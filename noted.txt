@@ -1,0 +1,405 @@
+    // help
+
+    // settings
+    <?php if (session('role') == 'Root') : ?>
+        let ctrlDownSet = false;
+        let ctrlKeySet = 17;
+        let cmdKeySet = 192;
+        let qKeySet = 192;
+        $(document).keydown(function(e) {
+            if (e.keyCode == ctrlKeySet || e.keyCode == cmdKeySet) ctrlDownSet = true;
+        }).keyup(function(e) {
+            if (e.keyCode == ctrlKeySet || e.keyCode == cmdKeySet) ctrlDownSet = false;
+        });
+        $(document).keydown(function(e) {
+            if (ctrlDownSet && (e.keyCode == qKeySet)) {
+
+                let myModal = document.getElementById('modal_settings');
+                let modal = bootstrap.Modal.getOrCreateInstance(myModal)
+                modal.show();
+
+            }
+        });
+
+        $(document).on('change', '.set_settings', function(e) {
+
+            let id = $(this).data('id');
+            let tabel = $(this).data('tabel');
+            let col = $(this).data('col');
+            let value = $(this).is(":checked");
+
+
+            post('general/update_settings_quiz', {
+                id,
+                tabel,
+                col,
+                value
+            }).then(res => {
+                if (res.status == '200') {
+                    sukses(res.message);
+                } else {
+                    gagal_with_button(res.message);
+                }
+            })
+        })
+
+        $(document).on('blur', '.set_settings_blur', function(e) {
+
+            let id = $(this).data('id');
+            let tabel = $(this).data('tabel');
+            let col = $(this).data('col');
+            let value = $(this).val();
+
+            post('general/update_settings_quiz', {
+                id,
+                tabel,
+                col,
+                value
+            }).then(res => {
+                if (res.status == '200') {
+                    sukses(res.message);
+                } else {
+                    gagal_with_button(res.message);
+                }
+            })
+        })
+    <?php endif; ?>
+    <?php if (settings()['help_on'] == 1) : ?>
+        let ctrlDown = false;
+        let ctrlKey = 17;
+        let cmdKey = 91;
+        let qKey = 81;
+        $(document).keydown(function(e) {
+            if (e.keyCode == ctrlKey || e.keyCode == cmdKey) ctrlDown = true;
+        }).keyup(function(e) {
+            if (e.keyCode == ctrlKey || e.keyCode == cmdKey) ctrlDown = false;
+        });
+        $(document).keydown(function(e) {
+            if (ctrlDown && (e.keyCode == qKey)) {
+                $('.modal_body_help').html('');
+                $('.search_help').val('');
+                let myModal = document.getElementById('modal_help');
+                let modal = bootstrap.Modal.getOrCreateInstance(myModal)
+                modal.show();
+
+                $(this).find('[autofocus]').focus();
+
+                $('#modal_help').on('shown.bs.modal', function() {
+                    $(this).find('[autofocus]').focus();
+                });
+
+
+            }
+        });
+
+        $(document).on('keyup', '.search_help', function(e) {
+            e.preventDefault();
+
+            let text = $(this).val();
+            let tabel = $(this).data('tabel');
+            let col = $(this).data('col');
+            let col_order = $(this).data('col_order');
+            let sort = $(this).data('sort');
+            post('public/search', {
+                text,
+                tabel,
+                col,
+                col_order,
+                sort
+            }).then(res => {
+                let html = '';
+                if (res.data.length == 0) {
+                    html += '<div style="font-size:14px">Data not found!.</div>';
+                } else {
+                    for (let i = 0; i < res.data.length; i++) {
+                        html += '<div style="font-size:14px" data-value="' + res.data[i].istilah + '" class="div_list btn_help_list">' + res.data[i].judul + '</div>';
+                    }
+                }
+
+                $('.modal_body_help').html(html);
+            })
+        })
+    <?php endif; ?>
+
+
+        <!-- modal settings -->
+    <?php if (session('role') == 'Root') : ?>
+        <div class="modal fade" id="modal_settings" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-body body_modal_settings">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="judul">
+                                    <div style="font-size: medium;" class="text_primary">Settings</div>
+                                </div>
+                                <hr>
+                                <div class="judul">
+                                    <div class="d-flex justify-content-between" style="font-size: 14px;">
+                                        <div>Help Enable</div>
+                                        <div>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input set_settings" <?= settings()['help_on'] == 1 ? 'checked' : ''; ?> data-id="-1" data-tabel="settings" data-col="help_on" type="checkbox" role="switch">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="judul">
+                                    <div class="d-flex justify-content-between" style="font-size: 14px;">
+                                        <div>Translation Enable</div>
+                                        <div>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input set_settings" <?= settings()['translation'] == 1 ? 'checked' : ''; ?> data-id="-1" data-tabel="settings" data-col="translation" type="checkbox" role="switch">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="judul">
+                                    <div class="d-flex justify-content-between" style="font-size: 14px;">
+                                        <div>Show Structures</div>
+                                        <div>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input set_settings" <?= settings()['show_structure'] == 1 ? 'checked' : ''; ?> data-id="-1" data-tabel="settings" data-col="show_structure" type="checkbox" role="switch">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="judul">
+                                    <div class="d-flex justify-content-between" style="font-size: 14px;">
+                                        <div>Show Grammar</div>
+                                        <div>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input set_settings" <?= settings()['show_grammar'] == 1 ? 'checked' : ''; ?> data-id="-1" data-tabel="settings" data-col="show_grammar" type="checkbox" role="switch">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="judul">
+                                    <div class="d-flex justify-content-between" style="font-size: 14px;">
+                                        <div>Show Quiz</div>
+                                        <div>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input set_settings" <?= settings()['show_quiz'] == 1 ? 'checked' : ''; ?> data-id="-1" data-tabel="settings" data-col="show_quiz" type="checkbox" role="switch">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="judul">
+                                    <div class="d-flex justify-content-between" style="font-size: 14px;">
+                                        <div>Show Penjelasan</div>
+                                        <div>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input set_settings" <?= settings()['show_penjelasan'] == 1 ? 'checked' : ''; ?> data-id="-1" data-tabel="settings" data-col="show_penjelasan" type="checkbox" role="switch">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="judul">
+                                    <div class="d-flex justify-content-between" style="font-size: 14px;">
+                                        <div>Speech Enable</div>
+                                        <div>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input set_settings" <?= settings()['speech_on'] == 1 ? 'checked' : ''; ?> data-id="-1" data-tabel="settings" data-col="speech_on" type="checkbox" role="switch">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr>
+                                <div class="judul">
+                                    <div class="d-flex justify-content-between" style="font-size: 14px;">
+                                        <div>Is Online</div>
+                                        <div>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input set_settings" <?= settings()['online'] == 1 ? 'checked' : ''; ?> data-id="-1" data-tabel="settings" data-col="online" type="checkbox" role="switch">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="judul">
+                                    <label class="form-label">Key Jwt</label>
+                                    <input data-id="-1" data-tabel="settings" data-col="key_jwt" type="text" value="<?= settings()['key_jwt']; ?>" class="form-control form-control-sm set_settings_blur" placeholder="Key Jwt">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    <?php endif; ?>
+
+
+    <!-- help -->
+    <div class="modal fade" id="modal_help" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <input data-col="istilah" data-tabel="pengertian" data-col_order="istilah" data-sort="ASC" type="text" class="form-control search_help" autofocus>
+                    <div class="modal_body_help mt-2">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    // navbar
+
+               <div class="d-flex gap-2">
+                <div class="navbar_link">
+                    <div class="d-flex gap-1">
+                        <div data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Help" class="<?= settings()['help_on'] == 0 ? 'text-dark' : 'text-success'; ?>"><i class="fa-regular fa-circle-dot"></i></div>
+                        <div data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Structures" class="<?= settings()['show_structure'] == 0 ? 'text-dark' : 'text-success'; ?>"><i class="fa-regular fa-circle-dot"></i></div>
+                        <div data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Translate" class="<?= settings()['translation'] == 0 ? 'text-dark' : 'text-success'; ?>"><i class="fa-regular fa-circle-dot"></i></div>
+                        <div data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Grammar" class="<?= settings()['show_grammar'] == 0 ? 'text-dark' : 'text-success'; ?>"><i class="fa-regular fa-circle-dot"></i></div>
+                        <div data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Quiz" class="<?= settings()['show_quiz'] == 0 ? 'text-dark' : 'text-success'; ?>"><i class="fa-regular fa-circle-dot"></i></div>
+                        <div data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Lesson" class="<?= settings()['show_penjelasan'] == 0 ? 'text-dark' : 'text-success'; ?>"><i class="fa-regular fa-circle-dot"></i></div>
+                        <div data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Speech" class="<?= settings()['speech_on'] == 0 ? 'text-dark' : 'text-success'; ?>"><i class="fa-regular fa-circle-dot"></i></div>
+                    </div>
+                </div>
+                <div class="navbar_link"><?= session('nama'); ?></div>
+                <a class="navbar_link" href="<?= base_url('logout'); ?>"><span class="text_danger"><i class="fa-solid fa-right-from-bracket"></i> Logout</span></a>
+            </div>
+
+
+            
+    const get_text_highlight = () => {
+        let text = "";
+        if (window.getSelection) {
+            text = window.getSelection().toString();
+        } else if (document.selection && document.selection.type != "Control") {
+            text = document.selection.createRange().text;
+        }
+        return text;
+    }
+
+    const highlight_text = (thisDiv, order) => {
+        $(thisDiv).on("mouseup", function() {
+            var selectedText = get_text_highlight();
+            var selectedTextRegExp = new RegExp(selectedText, "g");
+            var text = $(this).text().replace(selectedTextRegExp, "<span class='bg_danger_light'>" + selectedText + "</span>");
+            $(this).html(text);
+            if (order == 'translate') {
+                translate(selectedText)
+                    .then(res => {
+                        let lang = res[0][0][0];
+                        let html = '<div class="d-flex flex-column min-vh-100 min-vw-100">';
+                        html += '<div class="d-flex flex-grow-1 justify-content-center align-items-center">';
+                        html += '<div class="d-flex px-3 py-2 gap-2 bg_primary" style="border-radius:8px;">';
+
+                        html += '<div style="font-size:medium;max-width:350px" class="text_light">' + upper_first(lang) + '</div>';
+                        html += '<a type="button" class="flex-shrink-1 btn_more" data-text="' + selectedText + '" style="text-decoration: none;font-size:medium;color:#80b7ff" href=""><i class="fa-solid fa-circle-chevron-down"></i></a>';
+                        html += '<a class="btn_close_warning flex-shrink-1" style="text-decoration: none;font-size:medium;color:#ffe6e6" href=""><i class="fa-solid fa-circle-xmark"></i></a>';
+
+                        html += '</div>';
+                        html += '</div>';
+                        html += '</div>';
+                        $('.box_warning_with_button').html(html);
+
+                        $('.box_warning_with_button').show();
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
+        });
+    }
+
+    const search_sentence_in_quotes = (text) => {
+        const re = /"(.*?)"/g;
+        const result = [];
+        let current;
+        while (current = re.exec(text)) {
+            result.push(current.pop());
+        }
+        return console.log(result.length > 0 ?
+            result : [text]);
+    }
+
+
+
+
+
+
+
+    $(document).on('click', '.btn_help_list', function(e) {
+        e.preventDefault();
+        let value = $(this).data('value');
+        body_elements(value, 'pengertian');
+
+    })
+
+
+    let elem_fc = document.documentElement;
+
+    function openFullscreen() {
+        if (elem_fc.requestFullscreen) {
+            elem_fc.requestFullscreen();
+        } else if (elem_fc.webkitRequestFullscreen) {
+            /* Safari */
+            elem_fc.webkitRequestFullscreen();
+        }
+    }
+
+
+    // function closeFullscreen() {
+    //     if (document.exitFullscreen) {
+    //         document.exitFullscreen();
+    //     } else if (document.webkitExitFullscreen) {
+    //         /* Safari */
+    //         document.webkitExitFullscreen();
+    //     } else if (document.msExitFullscreen) {
+    //         /* IE11 */
+    //         document.msExitFullscreen();
+    //     }
+    // }
+
+        $(document).on('click', '.play_youtube', function(e) {
+        e.preventDefault();
+        let url = $(this).data('url');
+        new YT.Player('body_youtube_player', {
+            height: '390',
+            width: '640',
+            videoId: url,
+            events: {
+                onReady: e => e.target.playVideo()
+            }
+        });
+        $('#youtube_player').show();
+        $('iframe').show();
+
+        $(document).on('click', '.close_youtube', function(el) {
+            el.preventDefault();
+            $('iframe').hide();
+            $('#youtube_player').hide();
+            $('iframe').each(function() {
+                this.contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', '*')
+            });
+        })
+    })
+
+        const del_element_out_of_focus = (id) => {
+        $(window).click(function() {
+            let target = document.getElementById(id);
+            document.onclick = function(e) {
+                if (e.target.id !== id) {
+                    //element clicked wasn't the div; hide the div
+                    target.remove();
+                }
+            };
+
+        })
+    }
