@@ -49,6 +49,10 @@
                         <div class="text_main2">Role</div>
                         <input class="input btn_select add_role" name="role" data-tabel="options" data-where="kategori=Role" data-col="value" data-orderby="value=ASC" data-target="add_role" type="text" value="Member" placeholder="Role" readonly>
                     </div>
+                    <div class="mb-2">
+                        <div class="text_main2">Bidang</div>
+                        <input class="input btn_select add_bidang" name="bidang" data-tabel="options" data-where="kategori=Bidang" data-col="value" data-orderby="value=ASC" data-target="add_bidang" type="text" value="" placeholder="Bidang" readonly>
+                    </div>
                     <div class="d-grid">
                         <button type="submit" class="btn_primary"><i class="fa-solid fa-cloud"></i> Save</button>
                     </div>
@@ -113,6 +117,10 @@
         html += '<div class="mb-2">';
         html += '<div class="text_main2">Role</div>';
         html += '<input class="input btn_select update_role_' + id + '" name="role" data-tabel="options" data-col="value" data-orderby="value=ASC" data-where="kategori=Role" data-target="update_role_' + id + '" type="text" value="' + data.role + '" placeholder="Role" readonly>';
+        html += '</div>';
+        html += '<div class="mb-2">';
+        html += '<div class="text_main2">Bidang</div>';
+        html += '<input class="input btn_select update_bidang_' + id + '" name="bidang" data-tabel="options" data-col="value" data-orderby="value=ASC" data-where="kategori=Bidang" data-target="update_bidang_' + id + '" type="text" value="' + data.bidang + '" placeholder="Bidang" readonly>';
         html += '</div>';
         html += '<div class="d-grid">';
         html += '<button type="submit" class="btn_primary"><i class="fa-solid fa-cloud"></i> Update</button>';

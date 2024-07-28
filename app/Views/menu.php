@@ -5,10 +5,13 @@
     <button type="button" class="btn_success mb-3" data-bs-toggle="modal" data-bs-target="#add_<?= menu()['controller']; ?>">
         Add <?= menu()['menu']; ?>
     </button>
+    <button type="button" class="btn_primary mb-3" data-bs-toggle="modal" data-bs-target="#copy_<?= menu()['controller']; ?>">
+        Copy <?= menu()['menu']; ?>
+    </button>
 
     <select class="form-select form-select-sm mb-2 roles">
         <?php foreach ($role as $i) : ?>
-            <option <?= ($i['role'] == url(4) ? 'selected' : ''); ?> value="<?= $i['role']; ?>"><?= $i['role']; ?></option>
+            <option <?= ($i['value'] == url(4) ? 'selected' : ''); ?> value="<?= $i['value']; ?>"><?= $i['value']; ?></option>
         <?php endforeach; ?>
     </select>
     <?php if (count($data) == 0) : ?>
@@ -73,6 +76,35 @@
         <div class="modal-content">
             <div class="modal-body body_detail">
 
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Modal copy-->
+<div class="modal fade" id="copy_menu" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex justify-content-center body_select d-none">
+
+                </div>
+                <?php foreach (menus() as $i) : ?>
+                    <?php if ($i['menu'] !== 'Home') : ?>
+                        <div class="mb-2 div_list">
+                            <div class="d-flex justify-content-between gap-2">
+                                <div><?= $i['menu']; ?></div>
+                                <div>
+                                    <div class="d-flex justify-content-end gap-1">
+                                        <input class="input btn_select copy_menu_<?= $i['id']; ?>" name="tujuan" data-col="value" data-where="kategori=Role" data-tabel="options" data-orderby="value=ASC" data-target="copy_menu_<?= $i['id']; ?>" type="text" value="" placeholder="Role" readonly>
+                                        <a href="" class="btn_info btn_copy_menu" data-id="<?= $i['id']; ?>"><i class="fa-solid fa-circle-check"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    <?php endif; ?>
+                <?php endforeach; ?>
             </div>
 
         </div>
@@ -143,6 +175,22 @@
 
     $(document).on('change', '.roles', function() {
         location.href = "<?= base_url(menu()['controller']); ?>/" + $(this).val();
+    })
+    $(document).on('click', '.btn_copy_menu', function(e) {
+        e.preventDefault();
+        let menu_id = $(this).data('id');
+        let tujuan = $('.copy_menu_' + menu_id).val();
+
+        post('<?= menu()['controller']; ?>' + '/copy_menu', {
+            menu_id,
+            tujuan
+        }).then(res => {
+            if (res.status == '200') {
+                sukses(res.message);
+            } else {
+                gagal_with_button(res.message);
+            }
+        })
     })
 </script>
 <?= $this->endSection() ?>

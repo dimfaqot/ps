@@ -232,6 +232,7 @@
                 })
                 $('.harga_sewa_' + data.id).text(angka(sewa.harga, 'Rp'));
             } else {
+                $(cls).text("0");
                 $('.harga_sewa_' + data.id).text(angka(0, 'Rp'));
             }
 
@@ -607,6 +608,11 @@
 
         if (parseInt(str_replace(".", "", uang)) < (parseInt(str_replace(".", "", biaya)) - parseInt(diskon_int))) {
             gagal('Jumlah uang pembayaran kurang!.');
+            return false;
+        }
+
+        if (parseInt(str_replace(".", "", diskon)) > (parseInt(str_replace(".", "", biaya)))) {
+            gagal('Diskon tidak boleh lebih besar dari harga!.');
             return false;
         }
 

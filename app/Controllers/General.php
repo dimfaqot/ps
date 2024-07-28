@@ -57,4 +57,17 @@ class General extends BaseController
             gagal_js('Unit contains items!.');
         }
     }
+    public function delete_meja($id, $id2)
+    {
+        $db = db('jadwal');
+        $q = $db->where('id', $id)->get()->getRowArray();
+
+        $db->whereIn('meja', ['meja' => $q['meja']]);
+
+        if ($db->delete()) {
+            sukses_js('Delete data success.');
+        } else {
+            gagal_js('Delete data failed!.');
+        }
+    }
 }

@@ -14,7 +14,7 @@ class User extends BaseController
     {
         $db = db(menu()['tabel']);
 
-        $q = $db->select('id,nama,hp,img,role,username')->orderBy('nama', 'ASC')->get()->getResultArray();
+        $q = $db->select('id,nama,hp,img,role,username,bidang')->orderBy('nama', 'ASC')->get()->getResultArray();
 
         return view('user', ['judul' => menu()['menu'] . ' - PS', 'data' => $q]);
     }
@@ -57,6 +57,7 @@ class User extends BaseController
         $username = strtolower(clear($this->request->getVar('username')));
         $role = upper_first(clear($this->request->getVar('role')));
         $hp = upper_first(clear($this->request->getVar('hp')));
+        $bidang = upper_first(clear($this->request->getVar('bidang')));
         $img = 'file_not_found.jpg';
         $password = clear($this->request->getVar('password'));
 
@@ -73,6 +74,7 @@ class User extends BaseController
 
 
         $q['nama'] = $nama;
+        $q['bidang'] = $bidang;
         $q['username'] = $username;
         $q['role'] = $role;
         if ($password !== '') {

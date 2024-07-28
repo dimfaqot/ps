@@ -20,9 +20,13 @@ class Menu extends BaseController
         }
         $q = $db->orderBy('urutan', 'ASC')->get()->getResultArray();
 
-        $roles = $db->groupBy('role')->orderBy('urutan', 'ASC')->get()->getResultArray();
+        $dbo = db('options');
 
-        return view(menu()['controller'], ['judul' => menu()['menu'] . ' - PS', 'data' => $q, 'role' => $roles]);
+        $dbm = db('menus');
+        $menus = $db->where('role', 'Root')->get()->getResultArray();
+        $roles = $dbo->where('kategori', 'Role')->orderBy('id', 'ASC')->get()->getResultArray();
+
+        return view(menu()['controller'], ['judul' => menu()['menu'] . ' - PS', 'data' => $q, 'role' => $roles, 'menus' => $menus]);
     }
 
     public function add()
@@ -92,6 +96,30 @@ class Menu extends BaseController
             sukses(base_url(menu()['controller']), 'Update data success.');
         } else {
             gagal(base_url(menu()['controller']), 'Update data failed!.');
+        }
+    }
+    public function copy_menu()
+    {
+        $menu_id = clear($this->request->getVar('menu_id'));
+        $tujuan = clear($this->request->getVar('tujuan'));
+
+        $db = db(menu()['tabel']);
+        $q = $db->where('id', $menu_id)->get()->getRowArray();
+        if (!$q) {
+            gagal_js('Menu id not found!.');
+        }
+
+        $is_exist = $db->where('id', $menu_id)->where('role', $tujuan)->get()->getRowArray();
+        if ($is_exist) {
+            gagal_js('Menu already exist!.');
+        }
+        unset($q['id']);
+        $q['role'] = $tujuan;
+
+        if ($db->insert($q)) {
+            sukses_js('Copy data success.');
+        } else {
+            gagal_js('Copy data failed!.');
         }
     }
 }

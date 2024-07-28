@@ -30,6 +30,7 @@ $routes->get('/menu', 'Menu::index');
 $routes->get('/menu/(:any)', 'Menu::index/$1');
 $routes->post('/menu/add', 'Menu::add');
 $routes->post('/menu/update', 'Menu::update');
+$routes->post('/menu/copy_menu', 'Menu::copy_menu');
 
 // inv __________________________________
 $routes->get('/inv', 'Inventaris::index');
@@ -68,3 +69,13 @@ $routes->post('/rental/confirm_tambah', 'Rental::confirm_tambah');
 $routes->post('/rental/confirm_ubah', 'Rental::confirm_ubah');
 $routes->post('/rental/reset_play', 'Rental::reset_play');
 $routes->post('/rental/confirm_reset', 'Rental::confirm_reset');
+
+// jadwal __________________________________
+$routes->get('/jadwal', 'Jadwal::index');
+$routes->post('/jadwal/add', 'Jadwal::add');
+$routes->post('/jadwal/update_jadwal', 'Jadwal::update_jadwal');
+
+// billiard __________________________________
+$routes->get('/billiard', 'Billiard::index');
+$routes->post('/billiard/add', 'Billiard::add');
+$routes->post('/billiard/pembayaran', 'Billiard::pembayaran');

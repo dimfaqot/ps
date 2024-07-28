@@ -402,7 +402,6 @@
         let tabel = $(this).data('tabel');
         let orderby = $(this).data('orderby');
 
-
         body_select(tabel, col, orderby, where, target);
 
     });

@@ -15,7 +15,6 @@ class Login extends BaseController
 
     public function auth()
     {
-
         $username = clear($this->request->getVar('username'));
         $password = clear($this->request->getVar('password'));
 
