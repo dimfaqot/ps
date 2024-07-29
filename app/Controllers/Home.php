@@ -23,17 +23,17 @@ class Home extends BaseController
         //     $db->update($i);
         // }
 
-        $db = db('billiard');
-        $q = $db->get()->getResultArray();
+        // $db = db('billiard');
+        // $q = $db->get()->getResultArray();
 
-        $dbu = db('jadwal');
-        foreach ($q as $i) {
-            $qu = $dbu->where('id', $i['jadwal_id'])->get()->getRowArray();
-            dd($qu);
-            $i['meja'] = $qu['meja'];
-            $db->where('id', $i['id']);
-            $db->update($i);
-        }
+        // $dbu = db('jadwal');
+        // foreach ($q as $i) {
+        //     $qu = $dbu->where('id', $i['jadwal_id'])->get()->getRowArray();
+        //     dd($qu);
+        //     $i['meja'] = $qu['meja'];
+        //     $db->where('id', $i['id']);
+        //     $db->update($i);
+        // }
         return view('home', ['judul' => 'Home - PS']);
     }
 
