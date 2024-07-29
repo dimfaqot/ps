@@ -138,9 +138,9 @@
                                     })
                                 }
                             })
-                            console.log(total);
+
                             html += '<tr>';
-                            html += '<th style="text-align:right" colspan="4">TOTAL</th>';
+                            html += '<th style="text-align:right" colspan="5">TOTAL</th>';
                             html += '<th style="text-align:right">' + angka(total) + '</th>';
                             html += '</td>';
 
