@@ -11,28 +11,6 @@ class Home extends BaseController
     }
     public function index(): string
     {
-        // $db = db('rental');
-        // $q = $db->get()->getResultArray();
-
-        // $dbu = db('unit');
-        // foreach ($q as $i) {
-        //     $qu = $dbu->where('id', $i['unit_id'])->get()->getRowArray();
-
-        //     $i['meja'] = $qu['unit'];
-        //     $db->where('id', $i['id']);
-        //     $db->update($i);
-        // }
-
-        $db = db('billiard');
-        $q = $db->get()->getResultArray();
-
-        $dbu = db('jadwal');
-        foreach ($q as $i) {
-            $qu = $dbu->where('id', $i['jadwal_id'])->get()->getRowArray();
-            $i['meja'] = $qu['meja'];
-            $db->where('id', $i['id']);
-            $db->update($i);
-        }
         return view('home', ['judul' => 'Home - PS']);
     }
 
