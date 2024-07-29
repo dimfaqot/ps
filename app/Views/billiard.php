@@ -25,7 +25,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php for ($y = 1; $y < ($i + 5); $y++) : ?>
+                                        <?php for ($y = 1; $y < 6; $y++) : ?>
                                             <?php $jam = (strlen($y) <= 1 ? '0' . $y : $y); ?>
                                             <tr>
                                                 <th style="text-align: center;" scope="row"><?= $jam . ".00"; ?></th>
