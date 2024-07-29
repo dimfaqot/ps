@@ -50,6 +50,7 @@ class Rental extends BaseController
         $time = time();
         $datar = [
             'tgl' => $time,
+            'meja' => $qu['unit'],
             'unit_id' => $id,
             'dari' => $time,
             'ke' => ($durasi == -1 ? $durasi : $time + (60 * $durasi)),
@@ -76,6 +77,11 @@ class Rental extends BaseController
         $durasi = clear($this->request->getVar('durasi'));
 
         $dbu = db('unit');
+        $qu = $dbu->where('id', $id)->get()->getRowArray();
+
+        if ($qu['status'] == 'Maintenance') {
+            gagal_js('Unit dalam perbaiakan!.');
+        }
 
         $dbr = db('rental');
         $q = $dbr->where('unit_id', $id)->where('is_active', 1)->get()->getRowArray();
@@ -88,6 +94,7 @@ class Rental extends BaseController
         $datar = [
             'tgl' => $time,
             'unit_id' => $id,
+            'meja' => $qu['unit'],
             'dari' => $time,
             'ke' => ($durasi == -1 ? $durasi : $time + (60 * $durasi)),
             'durasi' => $durasi,

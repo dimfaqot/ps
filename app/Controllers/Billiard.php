@@ -57,7 +57,9 @@ class Billiard extends BaseController
             }
             $data = [
                 'jadwal_id' => $i,
+                'diskon' => $diskon,
                 'pemesan' => $qj['pemesan'],
+                'meja' => $qj['meja'],
                 'dari' => $qj['jam'],
                 'ke' => ($qj['jam'] == 24 ? 1 : $qj['jam'] + 1),
                 'durasi' => '1 Jam',

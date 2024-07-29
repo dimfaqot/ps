@@ -13,6 +13,7 @@ $routes->post('/auth', 'Login::auth');
 $routes->get('/logout', 'Login::logout');
 
 $routes->get('/home', 'Home::index');
+$routes->post('/home/get_pendapatan', 'Home::get_pendapatan');
 
 // users ____________________________________
 $routes->get('/users', 'User::index');
