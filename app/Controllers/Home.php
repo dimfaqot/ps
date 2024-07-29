@@ -29,7 +29,7 @@ class Home extends BaseController
         $dbu = db('jadwal');
         foreach ($q as $i) {
             $qu = $dbu->where('id', $i['jadwal_id'])->get()->getRowArray();
-
+            dd($qu);
             $i['meja'] = $qu['meja'];
             $db->where('id', $i['id']);
             $db->update($i);
