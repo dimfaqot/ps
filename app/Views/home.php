@@ -114,6 +114,7 @@
                             html += '<thead>';
                             html += '<tr>';
                             html += '<th style="text-align: center;" scope="row">#</th>';
+                            html += '<th style="text-align: center;" scope="row">Tgl</th>';
                             html += '<th style="text-align: center;" scope="row">Meja</th>';
                             html += '<th style="text-align: center;" scope="row">Durasi</th>';
                             html += '<th style="text-align: center;" scope="row">Diskon</th>';
@@ -128,6 +129,7 @@
                                     val.data.forEach((e, i) => {
                                         html += '<tr>';
                                         html += '<td>' + (i + 1) + '</td>';
+                                        html += '<td style="text-align:center">' + e.tanggal + '</td>';
                                         html += '<td>' + e.meja + '</td>';
                                         html += '<td>' + e.durasi + '</td>';
                                         html += '<td style="text-align:right">' + angka(e.diskon) + '</td>';

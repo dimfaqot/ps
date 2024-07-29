@@ -44,6 +44,7 @@ class Home extends BaseController
             $temp = [];
             $total = 0;
             foreach ($data_tahun as $i) {
+                $i['tanggal'] = date('d/m/Y', $i['tgl']);
                 if ($b['angka'] == date('m', $i['tgl'])) {
                     $temp[] = $i;
                     $total += $i['biaya'];
