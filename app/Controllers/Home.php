@@ -11,17 +11,17 @@ class Home extends BaseController
     }
     public function index(): string
     {
-        // $db = db('rental');
-        // $q = $db->get()->getResultArray();
+        $db = db('rental');
+        $q = $db->get()->getResultArray();
 
-        // $dbu = db('unit');
-        // foreach ($q as $i) {
-        //     $qu = $dbu->where('id', $i['unit_id'])->get()->getRowArray();
+        $dbu = db('unit');
+        foreach ($q as $i) {
+            $qu = $dbu->where('id', $i['unit_id'])->get()->getRowArray();
 
-        //     $i['meja'] = $qu['unit'];
-        //     $db->where('id', $i['id']);
-        //     $db->update($i);
-        // }
+            $i['meja'] = $qu['unit'];
+            $db->where('id', $i['id']);
+            $db->update($i);
+        }
 
         // $db = db('billiard');
         // $q = $db->get()->getResultArray();
