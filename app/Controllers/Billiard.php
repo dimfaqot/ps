@@ -63,7 +63,7 @@ class Billiard extends BaseController
                 'dari' => $qj['jam'],
                 'ke' => ($qj['jam'] == 24 ? 1 : $qj['jam'] + 1),
                 'durasi' => '1 Jam',
-                'biaya' => get_harga_billiard(),
+                'biaya' => get_harga_billiard() - $diskon,
                 'petugas' => user()['nama'],
                 'tgl' => time()
             ];
