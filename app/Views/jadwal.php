@@ -86,18 +86,18 @@
             let jam = (i.length <= 1 ? '0' + i : i);
             html += '<tr>';
             html += '<th style="text-align: center;" scope="row">' + i + ".00" + '</th>';
-            data.forEach(e => {
-                if (i == e.jam) {
-                    hari.forEach(h => {
+            hari.forEach(h => {
+                data.forEach(e => {
+                    if (i == e.jam) {
                         if (e.hari == h.indo) {
                             html += '<td contenteditable="true" class="update_jadwal" data-col="pemesan" data-meja="' + e.meja + '" data-id="' + e.id + '">' + e.pemesan + '</td>';
 
                         }
 
-                    })
 
-                }
+                    }
 
+                })
             })
             html += '</tr>';
 
@@ -134,7 +134,6 @@
         let meja = $(this).data('meja');
         let col = $(this).data('col');
         let val = $(this).text();
-
         post("<?= menu()['controller']; ?>" + '/update_jadwal', {
             id,
             col,

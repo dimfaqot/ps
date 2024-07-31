@@ -56,10 +56,11 @@
 
                                         <?php for ($x = $i; $x < ($i + 6); $x++) : ?>
                                             <?php if ($x < 25) : ?>
-                                                <?php $jam = (strlen($x) <= 1 ? '0' . $x : $x); ?>
+
                                                 <tr>
                                                     <th style="text-align: center;" scope="row"><?= $jam . ".00"; ?></th>
                                                     <?php foreach ($data as $d) : ?>
+
                                                         <?php if ($d['hari'] == hari(date('l'))['indo'] && $x == $d['jam'] && $d['meja'] == $m['meja']) : ?>
                                                             <td><?= $d['pemesan']; ?></td>
                                                             <td style="text-align: center;"><input data-biaya="<?= get_harga_billiard(); ?>" data-id="<?= $d['id']; ?>" class="form-check-input biaya" type="checkbox" value="" <?= $d['pemesan'] == '' || billiard_paid($d['id']) ? 'disabled' : ''; ?>> <?= rupiah(get_harga_billiard()); ?></td>
