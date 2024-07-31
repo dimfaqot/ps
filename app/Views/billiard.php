@@ -147,7 +147,18 @@
         if (checked.length <= 0) {
             $('.body_bayar').fadeOut();
         } else {
-            $('.body_bayar').fadeIn();
+            if (checked.length > 1) {
+                gagal('Hanya boleh satu pembayaran!.');
+                $('.body_bayar').fadeOut();
+                return false;
+            } else if (checked.length == 1) {
+                $('.body_bayar').fadeIn();
+
+            } else {
+                gagal('Hanya boleh satu pembayaran!.');
+                $('.body_bayar').fadeOut();
+                return false;
+            }
         }
 
     });
