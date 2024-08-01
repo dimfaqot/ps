@@ -18,7 +18,7 @@ function db($tabel, $db = null)
 function menus()
 {
 
-    $q1[] = ['id' => 0, 'no_urut' => 0, 'role' => user()['role'], 'menu' => 'Home', 'tabel' => 'users', 'controller' => 'home', 'icon' => "fa-solid fa-earth-asia", 'url' => 'home', 'logo' => 'file_not_found.jpg', 'group' => ''];
+    $q1[] = ['id' => 0, 'no_urut' => 0, 'role' => user()['role'], 'menu' => 'Home', 'tabel' => 'users', 'controller' => 'home', 'icon' => "fa-solid fa-earth-asia", 'url' => 'home', 'logo' => 'file_not_found.jpg', 'grup' => ''];
     $db = db('menus');
     $q2 = $db->where('role', user()['role'])->orderBy('urutan', 'ASC')->get()->getResultArray();
     $menus = array_merge($q1, $q2);
@@ -408,14 +408,15 @@ function billiard_paid($id)
     return $res;
 }
 
-function is_menu_active($group)
+function is_menu_active($grup)
 {
     $db = db('menus');
     $res = null;
-    $q = $db->where('controller', menu()['controller'])->where('group', $group)->get()->getRowArray();
+    $q = $db->where('controller', menu()['controller'])->where('grup', $grup)->get()->getRowArray();
     if ($q) {
-        return 1;
+        $res = 1;
     }
+    return $res;
 }
 
 function get_tahuns($tabel)

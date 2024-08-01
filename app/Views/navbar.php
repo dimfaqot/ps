@@ -6,8 +6,9 @@
                 <div class="d-flex gap-1">
                     <?php
                     $db = db('menus');
-                    $q1[] = ['id' => 0, 'no_urut' => 0, 'role' => user()['role'], 'menu' => 'Home', 'tabel' => 'users', 'controller' => 'home', 'icon' => "fa-solid fa-earth-asia", 'url' => 'home', 'logo' => 'file_not_found.jpg', 'group' => ''];
-                    $q2 = $db->where('role', 'Root')->groupBy('group')->orderBy('urutan', 'ASC')->get()->getResultArray();
+                    $q1[] = ['id' => 0, 'no_urut' => 0, 'role' => user()['role'], 'menu' => 'Home', 'tabel' => 'users', 'controller' => 'home', 'icon' => "fa-solid fa-earth-asia", 'url' => 'home', 'logo' => 'file_not_found.jpg', 'grup' => ''];
+                    $q2 = $db->where('role', 'Root')->groupBy('grup')->orderBy('urutan', 'ASC')->get()->getResultArray();
+
                     $menus = array_merge($q1, $q2);
                     ?>
                     <?php foreach ($menus as $m) : ?>
@@ -17,12 +18,12 @@
                             </a>
                         <?php else : ?>
                             <div class="dropdown">
-                                <a href="" class="navbar_link <?= (is_menu_active($m['group']) ? 'navbar_active' : ''); ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="<?= $m['icon']; ?>"></i> <?= $m['group']; ?>
+                                <a href="" class="navbar_link <?= (is_menu_active($m['grup']) ? 'navbar_active' : ''); ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="<?= $m['icon']; ?>"></i> <?= $m['grup']; ?>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <?php foreach (menus() as $i) : ?>
-                                        <?php if ($i['group'] == $m['group']) : ?>
+                                        <?php if ($i['grup'] == $m['grup']) : ?>
                                             <li><a style="border: none;" class="dropdown-item navbar_link <?= (url() == $i['controller'] ? 'navbar_active' : ''); ?>" href="<?= base_url($i['controller']); ?>"><i class="<?= $i['icon']; ?>"></i> <?= $i['menu']; ?></a></li>
                                         <?php endif; ?>
                                     <?php endforeach; ?>
