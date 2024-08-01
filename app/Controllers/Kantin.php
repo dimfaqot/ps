@@ -38,39 +38,61 @@ class Kantin extends BaseController
             gagal(base_url(menu()['controller']), 'Save data failed!.');
         }
     }
-    public function update()
+    public function pembayaran()
     {
-        $id = clear($this->request->getVar('id'));
         $barang = upper_first(clear($this->request->getVar('barang')));
-        $harga_satuan = rp_to_int(clear($this->request->getVar('harga_satuan')));
+        $barang_id = clear($this->request->getVar('id'));
+        $qty = clear($this->request->getVar('qty'));
         $stok = clear($this->request->getVar('stok'));
+        $diskon = rp_to_int(clear($this->request->getVar('diskon')));
+        $harga_satuan = rp_to_int(clear($this->request->getVar('harga_satuan')));
+        $total_harga = rp_to_int(clear($this->request->getVar('total_biaya')));
+        $uang = rp_to_int(clear($this->request->getVar('uang')));
+
+        if ($qty < $stok) {
+            gagal_js('ml. tidak boleh melebihi stok!.');
+        }
+        if ($uang < (($harga_satuan * $qty) - $diskon)) {
+            gagal_js('Uang tidak boleh lebih kecil dari harga!.');
+        }
+        if ($diskon > ($harga_satuan * $qty)) {
+            gagal_js('Diskon tidak boleh lebih besar dari harga!.');
+        }
+
+        if (($total_harga - $diskon) !== (($harga_satuan * $qty) - $diskon)) {
+            gagal_js('Jumlah harga beda dengan yang seharusnya!.');
+        }
+
+        $data = [
+            'barang_id' => $barang_id,
+            'barang' => $barang,
+            'qty' => $qty,
+            'diskon' => $diskon,
+            'harga_satuan' => $harga_satuan,
+            'total_harga' => (($harga_satuan * $qty) - $diskon),
+            'petugas' => user()['nama'],
+            'tgl' => time()
+        ];
 
         $db = db(menu()['tabel']);
-        $q = $db->where('id', $id)->get()->getRowArray();
-        if (!$q) {
-            gagal(base_url(menu()['controller']), 'Id not found!.');
-        }
+        if ($db->insert($data)) {
+            $dbb = db('barang');
+            $q = $dbb->where('id', $barang_id)->get()->getRowArray();
 
+            if (!$q) {
+                gagal_js('Id barang tidak ditemukan!.');
+            }
+            $q['stok'] = $q['stok'] - $qty;
 
-        $q['barang'] = $barang;
-        $q['harga_satuan'] = $harga_satuan;
-        $q['stok'] = $stok;
+            $dbb->where('id', $barang_id);
 
-        $db->where('id', $id);
-        if ($db->update($q)) {
-            sukses(base_url(menu()['controller']), 'Update data success.');
+            if ($dbb->update($q)) {
+                sukses_js('Pembayaran sukses.', ($uang - (($harga_satuan * $qty) - $diskon)));
+            } else {
+                sukses_js('Update stock failed!.', ($uang - (($harga_satuan * $qty) - $diskon)));
+            }
         } else {
-            gagal(base_url(menu()['controller']), 'Update data failed!.');
+            gagal(base_url(menu()['controller']), 'Save data failed!.');
         }
-    }
-
-
-    public function cari_barang()
-    {
-        $value = clear($this->request->getVar('value'));
-
-        $db = db('pengeluaran_kantin');
-        $q = $db->like('barang', $value, 'both')->orderBy('barang', 'ASC')->limit(10)->get()->getResultArray();
-        sukses_js('Koneksi sukses', $q);
     }
 }

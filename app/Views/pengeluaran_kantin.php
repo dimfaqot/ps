@@ -196,7 +196,6 @@
         html += '</form>';
 
         $('.body_detail').html(html);
-        $('.body_detail').html(html);
 
         let myModal = document.getElementById('detail');
         let modal = bootstrap.Modal.getOrCreateInstance(myModal)

@@ -12,9 +12,9 @@
                     <h6><i class="fa-brands fa-playstation"></i> PENDAPATAN PS</h6>
                     <h6 class="d-flex gap-1">
                         <select class="form-select get_pendapatan" data-tabel="rental">
-                            <?php for ($i = date('Y'); $i < 2030; $i++) : ?>
+                            <?php foreach (get_tahuns('rental') as $i) : ?>
                                 <option <?= ($i == date('Y') ? 'selected' : ''); ?> value="<?= $i; ?>"><?= $i; ?></option>
-                            <?php endfor; ?>
+                            <?php endforeach; ?>
                             <option value="All">All</option>
                         </select>
                     </h6>
@@ -31,15 +31,34 @@
                     <h6><i class="fa-solid fa-bowling-ball"></i> PENDAPATAN BILLIARD</h6>
                     <h6 class="d-flex gap-1">
                         <select class="form-select get_pendapatan" data-tabel="billiard">
-                            <?php for ($i = date('Y'); $i < 2030; $i++) : ?>
+                            <?php foreach (get_tahuns('billiard') as $i) : ?>
                                 <option <?= ($i == date('Y') ? 'selected' : ''); ?> value="<?= $i; ?>"><?= $i; ?></option>
-                            <?php endfor; ?>
+                            <?php endforeach; ?>
                             <option value="All">All</option>
                         </select>
                     </h6>
                 </div>
                 <div class="card p-2">
                     <canvas id="chart_billiard" style="width:100%;"></canvas>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-6">
+            <div class="div_card bg_success border border-success text-white" style="border-radius:5px;">
+                <div class="d-flex justify-content-between">
+                    <h6><i class="fa-solid fa-bowling-ball"></i> PENDAPATAN KANTIN</h6>
+                    <h6 class="d-flex gap-1">
+                        <select class="form-select get_pendapatan" data-tabel="kantin">
+                            <?php foreach (get_tahuns('kantin') as $i) : ?>
+                                <option <?= ($i == date('Y') ? 'selected' : ''); ?> value="<?= $i; ?>"><?= $i; ?></option>
+                            <?php endforeach; ?>
+                            <option value="All">All</option>
+                        </select>
+                    </h6>
+                </div>
+                <div class="card p-2">
+                    <canvas id="chart_kantin" style="width:100%;"></canvas>
                 </div>
             </div>
 
@@ -90,7 +109,7 @@
 
                 // const xPs = [100000, 6500000, 130000, 4590200, 452682, 987698, 4263528, 9876262, 665656, 879766, 879999, 0];
                 // const yPs = bulan;
-                console.log(tabel);
+
                 new Chart("chart_" + tabel, {
                     type: "line",
                     data: {
@@ -108,17 +127,22 @@
                             display: false
                         },
                         onClick: (e, values) => {
-                            console.log(values);
                             let html = '';
                             html += '<table class="table table-striped table-bordered table-sm">';
                             html += '<thead>';
                             html += '<tr>';
                             html += '<th style="text-align: center;" scope="row">#</th>';
                             html += '<th style="text-align: center;" scope="row">Tgl</th>';
-                            html += '<th style="text-align: center;" scope="row">Meja</th>';
-                            html += '<th style="text-align: center;" scope="row">Durasi</th>';
+                            if (tabel == 'kantin') {
+                                html += '<th style="text-align: center;" scope="row">Harga Satuan</th>';
+                                html += '<th style="text-align: center;" scope="row">Qty</th>';
+                            } else {
+                                html += '<th style="text-align: center;" scope="row">Meja</th>';
+                                html += '<th style="text-align: center;" scope="row">Durasi</th>';
+
+                            }
                             html += '<th style="text-align: center;" scope="row">Diskon</th>';
-                            html += '<th style="text-align: center;" scope="row">Biaya</th>';
+                            html += '<th style="text-align: center;" scope="row">' + (tabel == 'kantin' ? 'Harga' : 'Biaya') + '</th>';
                             html += '</tr>';
                             html += '</thead>';
                             html += '<tbody>';
@@ -130,8 +154,14 @@
                                         html += '<tr>';
                                         html += '<td>' + (i + 1) + '</td>';
                                         html += '<td style="text-align:center">' + e.tanggal + '</td>';
-                                        html += '<td>' + e.meja + '</td>';
-                                        html += '<td>' + e.durasi + '</td>';
+                                        if (tabel == 'kantin') {
+                                            html += '<td style="text-align:right">' + angka(e.harga_satuan) + '</td>';
+                                            html += '<td style="text-align:center">' + e.qty + '</td>';
+                                        } else {
+                                            html += '<td>' + e.meja + '</td>';
+                                            html += '<td>' + e.durasi + '</td>';
+
+                                        }
                                         html += '<td style="text-align:right">' + angka(e.diskon) + '</td>';
                                         html += '<td style="text-align:right">' + angka(e.biaya) + '</td>';
                                         html += '</tr>';
@@ -167,6 +197,7 @@
 
     chart_html('rental', '<?= date('Y'); ?>');
     chart_html('billiard', '<?= date('Y'); ?>');
+    chart_html('kantin', '<?= date('Y'); ?>');
 </script>
 
 <?= $this->endSection() ?>

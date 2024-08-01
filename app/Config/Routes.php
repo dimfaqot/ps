@@ -98,4 +98,4 @@ $routes->post('/barang/update', 'Barang::update');
 // kantin __________________________________
 $routes->get('/kantin', 'Kantin::index');
 $routes->post('/kantin/add', 'Kantin::add');
-$routes->post('/kantin/update', 'Kantin::update');
+$routes->post('/kantin/pembayaran', 'Kantin::pembayaran');
