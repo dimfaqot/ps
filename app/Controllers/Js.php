@@ -61,4 +61,12 @@ class Js extends BaseController
             sukses_js('Username available.', 'text_success', 'text_danger');
         }
     }
+    public function select_barang()
+    {
+        $value = clear($this->request->getVar('value'));
+        $db = db('barang');
+        $q = $db->like('barang', $value, 'both')->orderBy('barang', 'ASC')->limit(10)->get()->getResultArray();
+
+        sukses_js('Koneksi sukses.', $q);
+    }
 }

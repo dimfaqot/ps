@@ -1,22 +1,70 @@
 <!-- md -->
+<?php if (user()['role'] == 'Root') : ?>
+    <div class="d-none d-md-block">
+        <div class="box_navbar fixed-top shadow shadow-sm">
+            <div class="container d-flex justify-content-between">
+                <div class="d-flex gap-1">
+                    <?php
+                    $db = db('menus');
+                    $q1[] = ['id' => 0, 'no_urut' => 0, 'role' => user()['role'], 'menu' => 'Home', 'tabel' => 'users', 'controller' => 'home', 'icon' => "fa-solid fa-earth-asia", 'url' => 'home', 'logo' => 'file_not_found.jpg', 'group' => ''];
+                    $q2 = $db->where('role', 'Root')->groupBy('group')->orderBy('urutan', 'ASC')->get()->getResultArray();
+                    $menus = array_merge($q1, $q2);
+                    ?>
+                    <?php foreach ($menus as $m) : ?>
+                        <?php if ($m['menu'] == 'Home') : ?>
+                            <a href="<?= base_url($m['controller']); ?>" class="navbar_link <?= (url() == $m['controller'] ? 'navbar_active' : ''); ?> type=" button">
+                                <i class="<?= $m['icon']; ?>"></i> <?= $m['menu']; ?>
+                            </a>
+                        <?php else : ?>
+                            <div class="dropdown">
+                                <a href="" class="navbar_link <?= (is_menu_active($m['group']) ? 'navbar_active' : ''); ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="<?= $m['icon']; ?>"></i> <?= $m['group']; ?>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <?php foreach (menus() as $i) : ?>
+                                        <?php if ($i['group'] == $m['group']) : ?>
+                                            <li><a style="border: none;" class="dropdown-item navbar_link <?= (url() == $i['controller'] ? 'navbar_active' : ''); ?>" href="<?= base_url($i['controller']); ?>"><i class="<?= $i['icon']; ?>"></i> <?= $i['menu']; ?></a></li>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </ul>
 
-<div class="d-none d-md-block">
-    <div class="box_navbar fixed-top shadow shadow-sm">
-        <div class="container d-flex justify-content-between">
-            <div class="d-flex gap-1">
-                <?php foreach (menus() as $i) : ?>
-                    <a href="<?= base_url($i['controller']); ?>" class="navbar_link <?= (url() == $i['controller'] ? 'navbar_active' : ''); ?>"><i class="<?= $i['icon']; ?>"></i> <?= $i['menu']; ?></a>
-                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
 
-            </div>
-            <div class="pt-1">
-                <span class="px-3 py-1" style="background-color: #f2f2f2; border:1px solid #cccccc; color:#666666;font-size:small;border-radius:10px;"><?= user()['nama']; ?>/<?= user()['role']; ?></span>
-                <a class="btn_danger" style="border-radius: 10px;" href="<?= base_url('logout'); ?>"><i class="fa-solid fa-arrow-right-to-bracket"></i> Logout</a>
+                </div>
+                <div class="pt-1">
+                    <span class="px-3 py-1" style="background-color: #f2f2f2; border:1px solid #cccccc; color:#666666;font-size:small;border-radius:10px;"><?= user()['nama']; ?>/<?= user()['role']; ?></span>
+                    <a class="btn_danger" style="border-radius: 10px;" href="<?= base_url('logout'); ?>"><i class="fa-solid fa-arrow-right-to-bracket"></i> Logout</a>
+                </div>
             </div>
         </div>
+
     </div>
 
-</div>
+<?php else : ?>
+    <div class="d-none d-md-block">
+        <div class="box_navbar fixed-top shadow shadow-sm">
+            <div class="container d-flex justify-content-between">
+                <div class="d-flex gap-1">
+                    <?php foreach (menus() as $i) : ?>
+
+                        <a href="<?= base_url($i['controller']); ?>" class="navbar_link <?= (url() == $i['controller'] ? 'navbar_active' : ''); ?>"><i class="<?= $i['icon']; ?>"></i> <?= $i['menu']; ?></a>
+                    <?php endforeach; ?>
+
+                </div>
+                <div class="pt-1">
+                    <span class="px-3 py-1" style="background-color: #f2f2f2; border:1px solid #cccccc; color:#666666;font-size:small;border-radius:10px;"><?= user()['nama']; ?>/<?= user()['role']; ?></span>
+                    <a class="btn_danger" style="border-radius: 10px;" href="<?= base_url('logout'); ?>"><i class="fa-solid fa-arrow-right-to-bracket"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+<?php endif; ?>
+
+
 
 <!-- navbar sm -->
 <div class="d-block d-md-none d-sm-block fixed-top" style="top:-5px">

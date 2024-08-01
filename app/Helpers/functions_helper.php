@@ -18,7 +18,7 @@ function db($tabel, $db = null)
 function menus()
 {
 
-    $q1[] = ['id' => 0, 'no_urut' => 0, 'role' => user()['role'], 'menu' => 'Home', 'tabel' => 'users', 'controller' => 'home', 'icon' => "fa-solid fa-earth-asia", 'url' => 'home', 'logo' => 'file_not_found.jpg'];
+    $q1[] = ['id' => 0, 'no_urut' => 0, 'role' => user()['role'], 'menu' => 'Home', 'tabel' => 'users', 'controller' => 'home', 'icon' => "fa-solid fa-earth-asia", 'url' => 'home', 'logo' => 'file_not_found.jpg', 'group' => ''];
     $db = db('menus');
     $q2 = $db->where('role', user()['role'])->orderBy('urutan', 'ASC')->get()->getResultArray();
     $menus = array_merge($q1, $q2);
@@ -402,6 +402,32 @@ function billiard_paid($id)
     foreach ($q as $i) {
         if (date('d/m/Y', $i['tgl']) == date('d/m/Y')) {
             $res[] = $i;
+        }
+    }
+
+    return $res;
+}
+
+function is_menu_active($group)
+{
+    $db = db('menus');
+    $res = null;
+    $q = $db->where('controller', menu()['controller'])->where('group', $group)->get()->getRowArray();
+    if ($q) {
+        return 1;
+    }
+}
+
+function get_tahuns($tabel)
+{
+    $db = db($tabel);
+    $q = $db->get()->getResultArray();
+
+    $res = [];
+
+    foreach ($q as $i) {
+        if (!in_array(date('Y', $i['tgl']), $res)) {
+            $res[] = date('Y', $i['tgl']);
         }
     }
 

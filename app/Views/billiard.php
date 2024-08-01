@@ -56,6 +56,7 @@
 
                                         <?php for ($x = $i; $x < ($i + 6); $x++) : ?>
                                             <?php if ($x < 25) : ?>
+                                                <?php $jam = (strlen($x) <= 1 ? '0' . $x : $x); ?>
 
                                                 <tr>
                                                     <th style="text-align: center;" scope="row"><?= $jam . ".00"; ?></th>

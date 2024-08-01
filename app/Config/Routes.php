@@ -57,6 +57,7 @@ $routes->post('/unit/update_catatan', 'Unit::update_catatan');
 
 $routes->post('/js/select', 'Js::select');
 $routes->post('/js/check_is_exist', 'Js::check_is_exist');
+$routes->post('/js/select_barang', 'Js::select_barang');
 
 $routes->post('/general/delete', 'General::delete');
 
@@ -80,3 +81,21 @@ $routes->post('/jadwal/update_jadwal', 'Jadwal::update_jadwal');
 $routes->get('/billiard', 'Billiard::index');
 $routes->post('/billiard/add', 'Billiard::add');
 $routes->post('/billiard/pembayaran', 'Billiard::pembayaran');
+
+// KANTIN
+// pengeluaran kantin __________________________________
+$routes->get('/pengeluaran_kantin', 'Pengeluaran_kantin::index');
+$routes->get('/pengeluaran_kantin/(:num)/(:num)', 'Pengeluaran_kantin::index/$1/$2');
+$routes->post('/pengeluaran_kantin/add', 'Pengeluaran_kantin::add');
+$routes->post('/pengeluaran_kantin/update', 'Pengeluaran_kantin::update');
+
+// barang __________________________________
+$routes->get('/barang', 'Barang::index');
+$routes->post('/barang/cari_barang', 'Barang::cari_barang');
+$routes->post('/barang/add', 'Barang::add');
+$routes->post('/barang/update', 'Barang::update');
+
+// kantin __________________________________
+$routes->get('/kantin', 'Kantin::index');
+$routes->post('/kantin/add', 'Kantin::add');
+$routes->post('/kantin/update', 'Kantin::update');
