@@ -81,6 +81,11 @@ $routes->post('/jadwal/update_jadwal', 'Jadwal::update_jadwal');
 $routes->get('/billiard', 'Billiard::index');
 $routes->post('/billiard/add', 'Billiard::add');
 $routes->post('/billiard/pembayaran', 'Billiard::pembayaran');
+// pengeluaran kantin __________________________________
+$routes->get('/pengeluaran_billiard', 'Pengeluaran_billiard::index');
+$routes->get('/pengeluaran_billiard/(:num)/(:num)', 'Pengeluaran_billiard::index/$1/$2');
+$routes->post('/pengeluaran_billiard/add', 'Pengeluaran_billiard::add');
+$routes->post('/pengeluaran_billiard/update', 'Pengeluaran_billiard::update');
 
 // KANTIN
 // pengeluaran kantin __________________________________
