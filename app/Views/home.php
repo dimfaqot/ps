@@ -106,6 +106,10 @@
         html += '<tr>';
         html += '<th style="text-align: center;" scope="row">#</th>';
         html += '<th style="text-align: center;" scope="row">Tgl</th>';
+        if (order == 'pengeluaran') {
+            html += '<th style="text-align: center;" scope="row">Pj</th>';
+            html += '<th style="text-align: center;" scope="row">Barang</th>';
+        }
         if (tabel == 'kantin') {
             html += '<th style="text-align: center;" scope="row">Qty</th>';
             html += '<th style="text-align: center;" scope="row">Harga' + (order == 'pemasukan' ? ' Satuan' : '') + '</th>';
@@ -125,20 +129,25 @@
             html += '<th style="text-align: center;" scope="row">Diskon</th>';
             html += '<th style="text-align: center;" scope="row">' + (tabel == 'kantin' ? 'Harga' : 'Biaya') + '</th>';
 
-        } else {
-            html += '<th style="text-align: center;" scope="row">Pj</th>';
         }
         html += '</tr>';
         html += '</thead>';
         html += '<tbody>';
         let total_m = 0;
+        let bulan = '';
         data.forEach((val, idx) => {
             if (val.bulan == index) {
+                bulan = val.bln;
                 total_m = val.total;
                 val.data.forEach((e, i) => {
                     html += '<tr>';
                     html += '<td>' + (i + 1) + '</td>';
                     html += '<td style="text-align:center">' + e.tanggal + '</td>';
+                    if (order == 'pengeluaran') {
+                        html += '<td>' + (tabel == 'rental' && order == 'pemasukan' ? e.petugas : (tabel == 'rental' && order == 'pengeluaran' ? e.pembeli : e.pj)) + '</td>';
+                        html += '<td>' + e.barang + '</td>';
+
+                    }
                     if (tabel == 'kantin') {
                         html += '<td style="text-align:center">' + e.qty + '</td>';
                         html += '<td style="text-align:right">' + angka((order == 'pemasukan' ? e.harga_satuan : e.harga)) + '</td>';
@@ -158,9 +167,6 @@
 
                         html += '<td style="text-align:right">' + angka(e.diskon) + '</td>';
                         html += '<td style="text-align:right">' + angka(e.biaya) + '</td>';
-                    } else {
-                        html += '<td>' + (tabel == 'rental' && order == 'pemasukan' ? e.petugas : (tabel == 'rental' && order == 'pengeluaran' ? e.pembeli : e.pj)) + '</td>';
-
                     }
                     html += '</tr>';
                 })
@@ -168,7 +174,7 @@
         })
 
         html += '<tr>';
-        html += '<th style="text-align:right" colspan="' + (order == 'pemasukan' ? 5 : 4) + '">TOTAL</th>';
+        html += '<th style="text-align:right" colspan="5">TOTAL</th>';
         html += '<th style="text-align:right">' + angka(total_m) + '</th>';
         html += '</td>';
 
@@ -177,6 +183,7 @@
 
         let res = {
             total_m,
+            bulan,
             html
         }
         return res;
@@ -241,13 +248,13 @@
 
                             let html = '<div class="d-flex justify-content-between judul">';
                             html += '<div>';
-                            html += 'DETAIL ' + tabel.toUpperCase();
+                            html += 'KEUANGAN ' + tabel.toUpperCase() + ' ' + body_table.bulan.toUpperCase() + ' ' + tahun;
                             html += '</div>';
                             html += '<div>';
                             html += '<a type="button" href="" class="text_danger" data-bs-dismiss="modal"><i class="fa-solid fa-circle-xmark"></i></a>';
                             html += '</div>';
                             html += '</div>';
-                            html += '<div style="border-radius:5px;" class="judul_modal judul_' + tabel + '"></div>';
+                            html += '<div style="border-radius:3px;" class="mb-2 judul_modal judul_' + tabel + '"></div>';
                             html += '<ul class="nav nav-tabs">';
                             html += '<li class="nav-item">';
                             html += '<a class="nav-link active detail_data" data-order="pemasukan" aria-current="page" href="#">Pemasukan</a>';

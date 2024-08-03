@@ -71,7 +71,7 @@ class Home extends BaseController
                     $total +=  $i['biaya'];
                 }
             }
-            $res[] = ['bulan' => $b['satuan'], 'data' => $temp, 'total' => $total];
+            $res[] = ['bulan' => $b['satuan'], 'bln' => $b['bulan'], 'data' => $temp, 'total' => $total];
         }
 
         $res_p = [];
@@ -86,7 +86,7 @@ class Home extends BaseController
                     $total +=  $i['harga'];
                 }
             }
-            $res_p[] = ['bulan' => $b['satuan'], 'data' => $temp, 'total' => $total];
+            $res_p[] = ['bulan' => $b['satuan'], 'bln' => $b['bulan'], 'data' => $temp, 'total' => $total];
         }
 
         sukses_js('Connection success.', $res, $res_p);
