@@ -27,7 +27,7 @@
                                                 <?php foreach ($data as $d) : ?>
                                                     <?php if ($d['hari'] == hari(date('l'))['indo'] && $y == $d['jam'] && $d['meja'] == $m['meja']) : ?>
                                                         <td><?= $d['pemesan']; ?></td>
-                                                        <td style="text-align: center;"><input data-biaya="<?= get_harga_billiard(); ?>" data-id="<?= $d['id']; ?>" class="form-check-input biaya" type="checkbox" value="" <?= $d['pemesan'] == '' || billiard_paid($d['id']) ? 'disabled' : ''; ?>> <?= rupiah(get_harga_billiard()); ?></td>
+                                                        <td style="text-align: center;"><?= rupiah(get_harga_billiard()); ?></td>
                                                     <?php endif; ?>
                                                 <?php endforeach; ?>
                                             </tr>
