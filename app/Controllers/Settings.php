@@ -64,4 +64,15 @@ class Settings extends BaseController
             gagal(base_url(menu()['controller']), 'Update data failed!.');
         }
     }
+
+    public function make_user_jwt()
+    {
+        $role = clear($this->request->getVar('role'));
+        $data = [
+            'role' => $role,
+            'nama' => 'Temp User'
+        ];
+
+        sukses_js('Koneksi sukses.', encode_jwt($data));
+    }
 }

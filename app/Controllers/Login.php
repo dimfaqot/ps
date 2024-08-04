@@ -10,7 +10,17 @@ class Login extends BaseController
     }
     public function landing(): string
     {
-        return view('landing', ['judul' => 'Landing - PS']);
+        $db = db('unit');
+
+        $rental = $db->orderBy('id', 'ASC')->get()->getResultArray();
+
+        $db = db('jadwal');
+
+        $hari = hari(date('l'))['indo'];
+
+        $billiard = $db->where('hari', $hari)->orderBy('meja', 'ASC')->orderBy('jam', 'ASC')->get()->getResultArray();
+        $meja = $db->groupBy('meja')->orderBy('meja', 'ASC')->get()->getResultArray();
+        return view('landing', ['judul' => 'Landing - PS', 'rental' => $rental, 'meja' => $meja, 'billiard' => $billiard]);
     }
 
     public function auth()

@@ -43,6 +43,7 @@ $routes->post('/inv/update', 'Inventaris::update');
 $routes->get('/settings', 'Settings::index');
 $routes->post('/settings/add', 'Settings::add');
 $routes->post('/settings/update', 'Settings::update');
+$routes->post('/settings/make_user_jwt', 'Settings::make_user_jwt');
 
 // inv __________________________________
 $routes->get('/unit', 'Unit::index');
@@ -104,3 +105,6 @@ $routes->post('/barang/update', 'Barang::update');
 $routes->get('/kantin', 'Kantin::index');
 $routes->post('/kantin/add', 'Kantin::add');
 $routes->post('/kantin/pembayaran', 'Kantin::pembayaran');
+
+// public
+$routes->get('/ext/a/(:any)', 'Ext::auth/$1');

@@ -22,7 +22,6 @@ function menus()
     $db = db('menus');
     $q2 = $db->where('role', user()['role'])->orderBy('urutan', 'ASC')->get()->getResultArray();
     $menus = array_merge($q1, $q2);
-
     return $menus;
 }
 
@@ -78,6 +77,7 @@ function url($req = null)
 
 function check_role($order = null)
 {
+
     if (!session('id')) {
         gagal(base_url('login'), 'You are not login. Login first!.');
     }
@@ -202,11 +202,16 @@ function user()
     $db = db('users');
 
     $q = $db->where('id', session('id'))->get()->getRowArray();
-
     if (!$q) {
-        gagal(base_url('landing/login'), 'Session expired!.');
+        if (session('id')) {
+            $q['nama'] = session('nama');
+            $q['role'] = session('role');
+            $q['id'] = 0;
+            $q['img'] = 'file_not_found.jpg';
+        } else {
+            gagal(base_url('landing/login'), 'Session expired!.');
+        }
     }
-
     return $q;
 }
 

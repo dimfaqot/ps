@@ -5,6 +5,9 @@
     <button type="button" class="btn_success mb-3" data-bs-toggle="modal" data-bs-target="#add_<?= menu()['controller']; ?>">
         Add <?= menu()['menu']; ?>
     </button>
+    <button type="button" class="btn_purple mb-3" data-bs-toggle="modal" data-bs-target="#make_user">
+        Make User
+    </button>
 
     <?php if (count($data) == 0) : ?>
         <div class="div_list text_warning"><i class="fa-solid fa-ban"></i> Data not found!.</div>
@@ -65,8 +68,52 @@
         </div>
     </div>
 </div>
+<!-- Modal detail-->
+<div class="modal fade" id="make_user" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body body_make_user">
+                <div class="d-flex justify-content-center body_select d-none">
+
+                </div>
+                <div class="mb-2">
+                    <div class="text_main2">Role</div>
+                    <input class="input btn_select update_role" name="role" data-tabel="options" data-col="value" data-orderby="value=ASC" data-where="kategori=Role" data-target="update_role" type="text" value="Member" placeholder="Role" readonly>
+                </div>
+                <div class="d-grid">
+                    <button style="border-radius: 8px;" class="btn_purple make_secret_user"><i class="fa-solid fa-user-secret"></i> Make Secret User</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <script>
+    $(document).on('click', '.make_secret_user', function(e) {
+        e.preventDefault();
+        let role = $('.update_role').val();
+
+        post('settings/make_user_jwt', {
+            role
+        }).then(res => {
+            if (res.status == '200') {
+                let html = '';
+                html += '<textarea class="mb-3 form-control form-control-sm" rows="4">' + res.data + '</textarea>';
+                html += '<div class="d-grid"><button data-text="<?= base_url('ext/a/'); ?>' + res.data + '" class="btn_purple copy_text"><i class="fa-solid fa-copy"></i> Copy</button></div>';
+                $('.body_make_user').html(html)
+            } else {
+                gagal(res.message);
+            }
+        })
+    })
+    $(document).on('click', '.copy_text', function(e) {
+        e.preventDefault();
+        let text = $(this).data('text');
+        navigator.clipboard.writeText(text);
+        sukses('Copied.');
+    })
+
     $(document).on('click', '.detail', function(e) {
         e.preventDefault();
         let datas = <?= json_encode($data); ?>;
