@@ -111,8 +111,8 @@
             html += '<th style="text-align: center;" scope="row">Barang</th>';
         }
         if (tabel == 'kantin') {
-            html += '<th style="text-align: center;" scope="row">Qty</th>';
-            html += '<th style="text-align: center;" scope="row">Harga' + (order == 'pemasukan' ? ' Satuan' : '') + '</th>';
+            html += '<th style="text-align: center;" scope="row">Barang</th>';
+            html += '<th style="text-align: center;" scope="row">Harga' + (order == 'pemasukan' ? ' (Qty)' : '') + '</th>';
         } else {
             if (order == 'pemasukan') {
                 html += '<th style="text-align: center;" scope="row">Meja</th>';
@@ -149,8 +149,8 @@
 
                     }
                     if (tabel == 'kantin') {
-                        html += '<td style="text-align:center">' + e.qty + '</td>';
-                        html += '<td style="text-align:right">' + angka((order == 'pemasukan' ? e.harga_satuan : e.harga)) + '</td>';
+                        html += '<td>' + e.barang + '</td>';
+                        html += '<td style="text-align:right">' + angka((order == 'pemasukan' ? angka((e.harga_satuan * e.qty)) + ' (' + e.qty + ')' : e.harga)) + '</td>';
                     } else {
                         if (order == 'pemasukan') {
                             html += '<td>' + e.meja + '</td>';

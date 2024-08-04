@@ -14,7 +14,7 @@ class Kantin extends BaseController
     {
         $db = db(menu()['tabel']);
 
-        $q = $db->orderBy('barang', 'DESC')->orderBy('tgl', 'DESC')->get()->getResultArray();
+        $q = $db->orderBy('tgl', 'DESC')->orderBy('barang', 'DESC')->get()->getResultArray();
 
         return view(menu()['controller'], ['judul' => menu()['menu'] . ' - PS', 'data' => $q]);
     }
