@@ -150,7 +150,7 @@
                     }
                     if (tabel == 'kantin') {
                         html += '<td>' + e.barang + '</td>';
-                        html += '<td style="text-align:right">' + angka((order == 'pemasukan' ? angka((e.harga_satuan * e.qty)) + ' (' + e.qty + ')' : e.harga)) + '</td>';
+                        html += '<td style="text-align:right">' + (order == 'pemasukan' ? angka((e.harga_satuan * e.qty)) + ' (' + e.qty + ')' : angka(e.harga)) + '</td>';
                     } else {
                         if (order == 'pemasukan') {
                             html += '<td>' + e.meja + '</td>';
