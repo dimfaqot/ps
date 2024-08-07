@@ -99,7 +99,7 @@
         }).then(res => {
             if (res.status == '200') {
                 let html = '';
-                html += '<textarea class="mb-3 form-control form-control-sm" rows="4">' + res.data + '</textarea>';
+                html += '<textarea class="mb-3 form-control form-control-sm" rows="4"><?= base_url('ext/a/'); ?>' + res.data + '</textarea>';
                 html += '<div class="d-grid"><button data-text="<?= base_url('ext/a/'); ?>' + res.data + '" class="btn_purple copy_text"><i class="fa-solid fa-copy"></i> Copy</button></div>';
                 $('.body_make_user').html(html)
             } else {
