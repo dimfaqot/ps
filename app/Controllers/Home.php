@@ -32,6 +32,9 @@ class Home extends BaseController
 
         // mencari tahun pemasukan
         foreach ($q as $i) {
+            if ($tabel == 'rental') {
+                $i['biaya'] = $i['biaya'] - $i['diskon'];
+            }
             if ($tahun == 'All') {
                 $data_tahun[] = $i;
             } else {

@@ -3,7 +3,7 @@
     <?php if (count($meja) == 0) : ?>
         <div class="div_list text_warning"><i class="fa-solid fa-ban"></i> Data not found!.</div>
     <?php else : ?>
-        <h6 class="bg_warning_light p-2 text-center"><a href=""><i class="fa-solid fa-circle-left"></i></a> <?= hari(date('l'))['indo'] . ', ' . date('d') . ' ' . bulan(date('m'))['bulan'] . ' ' . date('Y'); ?> <a href=""><i class="fa-solid fa-circle-right"></i></a></h6>
+        <h6 class="bg_warning_light p-2 text-center"><a href="" class="change_date change_date_left" style="display: none;" data-order="left"><i class="fa-solid fa-circle-left"></i></a> <?= hari(date('l'))['indo'] . ', ' . date('d') . ' ' . bulan(date('m'))['bulan'] . ' ' . date('Y'); ?> <a class="change_date change_date_right" data-order="right" href=""><i class="fa-solid fa-circle-right"></i></a></h6>
         <div class="row g-2">
             <?php foreach ($meja as $m) : ?>
                 <div class="col-md-6">
@@ -59,7 +59,7 @@
 
                                                         <?php if ($d['hari'] == hari(date('l'))['indo'] && $x == $d['jam'] && $d['meja'] == $m['meja']) : ?>
                                                             <td><?= $d['pemesan']; ?></td>
-                                                            <td style="text-align: center;"><input data-biaya="<?= get_harga_billiard(); ?>" data-id="<?= $d['id']; ?>" class="form-check-input biaya" type="checkbox" value="" <?= $d['pemesan'] == '' || billiard_paid($d['id']) ? 'disabled' : ''; ?>> <?= rupiah(get_harga_billiard()); ?></td>
+                                                            <td style="text-align: center;"><?= rupiah(get_harga_billiard()); ?></td>
                                                         <?php endif; ?>
                                                     <?php endforeach; ?>
                                                 </tr>
@@ -78,3 +78,20 @@
         </div>
     <?php endif; ?>
 </div>
+
+<script>
+    let right = 0;
+    $(document).on('click', '.change_date', function(e) {
+        e.preventDefault();
+
+        let order = $(this).data('order');
+
+        if (right == 0) {
+            $('.change_date_left').hide();
+            if (order == 'left') {
+                gagal('Passed day not allowed!.');
+            }
+        }
+
+    })
+</script>
