@@ -69,4 +69,12 @@ class Js extends BaseController
 
         sukses_js('Koneksi sukses.', $q);
     }
+    public function select_layanan()
+    {
+        $value = clear($this->request->getVar('value'));
+        $db = db('layanan');
+        $q = $db->like('layanan', $value, 'both')->orderBy('layanan', 'ASC')->limit(10)->get()->getResultArray();
+
+        sukses_js('Koneksi sukses.', $q);
+    }
 }

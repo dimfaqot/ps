@@ -18,8 +18,7 @@
             <thead>
                 <tr>
                     <th style="text-align: center;" scope="col">#</th>
-                    <th style="text-align: center;" scope="col">Barang</th>
-                    <th style="text-align: center;" scope="col">Stok</th>
+                    <th style="text-align: center;" scope="col">Layanan</th>
                     <th style="text-align: center;" scope="col">Harga</th>
                     <th style="text-align: center;" scope="col">Del</th>
                 </tr>
@@ -28,9 +27,8 @@
                 <?php foreach ($data as $k => $i) : ?>
                     <tr>
                         <td style="text-align: center;"><?= ($k + 1); ?></td>
-                        <td class="detail" style="cursor: pointer;" data-id="<?= $i['id']; ?>"><?= $i['barang']; ?></td>
-                        <td style="text-align: center;"><?= $i['stok']; ?></td>
-                        <td style="text-align: right;"><?= rupiah($i['harga_satuan']); ?></td>
+                        <td class="detail" style="cursor: pointer;" data-id="<?= $i['id']; ?>"><?= $i['layanan']; ?></td>
+                        <td style="text-align: right;"><?= rupiah($i['harga']); ?></td>
                         <td style="text-align: center;"><a href="" data-alert="Are you sure to delete this data?" data-url="general/delete" data-id="<?= $i['id']; ?>" data-tabel="<?= menu()['tabel']; ?>" data-col="id" class="text_danger btn_confirm"><i class="fa-solid fa-circle-xmark"></i></a></td>
                     </tr>
 
@@ -50,16 +48,12 @@
                 <hr>
                 <form action="<?= base_url(menu()['controller']); ?>/add" method="post">
                     <div class="mb-2">
-                        <div class="text_main2">Barang <a class="cari_barang" href="">Cari Barang</a></div>
-                        <input class="input" type="text" name="barang" placeholder="Barang" required>
-                    </div>
-                    <div class="mb-2">
-                        <div class="text_main2">Stok</div>
-                        <input class="input" type="number" name="stok" placeholder="Stok barang" required>
+                        <div class="text_main2">Layanan</div>
+                        <input class="input" type="text" name="layanan" placeholder="Layanan" required>
                     </div>
                     <div class="mb-2">
                         <div class="text_main2">Harga</div>
-                        <input class="input uang" type="text" name="harga_satuan" placeholder="Harga satuan" required>
+                        <input class="input uang" type="text" name="harga" placeholder="Harga" required>
                     </div>
                     <div class="d-grid">
                         <button type="submit" class="btn_primary"><i class="fa-solid fa-cloud"></i> Save</button>
@@ -83,74 +77,9 @@
     </div>
 </div>
 
-<div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" aria-labelledby="staticBackdropLabel" style="z-index:9999999;max-width:400px;" id="cari_barang">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Cari Barang</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        <div class="input-group input-group-sm mb-2">
-            <span class="input-group-text">Cari Barang</span>
-            <input type="text" class="form-control input_cari_barang" placeholder="Ketik sesuatu...">
 
-        </div>
-        <table class="table table-sm table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th style="text-align: center;" scope="col">#</th>
-                    <th style="text-align: center;" scope="col">Barang</th>
-                    <th style="text-align: center;" scope="col">Qty</th>
-                    <th style="text-align: center;" scope="col">Harga</th>
-                </tr>
-            </thead>
-            <tbody class="tabel_cari_barang">
-
-            </tbody>
-        </table>
-    </div>
-</div>
 
 <script>
-    $(document).on('keyup', '.cari', function(e) {
-        e.preventDefault();
-        let value = $(this).val().toLowerCase();
-        $('.tabel_search tr').filter(function() {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-        });
-
-    });
-    $(document).on('keyup', '.input_cari_barang', function(e) {
-        e.preventDefault();
-        let value = $(this).val();
-        post('barang/cari_barang', {
-            value
-        }).then(res => {
-            if (res.status == '200') {
-                let html = '';
-                res.data.forEach((e, i) => {
-                    html += '<tr>';
-                    html += '<td style="text-align: center;">' + (i + 1) + '</td>';
-                    html += '<td>' + e.barang + '</td>';
-                    html += '<td style="text-align: center;">' + e.qty + '</td>';
-                    html += '<td style="text-align: right;">' + angka(e.harga) + '</td>';
-                    html += '</tr>';
-
-                })
-
-                $('.tabel_cari_barang').html(html);
-            } else {
-                gagal(res.message);
-            }
-        })
-
-    });
-    $(document).on('click', '.cari_barang', function(e) {
-        e.preventDefault();
-        const bsOffcanvas = new bootstrap.Offcanvas('#cari_barang');
-        bsOffcanvas.show();
-
-    });
-
     $(document).on('click', '.detail', function(e) {
         e.preventDefault();
         let id = $(this).data('id');
@@ -170,18 +99,14 @@
         html += '<input type="hidden" name="id" value="' + data.id + '">';
 
         html += '<div class="mb-2">';
-        html += '<div class="text_main2">Barang</div>';
-        html += '<input class="input" type="text" name="barang" value="' + data.barang + '" placeholder="Barang" required>';
+        html += '<div class="text_main2">Layanan</div>';
+        html += '<input class="input" type="text" name="layanan" value="' + data.layanan + '" placeholder="Layanan" required>';
         html += '</div>';
 
-        html += '<div class="mb-2">';
-        html += '<div class="text_main2">Stok</div>';
-        html += '<input class="input" type="number" name="stok" value="' + data.stok + '" placeholder="Stok" required>';
-        html += '</div>';
 
         html += '<div class="mb-2">';
         html += '<div class="text_main2">Harga</div>';
-        html += '<input class="input uang" type="text" name="harga_satuan" value="' + angka(data.harga_satuan) + '" placeholder="Total harga" required>';
+        html += '<input class="input uang" type="text" name="harga" value="' + angka(data.harga) + '" placeholder="Total harga" required>';
         html += '</div>';
 
 

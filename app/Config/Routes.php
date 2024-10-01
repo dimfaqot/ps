@@ -59,6 +59,7 @@ $routes->post('/unit/update_catatan', 'Unit::update_catatan');
 $routes->post('/js/select', 'Js::select');
 $routes->post('/js/check_is_exist', 'Js::check_is_exist');
 $routes->post('/js/select_barang', 'Js::select_barang');
+$routes->post('/js/select_layanan', 'Js::select_layanan');
 
 $routes->post('/general/delete', 'General::delete');
 
@@ -82,7 +83,8 @@ $routes->post('/jadwal/update_jadwal', 'Jadwal::update_jadwal');
 $routes->get('/billiard', 'Billiard::index');
 $routes->post('/billiard/add', 'Billiard::add');
 $routes->post('/billiard/pembayaran', 'Billiard::pembayaran');
-// pengeluaran kantin __________________________________
+
+// pengeluaran billiard __________________________________
 $routes->get('/pengeluaran_billiard', 'Pengeluaran_billiard::index');
 $routes->get('/pengeluaran_billiard/(:num)/(:num)', 'Pengeluaran_billiard::index/$1/$2');
 $routes->post('/pengeluaran_billiard/add', 'Pengeluaran_billiard::add');
@@ -108,3 +110,21 @@ $routes->post('/kantin/pembayaran', 'Kantin::pembayaran');
 
 // public
 $routes->get('/ext/a/(:any)', 'Ext::auth/$1');
+
+// BARBER
+// layanan __________________________________
+$routes->get('/layanan', 'Layanan::index');
+$routes->post('/layanan/cari_layanan', 'Layanan::cari_layanan');
+$routes->post('/layanan/add', 'Layanan::add');
+$routes->post('/layanan/update', 'Layanan::update');
+
+// pengeluaran barber __________________________________
+$routes->get('/pengeluaran_barber', 'Pengeluaran_barber::index');
+$routes->get('/pengeluaran_barber/(:num)/(:num)', 'Pengeluaran_barber::index/$1/$2');
+$routes->post('/pengeluaran_barber/add', 'Pengeluaran_barber::add');
+$routes->post('/pengeluaran_barber/update', 'Pengeluaran_barber::update');
+
+// barber __________________________________
+$routes->get('/barber', 'Barber::index');
+$routes->post('/barber/add', 'Barber::add');
+$routes->post('/barber/pembayaran', 'Barber::pembayaran');
