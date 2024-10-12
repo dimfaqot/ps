@@ -94,4 +94,34 @@ class Home extends BaseController
 
         sukses_js('Connection success.', $res, $res_p);
     }
+
+    public function koperasi()
+    {
+        $usaha = clear($this->request->getVar('usaha'));
+
+        $db = db('koperasi');
+
+        $q = $db->where('usaha', $usaha)->orderBy('tgl', 'ASC')->get()->getResultArray();
+
+        sukses_js('Connection success.', $q);
+    }
+    public function add_tabungan()
+    {
+        $usaha = clear($this->request->getVar('usaha'));
+        $tabungan = rp_to_int($this->request->getVar('tabungan'));
+
+        $db = db('koperasi');
+
+        $data = [
+            'tgl' => time(),
+            'usaha' => $usaha,
+            'tabungan' => $tabungan
+        ];
+
+        if ($db->insert($data)) {
+            sukses_js('Save data success.');
+        } else {
+            gagal_js('Save data failed!.');
+        }
+    }
 }

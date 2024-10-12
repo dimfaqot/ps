@@ -46,7 +46,8 @@ class Login extends BaseController
         }
 
         $data = [
-            'id' => $q['id']
+            'id' => $q['id'],
+            'role' => $q['role']
         ];
 
         session()->set($data);
@@ -57,6 +58,7 @@ class Login extends BaseController
     public function logout()
     {
         session()->remove('id');
+        session()->remove('role');
 
         sukses(base_url('login'), 'Logout sukses!.');
     }

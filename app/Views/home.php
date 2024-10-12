@@ -3,9 +3,7 @@
 <?= $this->section('content') ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 
-
 <div class="container">
-
     <div class="row g-3">
         <div class="col-md-6">
             <div class="div_card bg_primary border border-primary text-white" style="border-radius:5px;">
@@ -15,6 +13,7 @@
                         <div style="font-weight: normal;font-size:x-small" class="total_rental"></div>
                     </h6>
                     <h6 class="d-flex gap-1">
+                        <a href="" class="btn btn-sm btn-light koperasi" data-usaha="Ps" style="font-size: medium;"><i class="fa-solid fa-piggy-bank"></i></a>
                         <select class="form-select get_pendapatan" data-tabel="rental">
                             <?php foreach (get_tahuns('rental') as $i) : ?>
                                 <option <?= ($i == date('Y') ? 'selected' : ''); ?> value="<?= $i; ?>"><?= $i; ?></option>
@@ -37,6 +36,7 @@
                         <div style="font-weight: normal;font-size:x-small" class="total_billiard"></div>
                     </h6>
                     <h6 class="d-flex gap-1">
+                        <a href="" class="btn btn-sm btn-light koperasi" data-usaha="Billiard" style="font-size: medium;"><i class="fa-solid fa-piggy-bank"></i></a>
                         <select class="form-select get_pendapatan" data-tabel="billiard">
                             <?php foreach (get_tahuns('billiard') as $i) : ?>
                                 <option <?= ($i == date('Y') ? 'selected' : ''); ?> value="<?= $i; ?>"><?= $i; ?></option>
@@ -59,6 +59,7 @@
                         <div style="font-weight: normal;font-size:x-small" class="total_kantin"></div>
                     </h6>
                     <h6 class="d-flex gap-1">
+                        <a href="" class="btn btn-sm btn-light koperasi" data-usaha="Kantin" style="font-size: medium;"><i class="fa-solid fa-piggy-bank"></i></a>
                         <select class="form-select get_pendapatan" data-tabel="kantin">
                             <?php foreach (get_tahuns('kantin') as $i) : ?>
                                 <option <?= ($i == date('Y') ? 'selected' : ''); ?> value="<?= $i; ?>"><?= $i; ?></option>
@@ -69,6 +70,29 @@
                 </div>
                 <div class="card p-2">
                     <canvas id="chart_kantin" style="width:100%;"></canvas>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-6">
+            <div class="div_card bg_purple border border-success text-white" style="border-radius:5px;">
+                <div class="d-flex justify-content-between">
+                    <h6>
+                        <i class="fa-solid fa-shop mb-1"></i> PENDAPATAN BARBER
+                        <div style="font-weight: normal;font-size:x-small" class="total_barber"></div>
+                    </h6>
+                    <h6 class="d-flex gap-1">
+                        <a href="" class="btn btn-sm btn-light koperasi" data-usaha="barber" style="font-size: medium;"><i class="fa-solid fa-piggy-bank"></i></a>
+                        <select class="form-select get_pendapatan" data-tabel="barber">
+                            <?php foreach (get_tahuns('barber') as $i) : ?>
+                                <option <?= ($i == date('Y') ? 'selected' : ''); ?> value="<?= $i; ?>"><?= $i; ?></option>
+                            <?php endforeach; ?>
+                            <option value="All">All</option>
+                        </select>
+                    </h6>
+                </div>
+                <div class="card p-2">
+                    <canvas id="chart_barber" style="width:100%;"></canvas>
                 </div>
             </div>
 
@@ -87,7 +111,95 @@
         </div>
     </div>
 </div>
+<!-- Modal detail koperasi-->
+<div class="modal fade" id="koperasi" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body body_koperasi">
+
+            </div>
+        </div>
+    </div>
+</div>
 <script>
+    $(document).on('click', '.koperasi', function(e) {
+        e.preventDefault();
+
+        let usaha = $(this).data('usaha');
+
+        post('home/koperasi', {
+            usaha
+        }).then(res => {
+            if (res.status == "200") {
+                let html = '';
+                <?php if (session('role') == 'Root'): ?>
+                    html += '<div class="input-group input-group-sm mb-3">';
+                    html += '<input type="text" class="form-control uang input_tabungan_' + usaha + '" placeholder="Jumlah Tabungan">';
+                    html += '<button class="btn btn-outline-secondary save_tabungan" data-usaha="' + usaha + '" type="button"><i class="fa-solid fa-floppy-disk"></i> Save</button>';
+                    html += '</div>';
+                <?php endif; ?>
+
+                html += '<table class="table table-striped table-bordered table-sm">';
+                html += '<thead>';
+                html += '<tr>';
+                html += '<th style="text-align: center;" scope="row">#</th>';
+                html += '<th style="text-align: center;" scope="row">Tgl</th>';
+                html += '<th style="text-align: center;" scope="row">Usaha</th>';
+                html += '<th style="text-align: center;" scope="row">Tabungan</th>';
+                html += '</thead>';
+
+                html += '<tbody>';
+                let total_t = 0;
+                res.data.forEach((e, idx) => {
+                    total_t += parseInt(e.tabungan);
+                    html += '<tr>';
+                    html += '<td>' + (idx + 1) + '</td>';
+                    html += '<td style="text-align:center">' + time_php_to_js(e.tgl) + '</td>';
+                    html += '<td style="text-align:center">' + e.usaha + '</td>';
+                    html += '<td style="text-align:right">' + angka(e.tabungan) + '</td>';
+                    html += '</tr>';
+                })
+
+                html += '<tr>';
+                html += '<th style="text-align:right" colspan="3">TOTAL</th>';
+                html += '<th style="text-align:right">' + angka(total_t) + '</th>';
+                html += '</td>';
+
+                html += '</tbody>';
+                html += '</table>';
+
+                $('.body_koperasi').html(html);
+
+                let myModal = document.getElementById('koperasi');
+                let modal = bootstrap.Modal.getOrCreateInstance(myModal)
+                modal.show();
+            } else {
+                gagal_with_button(res.message);
+            }
+        })
+
+    })
+    $(document).on('click', '.save_tabungan', function(e) {
+        e.preventDefault();
+
+        let usaha = $(this).data('usaha');
+        let tabungan = $('.input_tabungan_' + usaha).val();
+
+        post('home/add_tabungan', {
+            usaha,
+            tabungan
+        }).then(res => {
+            if (res.status == "200") {
+                sukses(res.message);
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            } else {
+                gagal_with_button(res.message);
+            }
+        })
+
+    })
     $(document).on('change', '.get_pendapatan', function(e) {
         e.preventDefault();
 
