@@ -21,6 +21,7 @@ class Billiard_2 extends BaseController
     public function start_stop()
     {
         $id = clear($this->request->getVar('id'));
+        $billiard_id = clear($this->request->getVar('billiard_id'));
         $order = clear($this->request->getVar('order'));
         $durasi = clear($this->request->getVar('durasi'));
 
@@ -33,12 +34,13 @@ class Billiard_2 extends BaseController
 
         if ($order == 'end') {
             $db_bill = db('billiard_2');
-            $data = $db_bill->where('meja_id', $id)->get()->getRowArray();
+            $data = $db_bill->where('id', $billiard_id)->get()->getRowArray();
+
             if ($data['durasi'] == 0) {
                 $data['durasi_waktu'] = ceil((time() - $data['start']) / 60);
                 $data['biaya'] = biaya_per_menit($data['harga'], $data['start'], time());
             } else {
-                $data['biaya'] = $data['harga'] * ($data['durasi'] / 60);
+                $data['biaya'] = (int)$data['harga'] * (int)((int)$data['durasi'] / 60);
                 $data['durasi_waktu'] = $data['durasi'];
             }
             sukses_js('Koneksi sukses.', $data);
@@ -58,6 +60,7 @@ class Billiard_2 extends BaseController
                         'meja_id' => $id,
                         'durasi' => $durasi,
                         'petugas' => user()['nama'],
+                        'harga' => $q['harga'],
                         'is_active' => 1,
                         'meja' => 'Meja ' . $q['meja'],
                         'tgl' => time(),

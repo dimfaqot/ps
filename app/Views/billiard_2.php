@@ -20,7 +20,7 @@
                     <?php else: ?>
                         <div><?= date('H:i', get_detail_billiard($i['id'])['end']); ?></div>
                     <?php endif; ?>
-                    <div class="bg_danger px-2 fw-bold" style="border-radius: 5px;"><a href="" data-order="end" data-id="<?= $i['id']; ?>" class="text_light btn_start_stop" style="font-size: medium;"><i class="fa-regular fa-circle-stop"></i></a></div>
+                    <div class="bg_danger px-2 fw-bold" style="border-radius: 5px;"><a href="" data-billiard_id="<?= get_detail_billiard($i['id'])['id']; ?>" data-order="end" data-id="<?= $i['id']; ?>" class="text_light btn_start_stop" style="font-size: medium;"><i class="fa-regular fa-circle-stop"></i></a></div>
 
                 <?php endif; ?>
             </div>
@@ -94,12 +94,14 @@
         e.preventDefault();
 
         let id = $(this).data('id');
+        let billiard_id = $(this).data('billiard_id');
         let order = $(this).data('order');
         let durasi = $('.durasi_billiard_' + id).val();
 
         post('billiard/start_stop', {
             id,
             order,
+            billiard_id,
             durasi
         }).then(res => {
             if (res.status = "200") {
