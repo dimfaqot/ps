@@ -227,8 +227,14 @@
             html += '<th style="text-align: center;" scope="row">Harga' + (order == 'pemasukan' ? ' (Qty)' : '') + '</th>';
         } else {
             if (order == 'pemasukan') {
-                html += '<th style="text-align: center;" scope="row">Meja</th>';
-                html += '<th style="text-align: center;" scope="row">Durasi</th>';
+                if (tabel == 'barber') {
+                    html += '<th style="text-align: center;" scope="row">Layanan</th>';
+
+                } else {
+                    html += '<th style="text-align: center;" scope="row">Meja</th>';
+                    html += '<th style="text-align: center;" scope="row">Durasi</th>';
+
+                }
 
             } else {
                 html += '<th style="text-align: center;" scope="row">Qty</th>';
@@ -238,6 +244,9 @@
 
         }
         if (order == 'pemasukan') {
+            if (tabel == 'barber') {
+                html += '<th style="text-align: center;" scope="row">Qty</th>';
+            }
             html += '<th style="text-align: center;" scope="row">Diskon</th>';
             html += '<th style="text-align: center;" scope="row">' + (tabel == 'kantin' ? 'Harga' : 'Biaya') + '</th>';
 
@@ -265,8 +274,14 @@
                         html += '<td style="text-align:right">' + (order == 'pemasukan' ? angka((e.harga_satuan * e.qty)) + ' (' + e.qty + ')' : angka(e.harga)) + '</td>';
                     } else {
                         if (order == 'pemasukan') {
-                            html += '<td>' + e.meja + '</td>';
-                            html += '<td>' + e.durasi + '</td>';
+                            if (tabel == 'barber') {
+                                html += '<td>' + e.layanan + '</td>';
+                                html += '<td>' + e.qty + '</td>';
+                            } else {
+                                html += '<td>' + e.meja + '</td>';
+                                html += '<td>' + e.durasi + '</td>';
+
+                            }
 
                         } else {
                             html += '<td style="text-align:center">' + e.qty + '</td>';
@@ -278,7 +293,7 @@
                     if (order == 'pemasukan') {
 
                         html += '<td style="text-align:right">' + angka(e.diskon) + '</td>';
-                        html += '<td style="text-align:right">' + angka(e.biaya) + '</td>';
+                        html += '<td style="text-align:right">' + angka((tabel == 'barber' ? e.total_harga : e.biaya)) + '</td>';
                     }
                     html += '</tr>';
                 })
@@ -424,6 +439,7 @@
     chart_html('rental', '<?= date('Y'); ?>');
     chart_html('billiard', '<?= date('Y'); ?>');
     chart_html('kantin', '<?= date('Y'); ?>');
+    chart_html('barber', '<?= date('Y'); ?>');
 </script>
 
 <?= $this->endSection() ?>

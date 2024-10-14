@@ -28,13 +28,17 @@
             </div>
         </div>
     </div>
+
+
     <div class="d-none d-md-block" style="margin-top: 180px;"></div>
     <div class="d-block d-md-none d-sm-block" style="margin-top: 350px;"></div>
+
+
     <div class="body_rental">
         <?= view('landing/rental_landing', ['data' => $rental]); ?>
     </div>
     <div class="body_billiard" style="display: none;">
-        <?= view('landing/billiard_landing', ['data' => $billiard, 'meja' => $meja]); ?>
+        <?= view('landing/billiard_landing', ['data' => $billiard]); ?>
     </div>
 </div>
 

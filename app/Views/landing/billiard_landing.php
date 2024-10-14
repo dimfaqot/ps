@@ -1,97 +1,30 @@
 <div class="container">
 
-    <?php if (count($meja) == 0) : ?>
+    <?php if (count($data) == 0) : ?>
         <div class="div_list text_warning"><i class="fa-solid fa-ban"></i> Data not found!.</div>
     <?php else : ?>
-        <h6 class="bg_warning_light p-2 text-center"><a href="" class="change_date change_date_left" style="display: none;" data-order="left"><i class="fa-solid fa-circle-left"></i></a> <?= hari(date('l'))['indo'] . ', ' . date('d') . ' ' . bulan(date('m'))['bulan'] . ' ' . date('Y'); ?> <a class="change_date change_date_right" data-order="right" href=""><i class="fa-solid fa-circle-right"></i></a></h6>
         <div class="row g-2">
-            <?php foreach ($meja as $m) : ?>
-                <div class="col-md-6">
-                    <h6 class="judul"><?= $m['meja']; ?></h6>
-                    <?php for ($i = 1; $i < 25; $i++) : ?>
-                        <?php if ($i == 1) : ?>
-                            <div class="div_card mb-2">
-                                <table class="table table-sm table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th style="text-align: center;" scope="col">Jam</th>
-                                            <th style="text-align: center;" scope="col">Pemesan</th>
-                                            <th style="text-align: center;" scope="col">Biaya</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php for ($y = 1; $y < 6; $y++) : ?>
-                                            <?php $jam = (strlen($y) <= 1 ? '0' . $y : $y); ?>
-                                            <tr>
-                                                <th style="text-align: center;" scope="row"><?= $jam . ".00"; ?></th>
-                                                <?php foreach ($data as $d) : ?>
-                                                    <?php if ($d['hari'] == hari(date('l'))['indo'] && $y == $d['jam'] && $d['meja'] == $m['meja']) : ?>
-                                                        <td><?= $d['pemesan']; ?></td>
-                                                        <td style="text-align: center;"><?= rupiah(get_harga_billiard()); ?></td>
-                                                    <?php endif; ?>
-                                                <?php endforeach; ?>
-                                            </tr>
-                                        <?php endfor; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <?php endif; ?>
-                        <?php if ($i % 6 == 0) : ?>
-
-                            <div class="div_card mb-2">
-                                <table class="table table-sm table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th style="text-align: center;" scope="col">Jam</th>
-                                            <th style="text-align: center;" scope="col">Pemesan</th>
-                                            <th style="text-align: center;" scope="col">Biaya</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                        <?php for ($x = $i; $x < ($i + 6); $x++) : ?>
-                                            <?php if ($x < 25) : ?>
-                                                <?php $jam = (strlen($x) <= 1 ? '0' . $x : $x); ?>
-
-                                                <tr>
-                                                    <th style="text-align: center;" scope="row"><?= $jam . ".00"; ?></th>
-                                                    <?php foreach ($data as $d) : ?>
-
-                                                        <?php if ($d['hari'] == hari(date('l'))['indo'] && $x == $d['jam'] && $d['meja'] == $m['meja']) : ?>
-                                                            <td><?= $d['pemesan']; ?></td>
-                                                            <td style="text-align: center;"><?= rupiah(get_harga_billiard()); ?></td>
-                                                        <?php endif; ?>
-                                                    <?php endforeach; ?>
-                                                </tr>
-                                            <?php endif; ?>
-                                        <?php endfor; ?>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        <?php endif; ?>
-                    <?php endfor; ?>
+            <?php foreach ($data as $i) : ?>
+                <div class="col-md-4">
+                    <div class="rounded py-3 <?= ($i['is_active'] == 0 ? 'div_card_success' : 'div_card_failed'); ?>">
+                        <div class="d-flex justify-content-between">
+                            <h6><i class="fa-solid fa-bowling-ball"></i> Meja <?= $i['meja']; ?></h6>
+                            <div class="<?= $i['is_active'] == 0 ? 'btn_success' : 'btn_danger'; ?>"><?= $i['status']; ?></div>
+                        </div>
+                        <div class="text-center">
+                            <div><?= $i['paket']; ?></div>
+                            <h5><?= $i['durasi']; ?></h5>
+                        </div>
+                    </div>
 
                 </div>
             <?php endforeach; ?>
+
 
         </div>
     <?php endif; ?>
 </div>
 
 <script>
-    let right = 0;
-    $(document).on('click', '.change_date', function(e) {
-        e.preventDefault();
 
-        let order = $(this).data('order');
-
-        if (right == 0) {
-            $('.change_date_left').hide();
-            if (order == 'left') {
-                gagal('Passed day not allowed!.');
-            }
-        }
-
-    })
 </script>

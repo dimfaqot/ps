@@ -19,7 +19,7 @@ class Home extends BaseController
         $tabel = clear($this->request->getVar('tabel'));
         $tahun = clear($this->request->getVar('tahun'));
 
-        $db = db($tabel);
+        $db = db(($tabel == 'billiard' ? 'billiard_2' : $tabel));
 
         $q = $db->get()->getResultArray();
 
@@ -71,7 +71,7 @@ class Home extends BaseController
                         $i['biaya'] = $i['total_harga'];
                     }
                     $temp[] = $i;
-                    $total +=  $i['biaya'];
+                    $total +=  ($tabel == 'barber' ? $i['total_harga'] : $i['biaya']);
                 }
             }
             $res[] = ['bulan' => $b['satuan'], 'bln' => $b['bulan'], 'data' => $temp, 'total' => $total];
@@ -122,6 +122,46 @@ class Home extends BaseController
             sukses_js('Save data success.');
         } else {
             gagal_js('Save data failed!.');
+        }
+    }
+
+    public function replace()
+    {
+        $db = db('billiard');
+        $billiard = $db->orderBy('tgl', 'ASC')->get()->getResultArray();
+
+        $err = [];
+        foreach ($billiard as $i) {
+            $meja = 15;
+            if ($i['meja'] !== "") {
+                $meja = explode(" ", $i['meja'])[1];
+            }
+            $db_m = db('jadwal_2');
+            $m = $db_m->where('meja', $meja)->get()->getRowArray();
+            $data = [
+                'meja_id' => $m['id'],
+                'meja' => ($i['meja'] == "" ? 'Meja 15' : $i['meja']),
+                'tgl' => $i['tgl'],
+                'diskon' => $i['diskon'],
+                'petugas' => $i['petugas'],
+                'durasi' => $i['durasi'] * 60,
+                'harga' => $i['diskon'] + $i['biaya'],
+                'biaya' => (int)$i['biaya'],
+                'is_active' => 0,
+                'start' => 1728835189,
+                'end' => 1728838789
+            ];
+
+            $db_2 = db('billiard_2');
+            if (!$db_2->insert($data)) {
+                $err[] = $i['id'];
+            }
+        }
+
+        if (count($err) > 0) {
+            gagal_with_button(base_url('biiliard'), implode(", ", $err));
+        } else {
+            sukses(base_url('billiard'), 'Success.');
         }
     }
 }

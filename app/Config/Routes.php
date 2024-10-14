@@ -17,6 +17,7 @@ $routes->get('/home', 'Home::index');
 $routes->post('/home/get_pendapatan', 'Home::get_pendapatan');
 $routes->post('/home/koperasi', 'Home::koperasi');
 $routes->post('/home/add_tabungan', 'Home::add_tabungan');
+$routes->get('/home/replace', 'Home::replace');
 
 // users ____________________________________
 $routes->get('/users', 'User::index');
@@ -78,14 +79,21 @@ $routes->post('/rental/reset_play', 'Rental::reset_play');
 $routes->post('/rental/confirm_reset', 'Rental::confirm_reset');
 
 // jadwal __________________________________
-$routes->get('/jadwal', 'Jadwal::index');
-$routes->post('/jadwal/add', 'Jadwal::add');
-$routes->post('/jadwal/update_jadwal', 'Jadwal::update_jadwal');
+// $routes->get('/jadwal', 'Jadwal::index');
+// $routes->post('/jadwal/add', 'Jadwal::add');
+// $routes->post('/jadwal/update_jadwal', 'Jadwal::update_jadwal');
+$routes->get('/jadwal', 'Jadwal_2::index');
+$routes->post('/jadwal/add', 'Jadwal_2::add');
+$routes->post('/jadwal/update_jadwal', 'Jadwal_2::update_jadwal');
 
 // billiard __________________________________
-$routes->get('/billiard', 'Billiard::index');
-$routes->post('/billiard/add', 'Billiard::add');
-$routes->post('/billiard/pembayaran', 'Billiard::pembayaran');
+// $routes->get('/billiard', 'Billiard::index');
+// $routes->post('/billiard/add', 'Billiard::add');
+// $routes->post('/billiard/pembayaran', 'Billiard::pembayaran');
+$routes->get('/billiard', 'Billiard_2::index');
+$routes->post('/billiard/add', 'Billiard_2::add');
+$routes->post('/billiard/pembayaran', 'Billiard_2::pembayaran');
+$routes->post('/billiard/start_stop', 'Billiard_2::start_stop');
 
 // pengeluaran billiard __________________________________
 $routes->get('/pengeluaran_billiard', 'Pengeluaran_billiard::index');

@@ -439,3 +439,42 @@ function get_tahuns($tabel)
 
     return $res;
 }
+
+function get_detail_billiard($meja_id)
+{
+
+    $db = db('billiard_2');
+    $q = $db->where('is_active', 1)->where('meja_id', $meja_id)->get()->getRowArray();
+
+    return $q;
+}
+
+
+function durasi($start, $end)
+{
+    $start = date_create(date('Y-m-d H:i:s', $start));
+    $end = date_create(date('Y-m-d H:i:s', $end));
+
+    $diff  = date_diff($end, $start);
+
+    return $diff->h . ':' . $diff->i;
+}
+
+function biaya_per_menit($harga, $start, $end)
+{
+    $diff = $end - $start;
+    $menit = ceil($diff / 60);
+    $harga_per_menit = ceil($harga / 60);
+
+    $harga = $harga_per_menit * $menit;
+
+    $exp = explode('.', rupiah($harga));
+
+    if ($exp[1] !== '000') {
+        $temp = (int)$exp[1] + 1;
+        $temp .= ".000";
+        $harga = rp_to_int($temp);
+    }
+
+    return $harga;
+}
