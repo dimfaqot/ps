@@ -17,7 +17,7 @@ $routes->get('/home', 'Home::index');
 $routes->post('/home/get_pendapatan', 'Home::get_pendapatan');
 $routes->post('/home/koperasi', 'Home::koperasi');
 $routes->post('/home/add_tabungan', 'Home::add_tabungan');
-$routes->get('/home/replace', 'Home::replace');
+// $routes->get('/home/replace', 'Home::replace');
 
 // users ____________________________________
 $routes->get('/users', 'User::index');

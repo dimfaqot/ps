@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 
 <div class="mobile">
-    <a href="<?= base_url('home/replace'); ?>">Ok</a>
+
     <?php foreach ($meja as $i): ?>
         <div class="div_list">
             <div class="d-flex justify-content-between">
