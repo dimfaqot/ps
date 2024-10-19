@@ -292,5 +292,14 @@
         })
 
     })
+
+    $(document).on('keyup', '.cari', function(e) {
+        e.preventDefault();
+        let value = $(this).val().toLowerCase();
+        $('.tabel_search tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+
+    });
 </script>
 <?= $this->endSection() ?>
