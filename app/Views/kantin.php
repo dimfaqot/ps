@@ -33,7 +33,9 @@
                     </tr>
                 </thead>
                 <tbody class="tabel_search">
+                    <?php $total = 0; ?>
                     <?php foreach ($data as $k => $i) : ?>
+                        <?php $total += $i['total_harga']; ?>
                         <tr>
                             <td style="text-align: center;"><?= ($k + 1); ?></td>
                             <td style="text-align: center;"><?= date('d/m/y', $i['tgl']); ?></td>
@@ -43,6 +45,10 @@
                             <td style="text-align: right;" class="d-none d-md-table-cell"><?= $i['diskon']; ?></td>
                             <td style="text-align: right;"><?= rupiah($i['total_harga']); ?></td>
                             <td class="d-none d-md-table-cell"><?= $i['petugas']; ?></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="text-align: right;font-weight:bold">TOTAL</td>
+                            <td style="font-weight: bold;text-align: right;"><?= rupiah($total); ?></td>
                         </tr>
 
                     <?php endforeach; ?>

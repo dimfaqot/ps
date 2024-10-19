@@ -18,8 +18,13 @@ class Billiard extends BaseController
 
         $q = $db->where('hari', $hari)->orderBy('meja', 'ASC')->orderBy('jam', 'ASC')->get()->getResultArray();
         $meja = $db->groupBy('meja')->orderBy('meja', 'ASC')->get()->getResultArray();
-
-        return view(menu()['controller'], ['judul' => menu()['menu'] . ' - PS', 'data' => $q, 'meja' => $meja]);
+        $data = [];
+        foreach ($q as $i) {
+            if (date('n', $i['tgl']) == date('n') && date('n', $i['tgl']) == (date('n') - 1)) {
+                $data[] = $i;
+            }
+        }
+        return view(menu()['controller'], ['judul' => menu()['menu'] . ' - PS', 'data' => $data, 'meja' => $meja]);
     }
 
     public function pembayaran()

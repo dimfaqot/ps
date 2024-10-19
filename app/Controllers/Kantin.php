@@ -15,8 +15,13 @@ class Kantin extends BaseController
         $db = db(menu()['tabel']);
 
         $q = $db->orderBy('tgl', 'DESC')->orderBy('barang', 'DESC')->get()->getResultArray();
-
-        return view(menu()['controller'], ['judul' => menu()['menu'] . ' - PS', 'data' => $q]);
+        $data = [];
+        foreach ($q as $i) {
+            if (date('n', $i['tgl']) == date('n') || date('n', $i['tgl']) == (date('n') - 1)) {
+                $data[] = $i;
+            }
+        }
+        return view(menu()['controller'], ['judul' => menu()['menu'] . ' - PS', 'data' => $data]);
     }
 
     public function add()

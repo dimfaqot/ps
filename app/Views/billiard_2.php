@@ -2,30 +2,81 @@
 
 <?= $this->section('content') ?>
 
+
+<div style="margin-top: 250px;"></div>
 <div class="mobile">
 
-    <?php foreach ($meja as $i): ?>
-        <div class="div_list">
-            <div class="d-flex justify-content-between">
-                <div class="detail" data-meja="<?= $i['meja']; ?>" data-id="<?= $i['id']; ?>">Meja <?= $i['meja']; ?></div>
-                <?php if ($i['is_active'] == 0): ?>
-                    <div><input style="font-size:smaller" type="number" class="form-control form-control-sm durasi_billiard_<?= $i['id']; ?>" value="60"></div>
-                    <div><?= date('H:i'); ?></div>
-                    <div class="bg_success px-2 fw-bold" style="border-radius: 5px;"><a href="" data-order="start" data-id="<?= $i['id']; ?>" class="text_light btn_start_stop" style="font-size: medium;"><i class="fa-regular fa-circle-play"></i></a></div>
+    <div class="mb-3 fixed-top bg-light container p-2 border" style="top:60px;max-width: 400px;">
+        <?php foreach ($meja as $i): ?>
+            <div class="div_list">
+                <div class="d-flex justify-content-between">
+                    <div style="width: 70px;" class="detail" data-meja="<?= $i['meja']; ?>" data-id="<?= $i['id']; ?>">Meja <?= $i['meja']; ?></div>
+                    <?php if ($i['is_active'] == 0): ?>
+                        <div><input style="font-size:smaller" type="number" class="form-control form-control-sm durasi_billiard_<?= $i['id']; ?>" value="60"></div>
+                        <div><?= date('H:i'); ?></div>
+                        <div class="bg_success px-2 fw-bold" style="border-radius: 5px;"><a href="" data-order="start" data-id="<?= $i['id']; ?>" class="text_light btn_start_stop" style="font-size: medium;"><i class="fa-regular fa-circle-play"></i></a></div>
 
-                <?php else: ?>
-                    <div><input style="font-size:smaller" type="number" class="form-control form-control-sm durasi_billiard_<?= $i['id']; ?>" value="<?= get_detail_billiard($i['id'])['durasi']; ?>"></div>
-                    <?php if (get_detail_billiard($i['id'])['end'] == 0): ?>
-                        <div><?= durasi(get_detail_billiard($i['id'])['start'], time()); ?></div>
                     <?php else: ?>
-                        <div><?= date('H:i', get_detail_billiard($i['id'])['end']); ?></div>
-                    <?php endif; ?>
-                    <div class="bg_danger px-2 fw-bold" style="border-radius: 5px;"><a href="" data-billiard_id="<?= get_detail_billiard($i['id'])['id']; ?>" data-order="end" data-id="<?= $i['id']; ?>" class="text_light btn_start_stop" style="font-size: medium;"><i class="fa-regular fa-circle-stop"></i></a></div>
+                        <div><input style="font-size:smaller" type="number" class="form-control form-control-sm durasi_billiard_<?= $i['id']; ?>" value="<?= get_detail_billiard($i['id'])['durasi']; ?>"></div>
+                        <?php if (get_detail_billiard($i['id'])['end'] == 0): ?>
+                            <div><?= durasi(get_detail_billiard($i['id'])['start'], time()); ?></div>
+                        <?php else: ?>
+                            <div><?= date('H:i', get_detail_billiard($i['id'])['end']); ?></div>
+                        <?php endif; ?>
+                        <div class="bg_danger px-2 fw-bold" style="border-radius: 5px;"><a href="" data-billiard_id="<?= get_detail_billiard($i['id'])['id']; ?>" data-order="end" data-id="<?= $i['id']; ?>" class="text_light btn_start_stop" style="font-size: medium;"><i class="fa-regular fa-circle-stop"></i></a></div>
 
-                <?php endif; ?>
+                    <?php endif; ?>
+                </div>
             </div>
+        <?php endforeach; ?>
+
+    </div>
+    <?php if (count($data) == 0) : ?>
+        <div class="div_list text_warning"><i class="fa-solid fa-ban"></i> Data not found!.</div>
+    <?php else : ?>
+        <div class="input-group input-group-sm mb-2">
+            <span class="input-group-text">Search</span>
+            <input type="text" class="form-control cari" placeholder="Ketik sesuatu...">
         </div>
-    <?php endforeach; ?>
+        <div>
+            <table class="table table-sm table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align: center;" scope="col">#</th>
+                        <th style="text-align: center;" scope="col">Tgl</th>
+                        <th style="text-align: center;" scope="col">Meja</th>
+                        <th style="text-align: center;" class="d-none d-md-table-cell">Tarif</th>
+                        <th style="text-align: center;" scope="col">Durasi</th>
+                        <th style="text-align: center;" class="d-none d-md-table-cell">Diskon</th>
+                        <th style="text-align: center;" scope="col">Harga</th>
+                        <th style="text-align: center;" class="d-none d-md-table-cell">Admin</th>
+                    </tr>
+                </thead>
+                <tbody class="tabel_search">
+                    <?php $total = 0; ?>
+                    <?php foreach ($data as $k => $i) : ?>
+                        <?php $total += $i['biaya']; ?>
+                        <tr>
+                            <td style="text-align: center;"><?= ($k + 1); ?></td>
+                            <td style="text-align: center;"><?= date('d/m/y', $i['tgl']); ?></td>
+                            <td class="detail" style="cursor: pointer;" data-id="<?= $i['id']; ?>"><?= $i['meja']; ?></td>
+                            <td style="text-align: right;" class="d-none d-md-table-cell"><?= $i['harga']; ?></td>
+                            <td style="text-align: right;"><?= angka($i['durasi']); ?> Mnt</td>
+                            <td style="text-align: right;" class="d-none d-md-table-cell"><?= $i['diskon']; ?></td>
+                            <td style="text-align: right;"><?= rupiah($i['biaya']); ?></td>
+                            <td class="d-none d-md-table-cell"><?= $i['petugas']; ?></td>
+                        </tr>
+
+                    <?php endforeach; ?>
+                    <tr>
+                        <td colspan="4" style="text-align: right;font-weight:bold">TOTAL</td>
+                        <td style="font-weight: bold;text-align: right;"><?= rupiah($total); ?></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    <?php endif; ?>
 </div>
 
 

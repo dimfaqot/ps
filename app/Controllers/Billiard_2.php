@@ -15,7 +15,16 @@ class Billiard_2 extends BaseController
         $db = db('jadwal_2');
         $meja = $db->orderBy('meja', 'ASC')->get()->getResultArray();
 
-        return view('billiard_2', ['judul' => menu()['menu'] . ' - PLAYGROUND', 'meja' => $meja]);
+        $db_b = db('billiard_2');
+        $q = $db_b->orderBy('tgl', 'DESC')->get()->getResultArray();
+        $data = [];
+        foreach ($q as $i) {
+            if (date('n', $i['tgl']) == date('n') || date('n', $i['tgl']) == (date('n') - 1)) {
+                $data[] = $i;
+            }
+        }
+
+        return view('billiard_2', ['judul' => menu()['menu'] . ' - PLAYGROUND', 'meja' => $meja, 'data' => $data]);
     }
 
     public function start_stop()

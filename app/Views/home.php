@@ -346,9 +346,13 @@
 
                 valueX = [];
 
-                res.data.forEach(e => {
-                    valueX.push(e.total);
-                })
+                // res.data.forEach(e => {
+                //     valueX.push(e.total);
+                // })
+
+                for (let i = 0; i < res.data.length; i++) {
+                    valueX.push(res.data[i].total - res.data2[i].total);
+                }
 
                 // const xPs = [100000, 6500000, 130000, 4590200, 452682, 987698, 4263528, 9876262, 665656, 879766, 879999, 0];
                 // const yPs = bulan;

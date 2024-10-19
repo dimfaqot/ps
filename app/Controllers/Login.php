@@ -32,11 +32,11 @@ class Login extends BaseController
                 $dbb = db('billiard_2');
                 $q = $dbb->where('meja_id', $i['id'])->where('is_active', 1)->get()->getRowArray();
                 if ($q['durasi'] == 0) {
-                    $i['paket'] = "Reguler";
-                    $i['durasi'] = date('H:i', $i['end']);
-                } else {
                     $i['paket'] = "Open";
                     $i['durasi'] = durasi($q['start'], $q['end']);
+                } else {
+                    $i['paket'] = "Reguler";
+                    $i['durasi'] = date('H:i', $q['end']);
                 }
             }
             $billiard[] = $i;

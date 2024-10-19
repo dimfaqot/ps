@@ -90,6 +90,7 @@ class Home extends BaseController
                 }
             }
             $res_p[] = ['bulan' => $b['satuan'], 'bln' => $b['bulan'], 'data' => $temp, 'total' => $total];
+            // $res_p[] = ['bulan' => $b['satuan'], 'bln' => $b['bulan'], 'data' => $temp, 'total' => $total];
         }
 
         sukses_js('Connection success.', $res, $res_p);
