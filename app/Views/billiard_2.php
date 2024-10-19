@@ -3,8 +3,8 @@
 <?= $this->section('content') ?>
 
 
-<div style="margin-top: 235px;"></div>
-<div class="mobile">
+<div style="margin-top: 280px;"></div>
+<div class="mobile" style="border-radius: 4px;">
 
 
     <div class="mb-3 fixed-top bg-light container p-2 border" style="top:47px;max-width: 400px;">
@@ -30,15 +30,15 @@
                 </div>
             </div>
         <?php endforeach; ?>
-
+        <div class="input-group input-group-sm mt-3">
+            <span class="input-group-text">Search</span>
+            <input type="text" class="form-control cari" placeholder="Ketik sesuatu...">
+        </div>
     </div>
     <?php if (count($data) == 0) : ?>
         <div class="div_list text_warning"><i class="fa-solid fa-ban"></i> Data not found!.</div>
     <?php else : ?>
-        <div class="input-group input-group-sm mb-2">
-            <span class="input-group-text">Search</span>
-            <input type="text" class="form-control cari" placeholder="Ketik sesuatu...">
-        </div>
+
         <div>
             <table class="table table-sm table-bordered table-striped">
                 <thead>

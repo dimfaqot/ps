@@ -1,23 +1,25 @@
 <?= $this->extend('logged') ?>
 
 <?= $this->section('content') ?>
-<div class="container">
-    <button type="button" class="btn_success mb-3 cari_barang">
-        <i class="fa-solid fa-magnifying-glass"></i> Cari Barang
-    </button>
-    <button type="button" class="btn_purple mb-3 pembayaran">
-        <i class="fa-solid fa-cash-register"></i> Pembayaran
-    </button>
+<div style="margin-top: 160px;"></div>
+<div class="mobile" style="border-radius: 4px;">
+    <div class="mb-3 fixed-top bg-light container p-2 border" style="top:47px;max-width: 400px;">
+        <button type="button" class="btn_success mb-3 cari_barang">
+            <i class="fa-solid fa-magnifying-glass"></i> Cari Barang
+        </button>
+        <button type="button" class="btn_purple mb-3 pembayaran">
+            <i class="fa-solid fa-cash-register"></i> Pembayaran
+        </button>
 
-
-
-    <?php if (count($data) == 0) : ?>
-        <div class="div_list text_warning"><i class="fa-solid fa-ban"></i> Data not found!.</div>
-    <?php else : ?>
         <div class="input-group input-group-sm mb-2">
             <span class="input-group-text">Search</span>
             <input type="text" class="form-control cari" placeholder="Ketik sesuatu...">
         </div>
+
+    </div>
+    <?php if (count($data) == 0) : ?>
+        <div class="div_list text_warning"><i class="fa-solid fa-ban"></i> Data not found!.</div>
+    <?php else : ?>
         <div>
             <table class="table table-sm table-bordered table-striped">
                 <thead>
@@ -57,6 +59,7 @@
 
         </div>
     <?php endif; ?>
+
 </div>
 
 
