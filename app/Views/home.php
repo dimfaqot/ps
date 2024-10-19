@@ -75,10 +75,10 @@
 
         </div>
         <div class="col-md-6">
-            <div class="div_card bg_purple border border-success text-white" style="border-radius:5px;">
+            <div class="div_card bg_main border border-success text-white" style="border-radius:5px;">
                 <div class="d-flex justify-content-between">
                     <h6>
-                        <i class="fa-solid fa-shop mb-1"></i> PENDAPATAN BARBER
+                        <i class="fa-solid fa-scissors"></i> PENDAPATAN BARBER
                         <div style="font-weight: normal;font-size:x-small" class="total_barber"></div>
                     </h6>
                     <h6 class="d-flex gap-1">
