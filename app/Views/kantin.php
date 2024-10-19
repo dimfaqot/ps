@@ -18,7 +18,7 @@
             <span class="input-group-text">Search</span>
             <input type="text" class="form-control cari" placeholder="Ketik sesuatu...">
         </div>
-        <div style="max-height: 400px;overflow-y:auto">
+        <div>
             <table class="table table-sm table-bordered table-striped">
                 <thead>
                     <tr>
