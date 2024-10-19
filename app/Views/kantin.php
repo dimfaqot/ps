@@ -46,12 +46,12 @@
                             <td style="text-align: right;"><?= rupiah($i['total_harga']); ?></td>
                             <td class="d-none d-md-table-cell"><?= $i['petugas']; ?></td>
                         </tr>
-                        <tr>
-                            <td colspan="4" style="text-align: right;font-weight:bold">TOTAL</td>
-                            <td style="font-weight: bold;text-align: right;"><?= rupiah($total); ?></td>
-                        </tr>
 
                     <?php endforeach; ?>
+                    <tr>
+                        <td colspan="4" style="text-align: right;font-weight:bold">TOTAL</td>
+                        <td style="font-weight: bold;text-align: right;"><?= rupiah($total); ?></td>
+                    </tr>
                 </tbody>
             </table>
 
