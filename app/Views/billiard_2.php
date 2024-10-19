@@ -3,10 +3,11 @@
 <?= $this->section('content') ?>
 
 
-<div style="margin-top: 250px;"></div>
+<div style="margin-top: 235px;"></div>
 <div class="mobile">
 
-    <div class="mb-3 fixed-top bg-light container p-2 border" style="top:60px;max-width: 400px;">
+
+    <div class="mb-3 fixed-top bg-light container p-2 border" style="top:47px;max-width: 400px;">
         <?php foreach ($meja as $i): ?>
             <div class="div_list">
                 <div class="d-flex justify-content-between">
