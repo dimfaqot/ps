@@ -339,7 +339,10 @@
                 $('.value_list_select').html('');
                 return false;
             }
-            let con = "<?= menu()['controller']; ?>";
+            let con = '';
+            <?php if (url() == 'unit'): ?>
+                con = "<?= menu()['controller']; ?>";
+            <?php endif; ?>
             post('js/select', {
                 where,
                 con,
