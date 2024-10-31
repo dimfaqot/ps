@@ -12,14 +12,6 @@ class Inventaris extends BaseController
 
     public function index($role = null): string
     {
-        $d = db('inventaris');
-        $qq = $d->get()->getResultArray();
-
-        foreach ($qq as $i) {
-            $i['jenis'] = 'Inv';
-            $d->where('id', $i['id']);
-            $d->update($i);
-        }
 
         $db = db(menu()['tabel']);
 
