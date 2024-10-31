@@ -17,6 +17,7 @@ class Js extends BaseController
         $value = clear($this->request->getVar('value'));
         $tabel = clear($this->request->getVar('tabel'));
         $orderby = clear($this->request->getVar('orderby'));
+        $con = clear($this->request->getVar('con'));
 
         $db = db($tabel);
         $db;
@@ -26,6 +27,9 @@ class Js extends BaseController
             $db->whereIn($exp_where[0], [$exp_where[1]]);
         }
         $exp = explode("=", $orderby);
+        if ($con == 'unit') {
+            $db->where('jenis', 'Inv');
+        }
         $q = $db->like($col, $value, 'both')->orderBy($exp[0], $exp[1])->get()->getResultArray();
 
         sukses_js('Query sukses', $q);

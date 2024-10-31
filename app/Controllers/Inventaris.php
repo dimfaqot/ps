@@ -12,6 +12,15 @@ class Inventaris extends BaseController
 
     public function index($role = null): string
     {
+        $d = db('inventaris');
+        $qq = $d->get()->getResultArray();
+
+        foreach ($qq as $i) {
+            $i['jenis'] = 'Inv';
+            $d->where('id', $i['id']);
+            $d->update($i);
+        }
+
         $db = db(menu()['tabel']);
 
         $db;
@@ -39,16 +48,50 @@ class Inventaris extends BaseController
         $kondisi = upper_first(clear($this->request->getVar('kondisi')));
         $lokasi = upper_first(clear($this->request->getVar('lokasi')));
         $pembeli = upper_first(clear($this->request->getVar('pembeli')));
+        $qty = clear($this->request->getVar('qty'));
         $ket = upper_first(clear($this->request->getVar('ket')));
         $tgl = strtotime(clear($this->request->getVar('tgl')));
 
         $data = [
             'id' => get_last_no_inv(),
             'barang' => $barang,
+            'jenis' => 'Inv',
             'harga' => $harga,
             'kondisi' => $kondisi,
             'lokasi' => $lokasi,
             'pembeli' => $pembeli,
+            'qty' => $qty,
+            'ket' => $ket,
+            'tgl' => $tgl
+        ];
+
+        $db = db(menu()['tabel']);
+        if ($db->insert($data)) {
+            sukses(base_url(menu()['controller']), 'Save data success.');
+        } else {
+            gagal(base_url(menu()['controller']), 'Save data failed!.');
+        }
+    }
+    public function add_pengeluaran_ps()
+    {
+        $barang = upper_first(clear($this->request->getVar('barang')));
+        $harga = rp_to_int(clear($this->request->getVar('harga')));
+        $kondisi = '';
+        $lokasi = '';
+        $pembeli = upper_first(clear($this->request->getVar('pembeli')));
+        $qty = clear($this->request->getVar('qty'));
+        $ket = upper_first(clear($this->request->getVar('ket')));
+        $tgl = strtotime(clear($this->request->getVar('tgl')));
+
+        $data = [
+            'id' => get_last_no_inv(),
+            'barang' => $barang,
+            'jenis' => 'Pengeluaran',
+            'harga' => $harga,
+            'kondisi' => $kondisi,
+            'lokasi' => $lokasi,
+            'pembeli' => $pembeli,
+            'qty' => $qty,
             'ket' => $ket,
             'tgl' => $tgl
         ];
@@ -68,6 +111,7 @@ class Inventaris extends BaseController
         $kondisi = upper_first(clear($this->request->getVar('kondisi')));
         $lokasi = upper_first(clear($this->request->getVar('lokasi')));
         $pembeli = upper_first(clear($this->request->getVar('pembeli')));
+        $qty = clear($this->request->getVar('qty'));
         $ket = upper_first(clear($this->request->getVar('ket')));
         $tgl = strtotime(clear($this->request->getVar('tgl')));
 
@@ -83,6 +127,7 @@ class Inventaris extends BaseController
         $q['kondisi'] = $kondisi;
         $q['lokasi'] = $lokasi;
         $q['pembeli'] = $pembeli;
+        $q['qty'] = $qty;
         $q['ket'] = $ket;
         $q['tgl'] = $tgl;
 

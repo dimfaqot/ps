@@ -339,8 +339,10 @@
                 $('.value_list_select').html('');
                 return false;
             }
+            let con = "<?= menu()['controller']; ?>";
             post('js/select', {
                 where,
+                con,
                 tabel,
                 orderby,
                 col,

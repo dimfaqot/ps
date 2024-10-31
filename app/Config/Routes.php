@@ -41,6 +41,7 @@ $routes->post('/menu/copy_menu', 'Menu::copy_menu');
 $routes->get('/inv', 'Inventaris::index');
 $routes->get('/inv/(:any)', 'Inventaris::index/$1');
 $routes->post('/inv/add', 'Inventaris::add');
+$routes->post('/inv/add_pengeluaran_ps', 'Inventaris::add_pengeluaran_ps');
 $routes->post('/inv/update', 'Inventaris::update');
 
 // inv __________________________________
