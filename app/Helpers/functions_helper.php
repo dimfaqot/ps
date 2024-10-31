@@ -209,7 +209,7 @@ function user()
             $q['id'] = 0;
             $q['img'] = 'file_not_found.jpg';
         } else {
-            gagal(base_url('landing/login'), 'Session expired!.');
+            gagal(base_url('login'), 'Session expired!.');
         }
     }
     return $q;
