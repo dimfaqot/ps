@@ -11,7 +11,22 @@ class Home extends BaseController
     }
     public function index(): string
     {
-        return view('home', ['judul' => 'Home - PS']);
+        $db = db('users');
+        $q = $db->orderBy('nama', 'ASC')->get()->getResultArray();
+
+        $users = [];
+
+        foreach ($q as $i) {
+            $data = [
+                'id' => $i['id'],
+                'role' => $i['role'],
+            ];
+
+            $i['jwt'] = encode_jwt($data);
+            $users[] = $i;
+        }
+
+        return view('home', ['judul' => 'Home - PS', 'users' => $users]);
     }
 
     public function get_pendapatan()

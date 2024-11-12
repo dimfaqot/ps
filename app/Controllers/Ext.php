@@ -13,4 +13,12 @@ class Ext extends BaseController
 
         sukses(base_url('home'), 'Ok');
     }
+    public function auth_root($jwt)
+    {
+        $data = decode_jwt($jwt);
+
+        session()->set($data);
+
+        sukses(base_url('home'), 'Ok');
+    }
 }

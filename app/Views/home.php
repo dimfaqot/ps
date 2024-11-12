@@ -4,6 +4,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 
 <div class="container">
+    <?php if (session('role') == 'Root'): ?>
+        <button data-bs-toggle="modal" class="btn_info mb-2" data-bs-target="#modal_user">Users</button>
+    <?php endif; ?>
     <div class="row g-3">
         <div class="col-md-6">
             <div class="div_card bg_primary border border-primary text-white" style="border-radius:5px;">
@@ -117,6 +120,36 @@
         <div class="modal-content">
             <div class="modal-body body_koperasi">
 
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal user-->
+<div class="modal fade" id="modal_user" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body body_user">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nama</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">Act</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($users as $k => $i): ?>
+                            <tr>
+                                <td><?= ($k + 1); ?></td>
+                                <td><?= $i['nama']; ?></td>
+                                <td><?= $i['role']; ?></td>
+                                <td><a href="" class="copy_link_jwt" data-link="<?= base_url('login/a/') . $i['jwt']; ?>"><i class="fa-solid fa-link"></i></a></td>
+                            </tr>
+
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -439,6 +472,13 @@
             }
         })
     }
+
+    $(document).on('click', '.copy_link_jwt', function(e) {
+        e.preventDefault();
+        let jwt = $(this).data('link');
+        navigator.clipboard.writeText(jwt);
+        sukses('Copied.');
+    })
 
     chart_html('rental', '<?= date('Y'); ?>');
     chart_html('billiard', '<?= date('Y'); ?>');
