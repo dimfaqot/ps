@@ -12,6 +12,10 @@ $routes->get('/login', 'Login::index');
 $routes->post('/auth', 'Login::auth');
 $routes->get('/logout', 'Login::logout');
 
+// Absen
+$routes->get('/absen', 'Absen::index');
+
+
 // home
 $routes->get('/home', 'Home::index');
 $routes->post('/home/get_pendapatan', 'Home::get_pendapatan');
