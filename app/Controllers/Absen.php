@@ -23,7 +23,11 @@ class Absen extends BaseController
             gagal(base_url('home'), 'Lokasi terlalu jauh atau wifi belum digunakan!.');
         }
 
-        sukses(base_url('home'), 'Absen Sukses.');
+        if (get_absen() == 'Kamu tepat waktu.!') {
+            sukses(base_url('home'), 'Absen Sukses.');
+        } else {
+            gagal(base_url('home'), 'Absen Sukses.');
+        }
     }
     public function qrcode()
     {

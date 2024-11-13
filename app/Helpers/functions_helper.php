@@ -479,3 +479,37 @@ function biaya_per_menit($harga, $start, $end)
 
     return $harga;
 }
+
+function get_absen()
+{
+
+    $dbs = db('shift');
+    $s = $dbs->where('kategori', 'Admin Kantin')->get()->getResultArray();
+
+    $shift_now = [];
+    $time = 1732035600;
+    $res = 'Kamu terlambat lebih dai 1 Jam!.';
+
+    $time_server = date('H', $time);
+    $time_server_now = "00";
+    if ($time_server !== "00") {
+        $time_server_now = (substr($time_server, 0, 1) == 0 ? substr($time_server, 1) : $time_server);
+        $time_server_now = (int)$time_server_now;
+    }
+
+    foreach ($s as $i) {
+        if ($time_server_now == $i['jam']) {
+            $shift_now = $i;
+        }
+    }
+
+    if (count($shift_now) > 0) {
+        if (date('i', $time) == '00') {
+            $res = 'Kamu tepat waktu.!';
+        } else {
+            $res = 'Kamu terlambat ' . date('i', $time) . ' menit.!';
+        }
+    }
+
+    return $res;
+}
