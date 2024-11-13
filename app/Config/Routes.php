@@ -14,6 +14,9 @@ $routes->get('/logout', 'Login::logout');
 
 // Absen
 $routes->get('/absen', 'Absen::index');
+$routes->get('/qrcode', 'Absen::qrcode');
+$routes->get('/cetak_absen_qrcode', 'Absen::cetak_absen_qrcode');
+$routes->get('/presentation/(:any)', 'Absen::presentation/$1');
 
 
 // home
