@@ -11,8 +11,6 @@ class Absen extends BaseController
     }
     public function index(): string
     {
-        $temp = ['ip' => getenv('IP')];
-        dd(encode_jwt($temp));
         return view('absen', ['judul' => 'Home - ABSEN']);
     }
     public function presentation($jwt)
