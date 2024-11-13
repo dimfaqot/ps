@@ -24,9 +24,9 @@ class Absen extends BaseController
         }
 
         if (get_absen() == 'Kamu tepat waktu.!') {
-            sukses(base_url('home'), 'Absen Sukses.');
+            sukses(base_url('home'), get_absen());
         } else {
-            gagal(base_url('home'), 'Absen Sukses.');
+            gagal(base_url('home'), get_absen());
         }
     }
     public function qrcode()
