@@ -487,7 +487,7 @@ function get_absen()
     $s = $dbs->where('kategori', 'Admin Kantin')->get()->getResultArray();
 
     $shift_now = [];
-    $time = 1732035600;
+    $time = time();
     $res = 'Kamu terlambat lebih dai 1 Jam!.';
 
     $time_server = date('H', $time);
