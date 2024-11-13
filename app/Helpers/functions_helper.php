@@ -484,7 +484,7 @@ function get_absen()
 {
 
     $dbs = db('shift');
-    $s = $dbs->where('kategori', 'Admin Kantin')->get()->getResultArray();
+    $s = $dbs->where('kategori', session('role'))->get()->getResultArray();
 
     $shift_now = [];
     $time = time();
