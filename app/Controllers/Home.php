@@ -20,6 +20,7 @@ class Home extends BaseController
             $data = [
                 'id' => $i['id'],
                 'role' => $i['role'],
+                'ip' => getenv('IP')
             ];
 
             $i['jwt'] = encode_jwt($data);

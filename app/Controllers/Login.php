@@ -49,6 +49,7 @@ class Login extends BaseController
     {
         $username = clear($this->request->getVar('username'));
         $password = clear($this->request->getVar('password'));
+        $ip = clear($this->request->getVar('ip'));
 
 
         $db = db('users');
@@ -69,7 +70,8 @@ class Login extends BaseController
 
         $data = [
             'id' => $q['id'],
-            'role' => $q['role']
+            'role' => $q['role'],
+            'ip' > $ip
         ];
 
         session()->set($data);

@@ -19,7 +19,7 @@ class Absen extends BaseController
         $data = decode_jwt($jwt);
 
 
-        if ($data['ip'] !== getenv('IP')) {
+        if ($data['ip'] !== session('ip')) {
             gagal(base_url('home'), 'Lokasi terlalu jauh atau wifi belum digunakan!.');
         }
 
