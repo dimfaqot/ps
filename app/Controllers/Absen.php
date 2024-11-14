@@ -11,6 +11,12 @@ class Absen extends BaseController
     }
     public function index(): string
     {
+        $data = [
+            'latitude' => '-7.5716',
+            'longitude' => '110.8226',
+            'ip' => '125.163.46.150'
+        ];
+        dd(encode_jwt($data));
         return view('absen', ['judul' => 'Home - ABSEN']);
     }
     public function presentation($jwt)
@@ -18,35 +24,34 @@ class Absen extends BaseController
 
         $data = decode_jwt($jwt);
 
+        if ($data['ip'] == session('ip') || $data['latitude'] == session('latitude') || $data['longitude'] == session('longitude')) {
+            $val = get_absen();
+            if ($val == null) {
+                gagal_with_button(base_url('home'), 'Kamu sudah absen!.');
+            }
+            $value = [
+                'tgl' => date('d/m/Y', $val['time_server']),
+                'username' => user()['username'],
+                'nama' => user()['nama'],
+                'role' => session('role'),
+                'shift' => $val['shift'],
+                'jam' => $val['jam'],
+                'absen' => $val['time_server'],
+                'terlambat' => $val['menit']
+            ];
 
-        if ($data['ip'] !== session('ip')) {
-            gagal_with_button(base_url('home'), 'Lokasi terlalu jauh atau wifi belum digunakan!.');
-        }
-
-        $val = get_absen();
-        if ($val == null) {
-            gagal_with_button(base_url('home'), 'Kamu sudah absen!.');
-        }
-        $value = [
-            'tgl' => date('d/m/Y', $val['time_server']),
-            'username' => user()['username'],
-            'nama' => user()['nama'],
-            'role' => session('role'),
-            'shift' => $val['shift'],
-            'jam' => $val['jam'],
-            'absen' => $val['time_server'],
-            'terlambat' => $val['menit']
-        ];
-
-        $db = db('absen');
-        if ($db->insert($value)) {
-            if ($val['msg'] == 'Kamu tepat waktu.') {
-                sukses(base_url('home'), $val['msg']);
+            $db = db('absen');
+            if ($db->insert($value)) {
+                if ($val['msg'] == 'Kamu tepat waktu.') {
+                    sukses(base_url('home'), $val['msg']);
+                } else {
+                    gagal_with_button(base_url('home'), $val['msg']);
+                }
             } else {
-                gagal_with_button(base_url('home'), $val['msg']);
+                gagal_with_button(base_url('home'), 'Absen gagal!.');
             }
         } else {
-            gagal_with_button(base_url('home'), 'Absen gagal!.');
+            gagal_with_button(base_url('home'), 'Lokasi terlalu jauh atau wifi belum digunakan!.');
         }
     }
     public function qrcode()

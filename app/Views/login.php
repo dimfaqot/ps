@@ -9,6 +9,8 @@
             <div style="padding:40px;" class="flex-fill">
                 <form action="<?= base_url('auth'); ?>" method="post">
                     <input type="hidden" class="ip" name="ip">
+                    <input type="hidden" class="latitude" name="latitude">
+                    <input type="hidden" class="longitude" name="longitude">
                     <div class="input-group input-group-sm mb-2">
                         <span class="input-group-text"><i style="color:#0e8aed;" class="fa-solid fa-user-large"></i></span>
                         <input type="text" class="form-control" name="username" placeholder="Username">
@@ -50,11 +52,57 @@ background: linear-gradient(90deg, rgba(124,197,255,1) 31%, rgba(220,239,255,1) 
                 $('#country').html(location.country_name);
                 $('#state').html(location.state);
                 $('#city').html(location.city);
-                $('#latitude').html(location.latitude);
-                $('#longitude').html(location.longitude);
                 $('#ip').html(ip);
                 $('.ip').val(ip);
             });
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+            document.getElementById("location").innerHTML = "Geolocation is not supported by this browser.";
+        }
+
+
+        function showPosition(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            // document.getElementById("location").innerHTML = `Latitude: ${latitude} <br>Longitude: ${longitude}`;
+            // console.log(position);
+            $('#latitude').html(latitude);
+            $('#longitude').html(longitude);
+            $('.latitude').val(latitude);
+            $('.longitude').val(longitude);
+            // Send data to PHP server
+            // fetch('save_location.php', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify({
+            //         latitude: latitude,
+            //         longitude: longitude
+            //     })
+            // });
+        }
+
+
+
+        function showError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    document.getElementById("location").innerHTML = "User denied the request for Geolocation.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    document.getElementById("location").innerHTML = "Location information is unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    document.getElementById("location").innerHTML = "The request to get user location timed out.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    document.getElementById("location").innerHTML = "An unknown error occurred.";
+                    break;
+            }
+        }
     </script>
 </div>
 

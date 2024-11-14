@@ -2,29 +2,57 @@
 <html>
 
 <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    <title>Geo City Locator</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <title>Get Location</title>
 </head>
 
 <body>
-    <div>Country: <span id="country"></span></div>
-    <div>State: <span id="state"></span></div>
-    <div>City: <span id="city"></span></div>
-    <div>Latitude: <span id="latitude"></span></div>
-    <div>Longitude: <span id="longitude"></span></div>
-    <div>IP: <span id="ip"></span></div>
+    <button onclick="getLocation()">Get Location</button>
+    <p id="location"></p>
+
     <script>
-        $.getJSON('https://geolocation-db.com/json/')
-            .done(function(location) {
-                $('#country').html(location.country_name);
-                $('#state').html(location.state);
-                $('#city').html(location.city);
-                $('#latitude').html(location.latitude);
-                $('#longitude').html(location.longitude);
-                $('#ip').html(location.IPv4);
-            });
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                document.getElementById("location").innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            document.getElementById("location").innerHTML = `Latitude: ${latitude} <br>Longitude: ${longitude}`;
+            console.log(position);
+
+            // Send data to PHP server
+            // fetch('save_location.php', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify({
+            //         latitude: latitude,
+            //         longitude: longitude
+            //     })
+            // });
+        }
+
+        function showError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    document.getElementById("location").innerHTML = "User denied the request for Geolocation.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    document.getElementById("location").innerHTML = "Location information is unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    document.getElementById("location").innerHTML = "The request to get user location timed out.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    document.getElementById("location").innerHTML = "An unknown error occurred.";
+                    break;
+            }
+        }
     </script>
 </body>
 

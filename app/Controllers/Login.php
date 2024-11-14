@@ -50,6 +50,8 @@ class Login extends BaseController
         $username = clear($this->request->getVar('username'));
         $password = clear($this->request->getVar('password'));
         $ip = clear($this->request->getVar('ip'));
+        $latitude = clear($this->request->getVar('latitude'));
+        $longitude = clear($this->request->getVar('longitude'));
 
         $db = db('users');
         $data = [
@@ -70,7 +72,9 @@ class Login extends BaseController
         $data = [
             'id' => $q['id'],
             'role' => $q['role'],
-            'ip' => $ip
+            'ip' => $ip,
+            'latitude' => $latitude,
+            'longitude' => $longitude
         ];
 
         session()->set($data);
@@ -82,6 +86,8 @@ class Login extends BaseController
     {
         session()->remove('id');
         session()->remove('role');
+        session()->remove('latitude');
+        session()->remove('longitude');
 
         sukses(base_url('login'), 'Logout sukses!.');
     }
