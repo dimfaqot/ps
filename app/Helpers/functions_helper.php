@@ -484,32 +484,49 @@ function get_absen()
 {
 
     $dbs = db('shift');
-    $s = $dbs->where('kategori', session('role'))->get()->getResultArray();
+    $s = $dbs->where('kategori', 'Admin Kantin')->get()->getResultArray();
 
-    $shift_now = [];
-    $time = time();
-    $res = 'Kamu terlambat lebih dai 1 Jam!.';
+    $time_server = time();
 
-    $time_server = date('H', $time);
-    $time_server_now = "00";
-    if ($time_server !== "00") {
-        $time_server_now = (substr($time_server, 0, 1) == 0 ? substr($time_server, 1) : $time_server);
-        $time_server_now = (int)$time_server_now;
-    }
+    $datas = [];
 
+    $date_server = date_create(date('Y-m-d H:i:s', $time_server)); //jam server
     foreach ($s as $i) {
-        if ($time_server_now == $i['jam']) {
-            $shift_now = $i;
-        }
+        $time_shift = strtotime(date('Y-m-d') . ' ' . $i['jam'] . ':00');
+        $shift = date('Y-m-d') . ' ' . $i['jam'] . ':00';
+        $date_shift = date_create($shift); // jam shift
+        $diff = date_diff($date_shift, $date_server);
+        $i['diff'] = $diff->h . ' jam ' . $diff->i . ' menit';
+        $i['time_shift'] = $time_shift;
+        $i['time_server'] = $time_server;
+        $i['diff_time'] = $time_server - $time_shift;
+        $i['menit'] = round($i['diff_time'] / 60);
+
+        $datas[] = $i;
     }
 
-    if (count($shift_now) > 0) {
-        if (date('i', $time) == '00') {
-            $res = 'Kamu tepat waktu.!';
-        } else {
-            $res = 'Kamu terlambat ' . date('i', $time) . ' menit.!';
-        }
+    $short_by = SORT_DESC;
+
+    $keys = array_column($datas, 'diff_time');
+    array_multisort($keys, $short_by, $datas);
+
+    $data = $datas[0];
+
+    $db = db('absen');
+    $q = $db->where('role', 'Admin Kantin')->where('tgl', date('d/m/Y'))->where('shift', $data['shift'])->get()->getRowArray();
+
+    if ($q) {
+        return null;
     }
 
-    return $res;
+    $msg = "Kamu tepat waktu.";
+
+    if ($data['diff_time'] < 0) {
+        $msg = 'Belum waktunya absen!.';
+    } else {
+        $msg = 'Kamu terlambat ' . $data['diff'] . '.!';
+    }
+
+    $data['msg'] = $msg;
+    return $data;
 }

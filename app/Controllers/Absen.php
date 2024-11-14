@@ -23,10 +23,30 @@ class Absen extends BaseController
             gagal(base_url('home'), 'Lokasi terlalu jauh atau wifi belum digunakan!.');
         }
 
-        if (get_absen() == 'Kamu tepat waktu.!') {
-            sukses(base_url('home'), get_absen());
+        $val = get_absen();
+        if ($val == null) {
+            gagal(base_url('home'), 'Kamu sudah absen!.');
+        }
+        $value = [
+            'tgl' => date('d/m/Y', $val['time_server']),
+            'username' => user()['username'],
+            'nama' => user()['nama'],
+            'role' => session('role'),
+            'shift' => $val['shift'],
+            'jam' => $val['jam'],
+            'absen' => $val['time_server'],
+            'terlambat' => $val['menit']
+        ];
+
+        $db = db('absen');
+        if ($db->insert($value)) {
+            if ($val['msg'] == 'Kamu tepat waktu.') {
+                sukses(base_url('home'), $val['msg']);
+            } else {
+                gagal(base_url('home'), $val['msg']);
+            }
         } else {
-            gagal(base_url('home'), get_absen());
+            gagal(base_url('home'), 'Absen gagal!.');
         }
     }
     public function qrcode()
