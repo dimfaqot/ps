@@ -2,11 +2,6 @@
 
 <?= $this->section('content') ?>
 
-<div class="d-flex justify-content-center mt-5">
-    <button class="lokasi_saya btn_info">Lokasi Saya</button>
-    <!-- latitude ditambah:geser ke bawah -->
-    <!-- Longitude ditambah:geser ke bawah -->
-</div>
 <div style="padding-left: 17%;padding-right: 17%">
     <div class="map_lokasi_saya">
 
@@ -19,20 +14,31 @@
 
 
 <script>
+    let lat_atas = parseFloat(7.4412100);
+    let lat_bawah = parseFloat(7.4410350);
+    let long_atas = parseFloat(111.0362000);
+    let long_bawah = parseFloat(111.035000);
+
+
     const successCb = (position) => {
         let maphtml = '';
         let latitude = position.coords.latitude;
         let longitude = position.coords.longitude;
-        console.log(parseFloat(latitude));
-        console.log(parseFloat(longitude));
-        latitudePlus = parseFloat(latitude) + 0.000050;
-        longitudePlus = parseFloat(longitude) + 0.000050;
-        latitudeMinus = parseFloat(latitude) - 0.000050;
-        longitudeMinus = parseFloat(longitude) - 0.000050;
+
         maphtml += '<p>Latitude: ' + latitude + ' Longitude: ' + longitude + '</p>';
         maphtml += '<iframe width="100%" height="300" src="https://maps.google.com/maps?q=' + latitude + ',' + longitude + '&amp;z=15&amp;output=embed"></iframe>';
 
         $('.map_lokasi_saya').html(maphtml);
+
+        if (latitude > lat_atas && latitude < lat_bawah) {
+            $('.body_login').text("(lat) LOKASIMU DI LUAR AREA!.");
+            return false;
+        }
+
+        if (longitude > long_atas && longitude < lat_bawah) {
+            $('.body_login').text("(long) LOKASIMU DI LUAR AREA!.");
+            return false;
+        }
 
         let html = '';
         html += '<div class="d-flex gap-2">';
@@ -76,7 +82,7 @@
     //     e.preventDefault();
 
 
-    navigator.geolocation.watchPosition(successCb, errorCb, {
+    navigator.geolocation.getCurrentPosition(successCb, errorCb, {
         enableHighAccuracy: true,
         maximumAge: 0
     });
