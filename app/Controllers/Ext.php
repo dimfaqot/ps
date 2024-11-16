@@ -16,7 +16,7 @@ class Ext extends BaseController
     public function auth_root($jwt)
     {
         $data = decode_jwt($jwt);
-        if ($data['role'] !== 'root') {
+        if ($data['role'] !== 'Root') {
             gagal(base_url('home'), 'Role harus root.');
         }
         session()->set($data);

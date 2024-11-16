@@ -56,53 +56,23 @@ background: linear-gradient(90deg, rgba(124,197,255,1) 31%, rgba(220,239,255,1) 
                 $('.ip').val(ip);
             });
 
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition, showError);
-        } else {
-            document.getElementById("location").innerHTML = "Geolocation is not supported by this browser.";
+
+        const successCb = (position) => {
+            console.log(position);
+            $('.latitude').val(position.coords.latitude);
+            $('.longitude').val(position.coords.longitude);
+            $('#latitude').html(position.coords.latitude);
+            $('#longitude').html(position.coords.longitude);
         }
 
-
-        function showPosition(position) {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            // document.getElementById("location").innerHTML = `Latitude: ${latitude} <br>Longitude: ${longitude}`;
-            // console.log(position);
-            $('#latitude').html(latitude);
-            $('#longitude').html(longitude);
-            $('.latitude').val(latitude);
-            $('.longitude').val(longitude);
-            // Send data to PHP server
-            // fetch('save_location.php', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            //     body: JSON.stringify({
-            //         latitude: latitude,
-            //         longitude: longitude
-            //     })
-            // });
+        const errorCb = (error) => {
+            console.error(error);
         }
 
-
-
-        function showError(error) {
-            switch (error.code) {
-                case error.PERMISSION_DENIED:
-                    document.getElementById("location").innerHTML = "User denied the request for Geolocation.";
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    document.getElementById("location").innerHTML = "Location information is unavailable.";
-                    break;
-                case error.TIMEOUT:
-                    document.getElementById("location").innerHTML = "The request to get user location timed out.";
-                    break;
-                case error.UNKNOWN_ERROR:
-                    document.getElementById("location").innerHTML = "An unknown error occurred.";
-                    break;
-            }
-        }
+        navigator.geolocation.watchPosition(successCb, errorCb, {
+            enableHighAccuracy: true,
+            maximumAge: 0
+        });
     </script>
 </div>
 
