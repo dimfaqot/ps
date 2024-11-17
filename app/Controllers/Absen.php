@@ -109,6 +109,24 @@ class Absen extends BaseController
 
         sukses(base_url('home'), 'Absen reset.');
     }
+    public function hapus_absen()
+    {
+
+        $id = clear($this->request->getVar('id'));
+        $db = db('absen');
+        $q = $db->where('id', $id)->get()->getRowArray();
+
+        if (!$q) {
+            gagal_js('Id not found!.');
+        } else {
+            $db->where('id', $id);
+            if ($db->delete()) {
+                sukses_js('Data deleted.');
+            } else {
+                sukses_js('Deleted data failed!.');
+            }
+        }
+    }
     public function qrcode()
     {
         return view('qrcode_absen', ['judul' => 'Qrcode Absen']);

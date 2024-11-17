@@ -552,7 +552,11 @@
                     html += '<td>' + e.tgl + '</td>';
                     html += '<td>' + e.shift + '</td>';
                     html += '<td>' + e.ket + '</td>';
-                    html += '<td style="text-align:right">' + e.poin + '</td>';
+                    <?php if (session('role') == 'Root'): ?>
+                        html += '<td style="text-align:right"><a href="" class="hapus_absen" data-id="' + e.id + '">' + e.poin + '</a></td>';
+                    <?php else: ?>
+                        html += '<td style="text-align:right">' + e.poin + '</td>';
+                    <?php endif; ?>
                     html += '</tr>';
 
                 })
@@ -596,6 +600,24 @@
             username,
             role,
             nama
+        }).then(res => {
+            if (res.status == "200") {
+                sukses(res.message);
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            } else {
+                gagal(res.message);
+            }
+        })
+
+    })
+    $(document).on('click', '.hapus_absen', function(e) {
+        e.preventDefault();
+        let id = $(this).data('id');
+
+        post('absen/hapus_absen', {
+            id
         }).then(res => {
             if (res.status == "200") {
                 sukses(res.message);
