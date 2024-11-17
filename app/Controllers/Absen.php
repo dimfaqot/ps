@@ -94,6 +94,10 @@ class Absen extends BaseController
     }
     public function reset_absen()
     {
+
+        if ((int)date('d') > 2) {
+            gagal(base_url('home'), 'Tanggal reset berlalu!.');
+        }
         $db = db('absen');
 
         $q = $db->get()->getResultArray();
