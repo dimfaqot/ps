@@ -14,9 +14,9 @@
 
 
 <script>
-    let lat_atas = parseFloat(-7.4412100);
-    let lat_bawah = parseFloat(-7.4410350);
-    let long_atas = parseFloat(111.0362000);
+    let lat_bawah = parseFloat(-7.4412100);
+    let lat_atas = parseFloat(-7.4410950);
+    let long_atas = parseFloat(111.0364900);
     let long_bawah = parseFloat(111.035000);
 
 
@@ -27,14 +27,14 @@
         let latitude = position.coords.latitude;
         let longitude = position.coords.longitude;
 
-        console.log(latitude + ' > ' + lat_bawah + ' = ' + (latitude > lat_bawah));
+        console.log(latitude + ' > ' + lat_atas + ' = ' + (latitude > lat_bawah));
         console.log(latitude + ' < ' + lat_atas + ' = ' + (latitude > lat_atas));
         console.log(longitude + ' > ' + long_atas + ' = ' + (longitude > long_atas));
         console.log(longitude + ' < ' + long_bawah + ' = ' + (longitude > long_bawah));
         maphtml += '<p>Latitude: ' + latitude + ' Longitude: ' + longitude + '</p>';
         maphtml += '<iframe width="100%" height="300" src="https://maps.google.com/maps?q=' + latitude + ',' + longitude + '&amp;z=15&amp;output=embed"></iframe>';
         $('.map_lokasi_saya').html(maphtml);
-        if (latitude > lat_bawah && latitude < lat_atas && longitude > long_atas && longitude < lat_bawah) {
+        if (latitude > lat_atas && latitude < lat_bawah && longitude > long_atas && longitude < lat_bawah) {
 
 
             let html = '';
