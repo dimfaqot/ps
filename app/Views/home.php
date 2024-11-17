@@ -4,9 +4,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 
 <div class="container">
-    <?php if (session('role') == 'Root'): ?>
-        <button data-bs-toggle="modal" class="btn_info mb-2" data-bs-target="#modal_user">Users</button>
-    <?php endif; ?>
+    <div class="d-flex gap-2">
+        <?php if (session('role') == 'Root'): ?>
+            <button data-bs-toggle="modal" class="btn_info mb-2" data-bs-target="#modal_user">Users</button>
+        <?php endif; ?>
+        <button data-id="<?= session('id'); ?>" data-nama="<?= user()['nama']; ?>" class="btn_primary mb-2 fw-bold poin_absen">POIN: <?= poin_absen(session('id'))['poin']; ?></button>
+    </div>
+
     <div class="row g-3">
         <div class="col-md-6">
             <div class="div_card bg_primary border border-primary text-white" style="border-radius:5px;">
@@ -124,6 +128,18 @@
         </div>
     </div>
 </div>
+<!-- Modal detail poin_absen-->
+<div class="modal fade" id="poin_absen" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body body_poin_absen">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Modal user-->
 <div class="modal fade" id="modal_user" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -135,6 +151,8 @@
                             <th scope="col">#</th>
                             <th scope="col">Nama</th>
                             <th scope="col">Role</th>
+                            <th scope="col">Poin</th>
+                            <th scope="col">Error</th>
                             <th scope="col">Act</th>
                         </tr>
                     </thead>
@@ -144,9 +162,31 @@
                                 <td><?= ($k + 1); ?></td>
                                 <td><?= $i['nama']; ?></td>
                                 <td><?= $i['role']; ?></td>
+                                <td><a data-bs-toggle="offcanvas" data-bs-target="#add_error_<?= $i['id']; ?>" aria-controls="offcanvasBottom" href="">Error</a></td>
+                                <td><a data-nama="<?= $i['nama']; ?>" class="poin_absen" data-id="<?= $i['id']; ?>" href="">Poin</a></td>
                                 <td><a href="" class="copy_link_jwt" data-link="<?= base_url('login/a/') . $i['jwt']; ?>"><i class="fa-solid fa-link"></i></a></td>
                             </tr>
 
+
+                            <!-- canvas add_error -->
+                            <div class="offcanvas offcanvas-bottom" style="z-index:9999" tabindex="-1" id="add_error_<?= $i['id']; ?>" aria-labelledby="offcanvasBottomLabel">
+                                <div class="offcanvas-header">
+                                    <h5 class="offcanvas-title" id="offcanvasBottomLabel"><?= $i['nama']; ?></h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                </div>
+                                <div class="offcanvas-body small">
+                                    <?php
+                                    $db = db('aturan');
+                                    $q = $db->orderBy('poin', 'ASC')->get()->getResultArray();
+                                    ?>
+
+                                    <div class="list-group">
+                                        <?php foreach ($q as $a): ?>
+                                            <a href="#" data-role="<?= $i['role']; ?>" data-id="<?= $i['id']; ?>" data-username="<?= $i['username']; ?>" data-nama="<?= $i['nama']; ?>" data-poin="<?= $a['poin']; ?>" data-ket="<?= $a['aturan']; ?>" class="add_aturan list-group-item list-group-item-action"><?= $a['aturan']; ?>/<?= $a['poin']; ?></a>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            </div>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
@@ -478,6 +518,94 @@
         let jwt = $(this).data('link');
         navigator.clipboard.writeText(jwt);
         sukses('Copied.');
+    })
+
+    $(document).on('click', '.poin_absen', function(e) {
+        e.preventDefault();
+
+        let id = $(this).data('id');
+        let nama = $(this).data('nama');
+
+        post('absen/poin_absen', {
+            id
+        }).then(res => {
+            if (res.status == '200') {
+                let data = res.data.data;
+                let html = '<h6>' + nama + '</h6>';
+                html += '<table class="table table-sm table-bordered">';
+                html += '<thead>';
+                html += '<tr>';
+                html += '<th scope="col">#</th>';
+                html += '<th scope="col">Tgl</th>';
+                html += '<th scope="col">Shift</th>';
+                html += '<th scope="col">Ket</th>';
+                html += '<th scope="col">Poin</th>';
+                html += '</tr>';
+                html += '</thead>';
+                html += '<tbody>';
+                let total = 0;
+                data.forEach((e, i) => {
+                    total += parseInt(e.poin);
+                    html += '<tr>';
+                    html += '<td scope="row">' + (i + 1) + '</td>';
+                    html += '<td>' + e.tanggal + '</td>';
+                    html += '<td>' + e.shift + '</td>';
+                    html += '<td>' + e.ket + '</td>';
+                    html += '<td style="text-align:right">' + e.poin + '</td>';
+                    html += '</tr>';
+
+                })
+                html += '<tr>';
+                html += '<th colspan="5" style="text-align:right">' + total + '</th>';
+                html += '</tr>';
+                html += '</tbody>';
+                html += '</table>';
+                html += '<div class="d-grid text-center py-1 bg_danger fw-bold text-light">' + (100 + total) + '</div>';
+
+
+                let myModalUser = document.getElementById('modal_user');
+                let modalUser = bootstrap.Modal.getOrCreateInstance(myModalUser)
+                modalUser.hide();
+
+                $('.body_poin_absen').html(html);
+                let myModal = document.getElementById('poin_absen');
+                let modal = bootstrap.Modal.getOrCreateInstance(myModal)
+                modal.show();
+
+            } else {
+                gagal(res.message);
+            }
+        })
+
+    })
+
+    $(document).on('click', '.add_aturan', function(e) {
+        e.preventDefault();
+        let id = $(this).data('id');
+        let ket = $(this).data('ket');
+        let poin = $(this).data('poin');
+        let username = $(this).data('username');
+        let nama = $(this).data('nama');
+        let role = $(this).data('role');
+
+        post('absen/add_aturan', {
+            id,
+            ket,
+            poin,
+            username,
+            role,
+            nama
+        }).then(res => {
+            if (res.status == "200") {
+                sukses(res.message);
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            } else {
+                gagal(res.message);
+            }
+        })
+
     })
 
     chart_html('rental', '<?= date('Y'); ?>');

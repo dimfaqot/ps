@@ -11,47 +11,85 @@ class Absen extends BaseController
     }
     public function index(): string
     {
-        $data = [
-            'latitude' => '-7.5716',
-            'longitude' => '110.8226',
-            'ip' => '125.163.46.150'
-        ];
-        dd(encode_jwt($data));
         return view('absen', ['judul' => 'Home - ABSEN']);
+    }
+    public function encode()
+    {;
+
+        $data = encode_jwt(json_decode(json_encode($this->request->getVar('data')), true));
+        sukses_js('Jwt Sukses.', $data);
     }
     public function presentation($jwt)
     {
 
         $data = decode_jwt($jwt);
 
-        if ($data['ip'] == session('ip') || $data['latitude'] == session('latitude') || $data['longitude'] == session('longitude')) {
-            $val = get_absen();
-            if ($val == null) {
-                gagal_with_button(base_url('home'), 'Kamu sudah absen!.');
-            }
-            $value = [
-                'tgl' => date('d/m/Y', $val['time_server']),
-                'username' => user()['username'],
-                'nama' => user()['nama'],
-                'role' => session('role'),
-                'shift' => $val['shift'],
-                'jam' => $val['jam'],
-                'absen' => $val['time_server'],
-                'terlambat' => $val['menit']
-            ];
+        $val = get_absen();
+        if ($val == null) {
+            gagal_with_button(base_url('home'), 'Kamu sudah absen!.');
+        }
+        $value = [
+            'tgl' => $val['time_server'],
+            'username' => user()['username'],
+            'ket' => $val['ket'],
+            'poin' => $val['poin'],
+            'nama' => user()['nama'],
+            'role' => session('role'),
+            'user_id' => session('id'),
+            'shift' => $val['shift'],
+            'jam' => $val['jam'],
+            'absen' => $val['time_server'],
+            'terlambat' => $val['menit']
+        ];
 
-            $db = db('absen');
-            if ($db->insert($value)) {
-                if ($val['msg'] == 'Kamu tepat waktu.') {
-                    sukses(base_url('home'), $val['msg']);
-                } else {
-                    gagal_with_button(base_url('home'), $val['msg']);
-                }
+        $db = db('absen');
+        if ($db->insert($value)) {
+            if ($val['msg'] == 'Kamu tepat waktu.') {
+                sukses(base_url('home'), $val['msg']);
             } else {
-                gagal_with_button(base_url('home'), 'Absen gagal!.');
+                gagal_with_button(base_url('home'), $val['msg']);
             }
         } else {
-            gagal_with_button(base_url('home'), 'Lokasi terlalu jauh atau wifi belum digunakan!.');
+            gagal_with_button(base_url('home'), 'Absen gagal!.');
+        }
+    }
+
+    public function poin_absen()
+    {
+        $id = clear($this->request->getVar('id'));
+
+        $data = poin_absen($id);
+
+        sukses_js('Sukses', $data);
+    }
+    public function add_aturan()
+    {
+        $id = clear($this->request->getVar('id'));
+        $ket = clear($this->request->getVar('ket'));
+        $poin = clear($this->request->getVar('poin'));
+        $username = clear($this->request->getVar('username'));
+        $nama = clear($this->request->getVar('nama'));
+        $role = clear($this->request->getVar('role'));
+
+        $data = [
+            'ket' => $ket,
+            'tgl' => time(),
+            'username' => $username,
+            'nama' => $nama,
+            'role' => $role,
+            'shift' => 0,
+            'jam' => 0,
+            'absen' => 0,
+            'terlambat' => 0,
+            'poin' => $poin,
+            'user_id' => $id
+        ];
+
+        $db = db('absen');
+        if ($db->insert($data)) {
+            sukses_js('Data berhasil diinput.');
+        } else {
+            gagal_js('Data gagal diinput!.');
         }
     }
     public function qrcode()

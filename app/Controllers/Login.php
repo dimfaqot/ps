@@ -49,9 +49,6 @@ class Login extends BaseController
     {
         $username = clear($this->request->getVar('username'));
         $password = clear($this->request->getVar('password'));
-        $ip = clear($this->request->getVar('ip'));
-        $latitude = clear($this->request->getVar('latitude'));
-        $longitude = clear($this->request->getVar('longitude'));
 
         $db = db('users');
         $data = [
@@ -71,10 +68,7 @@ class Login extends BaseController
 
         $data = [
             'id' => $q['id'],
-            'role' => $q['role'],
-            'ip' => $ip,
-            'latitude' => $latitude,
-            'longitude' => $longitude
+            'role' => $q['role']
         ];
 
         session()->set($data);

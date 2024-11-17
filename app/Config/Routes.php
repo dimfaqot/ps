@@ -17,6 +17,9 @@ $routes->get('/absen', 'Absen::index');
 $routes->get('/qrcode', 'Absen::qrcode');
 $routes->get('/cetak_absen_qrcode', 'Absen::cetak_absen_qrcode');
 $routes->get('/presentation/(:any)', 'Absen::presentation/$1');
+$routes->post('/absen/encode', 'Absen::encode');
+$routes->post('/absen/poin_absen', 'Absen::poin_absen');
+$routes->post('/absen/add_aturan', 'Absen::add_aturan');
 
 
 // home

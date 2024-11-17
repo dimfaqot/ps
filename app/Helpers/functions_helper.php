@@ -484,7 +484,7 @@ function get_absen()
 {
 
     $dbs = db('shift');
-    $s = $dbs->where('kategori', 'Admin Kantin')->get()->getResultArray();
+    $s = $dbs->where('kategori', session('role'))->get()->getResultArray();
 
     $time_server = time();
 
@@ -513,7 +513,7 @@ function get_absen()
     $data = $datas[0];
 
     $db = db('absen');
-    $q = $db->where('role', 'Admin Kantin')->where('tgl', date('d/m/Y'))->where('shift', $data['shift'])->get()->getRowArray();
+    $q = $db->whereIn('ket', ['Terlambat', 'Ontime'])->where('role', session('role'))->where('tgl', date('d/m/Y'))->where('shift', $data['shift'])->get()->getRowArray();
 
     if ($q) {
         return null;
@@ -527,6 +527,39 @@ function get_absen()
         $msg = 'Kamu terlambat ' . $data['diff'] . '.!';
     }
 
+    if ($data['menit'] < 16) {
+        $data['ket'] = 'Ontime';
+        $dbp = db('aturan');
+        $qp = $dbp->where('aturan', $data['ket'])->get()->getRowArray();
+        if ($qp) {
+            $data['poin'] = $qp['poin'];
+        }
+    } else {
+        $data['ket'] = 'Terlambat';
+        $po = round(($data['menit'] - 15) / 10);
+        $data['poin'] = -$po;
+    }
+
     $data['msg'] = $msg;
+    return $data;
+}
+
+function poin_absen($id)
+{
+    $db = db('absen');
+
+    $q = $db->where('user_id', $id)->orderBy('tgl', 'ASC')->get()->getResultArray();
+
+
+    $poin = 100;
+    $val = [];
+    foreach ($q as $i) {
+        $poin = $poin + $i['poin'];
+        $i['tanggal'] = date('d/m/Y', $i['tgl']);
+        $val[] = $i;
+    }
+
+    $data = ['data' => $val, 'poin' => $poin];
+
     return $data;
 }
