@@ -31,11 +31,11 @@
         console.log(latitude + ' < ' + lat_atas + ' = ' + (latitude > lat_atas));
         console.log(longitude + ' > ' + long_atas + ' = ' + (longitude > long_atas));
         console.log(longitude + ' < ' + long_bawah + ' = ' + (longitude > long_bawah));
+        maphtml += '<p>Latitude: ' + latitude + ' Longitude: ' + longitude + '</p>';
+        maphtml += '<iframe width="100%" height="300" src="https://maps.google.com/maps?q=' + latitude + ',' + longitude + '&amp;z=15&amp;output=embed"></iframe>';
+        $('.map_lokasi_saya').html(maphtml);
         if (latitude > lat_bawah && latitude < lat_atas && longitude > long_atas && longitude < lat_bawah) {
 
-            maphtml += '<p>Latitude: ' + latitude + ' Longitude: ' + longitude + '</p>';
-            maphtml += '<iframe width="100%" height="300" src="https://maps.google.com/maps?q=' + latitude + ',' + longitude + '&amp;z=15&amp;output=embed"></iframe>';
-            $('.map_lokasi_saya').html(maphtml);
 
             let html = '';
             html += '<div class="d-flex gap-2">';
