@@ -29,7 +29,7 @@ class Absen extends BaseController
             gagal_with_button(base_url('home'), 'Kamu sudah absen!.');
         }
         $value = [
-            'tgl' => $val['time_server'],
+            'tgl' => date('d/m/Y', $val['time_server']),
             'username' => user()['username'],
             'ket' => $val['ket'],
             'poin' => $val['poin'],
@@ -73,13 +73,13 @@ class Absen extends BaseController
 
         $data = [
             'ket' => $ket,
-            'tgl' => time(),
+            'tgl' => date('d/m/Y'),
             'username' => $username,
             'nama' => $nama,
             'role' => $role,
             'shift' => 0,
             'jam' => 0,
-            'absen' => 0,
+            'absen' => time(),
             'terlambat' => 0,
             'poin' => $poin,
             'user_id' => $id
@@ -91,6 +91,19 @@ class Absen extends BaseController
         } else {
             gagal_js('Data gagal diinput!.');
         }
+    }
+    public function reset_absen()
+    {
+        $db = db('absen');
+
+        $q = $db->get()->getResultArray();
+
+        foreach ($q as $i) {
+            $db->where('id', $i['id']);
+            $db->delete();
+        }
+
+        sukses(base_url('home'), 'Absen reset.');
     }
     public function qrcode()
     {

@@ -7,6 +7,7 @@
     <div class="d-flex gap-2">
         <?php if (session('role') == 'Root'): ?>
             <button data-bs-toggle="modal" class="btn_info mb-2" data-bs-target="#modal_user">Users</button>
+            <a href="<?= base_url('absen/reset_absen'); ?>" class="btn_danger mb-2">Reset Absen</a>
         <?php endif; ?>
         <button data-id="<?= session('id'); ?>" data-nama="<?= user()['nama']; ?>" class="btn_primary mb-2 fw-bold poin_absen">POIN: <?= poin_absen(session('id'))['poin']; ?></button>
     </div>
@@ -548,7 +549,7 @@
                     total += parseInt(e.poin);
                     html += '<tr>';
                     html += '<td scope="row">' + (i + 1) + '</td>';
-                    html += '<td>' + e.tanggal + '</td>';
+                    html += '<td>' + e.tgl + '</td>';
                     html += '<td>' + e.shift + '</td>';
                     html += '<td>' + e.ket + '</td>';
                     html += '<td style="text-align:right">' + e.poin + '</td>';

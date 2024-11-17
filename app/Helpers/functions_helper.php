@@ -513,7 +513,7 @@ function get_absen()
     $data = $datas[0];
 
     $db = db('absen');
-    $q = $db->whereIn('ket', ['Terlambat', 'Ontime'])->where('role', session('role'))->where('tgl', date('d/m/Y'))->where('shift', $data['shift'])->get()->getRowArray();
+    $q = $db->where('role', session('role'))->where('tgl', date('d/m/Y'))->where('shift', $data['shift'])->whereIn('ket', ['Terlambat', 'Ontime'])->get()->getRowArray();
 
     if ($q) {
         return null;
@@ -548,18 +548,15 @@ function poin_absen($id)
 {
     $db = db('absen');
 
-    $q = $db->where('user_id', $id)->orderBy('tgl', 'ASC')->get()->getResultArray();
+    $q = $db->where('user_id', $id)->orderBy('absen', 'ASC')->get()->getResultArray();
 
 
     $poin = 100;
-    $val = [];
     foreach ($q as $i) {
         $poin = $poin + $i['poin'];
-        $i['tanggal'] = date('d/m/Y', $i['tgl']);
-        $val[] = $i;
     }
 
-    $data = ['data' => $val, 'poin' => $poin];
+    $data = ['data' => $q, 'poin' => $poin];
 
     return $data;
 }
