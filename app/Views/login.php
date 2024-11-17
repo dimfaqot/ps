@@ -14,8 +14,8 @@
 
 
 <script>
-    let lat_atas = parseFloat(7.4412100);
-    let lat_bawah = parseFloat(7.4410350);
+    let lat_atas = parseFloat(-7.4412100);
+    let lat_bawah = parseFloat(-7.4410350);
     let long_atas = parseFloat(111.0362000);
     let long_bawah = parseFloat(111.035000);
 
