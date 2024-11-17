@@ -22,7 +22,8 @@
 
     const successCb = (position) => {
 
-
+        console.log(111.0360068 < long_atas);
+        console.log(111.0360068 > long_bawah);
         let maphtml = '';
         let latitude = position.coords.latitude;
         let longitude = position.coords.longitude;
@@ -34,7 +35,7 @@
         maphtml += '<p>Latitude: ' + latitude + ' Longitude: ' + longitude + '</p>';
         maphtml += '<iframe width="100%" height="300" src="https://maps.google.com/maps?q=' + latitude + ',' + longitude + '&amp;z=15&amp;output=embed"></iframe>';
         $('.map_lokasi_saya').html(maphtml);
-        if (latitude > lat_atas && latitude < lat_bawah && longitude > long_atas && longitude < lat_bawah) {
+        if (latitude < lat_atas && latitude > lat_bawah && longitude < long_atas && longitude > lat_bawah) {
 
 
             let html = '';
