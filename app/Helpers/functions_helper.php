@@ -486,6 +486,8 @@ function get_absen()
     $dbs = db('shift');
     $s = $dbs->where('kategori', session('role'))->get()->getResultArray();
 
+    // dd(date('d/m/Y H:i:s', 1732024109));
+
     $time_server = time();
 
     $datas = [];
@@ -494,18 +496,22 @@ function get_absen()
     foreach ($s as $i) {
         $time_shift = strtotime(date('Y-m-d') . ' ' . $i['jam'] . ':00');
         $shift = date('Y-m-d') . ' ' . $i['jam'] . ':00';
+
+        $df = $time_server - $time_shift;
+        $mnt = round($df / 60);
+
         $date_shift = date_create($shift); // jam shift
         $diff = date_diff($date_shift, $date_server);
         $i['diff'] = $diff->h . ' jam ' . $diff->i . ' menit';
         $i['time_shift'] = $time_shift;
         $i['time_server'] = $time_server;
-        $i['diff_time'] = $time_server - $time_shift;
-        $i['menit'] = round($i['diff_time'] / 60);
-
-        $datas[] = $i;
+        $i['diff_time'] = $df;
+        $i['menit'] = $mnt;
+        if ($mnt > 0) {
+            $datas[] = $i;
+        }
     }
-
-    $short_by = SORT_DESC;
+    $short_by = SORT_ASC;
 
     $keys = array_column($datas, 'diff_time');
     array_multisort($keys, $short_by, $datas);
@@ -513,7 +519,8 @@ function get_absen()
     $data = $datas[0];
 
     $db = db('absen');
-    $q = $db->where('role', session('role'))->where('tgl', date('d/m/Y'))->where('shift', $data['shift'])->whereIn('ket', ['Terlambat', 'Ontime'])->get()->getRowArray();
+    $q = $db->where('role', session('role'))->where('tgl', date('d'))->where('shift', $data['shift'])->whereIn('ket', ['Terlambat', 'Ontime'])->get()->getRowArray();
+
 
     if ($q) {
         return null;

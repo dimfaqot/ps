@@ -85,6 +85,7 @@
             } else {
 
                 $('.lokasimu').html('<h3 style="color:red"><i class="fa-solid fa-triangle-exclamation"></i> LOKASIMU DI LUAR AREA!</h3>');
+
             }
 
             // if (longitude > long_atas && longitude < lat_bawah) {
