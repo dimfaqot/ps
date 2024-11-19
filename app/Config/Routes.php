@@ -23,6 +23,11 @@ $routes->post('/absen/add_aturan', 'Absen::add_aturan');
 $routes->get('/absen/reset_absen', 'Absen::reset_absen');
 $routes->post('/absen/hapus_absen', 'Absen::hapus_absen');
 
+// notif
+$routes->post('/notif/pesanan', 'Notif::pesanan');
+$routes->post('/notif/detail_pesanan', 'Notif::detail_pesanan');
+$routes->post('/notif/read_notif_pesanan', 'Notif::read_notif_pesanan');
+
 
 // home
 $routes->get('/home', 'Home::index');
@@ -153,3 +158,8 @@ $routes->post('/pengeluaran_barber/update', 'Pengeluaran_barber::update');
 $routes->get('/barber', 'Barber::index');
 $routes->post('/barber/add', 'Barber::add');
 $routes->post('/barber/pembayaran', 'Barber::pembayaran');
+
+// aturan __________________________________
+$routes->get('/aturan', 'Aturan::index');
+$routes->post('/aturan/add', 'Aturan::add');
+$routes->post('/aturan/update', 'Aturan::update');

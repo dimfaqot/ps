@@ -35,6 +35,7 @@
 
                 </div>
                 <div class="pt-1">
+                    <a href="" class="text_dark lonceng_notif" style="background-color: #f2f2f2; border:1px solid #cccccc;font-size:small;border-radius:10px;padding:4px 10px;text-decoration:none;"><i class="fa-solid fa-bell"></i> <span class="jml_notif">0</span></a>
                     <span class="px-3 py-1" style="background-color: #f2f2f2; border:1px solid #cccccc; color:#666666;font-size:small;border-radius:10px;"><?= user()['nama']; ?>/<?= user()['role']; ?></span>
                     <a class="btn_danger" style="border-radius: 10px;" href="<?= base_url('logout'); ?>"><i class="fa-solid fa-arrow-right-to-bracket"></i> Logout</a>
                 </div>
@@ -86,6 +87,7 @@
             </div>
 
             <div class="pt-1">
+                <a href="" class="text_dark lonceng_notif" style="font-size:small;border-radius:10px;padding:2px;text-decoration:none;"><i class="fa-solid fa-bell"></i> <span class="jml_notif">0</span></a>
                 <a href="" class="btn_act_purple" data-bs-toggle="offcanvas" data-bs-target="#leftMenu" aria-controls="leftMenu"><i class="fa-solid fa-bars text_purple"></i></a>
             </div>
         </div>
@@ -111,3 +113,139 @@
 
     </div>
 </div>
+
+
+<!-- notif canvas -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-body p-0">
+        <div class="shadow shadow-sm d-flex justify-content-between px-3 py-2">
+            <div>NOTIF PEMESANAN</div>
+            <div>
+                <a data-bs-dismiss="offcanvas" aria-label="Close" href="" class="text_danger" style="text-decoration: none;"><i class="fa-solid fa-circle-xmark"></i></a>
+            </div>
+        </div>
+        <div class="px-3">
+            <div class="accordion accordion-flush body_notif_pesanan" id="accordionFlushExample">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const notif_pesanan = () => {
+        post('notif/pesanan', {}).then(res => {
+            if (res.status == '200') {
+                let jml_notif = parseInt($('.jml_notif').text());
+
+                if (jml_notif !== res.data2) {
+                    $('.jml_notif').text(res.data2);
+                }
+
+                if (res.data2 == 0) {
+                    $('.lonceng_notif').removeClass('text_danger');
+                    $('.lonceng_notif').addClass('text_dark');
+                    $('.jml_notif').text(res.data.length);
+                } else {
+                    $('.lonceng_notif').addClass('text_danger');
+                    $('.lonceng_notif').removeClass('text_dark');
+
+                }
+            }
+        })
+    }
+
+    setInterval(() => {
+        notif_pesanan();
+
+    }, 1000);
+
+    // let myOffcanvas = document.getElementById('offcanvasRight')
+    // let bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas)
+    // bsOffcanvas.show()
+    $(document).on('click', '.lonceng_notif', function(e) {
+        e.preventDefault();
+
+        post('notif/detail_pesanan', {}).then(res => {
+            if (res.status == '200') {
+                let html = '';
+
+                res.data.forEach((e, i) => {
+                    html += '<div class="accordion-item">';
+                    html += '<div class="accordion-header" id="flush-heading' + e.id + '">';
+                    html += '<button style="font-size: small;" class="accordion-button collapsed ' + (e.dibaca == 0 ? 'bg_success_bright' : '') + ' read_notif_pesanan" data-id="' + e.id + '" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse' + e.id + '" aria-expanded="false" aria-controls="flush-collapse' + e.id + '">';
+                    html += '<div class="d-flex gap-2">';
+                    html += '<div class="px-2 rounded bg_warning_light">23:45</div>';
+                    html += '<div>' + e.menu + '</div>';
+                    html += '</div>';
+                    html += '</button>';
+                    html += '</div>';
+                    html += '<div id="flush-collapse' + e.id + '" class="accordion-collapse collapse" aria-labelledby="flush-heading' + e.id + '" data-bs-parent="#accordionFlushExample">';
+                    html += '<div class="accordion-body px-0">';
+
+                    html += '<div class="row g-2">';
+
+                    html += '<div class="col-6">';
+                    html += '<div class="input-group input-group-sm">';
+                    html += '<span class="input-group-text" style="font-size:10px;">Meja</span>';
+                    html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.meja + '">';
+                    html += '</div>';
+                    html += '</div>';
+
+                    html += '<div class="col-6">';
+                    html += '<div class="input-group input-group-sm">';
+                    html += '<span class="input-group-text" style="font-size:10px;">Pemesan</span>';
+                    html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.pemesan + '">';
+                    html += '</div>';
+                    html += '</div>';
+
+                    html += '<div class="col-6">';
+                    html += '<div class="input-group input-group-sm">';
+                    html += '<span class="input-group-text" style="font-size:10px;">Menu</span>';
+                    html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.menu + '">';
+                    html += '</div>';
+                    html += '</div>';
+
+                    html += '<div class="col-6">';
+                    html += '<div class="input-group input-group-sm">';
+                    html += '<span class="input-group-text" style="font-size:10px;">Qty</span>';
+                    html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.qty + '">';
+                    html += '</div>';
+                    html += '</div>';
+
+                    html += '<div class="col-6">';
+                    html += '<div class="input-group input-group-sm">';
+                    html += '<span class="input-group-text" style="font-size:10px;">Biaya</span>';
+                    html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.total + '">';
+                    html += '</div>';
+                    html += '</div>';
+
+                    html += '</div>';
+
+                    html += '</div>';
+                    html += '</div>';
+                    html += '</div>';
+                })
+
+                $('.body_notif_pesanan').html(html);
+                let myOffcanvas = document.getElementById('offcanvasRight')
+                let bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas)
+                bsOffcanvas.show()
+            }
+        })
+
+    })
+
+    $(document).on('click', '.read_notif_pesanan', function(e) {
+        e.preventDefault();
+        let id = $(this).data('id');
+        post('notif/read_notif_pesanan', {
+            id
+        }).then(res => {
+            if (res.status == '200') {
+                $(this).removeClass('bg_success_bright');
+            } else {
+                gagal(res.message);
+            }
+        })
+    })
+</script>
