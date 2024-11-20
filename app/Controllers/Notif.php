@@ -10,23 +10,35 @@ class Notif extends BaseController
         $db = db('notif');
         $q = $db->orderBy('tgl', 'DESC')->get()->getResultArray();
         $belum_dibaca = 0;
-
+        $err = [];
         foreach ($q as $i) {
 
             $exp = explode(",", $i['dibaca']);
             if (!in_array(session('id'), $exp)) {
+                $err[] = $i;
                 $belum_dibaca++;
             }
         }
 
-        sukses_js('Koneksi sukses.', $q, $belum_dibaca);
+        sukses_js('Koneksi sukses.', $q, $belum_dibaca, $err);
     }
     public function detail_pesanan()
     {
         $db = db('notif');
         $q = $db->orderBy('tgl', 'DESC')->get()->getResultArray();
 
-        sukses_js('Koneksi sukses.', $q);
+        $data = [];
+
+        foreach ($q as $i) {
+            $i['read'] = 0;
+            $exp = explode(",", $i['dibaca']);
+            if (in_array(session('id'), $exp)) {
+                $i['read'] = 1;
+            }
+            $data[] = $i;
+        }
+
+        sukses_js('Koneksi sukses.', $data);
     }
     public function read_notif_pesanan()
     {

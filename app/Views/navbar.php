@@ -169,11 +169,11 @@
         post('notif/detail_pesanan', {}).then(res => {
             if (res.status == '200') {
                 let html = '';
-
+                console.log(res.data);
                 res.data.forEach((e, i) => {
                     html += '<div class="accordion-item">';
                     html += '<div class="accordion-header" id="flush-heading' + e.id + '">';
-                    html += '<button style="font-size: small;" class="accordion-button collapsed ' + (e.dibaca == 0 ? 'bg_success_bright' : '') + ' read_notif_pesanan" data-id="' + e.id + '" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse' + e.id + '" aria-expanded="false" aria-controls="flush-collapse' + e.id + '">';
+                    html += '<button style="font-size: small;" class="accordion-button collapsed ' + (e.read == 0 ? 'bg_success_bright' : '') + ' read_notif_pesanan" data-id="' + e.id + '" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse' + e.id + '" aria-expanded="false" aria-controls="flush-collapse' + e.id + '">';
                     html += '<div class="d-flex gap-2">';
                     html += '<div class="px-2 rounded bg_warning_light">' + e.kategori + '</div>';
                     if (e.kategori == 'Absen') {
