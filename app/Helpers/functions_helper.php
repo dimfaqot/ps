@@ -495,7 +495,7 @@ function get_absen()
 {
 
     $dbs = db('shift');
-    $s = $dbs->where('kategori', session('id'))->get()->getResultArray();
+    $s = $dbs->where('kategori', session('role'))->get()->getResultArray();
 
 
     // $time_server = strtotime('2024-11-20 13:00:00');
@@ -532,9 +532,8 @@ function get_absen()
             $data = $i;
         }
     }
-
     $db = db('absen');
-    $q = $db->where('role', session('id'))->where('tgl', date('d'))->where('shift', $data['shift'])->whereIn('ket', ['Terlambat', 'Ontime'])->get()->getRowArray();
+    $q = $db->where('role', session('role'))->where('tgl', date('d'))->where('shift', $data['shift'])->whereIn('ket', ['Terlambat', 'Ontime'])->get()->getRowArray();
 
 
     if ($q) {
