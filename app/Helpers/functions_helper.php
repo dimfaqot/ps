@@ -498,7 +498,8 @@ function get_absen()
     $s = $dbs->where('kategori', session('id'))->get()->getResultArray();
 
 
-    $time_server = strtotime('2024-11-20 13:00:00');
+    // $time_server = strtotime('2024-11-20 13:00:00');
+    $time_server = time();
 
     $datas = [];
     $nums = [];
