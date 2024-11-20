@@ -586,3 +586,11 @@ function poin_absen($id)
 
     return $data;
 }
+
+function options($kategori)
+{
+    $db = db('options');
+
+    $q = $db->where('kategori', $kategori)->orderBy('value', 'ASC')->get()->getResultArray();
+    return $q;
+}

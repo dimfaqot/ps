@@ -23,4 +23,11 @@ class Ext extends BaseController
 
         sukses(base_url('home'), 'Ok');
     }
+    public function barang()
+    {
+
+        $db = db('barang');
+        $q = $db->orderBy('barang', 'ASC')->get()->getResultArray();
+        return view('ext_barang', ['Daftar Menu', 'data' => $q]);
+    }
 }

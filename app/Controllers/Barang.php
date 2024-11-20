@@ -16,7 +16,6 @@ class Barang extends BaseController
 
         $q = $db->orderBy('barang', 'ASC')->get()->getResultArray();
 
-
         return view(menu()['controller'], ['judul' => menu()['menu'] . ' - PS', 'data' => $q]);
     }
 
@@ -24,10 +23,12 @@ class Barang extends BaseController
     {
         $barang = upper_first(clear($this->request->getVar('barang')));
         $stok = clear($this->request->getVar('stok'));
+        $jenis = upper_first(clear($this->request->getVar('jenis')));
         $harga_satuan = rp_to_int(clear($this->request->getVar('harga_satuan')));
         $data = [
             'barang' => $barang,
             'harga_satuan' => $harga_satuan,
+            'jenis' => $jenis,
             'stok' => $stok
         ];
 
@@ -42,6 +43,7 @@ class Barang extends BaseController
     {
         $id = clear($this->request->getVar('id'));
         $barang = upper_first(clear($this->request->getVar('barang')));
+        $jenis = upper_first(clear($this->request->getVar('jenis')));
         $harga_satuan = rp_to_int(clear($this->request->getVar('harga_satuan')));
         $stok = clear($this->request->getVar('stok'));
 
@@ -54,6 +56,7 @@ class Barang extends BaseController
 
         $q['barang'] = $barang;
         $q['harga_satuan'] = $harga_satuan;
+        $q['jenis'] = $jenis;
         $q['stok'] = $stok;
 
         $db->where('id', $id);

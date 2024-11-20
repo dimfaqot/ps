@@ -49,8 +49,17 @@
                 <h6 class="text_main2 fw-bold"> <i class="fa-solid fa-user"></i> Add <?= menu()['menu']; ?></h6>
                 <hr>
                 <form action="<?= base_url(menu()['controller']); ?>/add" method="post">
+
                     <div class="mb-2">
-                        <div class="text_main2">Barang <a class="cari_barang" href="">Cari Barang</a></div>
+                        <div class="text_main2">Jenis <a class="cari_barang" href="">Cari Barang</a></div>
+                        <select class="form-select form-select-sm">
+                            <?php foreach (options('Jenis Menu') as $i): ?>
+                                <option <?= ($i['value'] == 'Makanan' ? 'selected' : ''); ?> value="<?= $i['value']; ?>"><?= $i['value']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <div class="text_main2">Barang</div>
                         <input class="input" type="text" name="barang" placeholder="Barang" required>
                     </div>
                     <div class="mb-2">
@@ -154,6 +163,7 @@
     $(document).on('click', '.detail', function(e) {
         e.preventDefault();
         let id = $(this).data('id');
+        let jenis_menu = <?= json_encode(options('Jenis Menu')); ?>;
 
         let datas = <?= json_encode($data); ?>;
 
@@ -168,6 +178,18 @@
         html += '<hr>';
         html += '<form action="<?= base_url(menu()['controller']); ?>/update" method="post">';
         html += '<input type="hidden" name="id" value="' + data.id + '">';
+
+        html += '<div class="mb-2">';
+        html += '<div class="text_main2">Jenis</div>';
+        html += '<select class="form-select form-select-sm">';
+
+        for (let idx = 0; idx < jenis_menu.length; idx++) {
+            html += '<option ' + (jenis_menu[idx].value == data.jenis ? 'selected' : '') + ' value = "' + jenis_menu[idx].value + '">' + jenis_menu[idx].value + '</option>';
+
+        }
+
+        html += '</select>';
+        html += '</div>';
 
         html += '<div class="mb-2">';
         html += '<div class="text_main2">Barang</div>';
