@@ -163,7 +163,7 @@
                                 <td><?= ($k + 1); ?></td>
                                 <td><?= $i['nama']; ?></td>
                                 <td><?= $i['role']; ?></td>
-                                <td><a data-bs-toggle="offcanvas" data-bs-target="#add_error_<?= $i['id']; ?>" aria-controls="offcanvasBottom" href="">Error</a></td>
+                                <td><a data-bs-toggle="offcanvas" data-bs-target="#add_error_<?= $i['id']; ?>" aria-controls="offcanvasBottom" href="">Disiplin</a></td>
                                 <td><a data-nama="<?= $i['nama']; ?>" class="poin_absen" data-id="<?= $i['id']; ?>" href="">Poin</a></td>
                                 <td><a href="" class="copy_link_jwt" data-link="<?= base_url('login/a/') . $i['jwt']; ?>"><i class="fa-solid fa-link"></i></a></td>
                             </tr>
@@ -551,10 +551,11 @@
                     html += '<td scope="row">' + (i + 1) + '</td>';
                     html += '<td>' + e.tgl + '</td>';
                     html += '<td>' + e.shift + '</td>';
-                    html += '<td>' + e.ket + '</td>';
                     <?php if (session('role') == 'Root'): ?>
-                        html += '<td style="text-align:right"><a href="" class="hapus_absen" data-id="' + e.id + '">' + e.poin + '</a></td>';
+                        html += '<td><a style="text-decoration:none" href="" class="hapus_absen text_danger" data-id="' + e.id + '">' + e.ket + '</a></td>';
+                        html += '<td style="text-align:right" data-id="' + e.id + '" class="update_poin" contenteditable>' + e.poin + '</a></td>';
                     <?php else: ?>
+                        html += '<td>' + e.ket + '</td>';
                         html += '<td style="text-align:right">' + e.poin + '</td>';
                     <?php endif; ?>
                     html += '</tr>';
@@ -624,6 +625,23 @@
                 setTimeout(() => {
                     location.reload();
                 }, 1500);
+            } else {
+                gagal(res.message);
+            }
+        })
+
+    })
+    $(document).on('blur', '.update_poin', function(e) {
+        e.preventDefault();
+        let id = $(this).data('id');
+        let val = $(this).text();
+
+        post('absen/update_poin', {
+            id,
+            val
+        }).then(res => {
+            if (res.status == "200") {
+                sukses(res.message);
             } else {
                 gagal(res.message);
             }

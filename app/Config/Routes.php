@@ -22,6 +22,7 @@ $routes->post('/absen/poin_absen', 'Absen::poin_absen');
 $routes->post('/absen/add_aturan', 'Absen::add_aturan');
 $routes->get('/absen/reset_absen', 'Absen::reset_absen');
 $routes->post('/absen/hapus_absen', 'Absen::hapus_absen');
+$routes->post('/absen/update_poin', 'Absen::update_poin');
 
 // notif
 $routes->post('/notif/pesanan', 'Notif::pesanan');

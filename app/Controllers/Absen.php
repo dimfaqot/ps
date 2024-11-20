@@ -148,6 +148,28 @@ class Absen extends BaseController
             }
         }
     }
+    public function update_poin()
+    {
+
+        $id = clear($this->request->getVar('id'));
+        $val = (int)clear($this->request->getVar('val'));
+
+        $db = db('absen');
+        $q = $db->where('id', $id)->get()->getRowArray();
+
+        if (!$q) {
+            gagal_js('Id not found!.');
+        } else {
+
+            $q['poin'] = $val;
+            $db->where('id', $id);
+            if ($db->update($q)) {
+                sukses_js('Update sukses.');
+            } else {
+                sukses_js('Update gagal!.');
+            }
+        }
+    }
     public function qrcode()
     {
         return view('qrcode_absen', ['judul' => 'Qrcode Absen']);
