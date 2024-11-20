@@ -480,19 +480,29 @@ function biaya_per_menit($harga, $start, $end)
     return $harga;
 }
 
+function get_closest($search, $arr)
+{
+    $closest = null;
+    foreach ($arr as $item) {
+        if ($closest === null || abs($search - $closest) > abs($item - $search)) {
+            $closest = $item;
+        }
+    }
+    return $closest;
+}
+
 function get_absen()
 {
 
     $dbs = db('shift');
-    $s = $dbs->where('kategori', session('role'))->get()->getResultArray();
+    $s = $dbs->where('kategori', session('id'))->get()->getResultArray();
 
-    // dd(date('d/m/Y H:i:s', 1732024109));
 
-    $time_server = time();
+    $time_server = strtotime('2024-11-20 13:00:00');
 
     $datas = [];
-
-    $date_server = date_create(date('Y-m-d H:i:s', $time_server)); //jam server
+    $nums = [];
+    $date_server = date_create(date('Y-m-d H:i:s', ($time_server - (15 * 60)))); //jam server
     foreach ($s as $i) {
         $time_shift = strtotime(date('Y-m-d') . ' ' . $i['jam'] . ':00');
         $shift = date('Y-m-d') . ' ' . $i['jam'] . ':00';
@@ -501,38 +511,46 @@ function get_absen()
         $mnt = round($df / 60);
 
         $date_shift = date_create($shift); // jam shift
-        $diff = date_diff($date_shift, $date_server);
+        $diff = date_diff($date_shift, ($date_server));
         $i['diff'] = $diff->h . ' jam ' . $diff->i . ' menit';
         $i['time_shift'] = $time_shift;
         $i['time_server'] = $time_server;
         $i['diff_time'] = $df;
         $i['menit'] = $mnt;
-        if ($mnt > 0) {
-            $datas[] = $i;
+        $nums[] = $time_shift;
+        $datas[] = $i;
+    }
+
+
+    $closest = get_closest($time_server, $nums);
+
+    $data = [];
+
+    foreach ($datas as $i) {
+        if ($i['time_shift'] == $closest) {
+            $data = $i;
         }
     }
-    $short_by = SORT_ASC;
-
-    $keys = array_column($datas, 'diff_time');
-    array_multisort($keys, $short_by, $datas);
-
-    $data = $datas[0];
 
     $db = db('absen');
-    $q = $db->where('role', session('role'))->where('tgl', date('d'))->where('shift', $data['shift'])->whereIn('ket', ['Terlambat', 'Ontime'])->get()->getRowArray();
+    $q = $db->where('role', session('id'))->where('tgl', date('d'))->where('shift', $data['shift'])->whereIn('ket', ['Terlambat', 'Ontime'])->get()->getRowArray();
 
 
     if ($q) {
-        return null;
+        gagal_with_button(base_url('home'), 'Kamu sudah absen!.');
     }
+
+
+    if ($data['menit'] < 0) {
+        gagal_with_button(base_url('home'), 'Belum waktunya absen!.');
+    } else if (round($data['menit'] / 60) > 2) {
+        gagal_with_button(base_url('home'), 'Telat lebih 3 jam!. Absen ditutup!.');
+    }
+
+
 
     $msg = "Kamu tepat waktu.";
 
-    if ($data['diff_time'] < 0) {
-        $msg = 'Belum waktunya absen!.';
-    } else {
-        $msg = 'Kamu terlambat ' . $data['diff'] . '.!';
-    }
 
     if ($data['menit'] < 16) {
         $data['ket'] = 'Ontime';
@@ -545,9 +563,10 @@ function get_absen()
         $data['ket'] = 'Terlambat';
         $po = round(($data['menit'] - 15) / 10);
         $data['poin'] = -$po;
+        $msg = 'Kamu terlambat ' . $data['diff'] . '.!';
     }
-
     $data['msg'] = $msg;
+
     return $data;
 }
 

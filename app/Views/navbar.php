@@ -174,54 +174,76 @@
                     html += '<div class="accordion-header" id="flush-heading' + e.id + '">';
                     html += '<button style="font-size: small;" class="accordion-button collapsed ' + (e.dibaca == 0 ? 'bg_success_bright' : '') + ' read_notif_pesanan" data-id="' + e.id + '" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse' + e.id + '" aria-expanded="false" aria-controls="flush-collapse' + e.id + '">';
                     html += '<div class="d-flex gap-2">';
-                    html += '<div class="px-2 rounded bg_warning_light">23:45</div>';
-                    html += '<div>' + e.menu + '</div>';
+                    html += '<div class="px-2 rounded bg_warning_light">' + e.kategori + '</div>';
+                    if (e.kategori == 'Absen') {
+                        html += '<div>' + e.pemesan + ' ' + e.meja + ' ' + (e.meja == 'Ontime' ? '<i class="fa-solid fa-thumbs-up text_success"></i>' : '<i class="fa-solid fa-thumbs-down text_danger"></i>') + '</div>';
+                    }
+                    if (e.kategori == 'Kantin') {
+                        html += '<div>Meja ' + e.meja + ' ' + e.menu + '</div>';
+                    }
+                    if (e.kategori == 'Aturan') {
+                        html += '<div>' + e.pemesan + ' ' + (e.qty < 0 ? 'Melanggar <i class="fa-solid fa-thumbs-down text_danger"></i>' : 'Mantap <i class="fa-solid fa-thumbs-up text_success"></i>') + '</div>';
+                    }
                     html += '</div>';
                     html += '</button>';
                     html += '</div>';
                     html += '<div id="flush-collapse' + e.id + '" class="accordion-collapse collapse" aria-labelledby="flush-heading' + e.id + '" data-bs-parent="#accordionFlushExample">';
                     html += '<div class="accordion-body px-0">';
 
-                    html += '<div class="row g-2">';
+                    if (e.kategori == 'Kantin') {
+                        html += '<div class="row g-2">';
 
-                    html += '<div class="col-6">';
-                    html += '<div class="input-group input-group-sm">';
-                    html += '<span class="input-group-text" style="font-size:10px;">Meja</span>';
-                    html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.meja + '">';
-                    html += '</div>';
-                    html += '</div>';
+                        html += '<div class="col-6">';
+                        html += '<div class="input-group input-group-sm">';
+                        html += '<span class="input-group-text" style="font-size:10px;">Meja</span>';
+                        html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.meja + '">';
+                        html += '</div>';
+                        html += '</div>';
 
-                    html += '<div class="col-6">';
-                    html += '<div class="input-group input-group-sm">';
-                    html += '<span class="input-group-text" style="font-size:10px;">Pemesan</span>';
-                    html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.pemesan + '">';
-                    html += '</div>';
-                    html += '</div>';
+                        html += '<div class="col-6">';
+                        html += '<div class="input-group input-group-sm">';
+                        html += '<span class="input-group-text" style="font-size:10px;">Pemesan</span>';
+                        html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.pemesan + '">';
+                        html += '</div>';
+                        html += '</div>';
 
-                    html += '<div class="col-6">';
-                    html += '<div class="input-group input-group-sm">';
-                    html += '<span class="input-group-text" style="font-size:10px;">Menu</span>';
-                    html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.menu + '">';
-                    html += '</div>';
-                    html += '</div>';
+                        html += '<div class="col-6">';
+                        html += '<div class="input-group input-group-sm">';
+                        html += '<span class="input-group-text" style="font-size:10px;">Menu</span>';
+                        html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.menu + '">';
+                        html += '</div>';
+                        html += '</div>';
 
-                    html += '<div class="col-6">';
-                    html += '<div class="input-group input-group-sm">';
-                    html += '<span class="input-group-text" style="font-size:10px;">Qty</span>';
-                    html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.qty + '">';
-                    html += '</div>';
-                    html += '</div>';
+                        html += '<div class="col-6">';
+                        html += '<div class="input-group input-group-sm">';
+                        html += '<span class="input-group-text" style="font-size:10px;">Qty</span>';
+                        html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.qty + '">';
+                        html += '</div>';
+                        html += '</div>';
 
-                    html += '<div class="col-6">';
-                    html += '<div class="input-group input-group-sm">';
-                    html += '<span class="input-group-text" style="font-size:10px;">Biaya</span>';
-                    html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.total + '">';
-                    html += '</div>';
-                    html += '</div>';
+                        html += '<div class="col-6">';
+                        html += '<div class="input-group input-group-sm">';
+                        html += '<span class="input-group-text" style="font-size:10px;">Biaya</span>';
+                        html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.total + '">';
+                        html += '</div>';
+                        html += '</div>';
 
-                    html += '</div>';
+                        html += '</div>';
+                        html += '</div>';
+                    }
+                    if (e.kategori == 'Absen') {
 
-                    html += '</div>';
+                        html += '<div class="px-4">';
+                        html += e.pemesan + ' ' + e.meja + ' ' + e.menu + ' dan ' + (e.qty < 0 ? 'dikurangi' : 'ditambah') + ' ' + e.qty + ' poin';
+                        html += '</div>';
+                    }
+                    if (e.kategori == 'Aturan') {
+
+                        html += '<div class="px-4">';
+                        html += e.pemesan + ' ' + e.meja + ' "' + e.menu + '" dan ' + (e.qty < 0 ? 'dikurangi' : 'ditambah') + ' ' + e.qty + ' poin';
+                        html += '</div>';
+                    }
+
                     html += '</div>';
                     html += '</div>';
                 })

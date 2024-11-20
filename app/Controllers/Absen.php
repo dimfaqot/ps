@@ -25,9 +25,7 @@ class Absen extends BaseController
         $data = decode_jwt($jwt);
 
         $val = get_absen();
-        if ($val == null) {
-            gagal_with_button(base_url('home'), 'Kamu sudah absen!.');
-        }
+
         $value = [
             'tgl' => date('d/m/Y', $val['time_server']),
             'username' => user()['username'],
@@ -44,6 +42,18 @@ class Absen extends BaseController
 
         $db = db('absen');
         if ($db->insert($value)) {
+            $dbn = db('notif');
+            $datan = [
+                'kategori' => 'Absen',
+                'pemesan' => $value['nama'],
+                'tgl' => $value['absen'],
+                'menu' => ($value['ket'] == 'Ontime' ? 'Absen pada ' . date('H:i', $val['time_server']) : $val['diff']),
+                'meja' => $value['ket'],
+                'qty' => $value['poin']
+            ];
+
+            $dbn->insert($datan);
+
             if ($val['msg'] == 'Kamu tepat waktu.') {
                 sukses(base_url('home'), $val['msg']);
             } else {
@@ -87,6 +97,17 @@ class Absen extends BaseController
 
         $db = db('absen');
         if ($db->insert($data)) {
+            $dbn = db('notif');
+            $datan = [
+                'kategori' => 'Aturan',
+                'pemesan' => $data['nama'],
+                'tgl' => $data['absen'],
+                'menu' => $data['ket'],
+                'meja' => ($data['poin'] < 0 ? 'melanggar' : 'layak dipuji'),
+                'qty' => $data['poin']
+            ];
+
+            $dbn->insert($datan);
             sukses_js('Data berhasil diinput.');
         } else {
             gagal_js('Data gagal diinput!.');

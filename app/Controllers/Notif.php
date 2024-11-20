@@ -7,12 +7,14 @@ class Notif extends BaseController
 
     public function pesanan()
     {
-        $db = db('notif_pesanan');
+        $db = db('notif');
         $q = $db->orderBy('tgl', 'DESC')->get()->getResultArray();
         $belum_dibaca = 0;
 
         foreach ($q as $i) {
-            if ($i['dibaca'] == 0) {
+
+            $exp = explode(",", $i['dibaca']);
+            if (!in_array(session('id'), $exp)) {
                 $belum_dibaca++;
             }
         }
@@ -21,7 +23,7 @@ class Notif extends BaseController
     }
     public function detail_pesanan()
     {
-        $db = db('notif_pesanan');
+        $db = db('notif');
         $q = $db->orderBy('tgl', 'DESC')->get()->getResultArray();
 
         sukses_js('Koneksi sukses.', $q);
@@ -29,18 +31,18 @@ class Notif extends BaseController
     public function read_notif_pesanan()
     {
         $id = clear($this->request->getVar('id'));
-        $db = db('notif_pesanan');
+        $db = db('notif');
         $q = $db->where('id', $id)->get()->getRowArray();
 
         if (!$q) {
             gagal_js('Id not found!.');
         }
 
-        if ($q['dibaca'] == 1) {
+        $exp = explode(",", $q['dibaca']);
+        if (in_array(session('id'), $exp)) {
             sukses_js('Ok');
         } else {
-            $q['dibaca'] = 1;
-
+            $q['dibaca'] = session('id') . ',';
             $db->where('id', $id);
             if ($db->update($q)) {
                 sukses_js('Ok');
@@ -48,6 +50,8 @@ class Notif extends BaseController
                 gagal_js('Update read gagal!.');
             }
         }
+
+
         sukses_js('Koneksi sukses.', $q);
     }
 }
