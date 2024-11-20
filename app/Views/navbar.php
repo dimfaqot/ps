@@ -56,6 +56,7 @@
 
                 </div>
                 <div class="pt-1">
+                    <a href="" class="text_dark lonceng_notif" style="background-color: #f2f2f2; border:1px solid #cccccc;font-size:small;border-radius:10px;padding:4px 10px;text-decoration:none;"><i class="fa-solid fa-bell"></i> <span class="jml_notif">0</span></a>
                     <span class="px-3 py-1" style="background-color: #f2f2f2; border:1px solid #cccccc; color:#666666;font-size:small;border-radius:10px;"><?= user()['nama']; ?>/<?= user()['role']; ?></span>
                     <a class="btn_danger" style="border-radius: 10px;" href="<?= base_url('logout'); ?>"><i class="fa-solid fa-arrow-right-to-bracket"></i> Logout</a>
                 </div>
