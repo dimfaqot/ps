@@ -119,10 +119,19 @@
 <!-- notif canvas -->
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
     <div class="offcanvas-body p-0">
-        <div class="shadow shadow-sm d-flex justify-content-between px-3 py-2">
-            <div>NOTIF PEMESANAN</div>
-            <div>
-                <a data-bs-dismiss="offcanvas" aria-label="Close" href="" class="text_danger" style="text-decoration: none;"><i class="fa-solid fa-circle-xmark"></i></a>
+        <div class="sticky-top bg-light">
+            <div class="shadow shadow-sm d-flex justify-content-between px-3 py-2">
+                <div>NOTIFIKASI</div>
+                <div>
+                    <a data-bs-dismiss="offcanvas" aria-label="Close" href="" class="text_danger" style="text-decoration: none;"><i class="fa-solid fa-circle-xmark"></i></a>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 px-3 py-2">
+                <a class="btn_act_grey px-4 rounded filter_notif" data-order="Absen" href="">Absen</a>
+                <a class="btn_act_grey px-4 rounded filter_notif" data-order="Aturan" href="">Aturan</a>
+                <a class="btn_act_grey px-4 rounded filter_notif" data-order="Pesanan" href="">Pesanan</a>
+                <a class="btn_act_success px-4 rounded filter_notif" data-order="All" href="">All</a>
             </div>
         </div>
         <div class="px-3">
@@ -133,6 +142,97 @@
     </div>
 </div>
 <script>
+    let data_notif;
+
+    const body_notif = (data, order = undefined) => {
+        let html = '';
+        data.forEach((e, i) => {
+            if (order !== undefined) {
+                if (e.kategori !== order) {
+                    return;
+                }
+            }
+            html += '<div class="accordion-item">';
+            html += '<div class="accordion-header" id="flush-heading' + e.id + '">';
+            html += '<button style="font-size: small;" class="accordion-button collapsed ' + (e.read == 0 ? 'bg_success_light' : '') + ' read_notif_pesanan" data-id="' + e.id + '" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse' + e.id + '" aria-expanded="false" aria-controls="flush-collapse' + e.id + '">';
+            html += '<div class="d-flex gap-2">';
+            html += '<div class="px-2 rounded bg_warning_light">' + e.kategori + '</div>';
+            if (e.kategori == 'Absen') {
+                html += '<div>' + e.pemesan + ' ' + e.meja + ' ' + (e.meja == 'Ontime' ? '<i class="fa-solid fa-thumbs-up text_success"></i>' : '<i class="fa-solid fa-thumbs-down text_danger"></i>') + '</div>';
+            }
+            if (e.kategori == 'Kantin') {
+                html += '<div>Meja ' + e.meja + ' ' + e.menu + '</div>';
+            }
+            if (e.kategori == 'Aturan') {
+                html += '<div>' + e.pemesan + ' ' + (e.qty < 0 ? 'Kurang Ajar <i class="fa-solid fa-thumbs-down text_danger"></i>' : 'Menyala <i class="fa-solid fa-thumbs-up text_success"></i>') + '</div>';
+            }
+            html += '</div>';
+            html += '</button>';
+            html += '</div>';
+            html += '<div id="flush-collapse' + e.id + '" class="accordion-collapse collapse" aria-labelledby="flush-heading' + e.id + '" data-bs-parent="#accordionFlushExample">';
+            html += '<div class="accordion-body px-0">';
+
+            if (e.kategori == 'Kantin') {
+                html += '<div class="row g-2">';
+
+                html += '<div class="col-6">';
+                html += '<div class="input-group input-group-sm">';
+                html += '<span class="input-group-text" style="font-size:10px;">Meja</span>';
+                html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.meja + '">';
+                html += '</div>';
+                html += '</div>';
+
+                html += '<div class="col-6">';
+                html += '<div class="input-group input-group-sm">';
+                html += '<span class="input-group-text" style="font-size:10px;">Pemesan</span>';
+                html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.pemesan + '">';
+                html += '</div>';
+                html += '</div>';
+
+                html += '<div class="col-6">';
+                html += '<div class="input-group input-group-sm">';
+                html += '<span class="input-group-text" style="font-size:10px;">Menu</span>';
+                html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.menu + '">';
+                html += '</div>';
+                html += '</div>';
+
+                html += '<div class="col-6">';
+                html += '<div class="input-group input-group-sm">';
+                html += '<span class="input-group-text" style="font-size:10px;">Qty</span>';
+                html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.qty + '">';
+                html += '</div>';
+                html += '</div>';
+
+                html += '<div class="col-6">';
+                html += '<div class="input-group input-group-sm">';
+                html += '<span class="input-group-text" style="font-size:10px;">Biaya</span>';
+                html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.total + '">';
+                html += '</div>';
+                html += '</div>';
+
+                html += '</div>';
+                html += '</div>';
+            }
+            if (e.kategori == 'Absen') {
+
+                html += '<div class="px-4">';
+                html += e.pemesan + ' ' + e.meja + ' <b>' + e.menu + '</b> dan ' + (e.qty < 0 ? 'dikurangi' : 'mendapatkan') + ' ' + e.qty + ' poin';
+                html += '</div>';
+            }
+            if (e.kategori == 'Aturan') {
+
+                html += '<div class="px-4">';
+                html += e.pemesan + ' ' + e.meja + ' <b>' + e.menu + '</b> dan ' + (e.qty < 0 ? 'dikurangi' : 'mendapatkan') + ' ' + e.qty + ' poin';
+                html += '</div>';
+            }
+
+            html += '</div>';
+            html += '</div>';
+        })
+
+        $('.body_notif_pesanan').html(html);
+
+    }
     const notif_pesanan = () => {
         post('notif/pesanan', {}).then(res => {
             if (res.status == '200') {
@@ -168,93 +268,27 @@
 
         post('notif/detail_pesanan', {}).then(res => {
             if (res.status == '200') {
-                let html = '';
-                console.log(res.data);
-                res.data.forEach((e, i) => {
-                    html += '<div class="accordion-item">';
-                    html += '<div class="accordion-header" id="flush-heading' + e.id + '">';
-                    html += '<button style="font-size: small;" class="accordion-button collapsed ' + (e.read == 0 ? 'bg_success_light' : '') + ' read_notif_pesanan" data-id="' + e.id + '" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse' + e.id + '" aria-expanded="false" aria-controls="flush-collapse' + e.id + '">';
-                    html += '<div class="d-flex gap-2">';
-                    html += '<div class="px-2 rounded bg_warning_light">' + e.kategori + '</div>';
-                    if (e.kategori == 'Absen') {
-                        html += '<div>' + e.pemesan + ' ' + e.meja + ' ' + (e.meja == 'Ontime' ? '<i class="fa-solid fa-thumbs-up text_success"></i>' : '<i class="fa-solid fa-thumbs-down text_danger"></i>') + '</div>';
-                    }
-                    if (e.kategori == 'Kantin') {
-                        html += '<div>Meja ' + e.meja + ' ' + e.menu + '</div>';
-                    }
-                    if (e.kategori == 'Aturan') {
-                        html += '<div>' + e.pemesan + ' ' + (e.qty < 0 ? 'Kurang Ajar <i class="fa-solid fa-thumbs-down text_danger"></i>' : 'Menyala <i class="fa-solid fa-thumbs-up text_success"></i>') + '</div>';
-                    }
-                    html += '</div>';
-                    html += '</button>';
-                    html += '</div>';
-                    html += '<div id="flush-collapse' + e.id + '" class="accordion-collapse collapse" aria-labelledby="flush-heading' + e.id + '" data-bs-parent="#accordionFlushExample">';
-                    html += '<div class="accordion-body px-0">';
-
-                    if (e.kategori == 'Kantin') {
-                        html += '<div class="row g-2">';
-
-                        html += '<div class="col-6">';
-                        html += '<div class="input-group input-group-sm">';
-                        html += '<span class="input-group-text" style="font-size:10px;">Meja</span>';
-                        html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.meja + '">';
-                        html += '</div>';
-                        html += '</div>';
-
-                        html += '<div class="col-6">';
-                        html += '<div class="input-group input-group-sm">';
-                        html += '<span class="input-group-text" style="font-size:10px;">Pemesan</span>';
-                        html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.pemesan + '">';
-                        html += '</div>';
-                        html += '</div>';
-
-                        html += '<div class="col-6">';
-                        html += '<div class="input-group input-group-sm">';
-                        html += '<span class="input-group-text" style="font-size:10px;">Menu</span>';
-                        html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.menu + '">';
-                        html += '</div>';
-                        html += '</div>';
-
-                        html += '<div class="col-6">';
-                        html += '<div class="input-group input-group-sm">';
-                        html += '<span class="input-group-text" style="font-size:10px;">Qty</span>';
-                        html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.qty + '">';
-                        html += '</div>';
-                        html += '</div>';
-
-                        html += '<div class="col-6">';
-                        html += '<div class="input-group input-group-sm">';
-                        html += '<span class="input-group-text" style="font-size:10px;">Biaya</span>';
-                        html += '<input style="font-size:10px;" type="text" class="form-control" value="' + e.total + '">';
-                        html += '</div>';
-                        html += '</div>';
-
-                        html += '</div>';
-                        html += '</div>';
-                    }
-                    if (e.kategori == 'Absen') {
-
-                        html += '<div class="px-4">';
-                        html += e.pemesan + ' ' + e.meja + ' <b>' + e.menu + '</b> dan ' + (e.qty < 0 ? 'dikurangi' : 'mendapatkan') + ' ' + e.qty + ' poin';
-                        html += '</div>';
-                    }
-                    if (e.kategori == 'Aturan') {
-
-                        html += '<div class="px-4">';
-                        html += e.pemesan + ' ' + e.meja + ' <b>' + e.menu + '</b> dan ' + (e.qty < 0 ? 'dikurangi' : 'mendapatkan') + ' ' + e.qty + ' poin';
-                        html += '</div>';
-                    }
-
-                    html += '</div>';
-                    html += '</div>';
-                })
-
-                $('.body_notif_pesanan').html(html);
+                data_notif = res.data;
+                body_notif(data_notif);
                 let myOffcanvas = document.getElementById('offcanvasRight')
                 let bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas)
                 bsOffcanvas.show()
             }
         })
+
+    })
+    $(document).on('click', '.filter_notif', function(e) {
+        e.preventDefault();
+        let notifs = document.querySelectorAll('.filter_notif');
+        notifs.forEach(e => {
+            e.classList.add('btn_act_grey');
+            e.classList.remove('btn_act_success');
+        })
+
+        $(this).removeClass('btn_act_grey');
+        $(this).addClass('btn_act_success');
+        let order = $(this).data('order');
+        body_notif(data_notif, (order == 'All' ? undefined : order));
 
     })
 
