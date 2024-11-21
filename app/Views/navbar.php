@@ -134,11 +134,11 @@
                 <a class="btn_act_success px-4 rounded filter_notif" data-order="All" href="">All</a>
             </div>
         </div>
-        <div class="px-3">
-            <div class="accordion accordion-flush body_notif_pesanan" id="accordionFlushExample">
 
-            </div>
+        <div class="accordion accordion-flush body_notif_pesanan" id="accordionFlushExample">
+
         </div>
+
     </div>
 </div>
 <script>
@@ -152,13 +152,16 @@
                     return;
                 }
             }
+            let tgl_kejadian = new Date(e.tgl * 1000);
+            let tgl_notif = new Date(e.harga * 1000);
             html += '<div class="accordion-item">';
             html += '<div style="border-bottom:1px solid #f2eaca" class="accordion-header" id="flush-heading' + e.id + '">';
             html += '<button style="font-size: small;" class="accordion-button collapsed ' + (e.read == 0 ? 'bg_success_light' : '') + ' read_notif_pesanan" data-id="' + e.id + '" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse' + e.id + '" aria-expanded="false" aria-controls="flush-collapse' + e.id + '">';
             html += '<div class="d-flex gap-2">';
+            html += '<div class="bg_success_bright rounded px-1" style="font-size:x-small;padding-top:2px">' + tgl_notif.getDate() + '/' + (tgl_notif.getMonth() + 1) + '/' + tgl_notif.getFullYear() + ' ' + tgl_notif.getHours() + ':' + (tgl_notif.getMinutes() + 1) + '</div>';
             html += '<div class="px-2 rounded bg_warning_light">' + e.kategori + '</div>';
             if (e.kategori == 'Absen') {
-                html += '<div>' + e.pemesan + ' ' + e.meja + ' ' + (e.meja == 'Ontime' ? '<i class="fa-solid fa-thumbs-up text_success"></i>' : '<i class="fa-solid fa-thumbs-down text_danger"></i>') + '</div>';
+                html += '<div>' + e.pemesan + '  ' + (e.meja == 'Ontime' ? 'Ontime <i class="fa-solid fa-thumbs-up text_success"></i>' : 'Terlambat <i class="fa-solid fa-thumbs-down text_danger"></i>') + '</div>';
             }
             if (e.kategori == 'Kantin') {
                 html += '<div>Meja ' + e.meja + ' ' + e.menu + '</div>';
@@ -216,13 +219,13 @@
             if (e.kategori == 'Absen') {
 
                 html += '<div class="px-4">';
-                html += e.pemesan + ' ' + e.meja + ' <b>' + e.menu + '</b> dan ' + (e.qty < 0 ? 'dikurangi' : 'mendapatkan') + ' ' + e.qty + ' poin';
+                html += e.pemesan + ' ' + e.meja + ' <b>' + e.menu + '</b> dan ' + (e.qty < 0 ? 'dikurangi' : 'mendapatkan') + ' ' + e.qty + ' poin pada ' + tgl_kejadian.getDate() + '/' + (tgl_kejadian.getMonth() + 1) + '/' + tgl_kejadian.getFullYear() + ' ' + tgl_kejadian.getHours() + ':' + (tgl_kejadian.getMinutes() + 1) + ' WIB';
                 html += '</div>';
             }
             if (e.kategori == 'Aturan') {
 
                 html += '<div class="px-4">';
-                html += e.pemesan + ' ' + e.meja + ' <b>' + e.menu + '</b> dan ' + (e.qty < 0 ? 'dikurangi' : 'mendapatkan') + ' ' + e.qty + ' poin';
+                html += e.pemesan + ' ' + e.meja + ' <b>' + e.menu + '</b> dan ' + (e.qty < 0 ? 'dikurangi' : 'mendapatkan') + ' ' + e.qty + ' poin pada ' + tgl_kejadian.getDate() + '/' + (tgl_kejadian.getMonth() + 1) + '/' + tgl_kejadian.getFullYear() + ' ' + tgl_kejadian.getHours() + ':' + (tgl_kejadian.getMinutes() + 1) + ' WIB';
                 html += '</div>';
             }
 

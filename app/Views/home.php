@@ -1,8 +1,11 @@
 <?= $this->extend('logged') ?>
 
 <?= $this->section('content') ?>
+<?php
+$db = db('aturan');
+$q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
+?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-
 <div class="container">
     <div class="d-flex gap-2">
         <?php if (session('role') == 'Root'): ?>
@@ -153,7 +156,6 @@
                             <th scope="col">Nama</th>
                             <th scope="col">Role</th>
                             <th scope="col">Poin</th>
-                            <th scope="col">Error</th>
                             <th scope="col">Act</th>
                         </tr>
                     </thead>
@@ -163,31 +165,10 @@
                                 <td><?= ($k + 1); ?></td>
                                 <td><a href="" type="button" class="canvas_perizinan" data-role="<?= $i['role']; ?>" data-id="<?= $i['id']; ?>" data-username="<?= $i['username']; ?>" data-nama="<?= $i['nama']; ?>" style="text-decoration: none;"><?= $i['nama']; ?></a></td>
                                 <td><?= $i['role']; ?></td>
-                                <td><a data-bs-toggle="offcanvas" data-bs-target="#add_error_<?= $i['id']; ?>" aria-controls="offcanvasBottom" href="">Disiplin</a></td>
                                 <td><a data-nama="<?= $i['nama']; ?>" class="poin_absen" data-id="<?= $i['id']; ?>" href="">Poin</a></td>
                                 <td><a href="" class="copy_link_jwt" data-link="<?= base_url('login/a/') . $i['jwt']; ?>"><i class="fa-solid fa-link"></i></a></td>
                             </tr>
 
-
-                            <!-- canvas add_error -->
-                            <div class="offcanvas offcanvas-bottom" style="z-index:9999" tabindex="-1" id="add_error_<?= $i['id']; ?>" aria-labelledby="offcanvasBottomLabel">
-                                <div class="offcanvas-header">
-                                    <h5 class="offcanvas-title" id="offcanvasBottomLabel"><?= $i['nama']; ?></h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                                </div>
-                                <div class="offcanvas-body small">
-                                    <?php
-                                    $db = db('aturan');
-                                    $q = $db->orderBy('poin', 'ASC')->get()->getResultArray();
-                                    ?>
-
-                                    <div class="list-group">
-                                        <?php foreach ($q as $a): ?>
-                                            <a href="#" data-role="<?= $i['role']; ?>" data-id="<?= $i['id']; ?>" data-username="<?= $i['username']; ?>" data-nama="<?= $i['nama']; ?>" data-poin="<?= $a['poin']; ?>" data-ket="<?= $a['aturan']; ?>" class="add_aturan list-group-item list-group-item-action"><?= $a['aturan']; ?>/<?= $a['poin']; ?></a>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </div>
-                            </div>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
@@ -676,34 +657,6 @@
 
     })
 
-    $(document).on('click', '.add_aturan', function(e) {
-        e.preventDefault();
-        let id = $(this).data('id');
-        let ket = $(this).data('ket');
-        let poin = $(this).data('poin');
-        let username = $(this).data('username');
-        let nama = $(this).data('nama');
-        let role = $(this).data('role');
-
-        post('absen/add_aturan', {
-            id,
-            ket,
-            poin,
-            username,
-            role,
-            nama
-        }).then(res => {
-            if (res.status == "200") {
-                sukses(res.message);
-                setTimeout(() => {
-                    location.reload();
-                }, 1500);
-            } else {
-                gagal(res.message);
-            }
-        })
-
-    })
 
     $(document).on('blur', '.update_poin', function(e) {
         e.preventDefault();

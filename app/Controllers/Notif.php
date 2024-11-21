@@ -8,7 +8,7 @@ class Notif extends BaseController
     public function pesanan()
     {
         $db = db('notif');
-        $q = $db->orderBy('tgl', 'DESC')->get()->getResultArray();
+        $q = $db->orderBy('harga', 'DESC')->get()->getResultArray();
         $belum_dibaca = 0;
         $err = [];
         foreach ($q as $i) {
@@ -25,7 +25,7 @@ class Notif extends BaseController
     public function detail_pesanan()
     {
         $db = db('notif');
-        $q = $db->orderBy('tgl', 'DESC')->get()->getResultArray();
+        $q = $db->orderBy('harga', 'DESC')->get()->getResultArray();
 
         $data = [];
 

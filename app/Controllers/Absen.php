@@ -27,7 +27,7 @@ class Absen extends BaseController
         $val = get_absen();
 
         $value = [
-            'tgl' => (int)date('d', $val['time_server']),
+            'tgl' => date('d/m/Y', $val['time_server']),
             'username' => user()['username'],
             'ket' => $val['ket'],
             'poin' => $val['poin'],
@@ -72,47 +72,7 @@ class Absen extends BaseController
 
         sukses_js('Sukses', $data);
     }
-    public function add_aturan()
-    {
-        $id = clear($this->request->getVar('id'));
-        $ket = clear($this->request->getVar('ket'));
-        $poin = clear($this->request->getVar('poin'));
-        $username = clear($this->request->getVar('username'));
-        $nama = clear($this->request->getVar('nama'));
-        $role = clear($this->request->getVar('role'));
 
-        $data = [
-            'ket' => $ket,
-            'tgl' => date('d/m/Y'),
-            'username' => $username,
-            'nama' => $nama,
-            'role' => $role,
-            'shift' => 0,
-            'jam' => 0,
-            'absen' => time(),
-            'terlambat' => 0,
-            'poin' => $poin,
-            'user_id' => $id
-        ];
-
-        $db = db('absen');
-        if ($db->insert($data)) {
-            $dbn = db('notif');
-            $datan = [
-                'kategori' => 'Aturan',
-                'pemesan' => $data['nama'],
-                'tgl' => $data['absen'],
-                'menu' => $data['ket'],
-                'meja' => ($data['poin'] < 0 ? 'melanggar' : 'layak dipuji'),
-                'qty' => $data['poin']
-            ];
-
-            $dbn->insert($datan);
-            sukses_js('Data berhasil diinput.');
-        } else {
-            gagal_js('Data gagal diinput!.');
-        }
-    }
     public function reset_absen()
     {
 
@@ -169,7 +129,7 @@ class Absen extends BaseController
         $db = db('absen');
         $data = [
             'ket' => $ket,
-            'tgl' => (int)date('d', $tgl),
+            'tgl' => date('d/m/Y', $tgl),
             'username' => $username,
             'nama' => $nama,
             'role' => $role,
@@ -183,6 +143,7 @@ class Absen extends BaseController
                 'kategori' => 'Aturan',
                 'pemesan' => $data['nama'],
                 'tgl' => $tgl,
+                'harga' => time(),
                 'menu' => $data['ket'],
                 'meja' => ($data['poin'] < 0 ? 'layak dikampleng karena' : 'layak dipuji karena'),
                 'qty' => $data['poin']
