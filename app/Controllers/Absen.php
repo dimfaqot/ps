@@ -27,7 +27,7 @@ class Absen extends BaseController
         $val = get_absen();
 
         $value = [
-            'tgl' => date('d/m/Y', $val['time_server']),
+            'tgl' => (int)date('d', $val['time_server']),
             'username' => user()['username'],
             'ket' => $val['ket'],
             'poin' => $val['poin'],
@@ -130,24 +130,7 @@ class Absen extends BaseController
 
         sukses(base_url('home'), 'Absen reset.');
     }
-    public function hapus_absen()
-    {
 
-        $id = clear($this->request->getVar('id'));
-        $db = db('absen');
-        $q = $db->where('id', $id)->get()->getRowArray();
-
-        if (!$q) {
-            gagal_js('Id not found!.');
-        } else {
-            $db->where('id', $id);
-            if ($db->delete()) {
-                sukses_js('Data deleted.');
-            } else {
-                sukses_js('Deleted data failed!.');
-            }
-        }
-    }
     public function update_poin()
     {
 
@@ -168,6 +151,47 @@ class Absen extends BaseController
             } else {
                 sukses_js('Update gagal!.');
             }
+        }
+    }
+    public function perizinan()
+    {
+
+        $ket = clear($this->request->getVar('ket'));
+        $tanggal = clear($this->request->getVar('tgl'));
+        $username = clear($this->request->getVar('username'));
+        $id = clear($this->request->getVar('id'));
+        $nama = clear($this->request->getVar('nama'));
+        $role = clear($this->request->getVar('role'));
+        $poin = (int)clear($this->request->getVar('poin'));
+        $jam = clear($this->request->getVar('jam') . ':00');
+        $tgl = strtotime($tanggal . ' ' . $jam);
+
+        $db = db('absen');
+        $data = [
+            'ket' => $ket,
+            'tgl' => (int)date('d', $tgl),
+            'username' => $username,
+            'nama' => $nama,
+            'role' => $role,
+            'poin' => $poin,
+            'user_id' => $id
+        ];
+
+        if ($db->insert($data)) {
+            $dbn = db('notif');
+            $datan = [
+                'kategori' => 'Aturan',
+                'pemesan' => $data['nama'],
+                'tgl' => $tgl,
+                'menu' => $data['ket'],
+                'meja' => ($data['poin'] < 0 ? 'layak dikampleng karena' : 'layak dipuji karena'),
+                'qty' => $data['poin']
+            ];
+
+            $dbn->insert($datan);
+            sukses_js('Data sukses dimasukkan.');
+        } else {
+            gagal_js('Data gagal dimasukkan.');
         }
     }
     public function qrcode()

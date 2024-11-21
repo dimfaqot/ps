@@ -183,7 +183,7 @@
                         html += '<div>Meja ' + e.meja + ' ' + e.menu + '</div>';
                     }
                     if (e.kategori == 'Aturan') {
-                        html += '<div>' + e.pemesan + ' ' + (e.qty < 0 ? 'Melanggar <i class="fa-solid fa-thumbs-down text_danger"></i>' : 'Mantap <i class="fa-solid fa-thumbs-up text_success"></i>') + '</div>';
+                        html += '<div>' + e.pemesan + ' ' + (e.qty < 0 ? 'Kurang Ajar <i class="fa-solid fa-thumbs-down text_danger"></i>' : 'Menyala <i class="fa-solid fa-thumbs-up text_success"></i>') + '</div>';
                     }
                     html += '</div>';
                     html += '</button>';
@@ -235,13 +235,13 @@
                     if (e.kategori == 'Absen') {
 
                         html += '<div class="px-4">';
-                        html += e.pemesan + ' ' + e.meja + ' ' + e.menu + ' dan ' + (e.qty < 0 ? 'dikurangi' : 'ditambah') + ' ' + e.qty + ' poin';
+                        html += e.pemesan + ' ' + e.meja + ' <b>' + e.menu + '</b> dan ' + (e.qty < 0 ? 'dikurangi' : 'mendapatkan') + ' ' + e.qty + ' poin';
                         html += '</div>';
                     }
                     if (e.kategori == 'Aturan') {
 
                         html += '<div class="px-4">';
-                        html += e.pemesan + ' ' + e.meja + ' "' + e.menu + '" dan ' + (e.qty < 0 ? 'dikurangi' : 'ditambah') + ' ' + e.qty + ' poin';
+                        html += e.pemesan + ' ' + e.meja + ' <b>' + e.menu + '</b> dan ' + (e.qty < 0 ? 'dikurangi' : 'mendapatkan') + ' ' + e.qty + ' poin';
                         html += '</div>';
                     }
 

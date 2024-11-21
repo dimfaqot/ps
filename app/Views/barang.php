@@ -52,7 +52,7 @@
 
                     <div class="mb-2">
                         <div class="text_main2">Jenis <a class="cari_barang" href="">Cari Barang</a></div>
-                        <select class="form-select form-select-sm">
+                        <select name="jenis" class="form-select form-select-sm">
                             <?php foreach (options('Jenis Menu') as $i): ?>
                                 <option <?= ($i['value'] == 'Makanan' ? 'selected' : ''); ?> value="<?= $i['value']; ?>"><?= $i['value']; ?></option>
                             <?php endforeach; ?>
@@ -181,7 +181,7 @@
 
         html += '<div class="mb-2">';
         html += '<div class="text_main2">Jenis</div>';
-        html += '<select class="form-select form-select-sm">';
+        html += '<select name="jenis" class="form-select form-select-sm">';
 
         for (let idx = 0; idx < jenis_menu.length; idx++) {
             html += '<option ' + (jenis_menu[idx].value == data.jenis ? 'selected' : '') + ' value = "' + jenis_menu[idx].value + '">' + jenis_menu[idx].value + '</option>';

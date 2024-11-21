@@ -161,7 +161,7 @@
                         <?php foreach ($users as $k => $i): ?>
                             <tr>
                                 <td><?= ($k + 1); ?></td>
-                                <td><?= $i['nama']; ?></td>
+                                <td><a href="" type="button" class="canvas_perizinan" data-role="<?= $i['role']; ?>" data-id="<?= $i['id']; ?>" data-username="<?= $i['username']; ?>" data-nama="<?= $i['nama']; ?>" style="text-decoration: none;"><?= $i['nama']; ?></a></td>
                                 <td><?= $i['role']; ?></td>
                                 <td><a data-bs-toggle="offcanvas" data-bs-target="#add_error_<?= $i['id']; ?>" aria-controls="offcanvasBottom" href="">Disiplin</a></td>
                                 <td><a data-nama="<?= $i['nama']; ?>" class="poin_absen" data-id="<?= $i['id']; ?>" href="">Poin</a></td>
@@ -193,6 +193,14 @@
                 </table>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- offcanvas perizinan -->
+<div class="offcanvas offcanvas-start" style="z-index:9999" tabindex="-1" id="canvas_perizinan" aria-labelledby="offcanvasLeftLabel">
+
+    <div class="offcanvas-body p-0 mb-5 body_canvas_perizinan">
+
     </div>
 </div>
 <script>
@@ -281,6 +289,89 @@
         let tahun = $(this).val();
 
         chart_html(tabel, tahun);
+
+    })
+
+    $(document).on('click', '.canvas_perizinan', function(e) {
+        e.preventDefault();
+
+        let nama = $(this).data('nama');
+        let username = $(this).data('username');
+        let id = $(this).data('id');
+        let role = $(this).data('role');
+        let poin = $(this).data('poin');
+        let ket = $(this).data('ket');
+        let tgl = $('.tgl_izin').val();
+        let jam = $('.jam_izin').val();
+
+        let html = '';
+        html += '<div class="sticky-top bg-light px-3">';
+        html += '<div class="d-flex justify-content-between">';
+        html += '<h6 class="offcanvas-title" id="offcanvasLeftLabel">Aturan untuk perizinan</h6>';
+        html += '<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>';
+        html += '</div>';
+        html += '<div class="mt-2">' + nama + '</div>';
+        html += '<div class="d-flex gap-2 mt-2">';
+        html += '<input type="date" class="tgl_izin form-control form-control-sm" value="<?= date('Y-m-d'); ?>">';
+        html += '<input type="text" class="jam_izin form-control form-control-sm" value="<?= date('H:i'); ?>">';
+        html += '</div>';
+
+        html += '<hr>';
+        html += '</div>';
+
+        html += '<div class="list-group px-3">';
+        let atrn = <?= json_encode($q); ?>;
+        for (let i = 0; i < atrn.length; i++) {
+            html += '<a href="#" data-role="' + role + '" data-id="' + id + '" data-username="' + username + '" data-nama="' + nama + '" data-poin="' + atrn[i].poin + '" data-ket="' + atrn[i].aturan + '" class="perizinan list-group-item list-group-item-action">' + atrn[i].aturan + '/' + atrn[i].poin + '</a>';
+
+        }
+        html += '</div>';
+        $('.body_canvas_perizinan').html(html);
+        const bsOffcanvas = new bootstrap.Offcanvas('#canvas_perizinan');
+        bsOffcanvas.show();
+    })
+
+    $(document).on('click', '.perizinan', function(e) {
+        e.preventDefault();
+
+        let id = $(this).data('id');
+        let nama = $(this).data('nama');
+        let role = $(this).data('role');
+        let username = $(this).data('username');
+        let poin = $(this).data('poin');
+        let ket = $(this).data('ket');
+        let tgl = $('.tgl_izin').val();
+        let jam = $('.jam_izin').val();
+
+        if (tgl == "") {
+            gagal('Tanggal harus diisi!.');
+            return false;
+        }
+        if (jam == "") {
+            gagal('Jam harus diisi!.');
+            return false;
+        }
+
+        post('absen/perizinan', {
+            ket,
+            id,
+            tgl,
+            username,
+            nama,
+            role,
+            poin,
+            jam
+        }).then(res => {
+            if (res.status == "200") {
+                sukses(res.message);
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+
+            } else {
+                gagal_with_button(res.message);
+            }
+        })
 
     })
 
@@ -538,7 +629,7 @@
                 html += '<tr>';
                 html += '<th scope="col">#</th>';
                 html += '<th scope="col">Tgl</th>';
-                html += '<th scope="col">Shift</th>';
+                html += '<th scope="col">Jenis</th>';
                 html += '<th scope="col">Ket</th>';
                 html += '<th scope="col">Poin</th>';
                 html += '</tr>';
@@ -550,9 +641,9 @@
                     html += '<tr>';
                     html += '<td scope="row">' + (i + 1) + '</td>';
                     html += '<td>' + e.tgl + '</td>';
-                    html += '<td>' + e.shift + '</td>';
+                    html += '<td>' + (e.ket == 'Terlambat' || e.ket == 'Ontime' ? 'Absen' : 'Aturan') + '</td>';
                     <?php if (session('role') == 'Root'): ?>
-                        html += '<td><a style="text-decoration:none" href="" class="hapus_absen text_danger" data-id="' + e.id + '">' + e.ket + '</a></td>';
+                        html += '<td><a style="text-decoration:none" href="" data-alert="Are you sure to delete this data?" data-url="general/delete" data-id="' + e.id + '" data-tabel="absen" data-col="id" class="text_danger btn_confirm">' + e.ket + '</a></td>';
                         html += '<td style="text-align:right" data-id="' + e.id + '" class="update_poin" contenteditable>' + e.poin + '</a></td>';
                     <?php else: ?>
                         html += '<td>' + e.ket + '</td>';
@@ -613,24 +704,7 @@
         })
 
     })
-    $(document).on('click', '.hapus_absen', function(e) {
-        e.preventDefault();
-        let id = $(this).data('id');
 
-        post('absen/hapus_absen', {
-            id
-        }).then(res => {
-            if (res.status == "200") {
-                sukses(res.message);
-                setTimeout(() => {
-                    location.reload();
-                }, 1500);
-            } else {
-                gagal(res.message);
-            }
-        })
-
-    })
     $(document).on('blur', '.update_poin', function(e) {
         e.preventDefault();
         let id = $(this).data('id');

@@ -494,11 +494,12 @@ function get_closest($search, $arr)
 function get_absen()
 {
 
+    $sess = session('role');
     $dbs = db('shift');
-    $s = $dbs->where('kategori', session('role'))->get()->getResultArray();
+    $s = $dbs->where('kategori', $sess)->get()->getResultArray();
 
 
-    // $time_server = strtotime('2024-11-20 13:00:00');
+    // $time_server = strtotime('2024-11-21 13:00:00');
     $time_server = time();
 
     $datas = [];
@@ -533,14 +534,14 @@ function get_absen()
         }
     }
     $db = db('absen');
-    $q = $db->where('role', session('role'))->where('tgl', date('d'))->where('shift', $data['shift'])->whereIn('ket', ['Terlambat', 'Ontime'])->get()->getRowArray();
+    $q = $db->where('role', $sess)->where('tgl', date('d'))->where('shift', $data['shift'])->whereIn('ket', ['Terlambat', 'Ontime'])->get()->getRowArray();
 
 
     if ($q) {
         gagal_with_button(base_url('home'), 'Kamu sudah absen!.');
     }
 
-
+    // dd($data);
     if ($data['menit'] < 0) {
         gagal_with_button(base_url('home'), 'Belum waktunya absen!.');
     } else if (round($data['menit'] / 60) > 2) {
@@ -592,5 +593,18 @@ function options($kategori)
     $db = db('options');
 
     $q = $db->where('kategori', $kategori)->orderBy('value', 'ASC')->get()->getResultArray();
+    return $q;
+}
+
+function barang($jenis = null)
+{
+    $db = db('barang');
+    $db;
+    if ($jenis !== null) {
+        $db->where('jenis', $jenis);
+    }
+
+    $q = $db->orderBy('barang', 'ASC')->get()->getResultArray();
+
     return $q;
 }
