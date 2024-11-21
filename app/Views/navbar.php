@@ -153,7 +153,7 @@
                 }
             }
             html += '<div class="accordion-item">';
-            html += '<div class="accordion-header" id="flush-heading' + e.id + '">';
+            html += '<div style="border-bottom:1px solid #f2eaca" class="accordion-header" id="flush-heading' + e.id + '">';
             html += '<button style="font-size: small;" class="accordion-button collapsed ' + (e.read == 0 ? 'bg_success_light' : '') + ' read_notif_pesanan" data-id="' + e.id + '" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse' + e.id + '" aria-expanded="false" aria-controls="flush-collapse' + e.id + '">';
             html += '<div class="d-flex gap-2">';
             html += '<div class="px-2 rounded bg_warning_light">' + e.kategori + '</div>';
@@ -169,8 +169,8 @@
             html += '</div>';
             html += '</button>';
             html += '</div>';
-            html += '<div id="flush-collapse' + e.id + '" class="accordion-collapse collapse" aria-labelledby="flush-heading' + e.id + '" data-bs-parent="#accordionFlushExample">';
-            html += '<div class="accordion-body px-0">';
+            html += '<div id="flush-collapse' + e.id + '" class="accordion-collapse collapse shadow" aria-labelledby="flush-heading' + e.id + '" data-bs-parent="#accordionFlushExample">';
+            html += '<div class="accordion-body px-0 bg_main_bright">';
 
             if (e.kategori == 'Kantin') {
                 html += '<div class="row g-2">';
