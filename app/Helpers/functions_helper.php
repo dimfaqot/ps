@@ -494,12 +494,14 @@ function get_closest($search, $arr)
 function get_absen()
 {
 
+    // $sess = 'Admin Kantin';
     $sess = session('role');
     $dbs = db('shift');
     $s = $dbs->where('kategori', $sess)->get()->getResultArray();
 
 
-    // $time_server = strtotime('2024-11-21 13:00:00');
+    // $time_shift = strtotime('2024-11-22 00:00:00');
+    // $time_server = strtotime('2024-11-22 01:00:00');
     $time_server = time();
 
     $datas = [];
@@ -536,16 +538,14 @@ function get_absen()
     $db = db('absen');
     $q = $db->where('role', $sess)->where('tgl', date('d'))->where('shift', $data['shift'])->whereIn('ket', ['Terlambat', 'Ontime'])->get()->getRowArray();
 
-
     if ($q) {
-        gagal_with_button(base_url('home'), 'Kamu sudah absen!.');
+        gagal_with_button(base_url('home'), 'Kamu sudah absen untuk shift ' . $data['shift'] . '!.');
     }
 
-    // dd($data);
     if ($data['menit'] < 0) {
-        gagal_with_button(base_url('home'), 'Belum waktunya absen!.');
+        gagal_with_button(base_url('home'), 'Belum waktunya absen untuk shift ' . $data['shift']  . '!.');
     } else if (round($data['menit'] / 60) > 2) {
-        gagal_with_button(base_url('home'), 'Telat lebih 3 jam!. Absen ditutup!.');
+        gagal_with_button(base_url('home'), 'Telat lebih 3 jam!. Absen untuk shift ' . $data['shift'] . ' ditutup!.');
     }
 
 

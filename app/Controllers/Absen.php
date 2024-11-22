@@ -27,7 +27,7 @@ class Absen extends BaseController
         $val = get_absen();
 
         $value = [
-            'tgl' => date('d/m/Y', $val['time_server']),
+            'tgl' => date('d', $val['time_server']),
             'username' => user()['username'],
             'ket' => $val['ket'],
             'poin' => $val['poin'],
@@ -47,6 +47,7 @@ class Absen extends BaseController
                 'kategori' => 'Absen',
                 'pemesan' => $value['nama'],
                 'tgl' => $value['absen'],
+                'harga' => time(),
                 'menu' => ($value['ket'] == 'Ontime' ? 'Absen pada ' . date('H:i', $val['time_server']) : $val['diff']),
                 'meja' => $value['ket'],
                 'qty' => $value['poin']

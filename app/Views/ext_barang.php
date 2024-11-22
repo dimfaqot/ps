@@ -26,8 +26,27 @@
 
 <body>
     <div class="container" style="margin-bottom: 100px;">
+        <div class="fixed-top" style="width: 300px;">
+            <div class="px-3" style="background-color: #d78926;">ORDER MENU</div>
+            <div class="p-3" style="background-color: #fffefd;">
+                <div class="pe-3 d-flex d-flex justify-content-between gap-3">
+                    <p>1. Mie goreng</p>
+                    <div class="d-flex">
+                        <a href="">-</a>
+                        <p>10</p>
+                        <a href="">+</a>
+                    </div>
+                    <p>10.000</p>
+                </div>
+                <div class="d-flex justify-content-end gap-1">
+                    <hr style="border:1px solid #d78926;width:90%">
+                    <div style="color: #d78926;font-weight:bold">+</div>
+                </div>
+                <div class="pe-3" style="color: #d78926;text-align:right">RP200.000</div>
+            </div>
+        </div>
         <div>
-            <h1 class="text-center mt-5" style="font-family: 'Tangerine', serif;color:#d78926;font-size:60px">
+            <h1 class=" text-center mt-5" style="font-family: 'Tangerine', serif;color:#d78926;font-size:60px">
                 Hayu Food Court
             </h1>
             <h1 class="text-center menu" style="font-size:60px">
@@ -103,7 +122,12 @@
             Hayu Food Court
         </h1>
     </div>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <script>
+
+    </script>
 </body>
 
 </html>

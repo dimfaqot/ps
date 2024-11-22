@@ -86,24 +86,7 @@
 
                 $('.lokasimu').html('<h3 style="color:red"><i class="fa-solid fa-triangle-exclamation"></i> LOKASIMU DI LUAR AREA!</h3>');
 
-                setTimeout(() => {
-                    const d = new Date();
-                    let time = d.getTime();
-                    let data = {
-                        latitude,
-                        longitude,
-                        id: '<?= session('id'); ?>',
-                        time
-                    }
 
-                    post('absen/encode', {
-                        data
-                    }).then(res => {
-                        if (res.status == '200') {
-                            window.location.href = "<?= base_url('presentation/'); ?>" + res.data;
-                        }
-                    })
-                }, 2000);
             }
 
             // if (longitude > long_atas && longitude < lat_bawah) {
