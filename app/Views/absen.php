@@ -37,7 +37,7 @@
             <span class="visually-hidden">Loading...</span>
         </div>
     </div>
-    <div style="padding: 0% 5%;"><?= date('d/m/Y H:i:s'); ?></div>
+    <div style="padding: 0% 5%;"><?= date('d/m/Y H:i:s'); ?> / <?= time(); ?></div>
     <div class="map_lokasi_saya" style="padding: 0% 5%;"></div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     <script>
@@ -87,7 +87,24 @@
 
                 $('.lokasimu').html('<h3 style="color:red"><i class="fa-solid fa-triangle-exclamation"></i> LOKASIMU DI LUAR AREA!</h3>');
 
+                setTimeout(() => {
+                    const d = new Date();
+                    let time = d.getTime();
+                    let data = {
+                        latitude,
+                        longitude,
+                        id: '<?= session('id'); ?>',
+                        time
+                    }
 
+                    post('absen/encode', {
+                        data
+                    }).then(res => {
+                        if (res.status == '200') {
+                            window.location.href = "<?= base_url('presentation/'); ?>" + res.data;
+                        }
+                    })
+                }, 2000);
             }
 
             // if (longitude > long_atas && longitude < lat_bawah) {
