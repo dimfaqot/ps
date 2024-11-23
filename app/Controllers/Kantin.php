@@ -18,10 +18,10 @@ class Kantin extends BaseController
         $q = $db->orderBy('tgl', 'DESC')->orderBy('barang', 'DESC')->get()->getResultArray();
         $data = [];
         foreach ($q as $i) {
-            $i['no_nota'] = 'K/14/23112024/104152';
+            // $i['no_nota'] = 'K/14/23112024/104152';
 
-            $db->where('id', $i['id']);
-            $db->update($i);
+            // $db->where('id', $i['id']);
+            // $db->update($i);
             if (date('n', $i['tgl']) == date('n') || date('n', $i['tgl']) == (date('n') - 1)) {
                 $data[] = $i;
             }
