@@ -501,8 +501,8 @@ function get_absen()
 
 
     // $time_shift = strtotime('2024-11-22 00:00:00');
-    // $time_server = strtotime('2024-11-22 01:00:00');
-    $time_server = time();
+    $time_server = strtotime('2024-11-22 01:00:00');
+    // $time_server = time();
 
     $datas = [];
     $nums = [];
