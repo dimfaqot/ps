@@ -501,7 +501,7 @@ function get_absen()
 
 
     // $time_shift = strtotime('2024-11-22 00:00:00');
-    $time_server = strtotime('2024-11-22 01:00:00');
+    $time_server = strtotime('2024-11-23 01:00:00');
     // $time_server = time();
 
     $datas = [];
@@ -539,7 +539,6 @@ function get_absen()
     }
     $tes = [$date_server, $time_server, date('d/m/Y H:i:s', $time_server)];
 
-    dd($datas, $tes, $closest, $data);
     $db = db('absen');
     $q = $db->where('role', $sess)->where('tgl', date('d'))->where('shift', $data['shift'])->whereIn('ket', ['Terlambat', 'Ontime'])->get()->getRowArray();
 
@@ -573,6 +572,7 @@ function get_absen()
     }
     $data['msg'] = $msg;
 
+    dd($datas, $tes, $closest, $data);
     return $data;
 }
 
