@@ -14,9 +14,14 @@ class Kantin extends BaseController
     {
         $db = db(menu()['tabel']);
 
+
         $q = $db->orderBy('tgl', 'DESC')->orderBy('barang', 'DESC')->get()->getResultArray();
         $data = [];
         foreach ($q as $i) {
+            $i['no_nota'] = 'K/14/23112024/104152';
+
+            $db->where('id', $i['id']);
+            $db->update($i);
             if (date('n', $i['tgl']) == date('n') || date('n', $i['tgl']) == (date('n') - 1)) {
                 $data[] = $i;
             }
@@ -49,7 +54,7 @@ class Kantin extends BaseController
 
         $db = db('barang');
         $dbk = db('kantin');
-
+        $no_nota = no_nota(menu()['tabel']);
         $err = [];
         $total_harga = 0;
         foreach ($data as $i) {
@@ -60,6 +65,7 @@ class Kantin extends BaseController
             }
             $value = [
                 'barang_id' => $i['barang_id'],
+                'no_nota' => $no_nota,
                 'barang' => $q['barang'],
                 'harga_satuan' => $q['harga_satuan'],
                 'tgl' => time(),

@@ -140,6 +140,9 @@ $routes->post('/kantin/pembayaran', 'Kantin::pembayaran');
 // public
 $routes->get('/ext/a/(:any)', 'Ext::auth/$1');
 $routes->get('/ext/menu', 'Ext::menu');
+$routes->post('/ext/save_menu_pesanan', 'Ext::save_menu_pesanan');
+$routes->get('/ext/pesanan/(:any)', 'Ext::pesanan/$1');
+$routes->post('/ext/invoice', 'Ext::invoice');
 $routes->get('/login/a/(:any)', 'Ext::auth_root/$1');
 
 // BARBER

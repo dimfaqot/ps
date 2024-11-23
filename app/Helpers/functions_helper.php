@@ -299,7 +299,7 @@ function rp_to_int($uang)
 
 function rupiah($uang)
 {
-    return 'Rp. ' . number_format($uang, 0, ",", ".");
+    return number_format($uang, 0, ",", ".");
 }
 
 function get_rental($data)
@@ -612,4 +612,18 @@ function barang($jenis = null)
     $q = $db->orderBy('barang', 'ASC')->get()->getResultArray();
 
     return $q;
+}
+
+function no_nota($tabel, $meja = 14)
+{
+
+    $db = db($tabel);
+    $no_nota = strtoupper(substr($tabel, 0, 1)) . '/' . $meja . '/' . date('dmY/His');
+    $q = $db->where('no_nota', $no_nota)->get()->getRowArray();
+
+    if (!$q) {
+        return $no_nota;
+    } else {
+        return strtoupper(substr($tabel, 0, 1)) . '/' . $meja . '/' . date('dmY/His') . '/0001';
+    }
 }

@@ -29,4 +29,63 @@ class Ext extends BaseController
         $q = $db->orderBy('barang', 'ASC')->get()->getResultArray();
         return view('ext_menu', ['judul' => 'Daftar Menu', 'data' => $q]);
     }
+    public function save_menu_pesanan()
+    {
+        $data = json_decode(json_encode($this->request->getVar('order_list')), true);
+        $no_meja = clear($this->request->getVar('no_meja'));
+        $nama_pemesan = upper_first(clear($this->request->getVar('nama_pemesan')));
+        $dbn = db('notif');
+
+        $no_nota = no_nota('kantin', $no_meja);
+        $tgl = time();
+        $err = [];
+        foreach ($data as $i) {
+            $datan = [
+                'no_nota' => $no_nota,
+                'tgl' => $tgl,
+                'menu' => $i['barang'],
+                'harga' => $i['harga'],
+                'qty' => $i['qty_item'],
+                'total' => $i['total_item'],
+                'meja' => $no_meja,
+                'pemesan' => $nama_pemesan,
+                'dibaca' => 'WAITING',
+                'kategori' => 'Pesanan',
+            ];
+            if (!$dbn->insert($datan)) {
+                $err[] = $i['barang'];
+            }
+        }
+        $res = [
+            'no_nota' => $no_nota,
+            'nama_pemesan' => $nama_pemesan,
+            'no_meja' => $no_meja
+        ];
+
+        if (count($err) > 0) {
+            gagal_js('Gagal disave: ' . implode(", ", $err), json_encode($res));
+        } else {
+            sukses_js('Pesanan sukses disimpan.', encode_jwt($res));
+        }
+    }
+
+    public function pesanan($jwt)
+    {
+        $data = decode_jwt($jwt);
+        $db = db('notif');
+        $q = $db->where('no_nota', $data['no_nota'])->orderBy('menu', 'ASC')->get()->getResultArray();
+
+        return view('ext_pesanan', ['judul' => 'Daftar Menu', 'data' => $q, 'no_meja' => $data['no_meja'], 'nama_pemesan' => $data['nama_pemesan']]);
+    }
+    public function invoice()
+    {
+        $kategori = clear($this->request->getVar('kategori'));
+        $jenis = clear($this->request->getVar('jenis'));
+        $no_nota = clear($this->request->getVar('no_nota'));
+
+        $db = db('notif');
+        $q = $db->where('no_nota', $no_nota)->whereNotIn('dibaca', [""])->get()->getRowArray();
+
+        sukses_js('Ok', $q['dibaca']);
+    }
 }

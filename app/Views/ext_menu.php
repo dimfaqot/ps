@@ -29,6 +29,18 @@
 </head>
 
 <body>
+    <!-- warning alert message -->
+    <div class="box_warning" style="position:fixed;z-index:999999;display:none;">
+
+    </div>
+    <!-- warning alert message with button -->
+    <div class="box_warning_with_button" style="position:fixed;z-index:999999;display:none;">
+
+    </div>
+    <!-- warning confirm -->
+    <div class="box_confirm" style="position:fixed;z-index:999999;display:none;">
+
+    </div>
     <div class="container" style="margin-bottom: 100px;">
         <div class="body_order">
 
@@ -159,11 +171,11 @@
             html += '<div class="p-3" style="background-color: #fffefd;">';
             html += '<div class="input-group input-group-sm mb-2">';
             html += '<span style="width:120px" class="input-group-text">Nomor Meja</span>';
-            html += '<input type="text" class="form-control nomor_meja" placeholder="Nomor meja...">';
+            html += '<input type="number" class="form-control no_meja" placeholder="Nomor meja...">';
             html += '</div>';
             html += '<div class="input-group input-group-sm mb-3">';
             html += '<span style="width:120px" class="input-group-text">Nama Pemesan</span>';
-            html += '<input type="text" class="form-control nomor_meja" placeholder="Nama pemesan...">';
+            html += '<input type="text" class="form-control nama_pemesan" placeholder="Nama pemesan...">';
             html += '</div>';
             html += '<hr>';
             html += '<h6>RINCIAN PESANAN:</h6>';
@@ -176,7 +188,7 @@
 
             html += '<div class="d-flex justify-content-center gap-2 mt-2">';
             html += '<button class="btn_grey cancel_order"><i class="fa-solid fa-thumbs-down"></i> Batal</button>';
-            html += '<button class="btn_warning"><i class="fa-solid fa-thumbs-up"></i> Pesan</button>';
+            html += '<button class="btn_warning btn_save_pesanan"><i class="fa-solid fa-thumbs-up"></i> Pesan</button>';
             html += '</div>';
 
             html += '</div>';
@@ -194,6 +206,35 @@
             e.preventDefault();
             order_list = [];
             $('.body_order').html("");
+        })
+        $(document).on('click', '.btn_save_pesanan', function(e) {
+            e.preventDefault();
+
+            let no_meja = $('.no_meja').val();
+            let nama_pemesan = $('.nama_pemesan').val();
+            if (no_meja == "") {
+                console.log('Ok');
+                gagal('Nomor meja harus diisi!.');
+                return false;
+            }
+            if (nama_pemesan == "") {
+                gagal('Nama Pemesan harus diisi!.');
+                return false;
+            }
+            post('ext/save_menu_pesanan', {
+                order_list,
+                nama_pemesan,
+                no_meja
+            }).then(res => {
+                if (res.status == "200") {
+                    sukses(res.message);
+                    setTimeout(() => {
+                        window.location.href = "<?= base_url('ext/pesanan'); ?>/" + res.data;
+                    }, 1400);
+                } else {
+                    gagal_with_button(res.message);
+                }
+            })
         })
 
         $(document).on('click', '.menu_list', function(e) {
