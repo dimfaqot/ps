@@ -568,7 +568,7 @@ function get_absen()
         $data['ket'] = 'Terlambat';
         $po = round(($data['menit'] - 15) / 10);
         $data['poin'] = -$po;
-        $msg = 'Kamu terlambat ' . $data['diff'] . '.!';
+        $msg = 'Kamu terlambat ' . $data['diff'] . ' untuk shift ' . $data['shift'] . '.!';
     }
     $data['msg'] = $msg;
 
