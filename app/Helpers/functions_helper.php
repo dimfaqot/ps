@@ -508,7 +508,7 @@ function get_absen()
     $nums = [];
     $date_server = date_create(date('Y-m-d H:i:s', $time_server)); //jam server
 
-    dd($date_server . ' ' . $date_server . ' ' . date('d/m/Y H:i:s'));
+    dd($date_server . ' ' . $time_server . ' ' . date('d/m/Y H:i:s', $time_server));
     foreach ($s as $i) {
         $time_shift = strtotime(date('Y-m-d') . ' ' . $i['jam'] . ':00');
         $shift = date('Y-m-d') . ' ' . $i['jam'] . ':00';
