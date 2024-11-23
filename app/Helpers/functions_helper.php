@@ -506,7 +506,7 @@ function get_absen()
 
     $datas = [];
     $nums = [];
-    $date_server = date_create(date('Y-m-d H:i:s', ($time_server - (15 * 60)))); //jam server
+    $date_server = date_create(date('Y-m-d H:i:s', $time_server)); //jam server
 
     dd($date_server);
     foreach ($s as $i) {
