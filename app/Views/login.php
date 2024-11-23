@@ -6,6 +6,7 @@
     <div class="map_lokasi_saya mt-3">
 
     </div>
+    <h6><?= date('d/m/Y H:i:s'); ?></h6>
     <div class="body_login" style="border: 2px solid white;border-radius:10px;background-color:white;display:none">
 
 

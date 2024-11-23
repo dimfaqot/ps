@@ -139,7 +139,7 @@ $routes->post('/kantin/pembayaran', 'Kantin::pembayaran');
 
 // public
 $routes->get('/ext/a/(:any)', 'Ext::auth/$1');
-$routes->get('/ext/barang', 'Ext::barang');
+$routes->get('/ext/menu', 'Ext::menu');
 $routes->get('/login/a/(:any)', 'Ext::auth_root/$1');
 
 // BARBER
