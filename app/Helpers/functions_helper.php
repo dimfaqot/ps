@@ -507,9 +507,8 @@ function get_absen()
     $datas = [];
     $nums = [];
     $date_server = date_create(date('Y-m-d H:i:s', $time_server)); //jam server
-    $tes = [$date_server, $time_server, date('d/m/Y H:i:s', $time_server)];
 
-    dd($tes);
+
     foreach ($s as $i) {
         $time_shift = strtotime(date('Y-m-d') . ' ' . $i['jam'] . ':00');
         $shift = date('Y-m-d') . ' ' . $i['jam'] . ':00';
@@ -538,6 +537,9 @@ function get_absen()
             $data = $i;
         }
     }
+    $tes = [$date_server, $time_server, date('d/m/Y H:i:s', $time_server)];
+
+    dd($datas, $tes, $closest, $data);
     $db = db('absen');
     $q = $db->where('role', $sess)->where('tgl', date('d'))->where('shift', $data['shift'])->whereIn('ket', ['Terlambat', 'Ontime'])->get()->getRowArray();
 
