@@ -54,7 +54,7 @@ class Notif extends BaseController
         if (in_array(session('id'), $exp)) {
             sukses_js('Ok');
         } else {
-            $q['dibaca'] = session('id') . ',';
+            $q['dibaca'] = $q['dibaca'] . session('id') . ',';
             $db->where('id', $id);
             if ($db->update($q)) {
                 sukses_js('Ok');

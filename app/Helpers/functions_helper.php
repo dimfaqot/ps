@@ -494,15 +494,15 @@ function get_closest($search, $arr)
 function get_absen()
 {
 
-    $sess = 'Admin Kantin';
-    // $sess = session('role');
+    // $sess = 'Admin Kantin';
+    $sess = session('role');
     $dbs = db('shift');
     $s = $dbs->where('kategori', $sess)->get()->getResultArray();
 
 
     // $time_shift = strtotime('2024-11-22 00:00:00');
-    $time_server = strtotime('2024-11-23 01:00:00');
-    // $time_server = time();
+    // $time_server = strtotime('2024-11-23 01:00:00');
+    $time_server = time();
 
     $datas = [];
     $nums = [];
@@ -572,7 +572,7 @@ function get_absen()
     }
     $data['msg'] = $msg;
 
-    dd($datas, $tes, $closest, $data);
+    // dd($datas, $tes, $closest, $data);
     return $data;
 }
 
