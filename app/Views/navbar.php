@@ -258,10 +258,10 @@
         })
     }
 
-    // setInterval(() => {
-    //     notif_pesanan();
+    setInterval(() => {
+        notif_pesanan();
 
-    // }, 1000);
+    }, 30000);
 
     // let myOffcanvas = document.getElementById('offcanvasRight')
     // let bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas)
