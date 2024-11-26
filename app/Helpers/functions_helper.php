@@ -465,16 +465,16 @@ function biaya_per_menit($harga, $start, $end)
     $diff = $end - $start;
     $menit = ceil($diff / 60);
     $harga_per_menit = ceil($harga / 60);
-
     $harga = $harga_per_menit * $menit;
 
 
     $exp = explode('.', rupiah($harga));
-
-    if (end($exp) !== '000') {
-        $temp = (int)$exp[1] + 1;
-        $temp .= ".000";
-        $harga = rp_to_int($temp);
+    if (count($exp) >= 2) {
+        if (end($exp) !== '000') {
+            $temp = (int)$exp[0] + 1;
+            $temp .= ".000";
+            $harga = rp_to_int($temp);
+        }
     }
 
     return $harga;

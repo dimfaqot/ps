@@ -52,6 +52,7 @@ class Billiard_2 extends BaseController
                 $data['biaya'] = (int)$data['harga'] * (int)((int)$data['durasi'] / 60);
                 $data['durasi_waktu'] = $data['durasi'];
             }
+
             sukses_js('Koneksi sukses.', $data);
         } else {
             if ($q['is_active'] == 1) {
