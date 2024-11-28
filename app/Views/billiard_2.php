@@ -238,6 +238,7 @@
         let id = $(this).attr('data-id');
         let meja_id = $(this).attr('data-meja_id');
         let total_biaya = $(this).attr('data-total_biaya');
+
         if (uang == "") {
             gagal("Uang harus diisi!.");
             return false;

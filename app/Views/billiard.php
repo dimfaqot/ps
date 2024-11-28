@@ -279,6 +279,7 @@
         let uang = $('.harga_jml_uang').val();
         let id = $(this).attr('data-id');
         let total_biaya = $(this).attr('data-total_biaya');
+
         if (uang == "") {
             gagal("Uang harus diisi!.");
             return false;

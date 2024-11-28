@@ -474,7 +474,7 @@
                 html += '</div>'
 
                 html += '<div class="mb-3 d-grid">';
-                html += '<a class="btn_success btn_bayar" data-no_nota=' + res.data[0].no_nota + ' data-total="' + total + '" style="text-align: center;" href=""><i class="fa-solid fa-cash-register"></i> Bayar</a>';
+                html += '<a class="btn_success btn_bayar_navbar" data-no_nota=' + res.data[0].no_nota + ' data-total="' + total + '" style="text-align: center;" href=""><i class="fa-solid fa-cash-register"></i> Bayar</a>';
                 html += '</div>';
 
                 $('.body_pembayaran').html(html);
@@ -509,7 +509,7 @@
             }
         }
     })
-    $(document).on('click', '.btn_bayar', function(e) {
+    $(document).on('click', '.btn_bayar_navbar', function(e) {
         e.preventDefault();
         let diskon = parseInt(str_replace(".", "", $('.diskon').val()));
         let no_nota = $(this).data('no_nota');
