@@ -181,4 +181,70 @@ class Home extends BaseController
             sukses(base_url('billiard'), 'Success.');
         }
     }
+    public function pembayaran_kantin_barcode()
+    {
+        $db = db('notif');
+        $no_nota = clear($this->request->getVar('no_nota'));
+        $diskon = (int)clear($this->request->getVar('diskon'));
+        $uang = (int)clear($this->request->getVar('uang'));
+        $biaya = (int)clear($this->request->getVar('biaya'));
+        $total = (int)clear($this->request->getVar('total'));
+        $q = $db->orderBy('no_nota', $no_nota)->where('dibaca', 'PROCESS')->get()->getResultArray();
+
+        if (!$q) {
+            gagal_js('No. nota not found!.');
+        }
+
+        if ($uang < $biaya) {
+            gagal_js('Uang pembayaran kurang!.');
+        }
+
+        if ($diskon > $biaya) {
+            gagal_js('Diskon kebesaran!.');
+        }
+        $db_barang = db('barang');
+        $err = [];
+        $diskon_item = floor($diskon / count($q));
+        $total_diskon = $diskon - ($diskon_item * count($q));
+
+        foreach ($q as $k => $i) {
+            $harga = $i['total'] - $diskon_item;
+            $data = [
+                'barang_id' => 0,
+                'barang' => $i['menu'],
+                'harga_satuan' => $i['harga'],
+                'diskon' => $diskon_item,
+                'qty' => $i['qty'],
+                'total_harga' => $harga,
+                'petugas' => user()['nama'],
+                'tgl' => time(),
+                'no_nota' => $no_nota
+            ];
+            $b = $db_barang->where('barang', $i['menu'])->get()->getRowArray();
+
+            if ($b) {
+                $data['barang_id'] = $b['id'];
+            }
+
+            if (($k + 1) == count($q)) {
+                if ($total_diskon > 0) {
+                    $data['diskon'] = $data['diskon'] + $total_diskon;
+                    $data['total_harga'] = ($data['total_harga'] + $diskon_item) - $data['diskon'];
+                }
+            }
+            $dbk = db('kantin');
+            if ($dbk->insert($data)) {
+                $i['dibaca'] = 'DONE';
+                $db->where('id', $i['id']);
+                $db->update($i);
+            } else {
+                $err[] = $i['menu'];
+            }
+        }
+        if (count($err) > 0) {
+            gagal_js('Data ' . implode(", ", $err) . 'gagal diinput!.');
+        } else {
+            sukses_js('Proses sukses.', $uang - $biaya, $no_nota);
+        }
+    }
 }

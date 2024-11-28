@@ -27,6 +27,9 @@ $routes->post('/absen/perizinan', 'Absen::perizinan');
 $routes->post('/notif/pesanan', 'Notif::pesanan');
 $routes->post('/notif/detail_pesanan', 'Notif::detail_pesanan');
 $routes->post('/notif/read_notif_pesanan', 'Notif::read_notif_pesanan');
+$routes->post('/notif/notif_detail_pesanan', 'Notif::notif_detail_pesanan');
+$routes->post('/notif/kerjakan_pesanan', 'Notif::kerjakan_pesanan');
+$routes->post('/notif/selesaikan_pesanan', 'Notif::selesaikan_pesanan');
 
 
 // home
@@ -34,6 +37,7 @@ $routes->get('/home', 'Home::index');
 $routes->post('/home/get_pendapatan', 'Home::get_pendapatan');
 $routes->post('/home/koperasi', 'Home::koperasi');
 $routes->post('/home/add_tabungan', 'Home::add_tabungan');
+$routes->post('/home/pembayaran_kantin_barcode', 'Home::pembayaran_kantin_barcode');
 // $routes->get('/home/replace', 'Home::replace');
 
 // users ____________________________________

@@ -12,11 +12,16 @@ class Notif extends BaseController
         $belum_dibaca = 0;
         $err = [];
         foreach ($q as $i) {
-
-            $exp = explode(",", $i['dibaca']);
-            if (!in_array(session('id'), $exp)) {
-                $err[] = $i;
-                $belum_dibaca++;
+            if ($i['kategori'] == 'Pesanan') {
+                if ($i['dibaca'] !== 'DONE') {
+                    $belum_dibaca++;
+                }
+            } else {
+                $exp = explode(",", $i['dibaca']);
+                if (!in_array(session('id'), $exp)) {
+                    $err[] = $i;
+                    $belum_dibaca++;
+                }
             }
         }
 
@@ -28,12 +33,25 @@ class Notif extends BaseController
         $q = $db->orderBy('harga', 'DESC')->get()->getResultArray();
 
         $data = [];
-
+        $no_nota_exist = [];
         foreach ($q as $i) {
-            $i['read'] = 0;
-            $exp = explode(",", $i['dibaca']);
-            if (in_array(session('id'), $exp)) {
-                $i['read'] = 1;
+            if ($i['kategori'] == 'Pesanan') {
+                if ($i['dibaca'] == 'DONE') {
+                    $i['read'] = 1;
+                } else {
+                    $i['read'] = 0;
+                }
+                if (in_array($i['no_nota'], $no_nota_exist)) {
+                    continue;
+                } else {
+                    $no_nota_exist[] = $i['no_nota'];
+                }
+            } else {
+                $i['read'] = 0;
+                $exp = explode(",", $i['dibaca']);
+                if (in_array(session('id'), $exp)) {
+                    $i['read'] = 1;
+                }
             }
             $data[] = $i;
         }
@@ -65,5 +83,47 @@ class Notif extends BaseController
 
 
         sukses_js('Koneksi sukses.', $q);
+    }
+    public function notif_detail_pesanan()
+    {
+        $no_nota = clear($this->request->getVar('no_nota'));
+        $db = db('notif');
+        $q = $db->where('no_nota', $no_nota)->get()->getResultArray();
+
+        if (!$q) {
+            gagal_js('No. nota not found!.');
+        }
+
+        sukses_js('Koneksi sukses.', $q);
+    }
+    public function kerjakan_pesanan()
+    {
+        $no_nota = clear($this->request->getVar('no_nota'));
+        $db = db('notif');
+        $q = $db->where('no_nota', $no_nota)->get()->getResultArray();
+
+        if (!$q) {
+            gagal_js('No. nota not found!.');
+        }
+
+        foreach ($q as $i) {
+            $i['dibaca'] = 'PROCESS';
+            $db->where('id', $i['id']);
+            $db->update($i);
+        }
+
+        sukses_js('Pesanan dikerjakan.', $q);
+    }
+    public function selesaikan_pesanan()
+    {
+        $no_nota = clear($this->request->getVar('no_nota'));
+        $db = db('notif');
+        $q = $db->where('no_nota', $no_nota)->get()->getResultArray();
+
+        if (!$q) {
+            gagal_js('No. nota not found!.');
+        }
+
+        sukses_js('Pesanan selesai.', $q);
     }
 }
