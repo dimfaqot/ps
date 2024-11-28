@@ -154,15 +154,15 @@
 </div>
 
 <!-- Modal pembayaran-->
-<div class="modal fade" id="pembayaran" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="pembayaran_navbar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
-                <div class="d-flex justify-content-center body_select_barang d-none">
+                <div class="d-flex justify-content-center d-none">
 
                 </div>
 
-                <div class="body_pembayaran">
+                <div class="body_pembayaran_navbar">
 
                 </div>
 
@@ -178,7 +178,7 @@
         <div class="modal-content">
             <div class="d-flex justify-content-between p-2 bg_danger">
                 <div class="fw-bold text_light"><i class="fa-solid fa-cash-register"></i> PEMBAYARAN</div>
-                <div class="bg_light" style="border-radius: 50%;padding:1.2px 4px"><a href="" class="btn_close_modal_pembayaran" data-bs-dismiss="modal"><i class="fa-solid fa-circle-xmark text_danger"></i></a></div>
+                <div class="bg_light" style="border-radius: 50%;padding:1.2px 4px"><a href="" class="btn_close_modal_pembayaran_navbar" data-bs-dismiss="modal"><i class="fa-solid fa-circle-xmark text_danger"></i></a></div>
             </div>
             <div class="modal-body body_total_harga">
 
@@ -477,9 +477,9 @@
                 html += '<a class="btn_success btn_bayar_navbar" data-no_nota=' + res.data[0].no_nota + ' data-total="' + total + '" style="text-align: center;" href=""><i class="fa-solid fa-cash-register"></i> Bayar</a>';
                 html += '</div>';
 
-                $('.body_pembayaran').html(html);
+                $('.body_pembayaran_navbar').html(html);
 
-                let myModalPembayaran = document.getElementById('pembayaran');
+                let myModalPembayaran = document.getElementById('pembayaran_navbar');
                 let modalPembayaran = bootstrap.Modal.getOrCreateInstance(myModalPembayaran)
                 modalPembayaran.show();
             } else {

@@ -8,6 +8,7 @@ class Login extends BaseController
     {
         return view('login', ['judul' => 'Login - PS']);
     }
+
     public function landing(): string
     {
         $db = db('unit');
