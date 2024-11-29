@@ -5,6 +5,11 @@ namespace App\Controllers;
 class Api extends BaseController
 {
 
+    public function index()
+    {
+
+        return view('uiapi', ['judul' => 'UI API']);
+    }
     public function lampu($tabel, $jwt)
     {
 
@@ -25,5 +30,22 @@ class Api extends BaseController
 
         $db->where('id', $q['id']);
         $db->update($q);
+    }
+
+    public function update_by_js()
+    {
+        $val = clear($this->request->getVar('val'));
+        $db = db('settings');
+
+        $q = $db->where('nama_setting', 'Billiard')->get()->getRowArray();
+        $q['value_str'] = $val;
+
+        $db->where('id', $q['id']);
+
+        if ($db->update($q)) {
+            sukses_js('Sukses');
+        } else {
+            sukses_js('Gagal!.');
+        }
     }
 }
