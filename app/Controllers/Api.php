@@ -9,6 +9,7 @@ class Api extends BaseController
     {
         $db = db('settings');
         $q = $db->where('nama_setting', 'Billiard')->get()->getRowArray();
+
         return view('uiapi', ['judul' => 'UI API', 'data' => $q['value_str']]);
     }
     public function lampu($tabel, $jwt)
