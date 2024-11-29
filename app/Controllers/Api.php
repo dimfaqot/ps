@@ -7,8 +7,9 @@ class Api extends BaseController
 
     public function index()
     {
-
-        return view('uiapi', ['judul' => 'UI API']);
+        $db = db('settings');
+        $q = $db->where('nama_setting', 'Billiard')->get()->getRowArray();
+        return view('uiapi', ['judul' => 'UI API', 'data' => $q['value_str']]);
     }
     public function lampu($tabel, $jwt)
     {

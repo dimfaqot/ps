@@ -9,10 +9,10 @@
             <h6 class="mb-2">SAKLAR LAMPU BILLIARD</h6>
             <div class="d-flex justify-content-between">
                 <div class="form-check form-switch body_saklar">
-                    <input class="form-check-input saklar" name="saklar" type="checkbox" role="switch" value="OFF">
+                    <input class="form-check-input saklar" name="saklar" type="checkbox" role="switch" <?= ($data = 'ON' ? 'checked' : ''); ?> value="<?= $data; ?>">
                 </div>
                 <div>
-                    <i class="fa-solid fa-circle-dot text-danger lampu"></i>
+                    <i class="fa-solid fa-circle-dot <?= ($data == 'OFF' ? 'text-danger' : 'text-success'); ?> lampu"></i>
                 </div>
             </div>
         </div>
