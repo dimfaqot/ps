@@ -6,6 +6,7 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Login::landing');
+$routes->get('/api', 'Api::lampu');
 
 $routes->get('/login', 'Login::index');
 
