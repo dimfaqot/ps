@@ -7,6 +7,6 @@ class Api extends BaseController
 
     public function lampu()
     {
-        sukses_js('OFF');
+        sukses_js('ON');
     }
 }
