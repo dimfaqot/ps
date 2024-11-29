@@ -14,7 +14,7 @@ class Api extends BaseController
         $q = $db->where('nama_setting', upper_first($tabel))->get()->getRowArray();
 
 
-        sukses_js('ON', $q['value_str'], $data['lampu']);
+        sukses_js($q['value_str'], $data['lampu']);
     }
     public function update($value)
     {
