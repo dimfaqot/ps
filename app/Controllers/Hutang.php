@@ -45,7 +45,7 @@ class Hutang extends BaseController
             'role' => 'Member',
             'bidang' => '',
             'username' => time(),
-            'password' => getenv('default_password')
+            'password' => password_hash(getenv('default_password'), PASSWORD_DEFAULT)
         ];
 
         if ($db->insert($data)) {
@@ -116,7 +116,7 @@ class Hutang extends BaseController
 
         $db = db('barang');
         $dbh = db('hutang');
-        $no_nota = no_nota($kategori);
+        $no_nota = no_nota(strtolower($kategori));
         $dbu = db('users');
         $user = $dbu->where('id', $user_id)->get()->getRowArray();
         $err = [];
