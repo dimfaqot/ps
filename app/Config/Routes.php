@@ -151,6 +151,7 @@ $routes->get('/ext/menu', 'Ext::menu');
 $routes->post('/ext/save_menu_pesanan', 'Ext::save_menu_pesanan');
 $routes->get('/ext/pesanan/(:any)', 'Ext::pesanan/$1');
 $routes->post('/ext/invoice', 'Ext::invoice');
+$routes->get('/login/a/member/(:any)', 'Ext::auth_jwt/$1');
 $routes->get('/login/a/(:any)', 'Ext::auth_root/$1');
 
 // BARBER
@@ -175,3 +176,14 @@ $routes->post('/barber/pembayaran', 'Barber::pembayaran');
 $routes->get('/aturan', 'Aturan::index');
 $routes->post('/aturan/add', 'Aturan::add');
 $routes->post('/aturan/update', 'Aturan::update');
+
+// Hutang __________________________________
+$routes->get('/hutang', 'Hutang::index');
+$routes->post('/hutang/update', 'Hutang::update');
+$routes->post('/hutang/pembeli', 'Hutang::pembeli');
+$routes->post('/hutang/add_pembeli', 'Hutang::add_pembeli');
+$routes->post('/hutang/update_pembeli', 'Hutang::update_pembeli');
+$routes->post('/hutang/data_hutang', 'Hutang::data_hutang');
+$routes->post('/hutang/add', 'Hutang::add');
+$routes->post('/hutang/lunas', 'Hutang::lunas');
+$routes->post('/hutang/bayar_lunas', 'Hutang::bayar_lunas');

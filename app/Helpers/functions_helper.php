@@ -116,7 +116,7 @@ function gagal_with_button($url, $pesan)
     die;
 }
 
-function sukses_js($pesan, $data = null, $data2 = null, $data3 = null, $data4 = null)
+function sukses_js($pesan, $data = null, $data2 = null, $data3 = null, $data4 = null, $data5 = null)
 {
     $data = [
         'status' => '200',
@@ -124,7 +124,8 @@ function sukses_js($pesan, $data = null, $data2 = null, $data3 = null, $data4 = 
         'data' => $data,
         'data2' => $data2,
         'data3' => $data3,
-        'data4' => $data4
+        'data4' => $data4,
+        'data5' => $data5
     ];
 
     echo json_encode($data);
@@ -626,4 +627,17 @@ function no_nota($tabel, $meja = 14)
     } else {
         return strtoupper(substr($tabel, 0, 1)) . '/' . $meja . '/' . date('dmY/His') . '/0001';
     }
+}
+
+function get_jml_hutang($id)
+{
+    $db = db('hutang');
+    $res = 0;
+    $q = $db->where('user_id', $id)->where('status', 0)->get()->getResultArray();
+
+    if ($q) {
+        $res = count($q);
+    }
+
+    return $res;
 }
