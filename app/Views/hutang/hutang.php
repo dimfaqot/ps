@@ -10,9 +10,6 @@ $user = $db->where('role', 'Member')->orderBy('nama', 'ASC')->get()->getResultAr
     <button type="button" class="btn_success mb-3" data-bs-toggle="modal" data-bs-target="#pembeli">
         <i class="fa-solid fa-user"></i> Pembeli
     </button>
-    <button type="button" class="btn_purple mb-3" data-bs-toggle="modal" data-bs-target="#add_<?= menu()['controller']; ?>">
-        <i class="fa-solid fa-circle-plus"></i> <?= menu()['menu']; ?>
-    </button>
 
     <input class="form-control form-control-sm cari mb-1" type="text" placeholder="Cari...">
     <table class="table table-sm table-bordered">
