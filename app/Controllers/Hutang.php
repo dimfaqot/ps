@@ -196,7 +196,7 @@ class Hutang extends BaseController
         $dbk = db('kantin');
         $dbh = db('hutang');
         $data_hutang = $dbh->where('user_id', $user_id)->where('status', 0)->get()->getResultArray();
-        $no_nota = no_nota($kategori);
+        $no_nota = no_nota(strtolower($kategori));
 
 
         $err = [];
