@@ -152,7 +152,7 @@ class Hutang extends BaseController
                 $err[] = 'Insert to kantin err';
             }
         }
-        dd('Ok');
+
 
         if (count($err) <= 0) {
             sukses_js('Save data success!.');
