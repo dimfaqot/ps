@@ -14,8 +14,7 @@ $user = $db->where('role', 'Member')->orderBy('nama', 'ASC')->get()->getResultAr
         <i class="fa-solid fa-circle-plus"></i> <?= menu()['menu']; ?>
     </button>
 
-
-
+    <input class="form-control form-control-sm cari mb-1" type="text" placeholder="Cari...">
     <table class="table table-sm table-bordered">
         <thead>
             <tr>
@@ -26,7 +25,7 @@ $user = $db->where('role', 'Member')->orderBy('nama', 'ASC')->get()->getResultAr
                 <th>Beli</th>
             </tr>
         </thead>
-        <tbody class="body_hutang">
+        <tbody class="body_hutang tabel_search">
             <?php foreach ($user as $k => $i): ?>
                 <tr>
                     <td><?= ($k + 1); ?></td>
@@ -49,6 +48,9 @@ $user = $db->where('role', 'Member')->orderBy('nama', 'ASC')->get()->getResultAr
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
+                <div class="d-grid text-center mb-2">
+                    <a href="" class="btn_grey" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-circle-xmark"></i> close</a>
+                </div>
                 <div class="input-group input-group-sm mb-2">
                     <input type="text" class="form-control add_pembeli" placeholder="Masukkan nama pembeli...">
                     <input type="text" class="form-control add_hp" placeholder="No. HP...">
@@ -811,6 +813,15 @@ $user = $db->where('role', 'Member')->orderBy('nama', 'ASC')->get()->getResultAr
 
         location.href = url;
         // window.open(url);
+    });
+
+    $(document).on('keyup', '.cari', function(e) {
+        e.preventDefault();
+        let value = $(this).val().toLowerCase();
+        $('.tabel_search tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+
     });
 </script>
 <?= $this->endSection() ?>
