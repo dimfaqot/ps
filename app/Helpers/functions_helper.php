@@ -617,7 +617,7 @@ function barang($jenis = null)
 
 function no_nota($tabel, $meja = 14)
 {
-    dd($tabel);
+
     $db = db($tabel);
     $no_nota = strtoupper(substr($tabel, 0, 1)) . '/' . $meja . '/' . date('dmY/His');
     $q = $db->where('no_nota', $no_nota)->get()->getRowArray();
