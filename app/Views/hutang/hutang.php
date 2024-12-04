@@ -223,7 +223,7 @@
                 })
                 if (res.data2 > 0) {
                     html += '<div class="d-grid mt-2">';
-                    html += '<button class="btn_info btn_whatsapp py-2 mb-1" data-kategori="<?= (session('role') == 'Root' ? 'Root' : explode(" ", session('role')))[1]; ?>" data-jwt="' + res.data5 + '" data-nama="' + res.data[0].nama + '" data-no_hp="' + res.data4 + '" style="border-radius:0px" data-user_id="' + res.data3 + '" data-total="' + res.data2 + '"><i class="fa-brands fa-whatsapp"></i> Kirim Whatsapp</button>';
+                    html += '<button class="btn_info btn_whatsapp py-2 mb-1" data-kategori="<?= (session('role') == 'Root' ? 'Root' : explode(" ", session('role'))[0]); ?>" data-jwt="' + res.data5 + '" data-nama="' + res.data[0].nama + '" data-no_hp="' + res.data4 + '" style="border-radius:0px" data-user_id="' + res.data3 + '" data-total="' + res.data2 + '"><i class="fa-brands fa-whatsapp"></i> Kirim Whatsapp</button>';
                     html += '<button class="btn_primary btn_lunas py-2" style="border-radius:0px" data-user_id="' + res.data3 + '" data-total="' + res.data2 + '" data-kategori="<?= (session('role') == 'Root' ? 'Root' : explode(" ", session('role'))[1]); ?>"><i class="fa-solid fa-hand-holding-dollar"></i> Lunasi</button>';
                     html += '</div>';
 
@@ -819,9 +819,10 @@
         let kategori = $(this).data('kategori');
         let no_hp = "62";
         no_hp += $(this).data('no_hp').substring(1);
-
+        console.log(kategori);
         if (kategori == 'Root') {
             gagal('Root tidak diizinkan!.');
+            return;
         }
 
         let text = "_Assalamualaikum Wr. Wb._%0a";
