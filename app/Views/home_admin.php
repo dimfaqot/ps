@@ -161,13 +161,16 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
                     </thead>
                     <tbody>
                         <?php foreach ($users as $k => $i): ?>
-                            <tr>
-                                <td><?= ($k + 1); ?></td>
-                                <td><a href="" type="button" class="canvas_perizinan" data-role="<?= $i['role']; ?>" data-id="<?= $i['id']; ?>" data-username="<?= $i['username']; ?>" data-nama="<?= $i['nama']; ?>" style="text-decoration: none;"><?= $i['nama']; ?></a></td>
-                                <td><?= $i['role']; ?></td>
-                                <td><a data-nama="<?= $i['nama']; ?>" class="poin_absen" data-id="<?= $i['id']; ?>" href="">Poin</a></td>
-                                <td><a href="" class="copy_link_jwt" data-link="<?= base_url('login/a/') . $i['jwt']; ?>"><i class="fa-solid fa-link"></i></a></td>
-                            </tr>
+                            <?php if ($i['role'] !== 'Member'): ?>
+                                <tr>
+                                    <td><?= ($k + 1); ?></td>
+                                    <td><a href="" type="button" class="canvas_perizinan" data-role="<?= $i['role']; ?>" data-id="<?= $i['id']; ?>" data-username="<?= $i['username']; ?>" data-nama="<?= $i['nama']; ?>" style="text-decoration: none;"><?= $i['nama']; ?></a></td>
+                                    <td><?= $i['role']; ?></td>
+                                    <td><a data-nama="<?= $i['nama']; ?>" class="poin_absen" data-id="<?= $i['id']; ?>" href="">Poin</a></td>
+                                    <td><a href="" class="copy_link_jwt" data-link="<?= base_url('login/a/') . $i['jwt']; ?>"><i class="fa-solid fa-link"></i></a></td>
+                                </tr>
+
+                            <?php endif; ?>
 
                         <?php endforeach; ?>
                     </tbody>

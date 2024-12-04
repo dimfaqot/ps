@@ -22,8 +22,6 @@ class Absen extends BaseController
     public function presentation($jwt)
     {
 
-        $data = decode_jwt($jwt);
-
         $val = get_absen();
 
         $value = [
@@ -84,9 +82,12 @@ class Absen extends BaseController
 
         $q = $db->get()->getResultArray();
 
+        $bl = bulan(date('m'))['satuan'] - 1;
         foreach ($q as $i) {
-            $db->where('id', $i['id']);
-            $db->delete();
+            if (bulan(date('m', $i['absen']))['satuan'] == $bl) {
+                $db->where('id', $i['id']);
+                $db->delete();
+            }
         }
 
         sukses(base_url('home'), 'Absen reset.');
@@ -156,30 +157,30 @@ class Absen extends BaseController
             gagal_js('Data gagal dimasukkan.');
         }
     }
-    public function qrcode()
-    {
-        return view('qrcode_absen', ['judul' => 'Qrcode Absen']);
-    }
-    public function cetak_absen_qrcode()
-    {
-        $set = [
-            'mode' => 'utf-8',
-            'format' => [215, 330],
-            'orientation' => 'P',
-            'margin-left' => 20,
-            'margin-right' => 20,
-            'margin-top' => -0,
-            'margin-bottom' => 0
-        ];
+    // public function qrcode()
+    // {
+    //     return view('qrcode_absen', ['judul' => 'Qrcode Absen']);
+    // }
+    // public function cetak_absen_qrcode()
+    // {
+    //     $set = [
+    //         'mode' => 'utf-8',
+    //         'format' => [215, 330],
+    //         'orientation' => 'P',
+    //         'margin-left' => 20,
+    //         'margin-right' => 20,
+    //         'margin-top' => -0,
+    //         'margin-bottom' => 0
+    //     ];
 
-        $mpdf = new \Mpdf\Mpdf($set);
+    //     $mpdf = new \Mpdf\Mpdf($set);
 
-        $html = view('cetak_absen_qrcode', ['judul' => 'Cetak Absen Qrcode']);
-        $mpdf->AddPage();
-        $mpdf->WriteHTML($html);
+    //     $html = view('cetak_absen_qrcode', ['judul' => 'Cetak Absen Qrcode']);
+    //     $mpdf->AddPage();
+    //     $mpdf->WriteHTML($html);
 
-        $this->response->setHeader('Content-Type', 'application/pdf');
+    //     $this->response->setHeader('Content-Type', 'application/pdf');
 
-        $mpdf->Output('Absen Qrcode' . '.pdf', 'I');
-    }
+    //     $mpdf->Output('Absen Qrcode' . '.pdf', 'I');
+    // }
 }

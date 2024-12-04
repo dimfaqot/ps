@@ -567,7 +567,7 @@ function get_absen()
         }
     } else {
         $data['ket'] = 'Terlambat';
-        $po = round(($data['menit'] - 15) / 10);
+        $po = (round(($data['menit'] - 15) / 10)) + 1;
         $data['poin'] = -$po;
         $msg = 'Kamu terlambat ' . $data['diff'] . ' untuk shift ' . $data['shift'] . '.!';
     }
