@@ -618,7 +618,7 @@ function barang($jenis = null)
 function no_nota($tabel, $meja = 14)
 {
 
-    $db = db($tabel);
+    $db = db(($tabel == 'kantin' ? $tabel : 'hutang'));
     $no_nota = strtoupper(substr($tabel, 0, 1)) . '/' . $meja . '/' . date('dmY/His');
     $q = $db->where('no_nota', $no_nota)->get()->getRowArray();
 
@@ -633,11 +633,36 @@ function get_jml_hutang($id)
 {
     $db = db('hutang');
     $res = 0;
-    $q = $db->where('user_id', $id)->where('status', 0)->get()->getResultArray();
+    $db->where('user_id', $id);
+    if (session('role') !== 'Root') {
+        $db->where('kategori', explode(" ", session('role'))[1]);
+    }
+    $q = $db->where('status', 0)->get()->getResultArray();
 
     if ($q) {
         $res = count($q);
     }
 
     return $res;
+}
+
+function data_pembeli()
+{
+
+    $dbu = db('users');
+
+    $q = $dbu->where('role', 'Member')->get()->getResultArray();
+
+    $data = [];
+    foreach ($q as $i) {
+        $i['status'] = get_jml_hutang($i['id']);
+        $data[] = $i;
+    }
+
+    $short_by = SORT_DESC;
+
+    $keys = array_column($data, 'status');
+    array_multisort($keys, $short_by, $data);
+
+    return $data;
 }

@@ -88,7 +88,7 @@ class Kantin extends BaseController
         if (count($err) <= 0) {
             sukses_js('Save data success!.', ($uang - $total_harga));
         } else {
-            gagal_js(implode(", ", $err));
+            gagal_js('Gagal!. ' . implode(", ", $err));
         }
     }
 }

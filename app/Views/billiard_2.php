@@ -88,7 +88,7 @@
         <div class="modal-content">
             <div class="d-flex justify-content-between p-2 bg_danger">
                 <div class="fw-bold text_light"><i class="fa-solid fa-cash-register"></i> PEMBAYARAN</div>
-                <div class="bg_light" style="border-radius: 50%;padding:1.2px 4px"><a href="" class="btn_close_modal_pembayaran" data-bs-dismiss="modal"><i class="fa-solid fa-circle-xmark text_danger"></i></a></div>
+                <div class="bg_light" style="border-radius: 50%;padding:1.2px 4px"><a href="" data-bs-dismiss="modal"><i class="fa-solid fa-circle-xmark text_danger"></i></a></div>
             </div>
             <div class="modal-body body_total_harga">
 
@@ -97,8 +97,70 @@
     </div>
 </div>
 
+<!-- <div class="modal fade show" id="user" tabindex="-1" aria-modal="true" role="dialog" style="display: block;">
+    <div class="modal-dialog">
+        <div class="modal-content modal_body_user">
+            <div class="bg_light">
+                <input class="user_input" placeholder="Ketik sesuatu..." value="" style="width: 100%;" type="text">
+                <div class="bg_3 sticky-top bg_3" style="z-index:10">
+                    <div style="position:absolute;width:100%" class="bg_3 px-2 body_list_user">
+                        <a data-col="sub" style="font-size:14px" href="" class="d-block rounded border-bottom insert_value">Smp</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
 
 <script>
+    // let myModal = document.getElementById('exampleModal');
+    // let modal = bootstrap.Modal.getOrCreateInstance(myModal);
+    // modal.show();
+    $(document).on('change', '.check_hutang', function(e) {
+        e.preventDefault();
+        if ($(this).is(':checked')) {
+            $('.harga_jml_uang').val(0);
+            $('.harga_jml_uang').attr('readonly', true);
+            let html = '';
+            html += '<span style="width: 120px;" class="input-group-text bg_warning text_warning_dark fw-bold">Nama</span>';
+            html += '<input type="text" placeholder="Klik untuk mencari nama..." class="form-control nama_user_hutang" value="">';
+            html += '<div class="body_search_user" style="z-index:10;position:absolute;left:120px;top:42px;">';
+
+            html += '</div>';
+            $('.body_user_hutang').html(html);
+            $('.nama_user_hutang').focus();
+        } else {
+            $('.harga_jml_uang').val("");
+            $('.harga_jml_uang').removeAttr('readonly');
+            $('.body_user_hutang').html("");
+        }
+
+    })
+    $(document).on('keyup', '.nama_user_hutang', function(e) {
+        e.preventDefault();
+        let user = $(this).val();
+        post('billiard/get_user', {
+            user
+        }).then(res => {
+            let html = '';
+            res.data.forEach(e => {
+                html += '<div class="div_search insert_value_user" data-user_id="' + e.id + '">' + e.nama + '</div>';
+            });
+            $('.body_search_user').html(html);
+        })
+
+    })
+    $(document).on('click', '.insert_value_user', function(e) {
+        e.preventDefault();
+        let nama = $(this).text();
+        let user_id = $(this).data('user_id');
+
+        $('.nama_user_hutang').val(nama);
+        $('.nama_user_hutang').attr('data-user_id', user_id);
+        $('.body_search_user').html("");
+    })
+
+
     let body_pembayaran = (data) => {
         let html = '';
         html += '<div class="soal_yakin p-3 bg_warning_light" style="border-radius: 5px;">';
@@ -114,9 +176,19 @@
         html += '<input style="text-align: right;" type="text" placeholder="Potongan harga" class="form-control uang harga_diskon" value="' + angka(0) + '">';
         html += '</div>';
 
-        html += '<div class="input-group mb-2">';
-        html += '<span style="width: 120px;" class="input-group-text bg_warning text_warning_dark fw-bold">UANG</span>';
-        html += '<input style="text-align: right;" type="text" placeholder="Uang yang dibayarkan" class="form-control uang harga_jml_uang" value="">';
+        // html += '<div class="input-group mb-2">';
+        // html += '<span style="width: 120px;" class="input-group-text bg_warning text_warning_dark fw-bold">UANG</span>';
+        // html += '<input style="text-align: right;" type="text" placeholder="Uang yang dibayarkan" class="form-control uang harga_jml_uang" value="">';
+        // html += '</div>';
+        html += '<div class="input-group mb-3">';
+        html += '<div class="input-group-text d-flex justify-content-center bg_warning text_warning_dark" style="width:120px">';
+        html += '<input class="form-check-input mt-0 check_hutang" style="text-align: right;" type="checkbox" value="" aria-label="Checkbox for following text input">';
+        html += '</div>';
+        html += '<input type="text" class="form-control uang harga_jml_uang" aria-label="Text input with checkbox" placeholder="Uang yang dibayarkan">';
+        html += '</div>';
+
+        html += '<div class="input-group mb-3 body_user_hutang">';
+
         html += '</div>';
 
         html += '<div class="bg_light p-3 fw-bold" style="text-align:center;font-size:xx-large">';
@@ -238,6 +310,9 @@
         let id = $(this).attr('data-id');
         let meja_id = $(this).attr('data-meja_id');
         let total_biaya = $(this).attr('data-total_biaya');
+        let hutang = $('.check_hutang').is(':checked');
+        let nama_user = $('.nama_user_hutang').val();
+        let user_id = $('.nama_user_hutang').data('user_id');
 
         if (uang == "") {
             gagal("Uang harus diisi!.");
@@ -248,9 +323,21 @@
             diskon_int = 0;
         }
 
-        if (parseInt(str_replace(".", "", uang)) < (parseInt(str_replace(".", "", total_biaya)) - parseInt(diskon_int))) {
-            gagal('Jumlah uang pembayaran kurang!.');
-            return false;
+        if (!hutang) {
+            if (parseInt(str_replace(".", "", uang)) < (parseInt(str_replace(".", "", total_biaya)) - parseInt(diskon_int))) {
+                gagal('Jumlah uang pembayaran kurang!.');
+                return false;
+            }
+
+        } else {
+            if (nama_user == "") {
+                gagal('Nama user kosong!.');
+                return;
+            }
+            if (user_id == "") {
+                gagal('User id kosong!.');
+                return;
+            }
         }
         if (parseInt(str_replace(".", "", diskon)) > (parseInt(str_replace(".", "", total_biaya)))) {
             gagal('Diskon tidak boleh lebih besar dari harga!.');
@@ -263,30 +350,37 @@
             durasi,
             uang,
             meja_id,
+            hutang,
+            nama_user,
+            user_id,
             diskon
         }).then(res => {
             if (res.status == "200") {
                 sukses(res.message);
-                let html = '';
-                html += '<div class="soal_yakin p-3 bg_warning_light" style="border-radius: 5px;">';
-                html += '<div style="font-size: xxx-large;font-weight:bold;text-align:center" class="text_success"><i class="fa-solid fa-circle-check"></i></div>';
-                html += '<div style="text-align: center;">' + res.message + '</div>';
-                html += '<div class="bg_warning mt-4 p-3">';
-                html += '<div class="text_warning_dark" style="text-align: center;font-weight:bold;">Jumlah Kembalian</div>';
-                html += '<div style="font-size: xxx-large;font-weight:bold;text-align:center" class="text_warning_dark">';
-                html += angka(res.data, 'Rp');
-                html += '</div>';
-
-                html += '</div>';
-                html += '</div>';
-                $('.body_total_harga').html(html);
-                let myModal = document.getElementById('total_harga');
-                let modal = bootstrap.Modal.getOrCreateInstance(myModal);
-                modal.show();
-
-                $(document).on('click', '.btn_close_modal_pembayaran', function() {
+                if (hutang) {
                     location.reload();
-                })
+                } else {
+                    let html = '';
+                    html += '<div class="soal_yakin p-3 bg_warning_light" style="border-radius: 5px;">';
+                    html += '<div style="font-size: xxx-large;font-weight:bold;text-align:center" class="text_success"><i class="fa-solid fa-circle-check"></i></div>';
+                    html += '<div style="text-align: center;">' + res.message + '</div>';
+                    html += '<div class="bg_warning mt-4 p-3">';
+                    html += '<div class="text_warning_dark" style="text-align: center;font-weight:bold;">Jumlah Kembalian</div>';
+                    html += '<div style="font-size: xxx-large;font-weight:bold;text-align:center" class="text_warning_dark">';
+                    html += angka(res.data, 'Rp');
+                    html += '</div>';
+
+                    html += '</div>';
+                    html += '</div>';
+                    $('.body_total_harga').html(html);
+                    let myModal = document.getElementById('total_harga');
+                    let modal = bootstrap.Modal.getOrCreateInstance(myModal);
+                    modal.show();
+
+                    $('#total_harga').on('hidden.bs.modal', function() {
+                        location.reload();
+                    });
+                }
             } else {
                 gagal_with_button(res.message);
             }

@@ -95,15 +95,14 @@ class Billiard_2 extends BaseController
     {
         $id = clear($this->request->getVar('id'));
         $meja_id = clear($this->request->getVar('meja_id'));
-        $uang = rp_to_int(clear($this->request->getVar('uang')));
+        $uang = (int)rp_to_int(clear($this->request->getVar('uang')));
         $durasi = clear($this->request->getVar('durasi'));
-        $diskon = rp_to_int(clear($this->request->getVar('diskon')));
-        $biaya = clear($this->request->getVar('biaya'));
+        $diskon = (int)rp_to_int(clear($this->request->getVar('diskon')));
+        $biaya = (int)clear($this->request->getVar('biaya'));
+        $nama_user = clear($this->request->getVar('nama_user'));
+        $user_id = clear($this->request->getVar('user_id'));
+        $hutang = $this->request->getVar('hutang');
 
-
-        if ($uang == "" || $uang == 0) {
-            gagal_js('Uang belum diisi!.');
-        }
         if ($biaya == "" || $biaya == 0) {
             gagal_js('Total biaya belum diisi!.');
         }
@@ -112,20 +111,57 @@ class Billiard_2 extends BaseController
             gagal_js('Diskon tidak boleh lebih besar dari total biaya!.');
         }
 
-        if ($uang < ($biaya - $diskon)) {
-            gagal_js('Uang kurang!.');
-        }
-
         $db = db('billiard_2');
         $q = $db->where('id', $id)->get()->getRowArray();
         if (!$q) {
             gagal_js('Meja belum dimulai!.');
         }
-
         $dbj = db('jadwal_2');
         $qj = $dbj->where('id', $meja_id)->get()->getRowArray();
         if (!$qj) {
             gagal_js('Id meja tidak ditemukan!.');
+        }
+
+        if ($hutang) {
+            $dbh = db('hutang');
+            $value = [
+                'barang_id' => $q['start'], //start dan end. end=start+durasi*60
+                'user_id' => $user_id,
+                'kategori' => 'Billiard',
+                'nama' => $nama_user,
+                'no_nota' => no_nota('billiard', $qj['meja']) . '|' . $diskon,
+                'barang' => 'Billiard ' . $q['meja'], //meja diexplode. dan meja id dicari dari jadwal2
+                'harga_satuan' => $qj['harga'], //harga
+                'tgl_lunas' => 0,
+                'status' => 0,
+                'tgl' => time(), //tgl
+                'qty' => $durasi, //durasi
+                'total_harga' => ($biaya - $diskon), //biaya. diskon dicari dari harga_satuan-total_harga
+                'teller' => $q['petugas'] //petugas
+            ];
+            if ($dbh->insert($value)) {
+                $db->where('id', $id);
+                if ($db->delete()) {
+                    $qj['is_active'] = 0;
+                    $qj['start'] = 0;
+
+                    $dbj->where('id', $meja_id);
+                    if ($dbj->update($qj)) {
+                        sukses_js('Sukses', $uang - $value['total_harga']);
+                    } else {
+                        gagal_js('Update meja gagal!.');
+                    }
+                } else {
+                    gagal_js('Data billiard gagal dihapus!.');
+                }
+            }
+        }
+
+        if ($uang == "" || $uang == 0) {
+            gagal_js('Uang belum diisi!.');
+        }
+        if ($uang < ($biaya - $diskon)) {
+            gagal_js('Uang kurang!.');
         }
 
         $q['biaya'] = $biaya - $diskon;
@@ -150,5 +186,15 @@ class Billiard_2 extends BaseController
         } else {
             gagal_js('End billiard gagal!.');
         }
+    }
+
+    public function get_user()
+    {
+        $user = clear($this->request->getVar('user'));
+        $db = db('users');
+
+        $q = $db->whereIn('role', ['Member'])->like('nama', $user, 'both')->orderBy('nama', 'ASC')->limit(10)->get()->getResultArray();
+
+        sukses_js('Koneksi ok', $q);
     }
 }

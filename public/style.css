@@ -917,5 +917,20 @@ font-weight: 600;
 
 
 
+.div_search {
+    background-color: #dadada;
+    border-bottom: 1px solid #a6a6a6;
+    font-size: medium;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.div_search:hover {
+    background-color: #cacaca;
+    border-bottom: 1px solid #e1e1e1;
+    font-size: medium;
+    padding: 5px 10px;
+    cursor: pointer;
+}
 
 

@@ -38,6 +38,14 @@ class Hutang extends BaseController
         $hp = clear($this->request->getVar('hp'));
 
         $db = db('users');
+        $nam = $db->whereIn('role', ['Member'])->where('nama', $nama)->get()->getRowArray();
+        if ($nam) {
+            gagal_js('Nama sudah ada!.');
+        }
+        $hp = $db->whereIn('role', ['Member'])->where('hp', $hp)->get()->getRowArray();
+        if ($nam) {
+            gagal_js('Hp sudah ada!.');
+        }
         $data = [
             'nama' => $nama,
             'hp' => $hp,
@@ -82,7 +90,12 @@ class Hutang extends BaseController
         $id = clear($this->request->getVar('id'));
 
         $db = db('hutang');
-        $q = $db->where('user_id', $id)->groupBy('no_nota')->orderBy('tgl', 'ASC')->get()->getResultArray();
+        $db->where('user_id', $id);
+        if (session('role') !== 'Root') {
+            $db->where('kategori', explode(" ", session('role'))[1]);
+        }
+        $q = $db->groupBy('no_nota')->orderBy('tgl', 'ASC')->get()->getResultArray();
+
         $dbu = db('users');
         $usr = $dbu->where('id', $id)->get()->getRowArray();
         $jwt = [
@@ -189,50 +202,78 @@ class Hutang extends BaseController
     {
         $user_id = clear($this->request->getVar('user_id'));
         $kategori = clear($this->request->getVar('kategori'));
+
         $uang = (int)clear($this->request->getVar('uang'));
         $diskon = (int)clear($this->request->getVar('diskon'));
         $total_setelah_diskon = (int)clear($this->request->getVar('total_setelah_diskon'));
 
-        $dbk = db('kantin');
+        $db_tujuan = db(($kategori == 'Kantin' ? 'kantin' : ($kategori == 'Billiard' ? 'billiard_2' : strtolower($kategori))));
         $dbh = db('hutang');
-        $data_hutang = $dbh->where('user_id', $user_id)->where('status', 0)->get()->getResultArray();
-        $no_nota = no_nota(strtolower($kategori));
-
+        $data_hutang = $dbh->where('user_id', $user_id)->where('kategori', $kategori)->where('status', 0)->get()->getResultArray();
 
         $err = [];
         $diskon_item = floor($diskon / count($data_hutang));
         $total_diskon = $diskon - ($diskon_item * count($data_hutang));
-        foreach ($data_hutang as $k => $i) {
 
-            $value = [
-                'barang_id' => $i['barang_id'],
-                'no_nota' => $no_nota,
-                'barang' => $i['barang'],
-                'harga_satuan' => $i['harga_satuan'],
-                'tgl' => time(),
-                'qty' => $i['qty'],
-                'diskon' => $diskon_item,
-                'total_harga' => $i['total_harga'] - $diskon_item,
-                'petugas' => user()['nama']
-            ];
-            if (($k + 1) == count($data_hutang)) {
-                if ($total_diskon > 0) {
-                    $value['diskon'] = $value['diskon'] + $total_diskon;
-                    $value['total_harga'] = ($value['total_harga'] + $diskon_item) - $value['diskon'];
+        $no_nota = no_nota(strtolower($kategori));
+        $bill = 0;
+        foreach ($data_hutang as $k => $i) {
+            if ($kategori == 'Kantin') {
+                $value = [
+                    'barang_id' => $i['barang_id'],
+                    'no_nota' => $no_nota,
+                    'barang' => $i['barang'],
+                    'harga_satuan' => $i['harga_satuan'],
+                    'tgl' => time(),
+                    'qty' => $i['qty'],
+                    'diskon' => $diskon_item,
+                    'total_harga' => $i['total_harga'] - $diskon_item,
+                    'petugas' => user()['nama']
+                ];
+                if (($k + 1) == count($data_hutang)) {
+                    if ($total_diskon > 0) {
+                        $value['diskon'] = $value['diskon'] + $total_diskon;
+                        $value['total_harga'] = ($value['total_harga'] + $diskon_item) - $value['diskon'];
+                    }
                 }
             }
 
-            if ($dbk->insert($value)) {
+            if ($kategori == 'Billiard') {
+                $dbm = db('jadwal_2');
+                $mj = explode(" ", $i['barang']);
+                $meja = $dbm->where('meja', end($mj))->get()->getRowArray();
+
+                $exp_nota = explode("|", $i['no_nota']);
+                $value = [
+                    'meja_id' => $meja['id'],
+                    // 'no_nota' => $no_nota,
+                    'meja' => 'Meja ' . $meja['meja'],
+                    'tgl' => time(),
+                    'durasi' => $i['qty'],
+                    'petugas' => user()['nama'],
+                    'biaya' => $i['total_harga'],
+                    'diskon' => end($exp_nota),
+                    'start' => $i['barang_id'],
+                    'end' => $i['barang_id'] + ($i['qty'] * 60),
+                    'is_active' => 0,
+                    'harga' => $i['harga_satuan']
+                ];
+                $i['no_nota'] = $exp_nota[0];
+            }
+
+            if ($db_tujuan->insert($value)) {
                 $dbh->where('id', $i['id']);
                 $i['status'] = 1;
                 $i['dibayar_kpd'] = user()['nama'];
+                $i['tgl_lunas'] = time();
                 $dbh->update($i);
             } else {
                 $err[] = $i['barang'];
             }
         }
+
         if (count($err) <= 0) {
-            sukses_js('Save data success!.', ($uang - $total_setelah_diskon));
+            sukses_js('Save data success!. ' . $uang . ' | ' . $total_setelah_diskon, ((int)$uang - (int)$total_setelah_diskon));
         } else {
             gagal_js('Gagal diinput: ' . implode(", ", $err));
         }

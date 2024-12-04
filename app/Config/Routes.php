@@ -120,6 +120,7 @@ $routes->get('/billiard', 'Billiard_2::index');
 $routes->post('/billiard/add', 'Billiard_2::add');
 $routes->post('/billiard/pembayaran', 'Billiard_2::pembayaran');
 $routes->post('/billiard/start_stop', 'Billiard_2::start_stop');
+$routes->post('/billiard/get_user', 'Billiard_2::get_user');
 
 // pengeluaran billiard __________________________________
 $routes->get('/pengeluaran_billiard', 'Pengeluaran_billiard::index');

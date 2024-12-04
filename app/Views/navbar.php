@@ -178,15 +178,15 @@
     </div>
 </div>
 
-<!-- modal total_harga -->
-<div class="modal fade" style="margin-top: 150px;z-index:9999" id="total_harga" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<!-- modal total_harga_navbar -->
+<div class="modal fade" style="margin-top: 150px;z-index:9999" id="total_harga_navbar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="d-flex justify-content-between p-2 bg_danger">
                 <div class="fw-bold text_light"><i class="fa-solid fa-cash-register"></i> PEMBAYARAN</div>
-                <div class="bg_light" style="border-radius: 50%;padding:1.2px 4px"><a href="" class="btn_close_modal_pembayaran_navbar" data-bs-dismiss="modal"><i class="fa-solid fa-circle-xmark text_danger"></i></a></div>
+                <div class="bg_light" style="border-radius: 50%;padding:1.2px 4px"><a href="" data-bs-dismiss="modal"><i class="fa-solid fa-circle-xmark text_danger"></i></a></div>
             </div>
-            <div class="modal-body body_total_harga">
+            <div class="modal-body body_total_harga_navbar">
 
             </div>
         </div>
@@ -557,9 +557,9 @@
 
                 html += '</div>';
                 html += '</div>';
-                $('.body_total_harga').html(html);
+                $('.body_total_harga_navbar').html(html);
 
-                let myModal2 = document.getElementById('total_harga');
+                let myModal2 = document.getElementById('total_harga_navbar');
                 let modal2 = bootstrap.Modal.getOrCreateInstance(myModal2)
                 modal2.show();
             } else {
@@ -568,7 +568,7 @@
         })
 
 
-        $('#total_harga').on('hidden.bs.modal', function() {
+        $('#total_harga_navbar').on('hidden.bs.modal', function() {
             location.reload();
         });
     })

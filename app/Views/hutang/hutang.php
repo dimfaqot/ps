@@ -1,8 +1,3 @@
-<?php
-$db = db('users');
-$user = $db->where('role', 'Member')->orderBy('nama', 'ASC')->get()->getResultArray();
-
-?>
 <?= $this->extend('logged') ?>
 
 <?= $this->section('content') ?>
@@ -23,10 +18,10 @@ $user = $db->where('role', 'Member')->orderBy('nama', 'ASC')->get()->getResultAr
             </tr>
         </thead>
         <tbody class="body_hutang tabel_search">
-            <?php foreach ($user as $k => $i): ?>
+            <?php foreach (data_pembeli() as $k => $i): ?>
                 <tr>
                     <td><?= ($k + 1); ?></td>
-                    <td class="<?= (get_jml_hutang($i['id']) == 0 ? 'text_success' : 'text_warning'); ?>"><?= $i['nama']; ?></td>
+                    <td class="<?= ($i['status'] <= 0 ? 'text_success' : 'text_warning'); ?>"><?= $i['nama']; ?></td>
                     <td><?= $i['hp']; ?></td>
                     <td style="text-align: center;"><a class="detail" data-id="<?= $i['id']; ?>" href=""><i class="fa-solid fa-up-right-from-square"></i></a></td>
                     <td style="text-align: center;"><a href="" class="pembayaran" data-user_id="<?= $i['id']; ?>" data-kategori="Kantin"><i class="fa-solid fa-circle-plus"></i></a></td>
@@ -116,6 +111,20 @@ $user = $db->where('role', 'Member')->orderBy('nama', 'ASC')->get()->getResultAr
         </div>
     </div>
 </div>
+<!-- Modal kembalian-->
+<div class="modal fade" id="kembalian" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="body_kembalian">
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
 <script>
     // let myModal = document.getElementById('data_hutang');
     // let modal = bootstrap.Modal.getOrCreateInstance(myModal)
@@ -137,24 +146,16 @@ $user = $db->where('role', 'Member')->orderBy('nama', 'ASC')->get()->getResultAr
 
             $('.body_pembeli').html(html);
         })
+
+        $('#pembeli').on('hidden.bs.modal', function() {
+            location.reload();
+        });
     }
 
     data_pembeli();
 
     const data_hutang_byid = (data, no_nota) => {
         let html = "";
-        // html += '<div>';
-        // html += '<div class="d-flex justify-content-between bg_success px-3 py-2">';
-        // html += '<div style="cursor: pointer;" class="flex-grow-1 fw-bold text-light" data-bs-toggle="collapse" href="#hutang_' + str_replace("/", "_", no_nota) + '" role="button" aria-expanded="false" aria-controls="hutang1">';
-        // html += '19/02/2024';
-        // html += '</div>';
-
-        // html += '<div class="fw-bold text-light">';
-        // html += 'LUNAS';
-        // html += '</div>';
-        // html += '</div>';
-        // html += '<div class="collapse" id="hutang1">';
-        // html += '<div class="card card-body">';
         html += '<table class="table table-sm table-bordered">';
         html += '<thead>';
         html += '<tr>';
@@ -185,9 +186,6 @@ $user = $db->where('role', 'Member')->orderBy('nama', 'ASC')->get()->getResultAr
         html += '</table>';
 
         return html;
-        // html += '</div>';
-        // html += '</div>';
-        // html += '</div>';
 
     }
     let list_hutang = [];
@@ -223,10 +221,13 @@ $user = $db->where('role', 'Member')->orderBy('nama', 'ASC')->get()->getResultAr
                     html += '</div>';
                     html += '</div>';
                 })
-                html += '<div class="d-grid mt-2">';
-                html += '<button class="btn_info btn_whatsapp py-2 mb-1" data-jwt="' + res.data5 + '" data-nama="' + res.data[0].nama + '" data-no_hp="' + res.data4 + '" style="border-radius:0px" data-user_id="' + res.data3 + '" data-total="' + res.data2 + '"><i class="fa-brands fa-whatsapp"></i> Kirim Whatsapp</button>';
-                html += '<button class="btn_primary btn_lunas py-2" style="border-radius:0px" data-user_id="' + res.data3 + '" data-total="' + res.data2 + '"><i class="fa-solid fa-hand-holding-dollar"></i> Lunasi</button>';
-                html += '</div>';
+                if (res.data2 > 0) {
+                    html += '<div class="d-grid mt-2">';
+                    html += '<button class="btn_info btn_whatsapp py-2 mb-1" data-jwt="' + res.data5 + '" data-nama="' + res.data[0].nama + '" data-no_hp="' + res.data4 + '" style="border-radius:0px" data-user_id="' + res.data3 + '" data-total="' + res.data2 + '"><i class="fa-brands fa-whatsapp"></i> Kirim Whatsapp</button>';
+                    html += '<button class="btn_primary btn_lunas py-2" style="border-radius:0px" data-user_id="' + res.data3 + '" data-total="' + res.data2 + '" data-kategori="<?= (session('role') == 'Root' ? 'Root' : explode(" ", session('role'))[1]); ?>"><i class="fa-solid fa-hand-holding-dollar"></i> Lunasi</button>';
+                    html += '</div>';
+
+                }
                 $('.modal_body_data_hutang').html(html);
                 let myModal = document.getElementById('data_hutang');
                 let modal = bootstrap.Modal.getOrCreateInstance(myModal)
@@ -332,7 +333,7 @@ $user = $db->where('role', 'Member')->orderBy('nama', 'ASC')->get()->getResultAr
         html += '</div>'
 
         html += '<div class="mb-3 d-grid">';
-        html += '<a class="btn_success btn_bayar" data-user_id="' + user_id + '" data-kategori="' + kategori + '" style="text-align: center;" href=""><i class="fa-solid fa-cash-register"></i> Simpan</a>';
+        html += '<a class="btn_success btn_bayar" data-user_id="' + user_id + '" data-kategori="<?= (session('role') == 'Root' ? 'Root' : explode(" ", session('role'))[1]); ?>" style="text-align: center;" href=""><i class="fa-solid fa-cash-register"></i> Simpan</a>';
         html += '</div>';
 
         $('.body_pembayaran').html(html);
@@ -579,7 +580,15 @@ $user = $db->where('role', 'Member')->orderBy('nama', 'ASC')->get()->getResultAr
         let elem_list_belanja = document.querySelectorAll('.list_belanja');
         let user_id = $(this).data('user_id');
         let kategori = $(this).data('kategori');
+        if (kategori == 'Root') {
+            gagal('Root tidak bisa input!.');
+            return;
+        }
         let total_harga = 0;
+        if (elem_list_belanja.length <= 0) {
+            gagal('Pesanan masih kosong!.');
+            return;
+        }
         elem_list_belanja.forEach((e, i) => {
             let barang_id = e.getAttribute('data-barang_id');
             let index = e.getAttribute('data-index');
@@ -621,6 +630,7 @@ $user = $db->where('role', 'Member')->orderBy('nama', 'ASC')->get()->getResultAr
 
         let user_id = $(this).data('user_id');
         let total = $(this).data('total');
+        let kategori = $(this).data('kategori');
 
         let html = '';
         html += '<table class="table table-sm table-bordered table-striped">';
@@ -659,7 +669,7 @@ $user = $db->where('role', 'Member')->orderBy('nama', 'ASC')->get()->getResultAr
         html += '<div class="total_uang_lunas">' + angka(total, 'Rp') + '</div>';
         html += '</div>';
 
-        html += '<div class="input-group mb-1">';
+        html += '<div class="input-group mb-1 <?= (session('role') == 'Admin Billiard' ? 'd-none' : ''); ?>">';
         html += '<span style="width: 120px;" class="input-group-text bg_warning_light text_warning_dark fw-bold">DISKON</span>';
         html += '<input style="text-align: right;" type="text" data-total="' + total + '" placeholder="Diskon..." class="form-control uang jml_diskon_lunas" value="0">';
         html += '</div>';
@@ -671,7 +681,7 @@ $user = $db->where('role', 'Member')->orderBy('nama', 'ASC')->get()->getResultAr
         html += '</div>'
 
         html += '<div class="mb-3 d-grid">';
-        html += '<a class="btn_success btn_bayar_lunas" data-user_id="' + user_id + '" data-total="' + total + '" style="text-align: center;" href=""><i class="fa-solid fa-cash-register"></i> Bayar</a>';
+        html += '<a class="btn_success btn_bayar_lunas" data-kategori="<?= (session('role') == 'Root' ? 'Root' : explode(" ", session('role'))[1]); ?>" data-user_id="' + user_id + '" data-total="' + total + '" style="text-align: center;" href=""><i class="fa-solid fa-cash-register"></i> Bayar</a>';
         html += '</div>';
 
         $('.body_lunas').html(html);
@@ -680,6 +690,7 @@ $user = $db->where('role', 'Member')->orderBy('nama', 'ASC')->get()->getResultAr
         let lns = bootstrap.Modal.getOrCreateInstance(lunasMdl)
         lns.show();
 
+        $('.jml_uang_lunas_dari_pembeli').focus();
         // post('hutang/lunas', {
         //     no_nota
 
@@ -729,7 +740,12 @@ $user = $db->where('role', 'Member')->orderBy('nama', 'ASC')->get()->getResultAr
         e.preventDefault();
         let total = $(this).data('total');
         let user_id = $(this).data('user_id');
+        let kategori = $(this).data('kategori');
         let diskon = $('.jml_diskon_lunas').val();
+        if (kategori == 'Root') {
+            gagal('Root tidak diizinkan!.');
+            return;
+        }
         if (diskon == "" || diskon == 0) {
             diskon = 0;
         } else {
@@ -755,14 +771,41 @@ $user = $db->where('role', 'Member')->orderBy('nama', 'ASC')->get()->getResultAr
             user_id,
             diskon,
             total_setelah_diskon: total - diskon,
-            kategori: 'Kantin'
+            kategori
 
         }).then(res => {
             if (res.status == '200') {
                 sukses(res.message);
-                setTimeout(() => {
+                let html = '';
+                html += '<div class="soal_yakin p-3 bg_warning_light" style="border-radius: 5px;">';
+                html += '<div style="font-size: xxx-large;font-weight:bold;text-align:center" class="text_success"><i class="fa-solid fa-circle-check"></i></div>';
+                html += '<div style="text-align: center;">' + res.message + '</div>';
+                html += '<div class="bg_warning mt-4 p-3">';
+                html += '<div class="text_warning_dark" style="text-align: center;font-weight:bold;">Jumlah Kembalian</div>';
+                html += '<div style="font-size: xxx-large;font-weight:bold;text-align:center" class="text_warning_dark">';
+                html += angka(res.data, 'Rp');
+                html += '</div>';
+
+                html += '</div>';
+                html += '</div>';
+                $('.body_kembalian').html(html);
+
+
+                let myModal = document.getElementById('lunas');
+                let modal = bootstrap.Modal.getOrCreateInstance(myModal);
+                modal.hide();
+
+                let myModalDftHtng = document.getElementById('data_hutang');
+                let modalHtng = bootstrap.Modal.getOrCreateInstance(myModalDftHtng);
+                modalHtng.hide();
+
+                let mdLuns = document.getElementById('kembalian');
+                let modalLns = bootstrap.Modal.getOrCreateInstance(mdLuns);
+                modalLns.show();
+
+                $('#kembalian').on('hidden.bs.modal', function() {
                     location.reload();
-                }, 1200);
+                });
             } else {
                 gagal_with_button(res.message);
             }
