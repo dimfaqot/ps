@@ -43,7 +43,7 @@ class Hutang extends BaseController
             gagal_js('Nama sudah ada!.');
         }
         $hp = $db->whereIn('role', ['Member'])->where('hp', $hp)->get()->getRowArray();
-        if ($nam) {
+        if ($hp) {
             gagal_js('Hp sudah ada!.');
         }
         $data = [
