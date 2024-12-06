@@ -523,7 +523,7 @@
         let biaya = parseInt(str_replace("Rp ", "", str_replace(".", "", $('.uang_yang_harus_dibayar').text())));
         let uang = parseInt(str_replace(".", "", $('.harga_jml_uang').val()));
 
-        let myModalPembayaran = document.getElementById('pembayaran');
+        let myModalPembayaran = document.getElementById('pembayaran_navbar');
         let modalPembayaran = bootstrap.Modal.getOrCreateInstance(myModalPembayaran)
         modalPembayaran.hide();
 
