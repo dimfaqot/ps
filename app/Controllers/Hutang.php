@@ -38,12 +38,12 @@ class Hutang extends BaseController
         $hp = clear($this->request->getVar('hp'));
 
         $db = db('users');
-        $nam = $db->whereIn('role', ['Member'])->where('nama', $nama)->get()->getRowArray();
+        $nam = $db->where('role', 'Member')->where('nama', $nama)->get()->getRowArray();
         if ($nam) {
             gagal_js('Nama sudah ada!.');
         }
-        $hp = $db->whereIn('role', ['Member'])->where('hp', $hp)->get()->getRowArray();
-        if ($hp) {
+        $db_hp = $db->where('role', 'Member')->where('hp', $hp)->get()->getRowArray();
+        if ($db_hp) {
             gagal_js('Hp sudah ada!.');
         }
         $data = [
@@ -74,6 +74,12 @@ class Hutang extends BaseController
 
         if (!$q) {
             gagal_js('Id not found!.');
+        }
+
+        $exist = $db->where('role', 'Member')->where($col, $val)->whereNotIn('id', [$id])->get()->getRowArray();
+
+        if ($exist) {
+            gagal_js(upper_first($col) . ' sudah ada!.');
         }
 
         $q[$col] = $val;

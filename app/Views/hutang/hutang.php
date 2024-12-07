@@ -242,11 +242,11 @@
     $(document).on('click', '.btn_add_pembeli', function(e) {
         e.preventDefault();
         let nama = $('.add_pembeli').val();
+        let hp = $('.add_hp').val();
         if (nama == "") {
             gagal("Nama harus diisi!.");
             return;
         }
-        let hp = $('.add_hp').val();
 
         post('hutang/add_pembeli', {
             nama,
