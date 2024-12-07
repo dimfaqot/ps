@@ -92,6 +92,14 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="get_nama_pemesan_sm" tabindex="-1">
+    <div class="modal-dialog p-1">
+        <div class="modal-content body_modal_get_nama_pemesan_sm" style="margin-top:100px;border:2px solid #1b120c">
+
+        </div>
+    </div>
+</div>
 <script>
     let order_list_sm = [];
 
@@ -105,12 +113,14 @@
         html += '</div>';
         html += '<div class="p-3 rounded-bottom" style="background-color: #1b120c;">';
         html += '<div class="input_light mb-3">';
-        html += '<div>No. Meja</div>';
-        html += '<input class="no_meja_sm" type="number" placeholder="Nomor meja..." style="width: 100%;">';
+        html += '<div>Nama Pemesan</div>';
+        html += '<span class="body_get_nama_pemesan_sm">';
+        html += '<input class="get_nama_pemesan_sm" type="text" placeholder="Nama pemesan..." style="width: 100%;cursor:pointer" readonly>';
+        html += '</span>';
         html += '</div>';
         html += '<div class="input_light mb-3">';
-        html += '<div>Nama Pemesan</div>';
-        html += '<input class="nama_pemesan_sm" type="text" placeholder="Nama pemesan..." style="width: 100%;">';
+        html += '<div>No. Meja</div>';
+        html += '<input class="no_meja_sm" type="number" placeholder="Nomor meja..." style="width: 100%;">';
         html += '</div>';
         html += '<table class="table table-dark table-striped table-hover">';
         html += '<thead>';
@@ -270,9 +280,14 @@
         e.preventDefault();
 
         let no_meja = $('.no_meja_sm').val();
-        let nama_pemesan = $('.nama_pemesan_sm').val();
+        let nama_pemesan = $('.get_nama_pemesan_sm').val();
+        let user_id = $('.get_nama_pemesan_sm').data('user_id');
         if (no_meja == "") {
             gagal('Nomor meja harus diisi!.');
+            return false;
+        }
+        if (user_id == "") {
+            gagal('User id not found!.');
             return false;
         }
         if (nama_pemesan == "") {
@@ -282,6 +297,7 @@
         post('ext/save_menu_pesanan', {
             order_list: order_list_sm,
             nama_pemesan,
+            user_id,
             no_meja
         }).then(res => {
             if (res.status == "200") {
@@ -293,5 +309,63 @@
                 gagal_with_button(res.message);
             }
         })
+    })
+    $(document).on('click', '.get_nama_pemesan_sm', function(e) {
+        e.preventDefault();
+        let html = '';
+        html += '<div class="input_light">';
+        html += '<input autofocus class="search_nama_pemesan_sm" placeholder="Ketik sesuatu..." value="" style="width: 100%;" type="text">';
+        html += '<section class="bg_3 sticky-top bg_3" style="z-index:10">';
+        html += '<section style="position:absolute;width:100%" class="bg_3 px-2 body_list_pemesan_sm">';
+
+        html += '</section>';
+        html += '</section>';
+        html += '</div>';
+        $('.body_modal_get_nama_pemesan_sm').html(html);
+        let myModal = document.getElementById('get_nama_pemesan_sm');
+        let modal = bootstrap.Modal.getOrCreateInstance(myModal)
+        modal.show();
+
+        $('.modal').on('shown.bs.modal', function() {
+            $(this).find('[autofocus]').focus();
+        });
+    })
+
+    $(document).on('keyup', '.search_nama_pemesan_sm', function(e) {
+        e.preventDefault();
+        let val = $(this).val();
+
+        post('home/get_nama_pemesan', {
+            val
+        }).then(res => {
+            if (res.status == '200') {
+                let html = '';
+                if (res.data.length == 0) {
+                    html += '<a style="font-size:14px;background-color:#1b120c;color:#f2eaca;padding:5px 10px;border:1px solid #f2eaca;text-decoration:none" href="" class="d-block"><i class="fa-solid fa-triangle-exclamation"></i> Namamu tidak ada!. Daftarkan ke petugas!.</a>';
+                } else {
+                    res.data.forEach((e, i) => {
+                        html += '<a data-id="' + e.id + '" data-nama="' + e.nama + '"  style="font-size:14px;background-color:#1b120c;color:#f2eaca;padding:5px 10px;border:1px solid #f2eaca;text-decoration:none" href="" class="d-block insert_value_sm">' + e.nama + '</a>';
+                    })
+
+                }
+
+                $('.body_list_pemesan_sm').html(html);
+            } else {
+                gagal_with_button(res.message);
+            }
+        })
+
+    })
+
+    $(document).on('click', '.insert_value_sm', function(e) {
+        e.preventDefault();
+        let id = $(this).data('id');
+        let value = $(this).data('nama');
+        $('.body_get_nama_pemesan_sm').html('<input value="' + value + '" class="get_nama_pemesan_sm" data-user_id="' + id + '" type="text" placeholder="Nama pemesan..." style="width: 100%;cursor:pointer" readonly>');
+        let myModal = document.getElementById('get_nama_pemesan_sm');
+        let modal = bootstrap.Modal.getOrCreateInstance(myModal)
+        modal.hide();
+
+
     })
 </script>

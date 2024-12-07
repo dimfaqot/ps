@@ -388,9 +388,17 @@
                 html += '</table>';
 
                 html += '<div class="d-grid">';
-                if (res.data[0].dibaca !== 'DONE') {
-                    html += '<button class="' + (res.data[0].dibaca == 'WAITING' ? 'btn_info kerjakan_pesanan' : 'btn_danger selesaikan_pesanan') + '" data-no_nota="' + res.data[0].no_nota + '"><i class="fa-solid fa-fire-burner"></i> ' + (res.data[0].dibaca == 'WAITING' ? 'Kerjakan' : 'Selesai') + '</button>';
+                if (res.data[0].dibaca == 'WAITING') {
+
+                    html += '<button class="btn_danger hapus_pesanan mb-3" data-no_nota="' + res.data[0].no_nota + '"><i class="fa-solid fa-trash"></i> Delete</button>';
+                    html += '<button class="btn_info kerjakan_pesanan" data-no_nota="' + res.data[0].no_nota + '"><i class="fa-solid fa-fire-burner"></i> Kerjakan</button>';
+                } else if (res.data[0].dibaca == 'PROCESS') {
+                    html += '<button class="btn_warning pindah_ke_hutang mb-2" data-no_nota="' + res.data[0].no_nota + '"><i class="fa-solid fa-scissors"></i> Pindahkan ke Hutang</button>';
+                    html += '<button class="btn_danger selesaikan_pesanan" data-no_nota="' + res.data[0].no_nota + '"><i class="fa-solid fa-fire-burner"></i> Selesai</button>';
+                } else {
+                    html += '<button type="button" class="btn_info_light"><i class="fa-regular fa-circle-check"></i> ' + res.data[0].dibaca + '</button>';
                 }
+
                 html += '</div>';
                 html += '</div>';
 
@@ -571,5 +579,42 @@
         $('#total_harga_navbar').on('hidden.bs.modal', function() {
             location.reload();
         });
+    })
+    $(document).on('click', '.pindah_ke_hutang', function(e) {
+        e.preventDefault();
+        let no_nota = $(this).data('no_nota');
+        post('home/pindah_ke_hutang', {
+            no_nota
+        }).then(res => {
+            if (res.status == '200') {
+                sukses(res.message);
+                setTimeout(() => {
+                    location.reload();
+                }, 1200);
+            } else {
+                gagal(res.message);
+            }
+        })
+
+
+        $('#total_harga_navbar').on('hidden.bs.modal', function() {
+            location.reload();
+        });
+    })
+    $(document).on('click', '.hapus_pesanan', function(e) {
+        e.preventDefault();
+        let no_nota = $(this).data('no_nota');
+        post('home/hapus_pesanan', {
+            no_nota
+        }).then(res => {
+            if (res.status == '200') {
+                sukses(res.message);
+                setTimeout(() => {
+                    location.reload();
+                }, 1200);
+            } else {
+                gagal(res.message);
+            }
+        })
     })
 </script>

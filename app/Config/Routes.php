@@ -42,6 +42,9 @@ $routes->post('/home/get_pendapatan', 'Home::get_pendapatan');
 $routes->post('/home/koperasi', 'Home::koperasi');
 $routes->post('/home/add_tabungan', 'Home::add_tabungan');
 $routes->post('/home/pembayaran_kantin_barcode', 'Home::pembayaran_kantin_barcode');
+$routes->post('/home/pindah_ke_hutang', 'Home::pindah_ke_hutang');
+$routes->post('/home/get_nama_pemesan', 'Home::get_nama_pemesan');
+$routes->post('/home/hapus_pesanan', 'Home::hapus_pesanan');
 // $routes->get('/home/replace', 'Home::replace');
 
 // users ____________________________________
@@ -188,3 +191,6 @@ $routes->post('/hutang/data_hutang', 'Hutang::data_hutang');
 $routes->post('/hutang/add', 'Hutang::add');
 $routes->post('/hutang/lunas', 'Hutang::lunas');
 $routes->post('/hutang/bayar_lunas', 'Hutang::bayar_lunas');
+
+// Notif __________________________________
+$routes->get('/firebase_notif', 'Firebase_notif::index');

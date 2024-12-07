@@ -158,6 +158,9 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="d-flex justify-content-center">
+                    <div style="padding:5px;width: 60px;height:60px;border-radius:50%;border:1px solid white;font-size:xx-large;color:white;text-align:center;background-color:#db8600"><i class="fa-regular fa-clock"></i></div>
+                </div>
                 <div class="d-grid">
                     <button style="background-color:#1b120c" class="rounded text-light p-2 btn_save_pesanan_sm"><i class="fa-regular fa-file-lines"></i> INVOICE</button>
                 </div>

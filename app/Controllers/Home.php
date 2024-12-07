@@ -247,4 +247,88 @@ class Home extends BaseController
             sukses_js('Proses sukses.', $uang - $biaya, $no_nota);
         }
     }
+
+    public function get_nama_pemesan()
+    {
+        $val = clear($this->request->getVar('val'));
+
+        $db = db('users');
+
+        $q = $db->where('role', 'Member')->like('nama', $val, 'both')->limit(5)->get()->getResultArray();
+        sukses_js('Ok', $q);
+    }
+    public function pindah_ke_hutang()
+    {
+        $db = db('notif');
+        $no_nota = clear($this->request->getVar('no_nota'));
+
+        $q = $db->orderBy('no_nota', $no_nota)->where('dibaca', 'PROCESS')->get()->getResultArray();
+
+        if (!$q) {
+            gagal_js('No. nota not found!.');
+        }
+
+
+        $db_barang = db('barang');
+        $dbh = db('hutang');
+        $err = [];
+
+        foreach ($q as $k => $i) {
+            $b = $db_barang->where('barang', $i['menu'])->get()->getRowArray();
+            $data = [
+                'kategori' => 'Kantin',
+                'no_nota' => $i['no_nota'],
+                'user_id' => $i['id_pemesan'],
+                'nama' => $i['pemesan'],
+                'tgl' => $i['tgl'],
+                'teller' => user()['nama'],
+                'status' => 0,
+                'barang_id' => ($b ? $b['id'] : 0),
+                'barang' => $i['menu'],
+                'harga_satuan' => $i['harga'],
+                'qty' => $i['qty'],
+                'total_harga' => $i['total'],
+                'tgl_lunas' => 0,
+            ];
+
+            if ($dbh->insert($data)) {
+                $i['dibaca'] = 'MOVE';
+                $db->where('id', $i['id']);
+                $db->update($i);
+            } else {
+                $err[] = $i['menu'];
+            }
+        }
+        if (count($err) > 0) {
+            gagal_js('Data ' . implode(", ", $err) . 'gagal diinput!.');
+        } else {
+            sukses_js('Data sukses dipindah.');
+        }
+    }
+    public function hapus_pesanan()
+    {
+        $db = db('notif');
+        $no_nota = clear($this->request->getVar('no_nota'));
+
+        $q = $db->orderBy('no_nota', $no_nota)->where('dibaca', 'WAITING')->get()->getResultArray();
+
+        if (!$q) {
+            gagal_js('No. nota not found!.');
+        }
+
+        $err = [];
+
+        foreach ($q as $i) {
+
+            $db->where('id', $i['id']);
+            if (!$db->delete()) {
+                $err[] = $i['menu'];
+            }
+        }
+        if (count($err) > 0) {
+            gagal_js('Data ' . implode(", ", $err) . 'gagal diinput!.');
+        } else {
+            sukses_js('Data sukses dipindah.');
+        }
+    }
 }

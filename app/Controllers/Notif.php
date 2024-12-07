@@ -36,7 +36,7 @@ class Notif extends BaseController
         $no_nota_exist = [];
         foreach ($q as $i) {
             if ($i['kategori'] == 'Pesanan') {
-                if ($i['dibaca'] == 'DONE') {
+                if ($i['dibaca'] == 'DONE' || $i['dibaca'] == 'MOVE') {
                     $i['read'] = 1;
                 } else {
                     $i['read'] = 0;

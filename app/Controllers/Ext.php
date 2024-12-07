@@ -53,6 +53,7 @@ class Ext extends BaseController
     {
         $data = json_decode(json_encode($this->request->getVar('order_list')), true);
         $no_meja = clear($this->request->getVar('no_meja'));
+        $user_id = clear($this->request->getVar('user_id'));
         $nama_pemesan = upper_first(clear($this->request->getVar('nama_pemesan')));
         $dbn = db('notif');
 
@@ -71,6 +72,7 @@ class Ext extends BaseController
                 'pemesan' => $nama_pemesan,
                 'dibaca' => 'WAITING',
                 'kategori' => 'Pesanan',
+                'id_pemesan' => $user_id
             ];
             if (!$dbn->insert($datan)) {
                 $err[] = $i['barang'];
