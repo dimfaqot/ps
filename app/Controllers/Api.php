@@ -50,4 +50,11 @@ class Api extends BaseController
             sukses_js('Gagal!.');
         }
     }
+
+    public function iot_notif_pesanan()
+    {
+        $db = db('notif');
+        $q = $db->where('kategori', 'Pesanan')->whereIn('dibaca', ['WAITING', 'PROCESS'])->countAllResults();
+        sukses_js(($q > 0 ? 'on' : 'off'));
+    }
 }

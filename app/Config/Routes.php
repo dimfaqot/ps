@@ -10,6 +10,7 @@ $routes->get('/api/(:any)/(:any)', 'Api::lampu/$1/$2');
 $routes->get('/api/(:any)/(:any)', 'Api::lampu/$1/$2');
 $routes->get('/uiapi', 'Api::index');
 $routes->post('/api/update_by_js', 'Api::update_by_js');
+$routes->get('/api/iot_notif_pesanan', 'Api::iot_notif_pesanan');
 
 $routes->get('/login', 'Login::index');
 
@@ -34,6 +35,7 @@ $routes->post('/notif/read_notif_pesanan', 'Notif::read_notif_pesanan');
 $routes->post('/notif/notif_detail_pesanan', 'Notif::notif_detail_pesanan');
 $routes->post('/notif/kerjakan_pesanan', 'Notif::kerjakan_pesanan');
 $routes->post('/notif/selesaikan_pesanan', 'Notif::selesaikan_pesanan');
+
 
 
 // home
