@@ -38,12 +38,12 @@
                 <?php foreach ($belanja as $k => $i): ?>
                     <?php
                     $total += $i['total_harga'];
-                    if ($i['status'] == 0) {
+                    if ($i['status'] == 1) {
                         $lunas += $i['total_harga'];
                     }
                     ?>
 
-                    <tr data-status="<?= ($i['status'] == 0 ? 'Lunas' : 'Hutang'); ?>">
+                    <tr style="<?= ($i['status'] == 1 ? 'display:none' : ''); ?>" data-sta="<?= $i['status']; ?>" data-status="<?= ($i['status'] == 1 ? 'Lunas' : 'Hutang'); ?>">
                         <td><?= $k + 1; ?></td>
                         <td><?= date('d/m/Y', $i['tgl']); ?></td>
                         <td><?= $i['barang']; ?></td>
@@ -75,8 +75,9 @@
             if (value == '') {
                 $('.body_lunas').text(angka(total));
             }
-
+            console.log(value);
             $('.isi_hutang tr').filter(function() {
+                console.log($(this).data('status'));
                 $(this).toggle($(this).data('status').indexOf(value) > -1);
             });
 
