@@ -110,4 +110,14 @@ class Ext extends BaseController
 
         sukses_js('Ok', $q['dibaca']);
     }
+
+    public function get_nama_pemesan()
+    {
+        $val = clear($this->request->getVar('val'));
+
+        $db = db('users');
+
+        $q = $db->where('role', 'Member')->like('nama', $val, 'both')->limit(5)->get()->getResultArray();
+        sukses_js('Ok', $q);
+    }
 }

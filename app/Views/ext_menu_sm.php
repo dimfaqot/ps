@@ -335,7 +335,7 @@
         e.preventDefault();
         let val = $(this).val();
 
-        post('home/get_nama_pemesan', {
+        post('ext/get_nama_pemesan', {
             val
         }).then(res => {
             if (res.status == '200') {

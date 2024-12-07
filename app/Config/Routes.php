@@ -45,7 +45,6 @@ $routes->post('/home/koperasi', 'Home::koperasi');
 $routes->post('/home/add_tabungan', 'Home::add_tabungan');
 $routes->post('/home/pembayaran_kantin_barcode', 'Home::pembayaran_kantin_barcode');
 $routes->post('/home/pindah_ke_hutang', 'Home::pindah_ke_hutang');
-$routes->post('/home/get_nama_pemesan', 'Home::get_nama_pemesan');
 $routes->post('/home/hapus_pesanan', 'Home::hapus_pesanan');
 // $routes->get('/home/replace', 'Home::replace');
 
@@ -159,6 +158,7 @@ $routes->get('/ext/pesanan/(:any)', 'Ext::pesanan/$1');
 $routes->post('/ext/invoice', 'Ext::invoice');
 $routes->get('/login/a/member/(:any)', 'Ext::auth_jwt/$1');
 $routes->get('/login/a/(:any)', 'Ext::auth_root/$1');
+$routes->post('/ext/get_nama_pemesan', 'Ext::get_nama_pemesan');
 
 // BARBER
 // layanan __________________________________
