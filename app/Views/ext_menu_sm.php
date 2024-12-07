@@ -8,7 +8,7 @@
                 <div class="row g-1">
                     <?php foreach (barang('Makanan') as $i): ?>
                         <div class="col-6">
-                            <h6 class="menu ps-2 menu_list_sm" data-order="Makanan" data-id="<?= $i['id']; ?>" data-barang="<?= $i['barang']; ?>" data-harga="<?= $i['harga_satuan']; ?>" style="cursor: pointer"><?= $i['barang']; ?></h6>
+                            <h6 data-stok="<?= $i['stok']; ?>" class="menu ps-2 <?= ($i['stok'] > 0 ? 'menu_list_sm' : ''); ?>" data-order="Makanan" data-id="<?= $i['id']; ?>" data-barang="<?= $i['barang']; ?>" data-harga="<?= $i['harga_satuan']; ?>" style="cursor: pointer"><?= ($i['stok'] <= 0 ? '<del style="color:red">' . $i['barang'] . '</del>' : $i['barang']); ?></h6>
                         </div>
                         <div class="list_<?= $i['id']; ?> col-3"></div>
                         <div class="col-3 menu fw-bold" style="padding:0px 5px;background-color: #db8600;text-align:right;font-size:medium"><?= rupiah($i['harga_satuan']); ?></div>
@@ -27,7 +27,7 @@
                 <div class="row g-1">
                     <?php foreach (barang('Cemilan') as $i): ?>
                         <div class="col-6">
-                            <h6 class="menu ps-2 menu_list_sm" data-order="Cemilan" data-id="<?= $i['id']; ?>" data-barang="<?= $i['barang']; ?>" data-harga="<?= $i['harga_satuan']; ?>" style="cursor: pointer;"><?= $i['barang']; ?></h6>
+                            <h6 class="menu ps-2 <?= ($i['stok'] > 0 ? 'menu_list_sm' : ''); ?>" data-order="Cemilan" data-id="<?= $i['id']; ?>" data-barang="<?= $i['barang']; ?>" data-harga="<?= $i['harga_satuan']; ?>" style="cursor: pointer;"><?= ($i['stok'] <= 0 ? '<del style="color:red">' . $i['barang'] . '</del>' : $i['barang']); ?></h6>
                         </div>
                         <div class="list_<?= $i['id']; ?> col-3"></div>
                         <div class="col-3 menu py-1 fw-bold" style="background-color: #db8600;text-align:right;font-size:medium"><?= rupiah($i['harga_satuan']); ?></div>
@@ -46,7 +46,7 @@
                 <div class="row g-1">
                     <?php foreach (barang('Minuman') as $i): ?>
                         <div class="col-6">
-                            <h6 class="menu ps-2 menu_list_sm" data-order="Minuman" data-id="<?= $i['id']; ?>" data-barang="<?= $i['barang']; ?>" data-harga="<?= $i['harga_satuan']; ?>" style="cursor: pointer;"><?= $i['barang']; ?></h6>
+                            <h6 class="menu ps-2 <?= ($i['stok'] > 0 ? 'menu_list_sm' : ''); ?>" data-order="Minuman" data-id="<?= $i['id']; ?>" data-barang="<?= $i['barang']; ?>" data-harga="<?= $i['harga_satuan']; ?>" style="cursor: pointer;"><?= ($i['stok'] <= 0 ? '<del style="color:red">' . $i['barang'] . '</del>' : $i['barang']); ?></h6>
                         </div>
                         <div class="list_<?= $i['id']; ?> col-3"></div>
                         <div class="col-3 menu py-1 fw-bold" style="background-color: #db8600;text-align:right;font-size:medium"><?= rupiah($i['harga_satuan']); ?></div>
