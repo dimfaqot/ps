@@ -6,10 +6,11 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Login::landing');
+$routes->get('/api/iot_rental/(:any)/(:num)', 'Api::iot_rental/$1/$2');
 $routes->get('/api/(:any)/(:any)', 'Api::lampu/$1/$2');
 $routes->get('/api/(:any)/(:any)', 'Api::lampu/$1/$2');
 $routes->get('/uiapi', 'Api::index');
-$routes->post('/api/update_by_js', 'Api::update_by_js');
+$routes->post('/api/update_iot_rental', 'Api::update_iot_rental');
 $routes->get('/api/iot_notif_pesanan', 'Api::iot_notif_pesanan');
 
 $routes->get('/login', 'Login::index');
