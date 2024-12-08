@@ -62,6 +62,6 @@ class Api extends BaseController
     {
         $db = db('api');
         $q = $db->where('kategori', $kategori)->where('meja', $meja)->get()->getRowArray();
-        sukses_js(($q['status'] == 0 ? 'on' : 'off'));
+        sukses_js($q['id'], $q['kategori'], $q['meja'], $q['status'], $q['durasi']);
     }
 }
