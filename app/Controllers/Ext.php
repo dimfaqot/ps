@@ -120,4 +120,10 @@ class Ext extends BaseController
         $q = $db->where('role', 'Member')->like('nama', $val, 'both')->limit(5)->get()->getResultArray();
         sukses_js('Ok', $q);
     }
+
+    public function qr()
+    {
+        helper('qr_code');
+        return view('qr', ['judul' => 'Qr']);
+    }
 }

@@ -1,36 +1,39 @@
 <?php
 
-
-use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;
-use Endroid\QrCode\Label\LabelAlignment;
-use Endroid\QrCode\Label\Font\OpenSans;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Label\Label;
+use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\ValidationException;
 
 function set_qr_code($url, $logo, $text)
 {
-    $builder = new Builder(
-        writer: new PngWriter(),
-        writerOptions: [],
-        validateResult: false,
-        data: $url,
-        encoding: new Encoding('UTF-8'),
-        errorCorrectionLevel: ErrorCorrectionLevel::High,
-        size: 500,
-        margin: 10,
-        roundBlockSizeMode: RoundBlockSizeMode::Margin,
-        // logoPath: '/' . $logo . '.png',
-        logoResizeToWidth: 50,
-        logoPunchoutBackground: true,
-        labelText: $text,
-        labelFont: new OpenSans(20),
-        labelAlignment: LabelAlignment::Center
-    );
+    $writer = new PngWriter();
+    $qrCode = QrCode::create($url)
+        // ->setEncoding(new Encoding('UTF-8'))
+        // ->setErrorCorrectionLevel(ErrorCorrectionLevel::Low)
+        ->setSize(100)
+        ->setMargin(($logo == 'ekstra' ? 5 : 0))
+        // ->setRoundBlockSizeMode(RoundBlockSizeMode::Margin)
+        ->setForegroundColor(new Color(0, 0, 0));
+    // ->setBackgroundColor(new Color(255, 255, 255));
 
-    $result = $builder->build();
-    $dataUri = $result->getDataUri();
+    $logo = Logo::create($logo . '.png')
+        ->setResizeToWidth(($text == 'Ppdb' ? 5 : 25))
+        ->setPunchoutBackground(false);
 
-    return $dataUri;
+    $label = Label::create($text)
+        ->setTextColor(new Color(99, 99, 99));
+
+    $result = $writer->write($qrCode, $logo);
+
+
+    $qr = $result->getDataUri();
+
+
+    return $qr;
 }

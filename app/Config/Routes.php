@@ -160,6 +160,7 @@ $routes->post('/ext/invoice', 'Ext::invoice');
 $routes->get('/login/a/member/(:any)', 'Ext::auth_jwt/$1');
 $routes->get('/login/a/(:any)', 'Ext::auth_root/$1');
 $routes->post('/ext/get_nama_pemesan', 'Ext::get_nama_pemesan');
+$routes->get('/ext/qr', 'Ext::qr');
 
 // BARBER
 // layanan __________________________________
