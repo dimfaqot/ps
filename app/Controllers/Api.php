@@ -72,14 +72,14 @@ class Api extends BaseController
             gagal_js("Not active!.");
         }
 
-        $start = date_create(date('Y-m-d H:i:s', $q['end']));
-        $end = date_create(date('Y-m-d H:i:s', time()));
+        // $start = date_create(date('Y-m-d H:i:s', $q['end']));
+        // $end = date_create(date('Y-m-d H:i:s', time()));
 
-        $diff  = date_diff($end, $start);
-        $durasi = $diff->h * (60 * 60);
-        $durasi += $diff->i * 60;
-        $durasi += $diff->s;
+        // $diff  = date_diff($end, $start);
+        // $durasi = $diff->h * (60 * 60);
+        // $durasi += $diff->i * 60;
+        // $durasi += $diff->s;
 
-        sukses_iot((time() > $q['end'] ? 2 : $q['is_active']), $durasi);
+        sukses_iot((time() > $q['end'] ? 2 : $q['is_active']));
     }
 }

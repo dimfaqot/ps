@@ -131,12 +131,11 @@ function sukses_js($pesan, $data = null, $data2 = null, $data3 = null, $data4 = 
     echo json_encode($data);
     die;
 }
-function sukses_iot($is_active, $durasi)
+function sukses_iot($is_active)
 {
     $data = [
         'status' => '200',
-        'is_active' => $is_active,
-        'durasi' => $durasi
+        'is_active' => $is_active
     ];
 
     echo json_encode($data);
