@@ -80,6 +80,6 @@ class Api extends BaseController
         $durasi += $diff->i * 60;
         $durasi += $diff->s;
 
-        sukses_iot($q['is_active'], $durasi * 1000);
+        sukses_iot($q['is_active'], $diff->h);
     }
 }
