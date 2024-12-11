@@ -18,13 +18,13 @@
                         <div class="bg_success px-2 fw-bold" style="border-radius: 5px;"><a href="" data-order="start" data-id="<?= $i['id']; ?>" class="text_light btn_start_stop" style="font-size: medium;"><i class="fa-regular fa-circle-play"></i></a></div>
 
                     <?php else: ?>
-                        <div><input style="font-size:smaller" type="number" class="form-control form-control-sm durasi_billiard_<?= $i['id']; ?>" value="<?= get_detail_billiard($i['id'])['durasi']; ?>"></div>
+                        <div><input style="font-size:smaller;cursor:pointer" type="number" class="form-control form-control-sm <?= (get_detail_billiard($i['id'])['durasi'] > 0 ? "durasi_billiard" : ""); ?> durasi_billiard_<?= $i['id']; ?>" data-kode="0" data-billiard_id="<?= get_detail_billiard($i['id'])['id']; ?>" data-id="<?= $i['id']; ?>" value="<?= get_detail_billiard($i['id'])['durasi']; ?>"></div>
                         <?php if (get_detail_billiard($i['id'])['end'] == 0): ?>
                             <div><?= durasi(get_detail_billiard($i['id'])['start'], time()); ?></div>
                         <?php else: ?>
                             <div><?= date('H:i', get_detail_billiard($i['id'])['end']); ?></div>
                         <?php endif; ?>
-                        <div class="bg_danger px-2 fw-bold" style="border-radius: 5px;"><a href="" data-billiard_id="<?= get_detail_billiard($i['id'])['id']; ?>" data-order="end" data-id="<?= $i['id']; ?>" class="text_light btn_start_stop" style="font-size: medium;"><i class="fa-regular fa-circle-stop"></i></a></div>
+                        <div class="bg_danger px-2 fw-bold body_btn_start_stop_<?= $i['id']; ?>" style="border-radius: 5px;"><a href="" data-billiard_id="<?= get_detail_billiard($i['id'])['id']; ?>" data-order="end" data-id="<?= $i['id']; ?>" class="text_light btn_start_stop" style="font-size: medium;"><i class="fa-regular fa-circle-stop"></i></a></div>
 
                     <?php endif; ?>
                 </div>
@@ -116,6 +116,24 @@
     // let myModal = document.getElementById('exampleModal');
     // let modal = bootstrap.Modal.getOrCreateInstance(myModal);
     // modal.show();
+    $(document).on('click', '.durasi_billiard', function(e) {
+        e.preventDefault();
+        let id = $(this).data('id');
+        let kode = $(this).data('kode');
+        let billiard_id = $(this).data('billiard_id');
+        if (kode == 0) {
+            $(this).data('kode', 1);
+            $('.body_btn_start_stop_' + id).removeClass('bg_danger');
+            $('.body_btn_start_stop_' + id).addClass('bg_main');
+            $('.body_btn_start_stop_' + id).html('<a href="" data-billiard_id="' + billiard_id + '" data-order="update" data-id="' + id + '" class="text_light btn_update" style="font-size: medium;"><i class="fa-solid fa-square-check"></i></a>');
+        } else {
+            $(this).data('kode', 0);
+            $('.body_btn_start_stop_' + id).addClass('bg_danger');
+            $('.body_btn_start_stop_' + id).removeClass('bg_main');
+            $('.body_btn_start_stop_' + id).html('<a href="" data-billiard_id="' + billiard_id + '" data-order="end" data-id="' + id + '" class="text_light btn_start_stop" style="font-size: medium;"><i class="fa-regular fa-circle-stop"></i></a>');
+        }
+    })
+
     $(document).on('change', '.check_hutang', function(e) {
         e.preventDefault();
         if ($(this).is(':checked')) {
@@ -240,6 +258,28 @@
                 }
             } else {
                 gagal_with_button(res.message);
+            }
+        })
+
+    })
+    $(document).on('click', '.btn_update', function(e) {
+        e.preventDefault();
+
+        let id = $(this).data('id');
+        let billiard_id = $(this).data('billiard_id');
+        let durasi = $('.durasi_billiard_' + id).val();
+
+        post('billiard/update', {
+            durasi,
+            billiard_id
+        }).then(res => {
+            if (res.status = "200") {
+                sukses(res.message);
+                setTimeout(() => {
+                    location.reload();
+                }, 800);
+            } else {
+                gagal(res.message);
             }
         })
 

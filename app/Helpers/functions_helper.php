@@ -131,6 +131,17 @@ function sukses_js($pesan, $data = null, $data2 = null, $data3 = null, $data4 = 
     echo json_encode($data);
     die;
 }
+function sukses_iot($is_active, $durasi)
+{
+    $data = [
+        'status' => '200',
+        'is_active' => $is_active,
+        'durasi' => $durasi
+    ];
+
+    echo json_encode($data);
+    die;
+}
 
 function gagal_js($pesan, $data = null, $data2 = null, $data3 = null, $data4 = null)
 {

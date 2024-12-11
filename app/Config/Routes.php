@@ -7,10 +7,12 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Login::landing');
 $routes->get('/api/iot_rental/(:any)/(:num)', 'Api::iot_rental/$1/$2');
+$routes->get('/api/tes_iot_rental/(:any)/(:num)', 'Api::tes_iot_rental/$1/$2');
 $routes->get('/api/(:any)/(:any)', 'Api::lampu/$1/$2');
 $routes->get('/api/(:any)/(:any)', 'Api::lampu/$1/$2');
 $routes->get('/uiapi', 'Api::index');
 $routes->post('/api/update_iot_rental', 'Api::update_iot_rental');
+$routes->post('/api/tes_update_iot_rental', 'Api::tes_update_iot_rental');
 $routes->get('/api/iot_notif_pesanan', 'Api::iot_notif_pesanan');
 
 $routes->get('/login', 'Login::index');
@@ -126,6 +128,7 @@ $routes->post('/billiard/add', 'Billiard_2::add');
 $routes->post('/billiard/pembayaran', 'Billiard_2::pembayaran');
 $routes->post('/billiard/start_stop', 'Billiard_2::start_stop');
 $routes->post('/billiard/get_user', 'Billiard_2::get_user');
+$routes->post('/billiard/update', 'Billiard_2::update');
 
 // pengeluaran billiard __________________________________
 $routes->get('/pengeluaran_billiard', 'Pengeluaran_billiard::index');

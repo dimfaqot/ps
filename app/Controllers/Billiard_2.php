@@ -12,6 +12,7 @@ class Billiard_2 extends BaseController
 
     public function index(): string
     {
+
         $db = db('jadwal_2');
         $meja = $db->orderBy('meja', 'ASC')->get()->getResultArray();
 
@@ -196,5 +197,32 @@ class Billiard_2 extends BaseController
         $q = $db->whereIn('role', ['Member'])->like('nama', $user, 'both')->orderBy('nama', 'ASC')->limit(10)->get()->getResultArray();
 
         sukses_js('Koneksi ok', $q);
+    }
+
+    public function update()
+    {
+        $billiard_id = clear($this->request->getVar('billiard_id'));
+        $durasi = (int)clear($this->request->getVar('durasi'));
+
+        $db = db('billiard_2');
+        $q = $db->where('id', $billiard_id)->get()->getRowArray();
+
+        if (!$q) {
+            gagal_js('Id not found!.');
+        }
+
+        if ($q['is_active'] == 0) {
+            gagal_js('Meja sudah habis!.');
+        }
+
+        $q['end'] += 60 * $durasi;
+        $q['durasi'] += $durasi;
+
+        $db->where('id', $billiard_id);
+        if ($db->update($q)) {
+            sukses_js('Sukses.');
+        } else {
+            gagal_js('Update gagal!.');
+        }
     }
 }

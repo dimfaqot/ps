@@ -34,7 +34,14 @@ class Api extends BaseController
         $db->update($q);
     }
 
-    public function update_iot_rental()
+
+    public function iot_notif_pesanan()
+    {
+        $db = db('notif');
+        $q = $db->where('kategori', 'Pesanan')->whereIn('dibaca', ['WAITING', 'PROCESS'])->countAllResults();
+        sukses_js(($q > 0 ? 'on' : 'off'));
+    }
+    public function tes_update_iot_rental()
     {
         $id = clear($this->request->getVar('id'));
         $db = db('api');
@@ -51,17 +58,28 @@ class Api extends BaseController
             gagal_js('Gagal update!.');
         }
     }
-
-    public function iot_notif_pesanan()
-    {
-        $db = db('notif');
-        $q = $db->where('kategori', 'Pesanan')->whereIn('dibaca', ['WAITING', 'PROCESS'])->countAllResults();
-        sukses_js(($q > 0 ? 'on' : 'off'));
-    }
-    public function iot_rental($kategori, $meja)
+    public function tes_iot_rental($kategori, $meja)
     {
         $db = db('api');
         $q = $db->where('kategori', $kategori)->where('meja', $meja)->get()->getRowArray();
         sukses_js($q['id'], $q['kategori'], $q['meja'], $q['status'], $q['durasi']);
+    }
+    public function iot_rental($kategori, $meja)
+    {
+        $db = db(($kategori == 'Billiard' ? 'billiard_2' : ($kategori == 'Ps' ? 'rental' : 'kantin')));
+        $q = $db->where('meja', "Meja " . $meja)->where('is_active', 1)->get()->getRowArray();
+        if (!$q) {
+            gagal_js("Not active!.");
+        }
+
+        $start = date_create(date('Y-m-d H:i:s', $q['end']));
+        $end = date_create(date('Y-m-d H:i:s', time()));
+
+        $diff  = date_diff($end, $start);
+        $durasi = $diff->h * (60 * 60);
+        $durasi += $diff->i * 60;
+        $durasi += $diff->s;
+
+        sukses_iot($q['is_active'], $durasi * 1000);
     }
 }

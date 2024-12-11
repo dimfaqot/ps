@@ -23,7 +23,7 @@
         e.preventDefault();
         let id = $(this).data('id');
 
-        post('api/update_iot_rental', {
+        post('api/tes_update_iot_rental', {
             id
         }).then(res => {
             if (res.status == "200") {
