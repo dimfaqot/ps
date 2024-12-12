@@ -66,10 +66,29 @@ class Api extends BaseController
     }
     public function iot_rental($kategori, $meja)
     {
-        $db = db(($kategori == 'Billiard' ? 'billiard_2' : ($kategori == 'Ps' ? 'rental' : 'kantin')));
-        $q = $db->where('meja', "Meja " . $meja)->where('is_active', 1)->get()->getRowArray();
-        if (!$q) {
-            gagal_js("Not active!.");
+        if ($kategori == 'Billiard') {
+            $db = db('billiard_2');
+            $q = $db->where('meja', "Meja " . $meja)->where('is_active', 1)->get()->getRowArray();
+            if (!$q) {
+                gagal_js("Not active!.");
+            }
+            if ($q['end'] == 0) {
+                sukses_iot(1);
+            }
+
+            sukses_iot((time() > $q['end'] ? 2 : $q['is_active']));
+        }
+        if ($kategori == 'Ps') {
+            $db = db('rental');
+            $q = $db->where('meja', "Meja " . $meja)->where('is_active', 1)->get()->getRowArray();
+            if (!$q) {
+                gagal_js("Not active!.");
+            }
+            if ($q['ke'] == -1) {
+                sukses_iot(1);
+            }
+
+            sukses_iot((time() > $q['ke'] ? 2 : $q['is_active']));
         }
 
         // $start = date_create(date('Y-m-d H:i:s', $q['end']));
@@ -80,6 +99,5 @@ class Api extends BaseController
         // $durasi += $diff->i * 60;
         // $durasi += $diff->s;
 
-        sukses_iot((time() > $q['end'] ? 2 : $q['is_active']));
     }
 }
