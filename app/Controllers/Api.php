@@ -8,8 +8,7 @@ class Api extends BaseController
     public function index()
     {
         $db = db('api');
-        $q = $db->orderBy('kategori', 'ASC')->orderBy('meja', 'ASC')->get()->getResultArray();
-
+        $q = $db->get()->getRowArray();
         return view('uiapi', ['judul' => 'UI API', 'data' => $q]);
     }
     public function lampu($tabel, $jwt)
