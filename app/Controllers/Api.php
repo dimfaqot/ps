@@ -58,10 +58,13 @@ class Api extends BaseController
             gagal_js('Gagal update!.');
         }
     }
-    public function tes_iot_rental($kategori, $meja)
+    public function tes_iot_rental()
     {
         $db = db('api');
-        $q = $db->where('kategori', $kategori)->where('meja', $meja)->get()->getRowArray();
+        $q = $db->get()->getRowArray();
+        $q['status'] = ($q['status'] == 1 ? 0 : 1);
+        $db->where('id', $q['id']);
+        $db->update($q);
         sukses_js($q['id'], $q['kategori'], $q['meja'], $q['status'], $q['durasi']);
     }
     public function iot_rental($kategori, $meja)

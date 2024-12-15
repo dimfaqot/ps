@@ -7,7 +7,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Login::landing');
 $routes->get('/api/iot_rental/(:any)/(:num)', 'Api::iot_rental/$1/$2');
-$routes->get('/api/tes_iot_rental/(:any)/(:num)', 'Api::tes_iot_rental/$1/$2');
+$routes->get('/api/tes_iot_rental', 'Api::tes_iot_rental');
 $routes->get('/api/(:any)/(:any)', 'Api::lampu/$1/$2');
 $routes->get('/api/(:any)/(:any)', 'Api::lampu/$1/$2');
 $routes->get('/uiapi', 'Api::index');
