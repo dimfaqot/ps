@@ -42,7 +42,7 @@ class Fulus extends BaseController
         $db = db('fulus');
         if ($db->insert($data)) {
             $rand = generateRandomString();
-            $saldo = encode_jwt_fulus($rand, $usr['fulus']);
+            $saldo = encode_jwt_fulus($rand, ['saldo' => $usr['fulus']]);
 
             sukses_js('Ok', $saldo, $rand, strlen($saldo));
         } else {
