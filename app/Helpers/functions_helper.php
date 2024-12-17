@@ -206,19 +206,12 @@ function decode_jwt($encode_jwt)
         die;
     }
 }
-function encode_jwt_fulus($key, $data)
-{
 
-    $jwt = JWT::encode($data, $key, 'HS256');
-
-    return $jwt;
-}
-
-function decode_jwt_fulus($key, $encode_jwt)
+function decode_jwt_fulus($encode_jwt)
 {
     try {
 
-        $decoded = JWT::decode($encode_jwt, new Key($key, 'HS256'));
+        $decoded = JWT::decode($encode_jwt, new Key(getenv("jwt_fulus"), 'HS256'));
         $arr = (array)$decoded;
 
         return $arr;

@@ -22,9 +22,7 @@ class Fulus extends BaseController
         // ];
 
         $jwt = $this->request->getVar('jwt');
-        $key = $this->request->getVar('key');
-
-        $decode = decode_jwt_fulus($key, $jwt);
+        $decode = decode_jwt_fulus($jwt);
         $dbu = db('users');
         $usr = $dbu->where("uid", $decode['uid'])->get()->getRowArray();
 
@@ -41,10 +39,7 @@ class Fulus extends BaseController
 
         $db = db('fulus');
         if ($db->insert($data)) {
-            $rand = generateRandomString();
-            $saldo = encode_jwt_fulus($rand, ['saldo' => $usr['fulus']]);
-
-            sukses_js('Ok', $saldo, $rand, strlen($saldo));
+            sukses_js('Ok', rupiah($usr['saldo']));
         } else {
             gagal_js('Salah!');
         }
