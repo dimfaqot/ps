@@ -41,7 +41,10 @@ class Fulus extends BaseController
         $q = $db->get()->getResultArray();
 
         if ($q) {
-            $db->delete();
+            foreach ($q as $i) {
+                $db->where('id', $i['id']);
+                $db->delete();
+            }
         }
         if ($db->insert($data)) {
             sukses_js('Ok', rupiah($usr['fulus']));
