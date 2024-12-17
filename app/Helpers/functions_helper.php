@@ -712,3 +712,15 @@ function generateRandomString($length = 32)
     }
     return $randomString;
 }
+
+function clear_rfid()
+{
+    $db = db('rfid');
+    $q = $db->get()->getResultArray();
+    if ($q) {
+        foreach ($q as $i) {
+            $db->where('id', $i['id']);
+            $db->delete();
+        }
+    }
+}

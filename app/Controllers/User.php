@@ -66,14 +66,7 @@ class User extends BaseController
 
         if ($db->insert($data)) {
             sukses(base_url(menu()['controller']), 'Save data success.');
-            $dbr = db('rfid');
-            $qr = $dbr->get()->getResultArray();
-            if ($qr) {
-                foreach ($qr as $i) {
-                    $dbr->where('id', $i['id']);
-                    $dbr->delete();
-                }
-            }
+            clear_rfid();
         } else {
             gagal(base_url(menu()['controller']), 'Save data failed!.');
         }
@@ -124,14 +117,7 @@ class User extends BaseController
         $db->where('id', $id);
         if ($db->update($q)) {
             sukses(base_url(menu()['controller']), 'Update data success.');
-            $dbr = db('rfid');
-            $qr = $dbr->get()->getResultArray();
-            if ($qr) {
-                foreach ($qr as $i) {
-                    $dbr->where('id', $i['id']);
-                    $dbr->delete();
-                }
-            }
+            clear_rfid();
         } else {
             gagal(base_url(menu()['controller']), 'Update data failed!.');
         }

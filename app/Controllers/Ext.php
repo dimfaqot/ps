@@ -135,13 +135,7 @@ class Ext extends BaseController
         $decode = decode_jwt_fulus($jwt);
         $data = ['uid' => $decode['uid']];
 
-        $qr = $db->get()->getResultArray();
-        if ($qr) {
-            foreach ($qr as $i) {
-                $db->where('id', $i['id']);
-                $db->delete();
-            }
-        }
+        clear_rfid();
 
         if ($db->insert($data)) {
             sukses_js('Sukses!.');
