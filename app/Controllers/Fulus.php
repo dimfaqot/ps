@@ -39,7 +39,7 @@ class Fulus extends BaseController
 
         $db = db('fulus');
         if ($db->insert($data)) {
-            sukses_js('Ok', rupiah($usr['saldo']));
+            sukses_js('Ok', rupiah($usr['fulus']));
         } else {
             gagal_js('Salah!');
         }
