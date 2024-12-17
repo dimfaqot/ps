@@ -201,3 +201,7 @@ $routes->post('/hutang/bayar_lunas', 'Hutang::bayar_lunas');
 
 // Notif __________________________________
 $routes->get('/firebase_notif', 'Firebase_notif::index');
+
+// fulus
+$routes->get('/fulus/get', 'Fulus::get');
+$routes->get('/fulus/add', 'Fulus::add');
