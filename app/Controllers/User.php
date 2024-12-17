@@ -148,26 +148,4 @@ class User extends BaseController
             sukses_js('Isi', $q);
         }
     }
-    public function add_uid()
-    {
-        $db = db('rfid');
-        $jwt = $this->request->getVar('jwt');
-
-        $decode = decode_jwt_fulus($jwt);
-        $data = ['uid' => $decode['uid']];
-
-        $qr = $db->get()->getResultArray();
-        if ($qr) {
-            foreach ($qr as $i) {
-                $db->where('id', $i['id']);
-                $db->delete();
-            }
-        }
-
-        if ($db->insert($data)) {
-            sukses_js('Sukses!.');
-        } else {
-            gagal_js('Gagal!.');
-        }
-    }
 }

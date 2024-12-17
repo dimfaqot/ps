@@ -56,7 +56,7 @@ $routes->get('/users', 'User::index');
 $routes->post('/users/add', 'User::add');
 $routes->post('/users/update', 'User::update');
 $routes->post('/users/get_uid', 'User::get_uid');
-$routes->post('/users/add_uid', 'User::add_uid');
+
 
 // options __________________________________
 $routes->get('/options', 'Options::index');
@@ -166,6 +166,7 @@ $routes->get('/login/a/member/(:any)', 'Ext::auth_jwt/$1');
 $routes->get('/login/a/(:any)', 'Ext::auth_root/$1');
 $routes->post('/ext/get_nama_pemesan', 'Ext::get_nama_pemesan');
 $routes->get('/ext/qr', 'Ext::qr');
+$routes->post('/ext/add_uid', 'Ext::add_uid');
 
 // BARBER
 // layanan __________________________________
