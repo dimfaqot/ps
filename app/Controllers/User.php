@@ -65,8 +65,8 @@ class User extends BaseController
 
 
         if ($db->insert($data)) {
-            sukses(base_url(menu()['controller']), 'Save data success.');
             clear_rfid();
+            sukses(base_url(menu()['controller']), 'Save data success.');
         } else {
             gagal(base_url(menu()['controller']), 'Save data failed!.');
         }
@@ -116,8 +116,8 @@ class User extends BaseController
 
         $db->where('id', $id);
         if ($db->update($q)) {
-            sukses(base_url(menu()['controller']), 'Update data success.');
             clear_rfid();
+            sukses(base_url(menu()['controller']), 'Update data success.');
         } else {
             gagal(base_url(menu()['controller']), 'Update data failed!.');
         }
@@ -129,7 +129,7 @@ class User extends BaseController
         $q = $db->get()->getRowArray();
 
         if (!$q) {
-            gagal_js('Kosong!');
+            gagal_js('Kosong!.');
         } else {
             sukses_js('Isi', $q);
         }
