@@ -21,8 +21,9 @@ class Fulus extends BaseController
         //     "durasi" => clear($this->request->getVar('durasi'))
         // ];
 
-        $req = json_decode($this->request->getVar('jwt'));
-        sukses_js($req);
+        $jwt = $this->request->getVar('jwt');
+        $key = $this->request->getVar('key');
+        sukses_js('Ok', $jwt, $key);
 
         $encode = encode_jwt_fulus($req['key'], $req['jwt']);
         $dbu = db('users');
