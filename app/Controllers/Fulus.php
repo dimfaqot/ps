@@ -24,19 +24,19 @@ class Fulus extends BaseController
         $jwt = $this->request->getVar('jwt');
         $key = $this->request->getVar('key');
 
-        $encode = encode_jwt_fulus($key, $jwt);
+        $decode = decode_jwt_fulus($key, $jwt);
         $dbu = db('users');
-        $usr = $dbu->where("uid", $encode['uid'])->get()->getRowArray();
+        $usr = $dbu->where("uid", $decode['uid'])->get()->getRowArray();
 
         if (!$usr) {
             gagal_js('Kartu tidak terdaftar!.');
         }
 
         $data = [
-            "uid" => $encode['uid'],
-            "kategori" => $encode['kategori'],
-            "meja" => $encode['meja'],
-            "durasi" => $encode['durasi']
+            "uid" => $decode['uid'],
+            "kategori" => $decode['kategori'],
+            "meja" => $decode['meja'],
+            "durasi" => $decode['durasi']
         ];
 
         $db = db('fulus');
