@@ -49,6 +49,8 @@ class Hutang extends BaseController
         $data = [
             'nama' => $nama,
             'hp' => $hp,
+            'saldo' => encode_jwt_fulus(['fulus' => 0]),
+            'uid' => '',
             'img' => 'file_not_found.jpg',
             'role' => 'Member',
             'bidang' => '',

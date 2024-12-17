@@ -55,6 +55,8 @@ $routes->post('/home/hapus_pesanan', 'Home::hapus_pesanan');
 $routes->get('/users', 'User::index');
 $routes->post('/users/add', 'User::add');
 $routes->post('/users/update', 'User::update');
+$routes->post('/users/get_uid', 'User::get_uid');
+$routes->post('/users/add_uid', 'User::add_uid');
 
 // options __________________________________
 $routes->get('/options', 'Options::index');

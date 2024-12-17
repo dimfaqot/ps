@@ -14,9 +14,17 @@ class User extends BaseController
     {
         $db = db(menu()['tabel']);
 
-        $q = $db->select('id,nama,hp,img,role,username,bidang')->orderBy('nama', 'ASC')->get()->getResultArray();
+        $q = $db->select('id,nama,hp,img,role,username,bidang,uid,fulus')->orderBy('nama', 'ASC')->get()->getResultArray();
 
-        return view('user', ['judul' => menu()['menu'] . ' - PS', 'data' => $q]);
+        $data = [];
+
+        foreach ($q as $i) {
+            $i['fulus'] = decode_jwt_fulus($i['fulus'])['fulus'];
+
+            $data[] = $i;
+        }
+
+        return view('user', ['judul' => menu()['menu'] . ' - PS', 'data' => $data]);
     }
 
     public function add()
@@ -25,18 +33,30 @@ class User extends BaseController
         $username = strtolower(clear($this->request->getVar('username')));
         $role = upper_first(clear($this->request->getVar('role')));
         $hp = upper_first(clear($this->request->getVar('hp')));
+        $uid = clear($this->request->getVar('uid'));
+        $fulus = rp_to_int($this->request->getVar('fulus'));
         $img = 'file_not_found.jpg';
         $password = password_hash(getenv('default_password'), PASSWORD_DEFAULT);
+
+        if ($fulus == "") {
+            $fulus = 0;
+        }
 
         $db = db(menu()['tabel']);
         $is_exist = $db->where('username', $username)->get()->getRowArray();
         if ($is_exist) {
             gagal(base_url(menu()['controller']), 'Username already taken!.');
         }
+        $is_exist_uid = $db->where('uid', $uid)->get()->getRowArray();
+        if ($is_exist_uid) {
+            gagal(base_url(menu()['controller']), 'Uid already exist!.');
+        }
 
         $data = [
             'nama' => $nama,
             'username' => $username,
+            'fulus' => encode_jwt_fulus(['fulus' => $fulus]),
+            'uid' => $uid,
             'role' => $role,
             'password' => $password,
             'img' => $img,
@@ -46,6 +66,14 @@ class User extends BaseController
 
         if ($db->insert($data)) {
             sukses(base_url(menu()['controller']), 'Save data success.');
+            $dbr = db('rfid');
+            $qr = $dbr->get()->getResultArray();
+            if ($qr) {
+                foreach ($qr as $i) {
+                    $dbr->where('id', $i['id']);
+                    $dbr->delete();
+                }
+            }
         } else {
             gagal(base_url(menu()['controller']), 'Save data failed!.');
         }
@@ -60,11 +88,20 @@ class User extends BaseController
         $bidang = upper_first(clear($this->request->getVar('bidang')));
         $img = 'file_not_found.jpg';
         $password = clear($this->request->getVar('password'));
+        $uid = clear($this->request->getVar('uid'));
+        $fulus = rp_to_int($this->request->getVar('fulus'));
+        if ($fulus == "") {
+            $fulus = 0;
+        }
 
         $db = db(menu()['tabel']);
         $is_exist = $db->where('username', $username)->whereNotIn('id', [$id])->get()->getRowArray();
         if ($is_exist) {
             gagal(base_url(menu()['controller']), 'Username already taken!.');
+        }
+        $is_exist_uid = $db->where('uid', $uid)->whereNotIn('id', [$id])->get()->getRowArray();
+        if ($is_exist_uid) {
+            gagal(base_url(menu()['controller']), 'Uid already exist!.');
         }
 
         $q = $db->where('id', $id)->get()->getRowArray();
@@ -76,6 +113,7 @@ class User extends BaseController
         $q['nama'] = $nama;
         $q['bidang'] = $bidang;
         $q['username'] = $username;
+        $q['fulus'] = encode_jwt_fulus(['fulus' => $fulus]);
         $q['role'] = $role;
         if ($password !== '') {
             $q['password'] = password_hash($password, PASSWORD_DEFAULT);
@@ -86,8 +124,50 @@ class User extends BaseController
         $db->where('id', $id);
         if ($db->update($q)) {
             sukses(base_url(menu()['controller']), 'Update data success.');
+            $dbr = db('rfid');
+            $qr = $dbr->get()->getResultArray();
+            if ($qr) {
+                foreach ($qr as $i) {
+                    $dbr->where('id', $i['id']);
+                    $dbr->delete();
+                }
+            }
         } else {
             gagal(base_url(menu()['controller']), 'Update data failed!.');
+        }
+    }
+
+    public function get_uid()
+    {
+        $db = db('rfid');
+        $q = $db->get()->getRowArray();
+
+        if (!$q) {
+            gagal_js('Kosong!');
+        } else {
+            sukses_js('Isi', $q);
+        }
+    }
+    public function add_uid()
+    {
+        $db = db('rfid');
+        $jwt = $this->request->getVar('jwt');
+
+        $decode = decode_jwt_fulus($jwt);
+        $data = ['uid' => $decode['uid']];
+
+        $qr = $db->get()->getResultArray();
+        if ($qr) {
+            foreach ($qr as $i) {
+                $db->where('id', $i['id']);
+                $db->delete();
+            }
+        }
+
+        if ($db->insert($data)) {
+            sukses_js('Sukses!.');
+        } else {
+            gagal_js('Gagal!.');
         }
     }
 }
