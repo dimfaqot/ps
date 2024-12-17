@@ -38,6 +38,11 @@ class Fulus extends BaseController
         ];
 
         $db = db('fulus');
+        $q = $db->get()->getResultArray();
+
+        if ($q) {
+            $db->delete();
+        }
         if ($db->insert($data)) {
             sukses_js('Ok', rupiah($usr['fulus']));
         } else {
