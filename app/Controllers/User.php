@@ -106,6 +106,7 @@ class User extends BaseController
         $q['nama'] = $nama;
         $q['bidang'] = $bidang;
         $q['username'] = $username;
+        $q['uid'] = $uid;
         $q['fulus'] = encode_jwt_fulus(['fulus' => $fulus]);
         $q['role'] = $role;
         if ($password !== '') {
