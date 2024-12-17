@@ -703,7 +703,7 @@ function data_pembeli()
     return $data;
 }
 
-function generateRandomString($length = 15)
+function generateRandomString($length = 32)
 {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charactersLength = strlen($characters);
