@@ -23,9 +23,8 @@ class Fulus extends BaseController
 
         $jwt = $this->request->getVar('jwt');
         $key = $this->request->getVar('key');
-        sukses_js('Ok', $jwt, $key);
 
-        $encode = encode_jwt_fulus($req['key'], $req['jwt']);
+        $encode = encode_jwt_fulus($key, $jwt);
         $dbu = db('users');
         $usr = $dbu->where("uid", $encode['uid'])->get()->getRowArray();
 
