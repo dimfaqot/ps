@@ -44,7 +44,7 @@ class Fulus extends BaseController
             $rand = generateRandomString();
             $res = ['key' => $rand, 'saldo' => $usr];
 
-            sukses_js('Ok', encode_jwt_fulus($rand, $res));
+            sukses_js('Ok', encode_jwt_fulus($rand, $res), $rand);
         } else {
             gagal_js('Salah!');
         }
