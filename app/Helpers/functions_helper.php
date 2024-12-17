@@ -206,6 +206,32 @@ function decode_jwt($encode_jwt)
         die;
     }
 }
+function encode_jwt_fulus($key, $data)
+{
+
+    $jwt = JWT::encode($data, $key, 'HS256');
+
+    return $jwt;
+}
+
+function decode_jwt_fulus($key, $encode_jwt)
+{
+    try {
+
+        $decoded = JWT::decode($encode_jwt, new Key($key, 'HS256'));
+        $arr = (array)$decoded;
+
+        return $arr;
+    } catch (\Exception $e) { // Also tried JwtException
+        $data = [
+            'status' => '400',
+            'message' => $e->getMessage()
+        ];
+
+        echo json_encode($data);
+        die;
+    }
+}
 
 
 function user()
@@ -675,4 +701,15 @@ function data_pembeli()
     array_multisort($keys, $short_by, $data);
 
     return $data;
+}
+
+function generateRandomString($length = 15)
+{
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
 }
