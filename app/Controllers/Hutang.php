@@ -50,7 +50,7 @@ class Hutang extends BaseController
             'nama' => $nama,
             'hp' => $hp,
             'saldo' => encode_jwt_fulus(['fulus' => 0]),
-            'uid' => '',
+            'uid' => generateRandomString(),
             'img' => 'file_not_found.jpg',
             'role' => 'Member',
             'bidang' => '',

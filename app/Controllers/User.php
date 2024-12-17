@@ -49,6 +49,7 @@ class User extends BaseController
         }
         $is_exist_uid = $db->where('uid', $uid)->get()->getRowArray();
         if ($is_exist_uid) {
+            clear_rfid();
             gagal(base_url(menu()['controller']), 'Uid already exist!.');
         }
 
@@ -94,6 +95,7 @@ class User extends BaseController
         }
         $is_exist_uid = $db->where('uid', $uid)->whereNotIn('id', [$id])->get()->getRowArray();
         if ($is_exist_uid) {
+            clear_rfid();
             gagal(base_url(menu()['controller']), 'Uid already exist!.');
         }
 
