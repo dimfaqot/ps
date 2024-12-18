@@ -77,8 +77,27 @@ class Api extends BaseController
             if ($q['end'] == 0) {
                 sukses_iot(1);
             }
+            $kode = 1;
+            if (time() > $q['end']) {
+                $kode = 2;
+            }
+            if ($q['metode'] == 'Tap' && $kode == 2) {
+                $dbm = db('jadwal_2');
+                $meja = $dbm->where('id', $q['meja_id'])->get()->getRowArray();
 
-            sukses_iot((time() > $q['end'] ? 2 : $q['is_active']));
+                if ($meja) {
+                    $meja['is_active'] = 0;
+                    $meja['start'] = 0;
+
+                    $dbm->where('id', $meja['id']);
+                    if ($dbm->update($meja)) {
+                        $q['is_active'] = 0;
+                        $db->where('id', $q['id']);
+                        $db->update($q);
+                    }
+                }
+            }
+            sukses_iot($kode);
         }
         if ($kategori == 'Ps') {
             $db = db('rental');
