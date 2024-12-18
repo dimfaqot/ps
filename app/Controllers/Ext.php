@@ -279,7 +279,7 @@ class Ext extends BaseController
     public function hasil_tap()
     {
         $meja = clear($this->request->getVar('meja'));
-        $durasi = clear($this->request->getVar('durasi'));
+        $durasi = (int)clear($this->request->getVar('durasi'));
         $durasi *= 60;
 
         $db = db('booking');
