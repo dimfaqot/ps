@@ -283,26 +283,26 @@ class Ext extends BaseController
         $durasi *= 60;
 
         $db = db('booking');
-        $dbb = db('billiard_2');
-        $dbu = db('users');
         $q = $db->get()->getRowArray();
 
         if ($q) {
             gagal_js('Belum ditap!.');
         } else {
+            $dbb = db('billiard_2');
             $bil = $dbb->where('meja', $meja)->where('is_active', 1)->where('metode', 'Tap')->get()->getRowArray();
-            sukses_js('Ok', $bil);
-            if (!$bil) {
-                sukses_js("Tap gagal!.");
-            } else {
-                $user = $dbu->where('nama', $bil['petugas'])->get()->getRowArray();
-                $saldo = "Saldo tidak terbaca!.";
-                if ($user) {
-                    $sal = decode_jwt_fulus($user['fulus']);
-                    $saldo = rupiah($sal['fulus']);
-                }
-                sukses_js('Tap berhasil.', $saldo);
+
+            // if (!$bil) {
+            //     sukses_js("Tap gagal!.");
+            // } else {
+            $dbu = db('users');
+            $user = $dbu->where('nama', $bil['petugas'])->get()->getRowArray();
+            $saldo = "Saldo tidak terbaca!.";
+            if ($user) {
+                $sal = decode_jwt_fulus($user['fulus']);
+                $saldo = rupiah($sal['fulus']);
             }
+            sukses_js('Tap berhasil.', $saldo);
+            // }
         }
     }
 }
