@@ -238,7 +238,7 @@ class Ext extends BaseController
             $dbb = db('billiard_2');
             if ($dbb->insert($data)) {
                 $sal = $fulus - $harga;
-                $user['fulus'] = encode_jwt_fulus($sal);
+                $user['fulus'] = encode_jwt_fulus(['fulus' => $sal]);
                 $dbu->where('id', $user['id']);
                 if ($dbu->update($user)) {
                     clear_tabel('booking');
