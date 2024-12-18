@@ -190,7 +190,7 @@ class Ext extends BaseController
         }
 
         $db = db('booking');
-        $q = $db->where('is_active', 1)->get()->getRowArray();
+        $q = $db->get()->getRowArray();
 
         if (!$q) {
             gagal_js('Booking gagal!.');
