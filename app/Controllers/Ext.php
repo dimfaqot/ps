@@ -290,7 +290,7 @@ class Ext extends BaseController
         } else {
             $dbb = db('billiard_2');
             $bil = $dbb->where('meja', "Meja " . $meja)->where('is_active', 1)->where('metode', 'Tap')->get()->getRowArray();
-
+            sukses_js('Ok', $bil);
             if (!$bil) {
                 sukses_js("Tap gagal!.");
             } else {
