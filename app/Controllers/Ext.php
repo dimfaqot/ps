@@ -285,15 +285,10 @@ class Ext extends BaseController
         $db = db('booking');
         $q = $db->get()->getRowArray();
 
-        if ($q) {
-            gagal_js('Belum ditap!.');
-        } else {
-
+        if (!$q) {
             $dbb = db('billiard_2');
             $bil = $dbb->where('meja', $meja)->where('is_active', 1)->where('metode', 'Tap')->get()->getRowArray();
-            if (!$bil) {
-                gagal_js("Tap gagal!.");
-            } else {
+            if ($bil) {
                 $dbu = db('users');
                 $user = $dbu->where('nama', $bil['petugas'])->get()->getRowArray();
                 $saldo = "Saldo tidak terbaca!.";

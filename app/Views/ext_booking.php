@@ -209,13 +209,7 @@ $meja = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                                 data
                             }).then(resp => {
                                 let respon = resp.data;
-                                if (resp.status == "400") {
-                                    gagal(resp.message);
-                                    setTimeout(() => {
-                                        location.reload();
-                                    }, 1200);
-
-                                } else {
+                                if (resp.status == "200") {
                                     sukses(resp.message);
                                     setTimeout(() => {
                                         let ht = '';
