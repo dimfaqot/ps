@@ -241,7 +241,7 @@ class Ext extends BaseController
                 $dbu->where('id', $user['id']);
                 if ($dbu->update($user)) {
                     clear_tabel('booking');
-                    sukses_js('Sukses. Saldo: ' + $user['fulus'], $data['durasi']);
+                    sukses_js('Sukses. Saldo: ' . $user['fulus'], $data['durasi']);
                 } else {
                     clear_tabel('booking');
                     gagal_js('Update saldo gagal!.');
