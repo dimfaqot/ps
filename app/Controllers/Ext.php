@@ -203,7 +203,7 @@ class Ext extends BaseController
             gagal_js('Meja tidak ditemukan!.');
         }
 
-        if ($q['is_active'] == 1) {
+        if ($meja['is_active'] == 1) {
             gagal_js('Meja aktif!.');
         }
 
