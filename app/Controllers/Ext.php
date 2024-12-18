@@ -135,12 +135,131 @@ class Ext extends BaseController
         $decode = decode_jwt_fulus($jwt);
         $data = ['uid' => $decode['uid']];
 
-        clear_rfid();
+        clear_tabel('rfid');
 
         if ($db->insert($data)) {
             sukses_js('Sukses!.');
         } else {
             gagal_js('Gagal!.');
         }
+    }
+
+    public function booking()
+    {
+        return view('ext_booking', ['judul' => 'BOOKING']);
+    }
+    public function add_booking()
+    {
+        $data = json_decode(json_encode($this->request->getVar('data')), true);
+        clear_tabel('booking');
+        $db = db('booking');
+        if ($db->insert($data)) {
+            sukses_js('Sukses. Silahkan tap dalam 20 detik!.');
+        } else {
+            gagal_js('Order gagal!.');
+        }
+    }
+    public function get_durasi()
+    {
+        $db = db('billiard_2');
+        $q = $db->where('is_active', 1)->get()->getResultArray();
+
+        $res = [];
+        foreach ($q as $i) {
+            $exp = explode(" ", $i['meja']);
+            $dur = explode(":", durasi($i['end'], time()));
+            $val = [
+                'meja' => end($exp),
+                'durasi' => ($i['durasi'] == 0 ? "Open" : $dur[0] . "h " . $dur[1] . "m")
+            ];
+
+            $res[] = $val;
+        }
+
+        sukses_js('Ok', $res);
+    }
+    public function tap_booking()
+    {
+        $jwt = $this->request->getVar('jwt');
+        $decode = decode_jwt_fulus($jwt);
+
+        $dbu = db('users');
+        $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
+        if (!$user) {
+            gagal_js('Kartu tidak dikenal!.');
+        }
+
+        $db = db('booking');
+        $q = $db->where('is_active', 1)->get()->getRowArray();
+
+        if (!$q) {
+            gagal_js('Booking gagal!.');
+        }
+
+        $dbm = db('jadwal_2');
+        $meja = $dbm->where('meja', $q['meja'])->get()->getRowArray();
+
+        if (!$meja) {
+            gagal_js('Meja tidak ditemukan!.');
+        }
+
+        if ($q['is_active'] == 1) {
+            gagal_js('Meja aktif!.');
+        }
+
+        $harga = (int)$meja['harga'] * (int)$q['durasi'];
+        $fulus = (int)$user['fulus'];
+        if ($fulus < $harga) {
+            gagal_js('Saldo tidak cukup!.');
+        }
+
+        $time_now = time();
+        $meja['is_active'] = 1;
+        $meja['start'] = $time_now;
+
+        $dbm->where('id', $meja['id']);
+        if ($dbm->update($meja)) {
+            $data = [
+                'meja_id' => $meja['id'],
+                'meja' => "Meja " . $meja['meja'],
+                'tgl' => $time_now,
+                'durasi' => $q['durasi'] * 60,
+                'petugas' => $user['nama'],
+                'biaya' => $harga,
+                'diskon' => 0,
+                'start' => $time_now,
+                'end' => $time_now + (60 * $q['durasi']),
+                'is_active' => 1,
+                'harga' => $meja['harga'],
+                'metode' => 'Tap'
+            ];
+
+            $dbb = db('billiard_2');
+            if ($dbb->insert($data)) {
+                $user['fulus'] = $fulus - $harga;
+                $dbu->where('id', $user['id']);
+                if ($dbu->update($user)) {
+                    clear_tabel('booking');
+                    sukses_js('Sukses. Saldo: ' + $user['fulus'], $data['durasi']);
+                } else {
+                    clear_tabel('booking');
+                    gagal_js('Update saldo gagal!.');
+                }
+            } else {
+                clear_tabel('booking');
+                gagal_js('Insert billiard gagal!.');
+            }
+        } else {
+            clear_tabel('booking');
+            gagal_js('Update meja gagal!.');
+        }
+    }
+
+    public function del_booking()
+    {
+        $jwt = $this->request->getVar('jwt');
+        decode_jwt_fulus($jwt);
+
+        clear_tabel('booking');
     }
 }

@@ -167,6 +167,12 @@ $routes->get('/login/a/(:any)', 'Ext::auth_root/$1');
 $routes->post('/ext/get_nama_pemesan', 'Ext::get_nama_pemesan');
 $routes->get('/ext/qr', 'Ext::qr');
 $routes->post('/ext/add_uid', 'Ext::add_uid');
+$routes->get('/booking', 'Ext::booking');
+$routes->post('/add_booking', 'Ext::add_booking');
+$routes->post('/get_durasi', 'Ext::get_durasi');
+$routes->post('/tap_booking', 'Ext::tap_booking');
+$routes->post('/end_booking', 'Ext::end_booking');
+$routes->post('/del_booking', 'Ext::del_booking');
 
 // BARBER
 // layanan __________________________________

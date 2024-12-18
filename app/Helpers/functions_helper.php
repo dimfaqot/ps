@@ -713,9 +713,9 @@ function generateRandomString($length = 14)
     return $randomString;
 }
 
-function clear_rfid()
+function clear_tabel($tabel)
 {
-    $db = db('rfid');
+    $db = db($tabel);
     $q = $db->get()->getResultArray();
     if ($q) {
         foreach ($q as $i) {

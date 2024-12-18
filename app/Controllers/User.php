@@ -49,7 +49,7 @@ class User extends BaseController
         }
         $is_exist_uid = $db->where('uid', $uid)->get()->getRowArray();
         if ($is_exist_uid) {
-            clear_rfid();
+            clear_tabel('rfid');
             gagal(base_url(menu()['controller']), 'Uid already exist!.');
         }
 
@@ -66,7 +66,7 @@ class User extends BaseController
 
 
         if ($db->insert($data)) {
-            clear_rfid();
+            clear_tabel('rfid');
             sukses(base_url(menu()['controller']), 'Save data success.');
         } else {
             gagal(base_url(menu()['controller']), 'Save data failed!.');
@@ -95,7 +95,7 @@ class User extends BaseController
         }
         $is_exist_uid = $db->where('uid', $uid)->whereNotIn('id', [$id])->get()->getRowArray();
         if ($is_exist_uid) {
-            clear_rfid();
+            clear_tabel('rfid');
             gagal(base_url(menu()['controller']), 'Uid already exist!.');
         }
 
@@ -119,7 +119,7 @@ class User extends BaseController
 
         $db->where('id', $id);
         if ($db->update($q)) {
-            clear_rfid();
+            clear_tabel('rfid');
             sukses(base_url(menu()['controller']), 'Update data success.');
         } else {
             gagal(base_url(menu()['controller']), 'Update data failed!.');

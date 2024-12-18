@@ -18,13 +18,14 @@
                         <div class="bg_success px-2 fw-bold" style="border-radius: 5px;"><a href="" data-order="start" data-id="<?= $i['id']; ?>" class="text_light btn_start_stop" style="font-size: medium;"><i class="fa-regular fa-circle-play"></i></a></div>
 
                     <?php else: ?>
-                        <div><input style="font-size:smaller;cursor:pointer" type="number" class="form-control form-control-sm <?= (get_detail_billiard($i['id'])['durasi'] > 0 ? "durasi_billiard" : ""); ?> durasi_billiard_<?= $i['id']; ?>" data-kode="0" data-billiard_id="<?= get_detail_billiard($i['id'])['id']; ?>" data-id="<?= $i['id']; ?>" value="<?= get_detail_billiard($i['id'])['durasi']; ?>"></div>
-                        <?php if (get_detail_billiard($i['id'])['end'] == 0): ?>
-                            <div><?= durasi(get_detail_billiard($i['id'])['start'], time()); ?></div>
+                        <?php $billiard = get_detail_billiard($i['id']); ?>
+                        <div><input style="font-size:smaller;cursor:pointer" type="number" class="form-control form-control-sm <?= ($billiard['metode'] == 'Cash' ? ($billiard['durasi'] > 0 ? "durasi_billiard" : "") : ""); ?> durasi_billiard_<?= $i['id']; ?>" data-kode="0" data-billiard_id="<?= $billiard['id']; ?>" data-id="<?= $i['id']; ?>" value="<?= $billiard['durasi']; ?>" <?= ($billiard['metode'] == 'Tap' ? 'readonly' : ''); ?>></div>
+                        <?php if ($billiard['end'] == 0): ?>
+                            <div><?= durasi($billiard['start'], time()); ?></div>
                         <?php else: ?>
-                            <div><?= date('H:i', get_detail_billiard($i['id'])['end']); ?></div>
+                            <div><?= date('H:i', $billiard['end']); ?></div>
                         <?php endif; ?>
-                        <div class="bg_danger px-2 fw-bold body_btn_start_stop_<?= $i['id']; ?>" style="border-radius: 5px;"><a href="" data-billiard_id="<?= get_detail_billiard($i['id'])['id']; ?>" data-order="end" data-id="<?= $i['id']; ?>" class="text_light btn_start_stop" style="font-size: medium;"><i class="fa-regular fa-circle-stop"></i></a></div>
+                        <div class="bg_danger px-2 fw-bold body_btn_start_stop_<?= $i['id']; ?>" style="border-radius: 5px;"><a href="" data-billiard_id="<?= $billiard['id']; ?>" data-order="end" data-id="<?= $i['id']; ?>" class="text_light btn_start_stop" data-metode="<?= $billiard['metode']; ?>" style="font-size: medium;"><i class="fa-regular fa-circle-stop"></i></a></div>
 
                     <?php endif; ?>
                 </div>
@@ -236,9 +237,15 @@
         e.preventDefault();
 
         let id = $(this).data('id');
+        let metode = $(this).data('metode');
         let billiard_id = $(this).data('billiard_id');
         let order = $(this).data('order');
         let durasi = $('.durasi_billiard_' + id).val();
+
+        if (metode == 'Tap') {
+            gagal('Otomatis!.');
+            return;
+        }
 
         post('billiard/start_stop', {
             id,

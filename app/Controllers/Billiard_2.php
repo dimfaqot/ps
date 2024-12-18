@@ -76,7 +76,8 @@ class Billiard_2 extends BaseController
                         'meja' => 'Meja ' . $q['meja'],
                         'tgl' => time(),
                         'start' => time(),
-                        'end' => ($durasi == 0 ? 0 : time() + ($durasi * 60))
+                        'end' => ($durasi == 0 ? 0 : time() + ($durasi * 60)),
+                        'metode' => 'Cash'
                     ];
                     $db_bill = db('billiard_2');
 
