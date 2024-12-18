@@ -278,23 +278,23 @@ class Ext extends BaseController
     }
     public function hasil_tap()
     {
-        $meja = clear($this->request->getVar('meja'));
+        $meja = "Meja " . clear($this->request->getVar('meja'));
         $durasi = (int)clear($this->request->getVar('durasi'));
         $durasi *= 60;
 
         $db = db('booking');
+        $dbb = db('billiard_2');
+        $dbu = db('users');
         $q = $db->get()->getRowArray();
 
         if ($q) {
             gagal_js('Belum ditap!.');
         } else {
-            $dbb = db('billiard_2');
-            $bil = $dbb->where('meja', "Meja " . $meja)->where('is_active', 1)->where('metode', 'Tap')->get()->getRowArray();
+            $bil = $dbb->where('meja', $meja)->where('is_active', 1)->where('metode', 'Tap')->get()->getRowArray();
             sukses_js('Ok', $bil);
             if (!$bil) {
                 sukses_js("Tap gagal!.");
             } else {
-                $dbu = db('users');
                 $user = $dbu->where('nama', $bil['petugas'])->get()->getRowArray();
                 $saldo = "Saldo tidak terbaca!.";
                 if ($user) {
