@@ -229,7 +229,7 @@ class Ext extends BaseController
                 'biaya' => $harga,
                 'diskon' => 0,
                 'start' => $time_now,
-                'end' => $time_now + (60 * $q['durasi']),
+                'end' => $time_now + ((60 * 60) * $q['durasi']),
                 'is_active' => 1,
                 'harga' => $meja['harga'],
                 'metode' => 'Tap'
