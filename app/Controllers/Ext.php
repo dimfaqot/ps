@@ -292,7 +292,7 @@ class Ext extends BaseController
         } else {
 
             if (!$bil) {
-                sukses_js("Tap gagal!.");
+                gagal_js("Tap gagal!.");
             } else {
                 $dbu = db('users');
                 $user = $dbu->where('nama', $bil['petugas'])->get()->getRowArray();
