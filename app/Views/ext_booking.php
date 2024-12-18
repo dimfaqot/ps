@@ -225,7 +225,7 @@ $meja = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                                     }, 2400);
                                 }
                             })
-                        }, 3500);
+                        }, 4000);
 
                     }, 1200);
                 } else {
