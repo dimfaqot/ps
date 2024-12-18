@@ -208,7 +208,7 @@ class Ext extends BaseController
         }
 
         $harga = (int)$meja['harga'] * (int)$q['durasi'];
-        $decode_fulus = decode_jwt_fulus($user['fulus']);
+        $decode_fulus = decode_jwt_fulus($user['fulus'])['fulus'];
         $fulus = (int)$decode_fulus['fulus'];
         if ($fulus < $harga) {
             gagal_js('Saldo tidak cukup!.');
