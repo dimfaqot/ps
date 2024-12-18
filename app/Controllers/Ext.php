@@ -289,10 +289,10 @@ class Ext extends BaseController
             gagal_js('Belum ditap!.');
         } else {
             $dbb = db('billiard_2');
-            $bil = $dbb->where('meja', "Meja " . $meja)->where('durasi', $durasi)->where('is_active', 1)->whereNotIn('biaya', [0])->get()->getRowArray();
+            $bil = $dbb->where('meja', "Meja " . $meja)->where('is_active', 1)->where('metode', 'Tap')->get()->getRowArray();
 
             if (!$bil) {
-                sukses_js("Tap gagal!");
+                sukses_js("Tap gagal!.");
             } else {
                 $dbu = db('users');
                 $user = $dbu->where('nama', $bil['petugas'])->get()->getRowArray();
@@ -301,7 +301,7 @@ class Ext extends BaseController
                     $sal = decode_jwt_fulus($user['fulus']);
                     $saldo = rupiah($sal['fulus']);
                 }
-                sukses_js('Tap berhasil!', $saldo);
+                sukses_js('Tap berhasil.', $saldo);
             }
         }
     }
