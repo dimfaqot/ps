@@ -282,7 +282,7 @@ class Ext extends BaseController
         $durasi = (int)clear($this->request->getVar('durasi'));
         $durasi *= 60;
         $dbb = db('billiard_2');
-        $bil = $dbb->where('meja', $meja)->where('is_active', 1)->where('metode', 'Tap')->get()->getRowArray();
+        $bil = $dbb->where('is_active', 1)->where('metode', 'Tap')->get()->getRowArray();
 
         $db = db('booking');
         $q = $db->get()->getRowArray();
