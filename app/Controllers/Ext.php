@@ -280,7 +280,7 @@ class Ext extends BaseController
     {
         $meja = clear($this->request->getVar('meja'));
         $durasi = (int)clear($this->request->getVar('durasi'));
-        $durasi = (60 * 60) * $durasi;
+        $durasi = 60 * $durasi;
 
         $db = db('booking');
         $q = $db->get()->getRowArray();
