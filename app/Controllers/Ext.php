@@ -261,6 +261,7 @@ class Ext extends BaseController
         decode_jwt_fulus($jwt);
 
         clear_tabel('booking');
+        sukses_js('Booking dihapus!.');
     }
 
     public function get_booking()
