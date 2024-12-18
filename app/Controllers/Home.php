@@ -11,6 +11,7 @@ class Home extends BaseController
     }
     public function index(): string
     {
+
         $db = db('users');
         $q = $db->orderBy('nama', 'ASC')->get()->getResultArray();
 
