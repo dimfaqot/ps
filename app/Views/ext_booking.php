@@ -221,7 +221,7 @@ $meja = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                                     html += '<div class="d-flex justify-content-center" style="margin-top: 200px;">';
                                     html += '<div class="rounded-circle embos text-center p-2 fw-bold" style="cursor:pointer;font-size:111px;width:200px;height:200px;color:#cbf4f0;border:1px solid #3c3e46">' + x + '</div>';
                                     html += '</div>';
-                                    if (x < 21) {
+                                    if (x < 121) {
                                         $('.content').html(html);
                                     } else {
                                         gagal("Waktu tap habis!.");
