@@ -281,8 +281,6 @@ class Ext extends BaseController
         $meja = "Meja " . clear($this->request->getVar('meja'));
         $durasi = (int)clear($this->request->getVar('durasi'));
         $durasi *= 60;
-        $dbb = db('billiard_2');
-        $bil = $dbb->where('is_active', 1)->where('metode', 'Tap')->get()->getRowArray();
 
         $db = db('booking');
         $q = $db->get()->getRowArray();
@@ -291,6 +289,8 @@ class Ext extends BaseController
             gagal_js('Belum ditap!.');
         } else {
 
+            $dbb = db('billiard_2');
+            $bil = $dbb->where('meja', $meja)->where('is_active', 1)->where('metode', 'Tap')->get()->getRowArray();
             if (!$bil) {
                 gagal_js("Tap gagal!.");
             } else {
