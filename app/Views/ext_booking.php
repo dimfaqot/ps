@@ -183,6 +183,7 @@ $meja = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             post('add_booking', {
                 data
             }).then(res => {
+                data['meja'] = "Meja " + data.meja;
                 if (res.status == "200") {
                     sukses(res.message);
                     setTimeout(() => {
