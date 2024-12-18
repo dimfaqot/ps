@@ -11,9 +11,6 @@ class Home extends BaseController
     }
     public function index(): string
     {
-        $dur = (60 * 60) * 3;
-        $ne = time() + $dur;
-        dd(date('H:i', $ne));
         $db = db('users');
         $q = $db->orderBy('nama', 'ASC')->get()->getResultArray();
 
