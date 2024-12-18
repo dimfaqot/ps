@@ -262,4 +262,15 @@ class Ext extends BaseController
 
         clear_tabel('booking');
     }
+
+    public function get_booking()
+    {
+        $db = db('booking');
+        $q = $db->get()->getRowArray();
+        if ($q) {
+            sukses_js('Silahkan tap!.');
+        } else {
+            gagal_js('Silahkan pilih meja!');
+        }
+    }
 }
