@@ -185,19 +185,56 @@ $meja = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             }).then(res => {
                 if (res.status == "200") {
                     sukses(res.message);
-                    let x = 0;
-                    setInterval(() => {
-                        x++;
-                        let html = '';
-                        html += '<div class="d-flex justify-content-center" style="margin-top: 200px;">';
-                        html += '<div class="rounded-circle embos text-center p-2 fw-bold" style="cursor:pointer;font-size:111px;width:200px;height:200px;color:#cbf4f0;border:1px solid #3c3e46">' + x + '</div>';
-                        html += '</div>';
-                        if (x < 21) {
-                            $('.content').html(html);
-                        } else {
-                            location.reload();
-                        }
-                    }, 1000);
+                    setTimeout(() => {
+                        let x = 0;
+                        setInterval(() => {
+                            // hasil tap
+                            x++;
+                            post('hasil_tap', {
+                                data
+                            }).then(resp => {
+                                let respon = resp.data;
+                                if (res.resp == "200") {
+                                    if (respon == null) {
+                                        gagal(resp.message);
+                                        setTimeout(() => {
+                                            location.reload();
+                                        }, 1200);
+                                    } else {
+                                        sukses(resp.message);
+                                        setTimeout(() => {
+                                            let ht = '';
+                                            ht += '<div style="margin-top: 250px;">';
+                                            ht += '<h6 class="text-center" style="color: aliceblue;">Saldo</h6>';
+                                            ht += '<h5 class="text-center" style="color: aliceblue;">' + respon + '</h5>';
+                                            ht += '</div>';
+                                            $('.content').html(ht);
+                                        }, 1200);
+
+                                        setTimeout(() => {
+                                            location.reload();
+                                        }, 2400);
+                                    }
+
+                                } else {
+                                    let html = '';
+                                    html += '<div class="d-flex justify-content-center" style="margin-top: 200px;">';
+                                    html += '<div class="rounded-circle embos text-center p-2 fw-bold" style="cursor:pointer;font-size:111px;width:200px;height:200px;color:#cbf4f0;border:1px solid #3c3e46">' + x + '</div>';
+                                    html += '</div>';
+                                    if (x < 21) {
+                                        $('.content').html(html);
+                                    } else {
+                                        gagal("Waktu tap habis!.");
+
+                                        setTimeout(() => {
+                                            location.reload();
+                                        }, 1200);
+                                    }
+                                }
+                            })
+
+                        }, 1000);
+                    }, 1200);
                 } else {
                     gagal(res.message);
                 }

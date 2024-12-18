@@ -154,7 +154,7 @@ class Ext extends BaseController
         clear_tabel('booking');
         $db = db('booking');
         if ($db->insert($data)) {
-            sukses_js('Sukses. Silahkan tap dalam 20 detik!.');
+            sukses_js('Sukses. Silahkan tap dalam 20 detik!.', $data);
         } else {
             gagal_js('Order gagal!.');
         }
@@ -274,6 +274,35 @@ class Ext extends BaseController
             sukses_js('Silahkan tap!.');
         } else {
             gagal_js('Silahkan pilih meja!');
+        }
+    }
+    public function hasil_tap()
+    {
+        $meja = clear($this->request->getVar('meja'));
+        $durasi = (int)clear($this->request->getVar('durasi'));
+        $durasi = (60 * 60) * $durasi;
+
+        $db = db('booking');
+        $q = $db->get()->getRowArray();
+
+        if ($q) {
+            gagal_js('Belum ditap!.');
+        } else {
+            $dbb = db('billiard_2');
+            $bil = $dbb->where('meja', "Meja " . $meja)->where('durasi', $durasi)->where('is_active', 1)->whereNotIn('biaya', [0])->get()->getRowArray();
+
+            if (!$bil) {
+                sukses_js("Tap gagal!");
+            } else {
+                $dbu = db('users');
+                $user = $dbu->where('nama', $bil['petugas'])->get()->getRowArray();
+                $saldo = "Saldo tidak terbaca!.";
+                if ($user) {
+                    $sal = decode_jwt_fulus($user['fulus']);
+                    $saldo = rupiah($sal['fulus']);
+                }
+                sukses_js('Tap berhasil!', $saldo);
+            }
         }
     }
 }
