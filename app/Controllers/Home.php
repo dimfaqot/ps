@@ -11,12 +11,6 @@ class Home extends BaseController
     }
     public function index(): string
     {
-        $meja = "Meja " . 1;
-        $durasi = 1;
-        $durasi *= 60;
-        $dbb = db('billiard_2');
-        $bil = $dbb->where('meja', $meja)->where('is_active', 1)->where('metode', 'Tap')->get()->getRowArray();
-        dd($bil);
         $db = db('users');
         $q = $db->orderBy('nama', 'ASC')->get()->getResultArray();
 
