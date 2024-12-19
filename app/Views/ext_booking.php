@@ -185,49 +185,25 @@ $meja = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             }).then(res => {
                 if (res.status == "200") {
                     sukses(res.message);
-                    setTimeout(() => {
-                        let x = 0;
-                        setInterval(() => {
-                            x++;
-                            let html = '';
-                            html += '<div class="d-flex justify-content-center" style="margin-top: 200px;">';
-                            html += '<div class="rounded-circle embos text-center p-2 fw-bold" style="cursor:pointer;font-size:111px;width:200px;height:200px;color:#cbf4f0;border:1px solid #3c3e46">' + x + '</div>';
-                            html += '</div>';
-                            if (x < 21) {
-                                $('.content').html(html);
-                            } else {
-                                gagal("Waktu tap habis!.");
+                    hasil_tap(data);
+                    let x = 0;
+                    // setInterval(() => {
+                    //     x++;
+                    //     let html = '';
+                    //     html += '<div class="d-flex justify-content-center" style="margin-top: 200px;">';
+                    //     html += '<div class="rounded-circle embos text-center p-2 fw-bold" style="cursor:pointer;font-size:111px;width:200px;height:200px;color:#cbf4f0;border:1px solid #3c3e46">' + x + '</div>';
+                    //     html += '</div>';
+                    //     if (x < 621) {
+                    //         $('.content').html(html);
+                    //     } else {
+                    //         gagal("Waktu tap habis!.");
 
-                                setTimeout(() => {
-                                    location.reload();
-                                }, 1200);
-                            }
-                        }, 1000);
-                        // hasil tap
-                        setInterval(() => {
-                            post('hasil_tap', {
-                                data
-                            }).then(resp => {
-                                let respon = resp.data;
-                                if (resp.status == "200") {
-                                    sukses(resp.message);
-                                    setTimeout(() => {
-                                        let ht = '';
-                                        ht += '<div style="margin-top: 250px;">';
-                                        ht += '<h6 class="text-center" style="color: aliceblue;">Saldo</h6>';
-                                        ht += '<h5 class="text-center" style="color: aliceblue;">' + respon + '</h5>';
-                                        ht += '</div>';
-                                        $('.content').html(ht);
-                                    }, 1200);
-
-                                    setTimeout(() => {
-                                        location.reload();
-                                    }, 2400);
-                                }
-                            })
-                        }, 4000);
-
-                    }, 1200);
+                    //         setTimeout(() => {
+                    //             location.reload();
+                    //         }, 1200);
+                    //     }
+                    // }, 1000);
+                    // hasil tap
                 } else {
                     gagal(res.message);
                 }
@@ -249,6 +225,37 @@ $meja = $db->orderBy('meja', 'ASC')->get()->getResultArray();
         setInterval(() => {
             get_durasi();
         }, 5000);
+
+        const hasil_tap = (data) => {
+            setInterval(() => {
+                post('hasil_tap', {
+                    data
+                }).then(res => {
+                    if (res.status == "200") {
+                        sukses(res.message);
+                        setTimeout(() => {
+                            let ht = '';
+                            ht += '<div style="margin-top: 250px;">';
+                            ht += '<h6 class="text-center" style="color: aliceblue;">Saldo</h6>';
+                            ht += '<h5 class="text-center" style="color: aliceblue;">' + res.data + '</h5>';
+                            ht += '</div>';
+                            $('.content').html(ht);
+                        }, 1000);
+
+                        setTimeout(() => {
+                            location.reload();
+                        }, 3000);
+                    } else {
+                        let ht = '';
+                        ht += '<div style="margin-top: 250px;">';
+                        ht += '<h6 class="text-center" style="color: aliceblue;">' + res.message + '</h6>';
+                        ht += '<h5 class="text-center" style="color: aliceblue;">.......</h5>';
+                        ht += '</div>';
+                        $('.content').html(ht);
+                    }
+                })
+            }, 3200);
+        }
     </script>
 </body>
 

@@ -278,27 +278,33 @@ class Ext extends BaseController
     }
     public function hasil_tap()
     {
-        $meja = "Meja " . clear($this->request->getVar('meja'));
-        $durasi = (int)clear($this->request->getVar('durasi'));
+        $data = json_decode(json_encode($this->request->getVar('data')), true);
+        $meja = "Meja " . $data['meja'];
+        $durasi = (int)$data['durasi'];
         $durasi *= 60;
-        $dbb = db('billiard_2');
-        $bil = $dbb->where('meja', $meja)->where('is_active', 1)->where('metode', 'Tap')->get()->getRowArray();
+
 
         $db = db('booking');
         $q = $db->get()->getRowArray();
 
-        if (!$q) {
-            if ($bil) {
+        if ($q) {
+            gagal_js('Silahkan tap!.');
+        } else {
+            $dbb = db('billiard_2');
+            $bil = $dbb->where('meja', $meja)->where('durasi', $durasi)->whereNotIn('biaya', [0])->where('is_active', 1)->where('metode', 'Tap')->get()->getRowArray();
+
+            if (!$bil) {
+                gagal_js("Proses!");
+            } else {
                 $dbu = db('users');
                 $user = $dbu->where('nama', $bil['petugas'])->get()->getRowArray();
                 $saldo = "Saldo tidak terbaca!.";
                 if ($user) {
                     $sal = decode_jwt_fulus($user['fulus']);
-                    $saldo = rupiah($sal['fulus']);
+                    $sal = (int)$sal['fulus'];
+                    $saldo = rupiah($sal);
                 }
                 sukses_js('Tap berhasil.', $saldo);
-            } else {
-                gagal_js("Gagal!.");
             }
         }
     }
