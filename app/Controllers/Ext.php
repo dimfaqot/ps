@@ -214,13 +214,13 @@ class Ext extends BaseController
             gagal_js('Data booking tidak ditemukan!');
         }
 
-        sukses_js("Ok", $q);
         $dbu = db('users');
 
         $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
 
-        if ($q['kategori'] == 'Daftar') {
+        if ($q['kategori'] == "Daftar") {
             if ($member_id) {
+                sukses_js("Ok", $q);
                 $user_m = $dbu->where('id', $q['durasi'])->get()->getRowArray();
                 if (!$user_m) {
                     clear_tabel('booking');
