@@ -217,7 +217,7 @@ class Ext extends BaseController
         $dbu = db('users');
 
         $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
-
+        sukses_js("ok", $user);
         if ($q['kategori'] == "Daftar") {
             sukses_js("Masuk", $q);
             if ($member_id) {
