@@ -219,6 +219,7 @@ class Ext extends BaseController
         $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
 
         if ($q['kategori'] == "Daftar") {
+            sukses_js("Masuk", $q);
             if ($member_id) {
                 sukses_js("Ok", $q);
                 $user_m = $dbu->where('id', $q['durasi'])->get()->getRowArray();
