@@ -523,6 +523,54 @@ class Ext extends BaseController
             }
         }
     }
+    public function tap_booking_daftar()
+    {
+        clear_tabel('message');
+        $jwt = $this->request->getVar('jwt');
+        $decode = decode_jwt_fulus($jwt);
+
+        // kalau dalam jwt ada keu topupId berarti kartu member yang ditap setelah kartu Root
+        $member_id = key_exists("member_id", $decode);
+
+
+        $db = db('booking');
+        $q = $db->get()->getRowArray();
+
+        if (!$q) {
+            message($q['kategori'], "Data booking tidak ditemukan!.", 400);
+            gagal_js('Data booking tidak ditemukan!');
+        }
+
+        $dbu = db('users');
+
+        $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
+
+        if ($user['role'] !== 'Root') {
+            clear_tabel('booking');
+            message($q['kategori'], "Akses kartu ditolakl!.", 400);
+            gagal_js('Akses kartu ditolakl!.');
+        } else {
+            message($q['kategori'], "Akses diterima.", 200, "Tap rfid member...");
+            sukses_js('Akses diterima.', 'next');
+        }
+
+        if ($member_id) {
+            sukses_js("Ok", $q);
+            $user_m = $dbu->where('id', $q['durasi'])->get()->getRowArray();
+            if (!$user_m) {
+                clear_tabel('booking');
+                message($q['kategori'], "User tidak ada!.", 400);
+                gagal_js("User tidak ada!.");
+            }
+            $user_m["uid"] = $decode['uid'];
+            $dbu->where('id', $q['durasi']);
+            if ($dbu->update($user_m)) {
+                clear_tabel('booking');
+                message($q['kategori'], "Pendaftaran sukses.", 200);
+                sukses_js("Pendaftaran sukses.");
+            }
+        }
+    }
 
     public function del_booking()
     {
@@ -538,7 +586,7 @@ class Ext extends BaseController
         $db = db('booking');
         $q = $db->get()->getRowArray();
         if ($q) {
-            sukses_js('Silahkan tap!.');
+            sukses_js('Silahkan tap!.', $q);
         } else {
             gagal_js('Silahkan pilih meja!');
         }

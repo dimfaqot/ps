@@ -171,12 +171,14 @@ $routes->get('/booking', 'Ext::booking');
 $routes->post('/get_durasi', 'Ext::get_durasi');
 $routes->post('/get_booking', 'Ext::get_booking');
 $routes->post('/add_booking', 'Ext::add_booking');
-$routes->post('/tap_booking', 'Ext::tap_booking');
 $routes->post('/end_booking', 'Ext::end_booking');
 $routes->post('/del_booking', 'Ext::del_booking');
 $routes->post('/hasil_tap', 'Ext::hasil_tap');
 $routes->post('/hasil_tap_2', 'Ext::hasil_tap_2');
 $routes->post('/daftar/search_db', 'Ext::search_db');
+$routes->post('/tap_booking', 'Ext::tap_booking');
+$routes->post('/tap_booking/Daftar', 'Ext::tap_booking_daftar');
+
 
 // BARBER
 // layanan __________________________________
