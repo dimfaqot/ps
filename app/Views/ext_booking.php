@@ -58,6 +58,37 @@
             font-size: small;
             color: #ffffff;
         }
+
+
+        .input_light div {
+            color: #bcc1f1;
+            margin-bottom: 5px;
+        }
+
+        .input_light input {
+            background-color: #292550;
+            border: 5px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            color: #bcc1f1
+        }
+
+        .link_3 {
+            text-decoration: none;
+            font-size: 10px;
+            color: #010517;
+            padding: 5px 10px;
+            background-color: #6173fc;
+        }
+
+        .link_3:hover {
+            text-decoration: none;
+            font-size: 10px;
+            background-color: #010517;
+            padding: 5px 10px;
+            border: none;
+            color: #6173fc
+        }
     </style>
 </head>
 
@@ -83,6 +114,14 @@
         </div>
 
     </div>
+    <!-- modal search_db-->
+    <div class="modal fade" id="search_db" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content modal_body_search_db">
+
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 
@@ -103,14 +142,78 @@
         }
 
 
+        $(document).on('click', '.daftar', function(e) {
+            e.preventDefault();
+            if (data.kategori == undefined) {
+                $(this).addClass("select");
+                data['kategori'] = "Daftar";
+            } else if (data.kategori == "Daftar") {
+                $(this).removeClass("select");
+                data = {};
+            } else {
+                data = {};
+                $(this).addClass("select");
+                data['kategori'] = "Daftar";
+            }
+
+            let html = '';
+            html += '<div class="input_light">';
+            html += '<input autofocus class="search_db_input" placeholder="Ketik sesuatu..." value="" style="width: 100%;" type="text">';
+            html += '<section class="bg_3 sticky-top bg_3" style="z-index:10">';
+            html += '<section style="position:absolute;width:100%" class="bg_3 px-2 body_list_search_db">';
+
+            html += '</section>';
+            html += '</section>';
+            html += '</div>';
+            $('.modal_body_search_db').html(html);
+            let myModal = document.getElementById('search_db');
+            let modal = bootstrap.Modal.getOrCreateInstance(myModal)
+            modal.show();
+
+        })
+        $(document).on('keyup', '.search_db_input', function(e) {
+            e.preventDefault();
+            let value = $(this).val();
+            post('daftar/search_db', {
+                value
+            }).then(res => {
+                if (res.status == '200') {
+                    let html = '';
+                    res.data.forEach((e, i) => {
+                        html += '<a data-id="' + e.id + '" style="font-size:14px" href="" class="link_3 d-block rounded border-bottom insert_value">' + e.nama + '</a>';
+                    })
+
+                    $('.body_list_search_db').html(html);
+                } else {
+                    gagal_with_button(res.message);
+                }
+            })
+
+        })
+
+        $(document).on('click', '.insert_value', function(e) {
+            e.preventDefault();
+            let id = $(this).data('id');
+            data['durasi'] = id;
+
+            let myModal = document.getElementById('search_db');
+            let modal = bootstrap.Modal.getOrCreateInstance(myModal)
+            modal.hide();
+
+            show_btn_ok();
+
+        })
         $(document).on('click', '.btn_topup', function(e) {
             e.preventDefault();
             let menu = $(this).data('menu');
             remove_cls('meja', 'select', 'default');
             remove_cls('durasi', 'select', 'default');
             remove_cls('btn_menu', 'select', 'default');
+
+
             if (data.kategori == menu) {
-                $(this).removeClass("select rounded-circle");
+                $(this).removeClass("select");
+                $(this).removeClass("rounded-circle");
                 $('.date_time').removeClass('d-none');
                 $('.target_topup').addClass('d-none');
                 data = {};
@@ -137,6 +240,8 @@
 
             $(".date_time").addClass("d-none"); //hide date time
 
+            $(".daftar").removeClass("select");
+            $(".btn_topup").removeClass("select");
 
             if (data.kategori == undefined) {
                 let elem = document.querySelectorAll('.target_menu');
@@ -264,7 +369,7 @@
 
 
         const show_btn_ok = () => {
-            if (data.kategori == "Topup") {
+            if (data.kategori == "Topup" || data.kategori == "Daftar") {
                 if (data.durasi && data.kategori) {
                     $('.div_btn_ok').html('<button class="btn_grey embos mb-4 btn_ok">Ok</button>');
                 } else {
@@ -286,7 +391,7 @@
                 gagal('Kategori belum dipilih!.');
                 return;
             }
-            if (!data.meja && data.kategori !== 'Topup') {
+            if (!data.meja && data.kategori == 'Ps' && data.kategori == "Billiard") {
                 gagal('Meja belum dipilih!.');
                 return;
             }
@@ -325,6 +430,7 @@
         })
 
         const get_durasi = (kategori) => {
+
             post('get_durasi', {
                 kategori
             }).then(res => {
@@ -374,13 +480,12 @@
                 if (kategori && kategori !== "Kantin") {
                     get_durasi(kategori);
                 }
-                if (!kategori) {
+                if (kategori == undefined || kategori == "Topup" || kategori == "Kantin" || kategori == "Daftar" || kategori == "Saldo" || kategori == "Hutang") {
                     clearInterval(intervalId);
                     console.log('Interval stopped after 5 iterations.');
                 }
             }, 1000);
         }
-
 
         const hasil_tap = (data) => {
             setInterval(() => {

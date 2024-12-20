@@ -1,4 +1,5 @@
     <div class="rounded target_topup con d-none px-4 pt-4 mt-5" style="border: 1px solid #242b32;">
+        <span class="border border-warning text-warning rounded p-2 daftar" style="font-size:x-small;cursor:pointer"><i class="fa-regular fa-user"></i> DAFTAR</span>
         <h6 class="text-center text-light mb-4">TOPUP</h6>
         <?php for ($i = 1; $i < 10; $i++) : ?>
             <?php $angka = ($i == 7 ? 10 : ($i == 8 ? 20 : ($i == 9 ? 30 : $i))); ?>
@@ -13,4 +14,5 @@
         <div class="sticky-bottom d-grid div_btn_ok">
 
         </div>
+
     </div>

@@ -771,9 +771,7 @@ function konfirmasi_root($booking, $user)
         clear_tabel('booking');
         message($booking['kategori'], "Akses kartu ditolakl!.", 400);
         gagal_js('Akses kartu ditolakl!.');
-    }
-    if ($booking['kategori'] == 'Topup') {
-        clear_tabel('booking');
+    } else {
         message($booking['kategori'], "Akses diterima.", 200, "Tap rfid member...");
         sukses_js('Akses diterima.', 'next');
     }

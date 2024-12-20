@@ -176,6 +176,7 @@ $routes->post('/end_booking', 'Ext::end_booking');
 $routes->post('/del_booking', 'Ext::del_booking');
 $routes->post('/hasil_tap', 'Ext::hasil_tap');
 $routes->post('/hasil_tap_2', 'Ext::hasil_tap_2');
+$routes->post('/daftar/search_db', 'Ext::search_db');
 
 // BARBER
 // layanan __________________________________

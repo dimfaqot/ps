@@ -558,4 +558,12 @@ class Ext extends BaseController
             gagal_js('Gagal!.');
         }
     }
+    public function search_db()
+    {
+        $value = clear($this->request->getVar('value'));
+        $db = db('users');
+
+        $q = $db->like('nama', $value, "both")->limit(8)->get()->getResultArray();
+        sukses_js('Ok', $q);
+    }
 }
