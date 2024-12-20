@@ -234,6 +234,7 @@ class Ext extends BaseController
                     sukses_js("Pendaftaran sukses.");
                 }
             } else {
+                sukses_js("jos");
                 konfirmasi_root($q, $user);
             }
         }
