@@ -11,6 +11,25 @@ class Home extends BaseController
     }
     public function index(): string
     {
+        $db = db('barber');
+        $q = $db->get()->getResultArray();
+
+        foreach ($q as $i) {
+            $i['status'] = 1;
+            $i['metode'] = "Cash";
+
+            $db->where("id", $i['id']);
+            $db->update($i);
+        }
+        $db = db('rental');
+        $q = $db->get()->getResultArray();
+
+        foreach ($q as $i) {
+            $i['metode'] = "Cash";
+
+            $db->where("id", $i['id']);
+            $db->update($i);
+        }
         $db = db('users');
         $q = $db->orderBy('nama', 'ASC')->get()->getResultArray();
 

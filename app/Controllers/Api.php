@@ -103,13 +103,38 @@ class Api extends BaseController
             $db = db('rental');
             $q = $db->where('meja', "Meja " . $meja)->where('is_active', 1)->get()->getRowArray();
             if (!$q) {
-                gagal_js("Not active!.");
+                gagal_js("Unit tidak aktif!.");
             }
             if ($q['ke'] == -1) {
                 sukses_iot(1);
             }
 
-            sukses_iot((time() > $q['ke'] ? 2 : $q['is_active']));
+            $kode = 1;
+            if (time() > $q['ke']) {
+                $kode = 2;
+            }
+
+            if ($q['metode'] == 'Tap' && $kode == 2) {
+                $q['is_active'] = 0;
+                $db->where('id', $q['id']);
+                $db->update($q);
+
+                $dbu = db('unit');
+                $qu = $dbu->where('meja', "Meja " . $meja)->get()->getRowArray();
+
+                if (!$qu) {
+                    gagal_js("Not active!.");
+                }
+
+                $qu['status'] = 'Available';
+                $dbu->where('id', $qu['id']);
+                if ($dbu->update($qu)) {
+                    sukses_js('Sukses.');
+                } else {
+                    gagal_js('Update data to unit failed!.');
+                }
+            }
+            sukses_iot($kode);
         }
 
         // $start = date_create(date('Y-m-d H:i:s', $q['end']));

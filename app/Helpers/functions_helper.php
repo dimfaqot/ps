@@ -340,10 +340,8 @@ function rupiah($uang)
 
 function get_rental($data)
 {
-
     $db = db('rental');
     $q = $db->where('unit_id', $data['id'])->where('is_active', 1)->get()->getRowArray();
-
     return ($q ? $q : null);
 }
 
@@ -722,5 +720,61 @@ function clear_tabel($tabel)
             $db->where('id', $i['id']);
             $db->delete();
         }
+    }
+}
+
+function message($kategori, $msg, $status, $msg2 = "")
+{
+    $db = db('message');
+    $q = $db->get()->getRowArray();
+    if ($q) {
+        $q['kategori'] = $kategori;
+        $q['message'] = $msg;
+        $q['message_2'] = $msg2;
+        $q['status'] = $status;
+        $db->where('id', $q['id']);
+        $db->update($q);
+    } else {
+        $data = ['kategori' => $kategori, 'message' => $msg, 'status' => $status, 'message_2' => $msg2];
+        $db->insert($data);
+    }
+}
+
+function topup($user, $booking)
+{
+    $jml = $booking['durasi'] * 10000;
+
+    $decode_fulus = decode_jwt_fulus($user['fulus']);
+
+    $fulus = $decode_fulus['fulus'];
+
+    $user['fulus'] = encode_jwt_fulus(['fulus' => $fulus + $jml]);
+
+    $db = db('users');
+    $db->where('id', $user['id']);
+    if ($db->update($user)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+function saldo($user)
+{
+    $decode_fulus = decode_jwt_fulus($user['fulus']);
+    $fulus = $decode_fulus['fulus'];
+    return $fulus;
+}
+
+function konfirmasi_root($booking, $user)
+{
+    if ($booking['kategori'] == 'Topup' && $user['role'] !== 'Root') {
+        clear_tabel('booking');
+        message($booking['kategori'], "Akses kartu ditolakl!.", 400);
+        gagal_js('Akses kartu ditolakl!.');
+    }
+    if ($booking['kategori'] == 'Topup') {
+        clear_tabel('booking');
+        message($booking['kategori'], "Akses diterima.", 200, "Tap rfid member...");
+        sukses_js('Akses diterima.', 'next');
     }
 }

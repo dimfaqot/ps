@@ -194,6 +194,7 @@ $routes->post('/pengeluaran_barber/update', 'Pengeluaran_barber::update');
 $routes->get('/barber', 'Barber::index');
 $routes->post('/barber/add', 'Barber::add');
 $routes->post('/barber/pembayaran', 'Barber::pembayaran');
+$routes->post('/barber/pembayaran_tap', 'Barber::pembayaran_tap');
 
 // aturan __________________________________
 $routes->get('/aturan', 'Aturan::index');

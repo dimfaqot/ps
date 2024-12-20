@@ -166,7 +166,8 @@
         html += '</div>'
 
         html += '<div class="mb-3 d-grid">';
-        html += '<a class="btn_success btn_bayar" style="text-align: center;" href=""><i class="fa-solid fa-cash-register"></i> Bayar</a>';
+        html += '<a class="btn_success btn_bayar mb-2" style="text-align: center;" href=""><i class="fa-solid fa-cash-register"></i> Bayar</a>';
+        html += '<a class="btn_purple btn_tap" style="text-align: center;" href=""><i class="fa-regular fa-credit-card"></i> Tap</a>';
         html += '</div>';
 
         $('.body_pembayaran').html(html);
@@ -562,6 +563,46 @@
                         location.reload();
                     });
                 })
+            } else {
+                gagal_with_button(res.message);
+            }
+        })
+    })
+    $(document).on('click', '.btn_tap', function(e) {
+        e.preventDefault();
+
+        let data = [];
+        let elem_list_belanja = document.querySelectorAll('.list_belanja');
+
+        let total_harga = 0;
+        elem_list_belanja.forEach((e, i) => {
+            let layanan_id = e.getAttribute('data-barang_id');
+            let index = e.getAttribute('data-index');
+
+            let qty = parseInt($('.list_qty_' + index).text());
+            let diskon = parseInt(str_replace(".", "", $('.list_diskon_' + index).text()));
+            let harga = parseInt(str_replace(".", "", $('.list_harga_' + index).text()));
+            let barang = $('.list_barang_' + index).text();
+
+            data.push({
+                layanan_id,
+                qty,
+                diskon
+            });
+
+            total_harga += harga;
+        })
+
+
+        post('barber/pembayaran_tap', {
+            data
+        }).then(res => {
+            if (res.status == '200') {
+                sukses(res.message);
+
+                $('#pembayaran').on('hidden.bs.modal', function() {
+                    location.reload();
+                });
             } else {
                 gagal_with_button(res.message);
             }

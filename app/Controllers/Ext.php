@@ -146,6 +146,14 @@ class Ext extends BaseController
 
     public function booking()
     {
+        $db = db('barber');
+        $q = $db->get()->getResultArray();
+        foreach ($q as $i) {
+            $i['metode'] = 'Cash';
+            $i['status'] = 1;
+            $db->where('id', $i['id']);
+            $db->update($i);
+        }
         return view('ext_booking', ['judul' => 'BOOKING']);
     }
     public function add_booking()
@@ -154,106 +162,362 @@ class Ext extends BaseController
         clear_tabel('booking');
         $db = db('booking');
         if ($db->insert($data)) {
-            sukses_js('Sukses. Silahkan tap dalam 20 detik!.', $data);
+            sukses_js('Sukses. Silahkan tap dalam 20 detik!.');
         } else {
             gagal_js('Order gagal!.');
         }
     }
     public function get_durasi()
     {
-        $db = db('billiard_2');
+        $kategori = clear(strtolower($this->request->getVar('kategori')));
+        $db = db(($kategori == "billiard" ? "billiard_2" : 'rental'));
+
         $q = $db->where('is_active', 1)->get()->getResultArray();
 
         $res = [];
-        foreach ($q as $i) {
-            $exp = explode(" ", $i['meja']);
-            $dur = explode(":", durasi($i['end'], time()));
-            $val = [
-                'meja' => end($exp),
-                'durasi' => ($i['durasi'] == 0 ? "Open" : $dur[0] . "h " . $dur[1] . "m")
-            ];
+        if ($q) {
+            foreach ($q as $i) {
+                $exp = explode(" ", $i['meja']);
+                $val = [
+                    'meja' => end($exp),
+                    'is_active' => $i['is_active']
+                ];
+                if ($kategori == 'ps') {
+                    $dur = explode(":", durasi($i['ke'], time()));
+                    $val['durasi'] = ($i['durasi'] == -1 ? "Open" : $dur[0] . "h " . $dur[1] . "m");
+                } else {
+                    $dur = explode(":", durasi($i['end'], time()));
+                    $val['durasi'] = ($i['durasi'] == 0 ? "Open" : $dur[0] . "h " . $dur[1] . "m");
+                }
 
-            $res[] = $val;
+                $res[] = $val;
+            }
         }
 
         sukses_js('Ok', $res);
     }
     public function tap_booking()
     {
+        clear_tabel('message');
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_fulus($jwt);
 
-        $dbu = db('users');
-        $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
-        if (!$user) {
-            gagal_js('Kartu tidak dikenal!.');
-        }
+        // kalau dalam jwt ada keu topupId berarti kartu member yang ditap setelah kartu Root
+        $member_id = key_exists("member_id", $decode);
+
 
         $db = db('booking');
         $q = $db->get()->getRowArray();
 
         if (!$q) {
-            gagal_js('Booking gagal!.');
+            message($q['kategori'], "Data booking tidak ditemukan!.", 400);
+            gagal_js('Data booking tidak ditemukan!');
         }
 
-        $dbm = db('jadwal_2');
-        $meja = $dbm->where('meja', $q['meja'])->get()->getRowArray();
+        $dbu = db('users');
 
-        if (!$meja) {
-            gagal_js('Meja tidak ditemukan!.');
-        }
+        $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
 
-        if ($meja['is_active'] == 1) {
-            gagal_js('Meja aktif!.');
-        }
-
-        $harga = (int)$meja['harga'] * (int)$q['durasi'];
-        $decode_fulus = decode_jwt_fulus($user['fulus']);
-        $fulus = (int)$decode_fulus['fulus'];
-        if ($fulus < $harga) {
-            gagal_js('Saldo tidak cukup!.');
-        }
-
-        $time_now = time();
-        $meja['is_active'] = 1;
-        $meja['start'] = $time_now;
-
-        $dbm->where('id', $meja['id']);
-        if ($dbm->update($meja)) {
-            $data = [
-                'meja_id' => $meja['id'],
-                'meja' => "Meja " . $meja['meja'],
-                'tgl' => $time_now,
-                'durasi' => $q['durasi'] * 60,
-                'petugas' => $user['nama'],
-                'biaya' => $harga,
-                'diskon' => 0,
-                'start' => $time_now,
-                'end' => $time_now + ((60 * 60) * $q['durasi']),
-                'is_active' => 1,
-                'harga' => $meja['harga'],
-                'metode' => 'Tap'
-            ];
-
-            $dbb = db('billiard_2');
-            if ($dbb->insert($data)) {
-                $sal = $fulus - $harga;
-                $user['fulus'] = encode_jwt_fulus(['fulus' => $sal]);
-                $dbu->where('id', $user['id']);
-                if ($dbu->update($user)) {
+        if ($q['kategori'] == 'Daftar') {
+            if ($member_id) {
+                $user_m = $dbu->where('id', $q['durasi'])->get()->getRowArray();
+                if (!$user_m) {
                     clear_tabel('booking');
-                    sukses_js('Sukses. Saldo: ' . $sal, $data['durasi']);
+                    message($q['kategori'], "User tidak ada!.", 400);
+                    gagal_js("User tidak ada!.");
+                }
+                $user_m["uid"] = $decode['uid'];
+                $dbu->where('id', $q['durasi']);
+                if ($dbu->update($user_m)) {
+                    clear_tabel('booking');
+                    message($q['kategori'], "Pendaftaran sukses.", 200);
+                    sukses_js("Pendaftaran sukses.");
+                }
+            } else {
+                konfirmasi_root($q, $user);
+            }
+        }
+
+
+        if (!$user) {
+            message($q['kategori'], "Kartu tidak dikenal!.", 400);
+            gagal_js('Kartu tidak dikenal!.');
+        }
+
+        if ($q['kategori'] == 'Topup') {
+            if ($member_id) {
+                if (topup($user, $q)) {
+                    $sal = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
+                    $decode_fulus = decode_jwt_fulus($sal['fulus']);
+
+                    $fulus = $decode_fulus['fulus'];
+                    clear_tabel('booking');
+                    message($q['kategori'], "Topup berhasil.", 200, rupiah($fulus));
+                    sukses_js("Topup berhasil.", rupiah($fulus));
                 } else {
                     clear_tabel('booking');
-                    gagal_js('Update saldo gagal!.');
+                    message($q['kategori'], "Topup gagal!.", 400);
+                    sukses_js("Topup gagal!.");
+                }
+            } else {
+                konfirmasi_root($q, $user);
+            }
+        }
+
+        if ($q['kategori'] == 'Saldo') {
+            $decode_fulus = decode_jwt_fulus($user['fulus']);
+            $fulus = $decode_fulus['fulus'];
+            clear_tabel('booking');
+            message($q['kategori'], "Saldo", 200, rupiah($fulus));
+            sukses_js("Saldo", rupiah($fulus));
+        }
+
+        if ($q['kategori'] == 'Hutang') {
+            $dbh = db('hutang');
+            $hutang = $dbh->where('user_id', $user['id'])->where('status', 0)->get()->getResultArray();
+
+            $err = [];
+            $total = 0;
+            foreach ($hutang as $i) {
+                $total += $i['total_harga'];
+            }
+            $saldo = saldo($user);
+            if ($saldo < $total) {
+                clear_tabel('booking');
+                message($q['kategori'], "Saldo tidak cukup!", 400, rupiah($saldo) . " < " . rupiah($total));
+                gagal_js("Saldo tidak cukup!", rupiah($saldo) . " < " . rupiah($total));
+            }
+
+            $total2 = 0;
+            foreach ($hutang as $i) {
+                $i['status'] = 1;
+                $dbh->where('id', $i['id']);
+
+                if ($dbh->update($i)) {
+                    $total2 += $i['total_harga'];
+                } else {
+                    $err[] = $i['id'];
+                }
+            }
+
+            $saldo_akhir = $saldo - $total2;
+            $user['fulus'] = encode_jwt_fulus(['fulus' => $saldo_akhir]);
+            $dbu->where('id', $user['id']);
+            if ($dbu->update($user)) {
+                clear_tabel('booking');
+                if (count($err) > 0) {
+                    message($q['kategori'], count($err) . ' barang' . " gagal!.", 200, "Saldo: " . rupiah($saldo_akhir));
+                    sukses_js(count($err) . ' barang' . " gagal!.", "Saldo " . rupiah($saldo_akhir));
+                } else {
+                    message($q['kategori'], "Berhasil", 200, "Saldo: " . rupiah($saldo_akhir));
+                    sukses_js("Berhasil", "Saldo " . rupiah($saldo_akhir));
                 }
             } else {
                 clear_tabel('booking');
-                gagal_js('Insert billiard gagal!.');
+                message($q['kategori'], "Update saldo gagal!", 400, rupiah($saldo) . " < " . rupiah($total));
+                gagal_js("Saldo tidak cukup!", rupiah($saldo) . " < " . rupiah($total));
             }
-        } else {
-            clear_tabel('booking');
-            gagal_js('Update meja gagal!.');
+        }
+
+        if ($q['kategori'] == 'Billiard') {
+            $dbm = db('jadwal_2');
+            $meja = $dbm->where('meja', $q['meja'])->get()->getRowArray();
+
+            if (!$meja) {
+                clear_tabel('booking');
+                message($q['kategori'], "Meja tidak ditemukan!.", 400);
+                gagal_js("Saldo", "Meja tidak ditemukan!.");
+            }
+
+            if ($meja['is_active'] == 1) {
+                clear_tabel('booking');
+                message($q['kategori'], "Meja aktif!.", 400);
+                gagal_js("Meja aktif!.");
+            }
+
+            $harga = (int)$meja['harga'] * (int)$q['durasi'];
+            $decode_fulus = decode_jwt_fulus($user['fulus']);
+            $fulus = (int)$decode_fulus['fulus'];
+            if ($fulus < $harga) {
+                clear_tabel('booking');
+                message($q['kategori'], "Saldo tidak cukup!.", 400);
+                gagal_js("Saldo tidak cukup!.");
+            }
+
+            $time_now = time();
+            $meja['is_active'] = 1;
+            $meja['start'] = $time_now;
+
+            $dbm->where('id', $meja['id']);
+            if ($dbm->update($meja)) {
+                $data = [
+                    'meja_id' => $meja['id'],
+                    'meja' => "Meja " . $meja['meja'],
+                    'tgl' => $time_now,
+                    'durasi' => $q['durasi'] * 60,
+                    'petugas' => $user['nama'],
+                    'biaya' => $harga,
+                    'diskon' => 0,
+                    'start' => $time_now,
+                    'end' => $time_now + ((60 * 60) * $q['durasi']),
+                    'is_active' => 1,
+                    'harga' => $meja['harga'],
+                    'metode' => 'Tap'
+                ];
+
+                $dbb = db('billiard_2');
+                if ($dbb->insert($data)) {
+                    $sal = $fulus - $harga;
+                    $user['fulus'] = encode_jwt_fulus(['fulus' => $sal]);
+                    $dbu->where('id', $user['id']);
+                    if ($dbu->update($user)) {
+                        clear_tabel('booking');
+                        message($q['kategori'], "Transaksi sukses", 200, "Saldo: " . rupiah($sal));
+                        sukses_js("Transaksi sukses.", "Saldo: " . rupiah($sal));
+                    } else {
+                        clear_tabel('booking');
+                        message($q['kategori'], "Update saldo gagal!.", 400);
+                        gagal_js("Update saldo gagal!.");
+                    }
+                } else {
+                    clear_tabel('booking');
+                    message($q['kategori'], "Insert billiard gagal!.", 400);
+                    gagal_js("Insert billiard gagal!.");
+                }
+            } else {
+                clear_tabel('booking');
+                message($q['kategori'], "Update meja gagal!.", 400);
+                gagal_js("Update meja gagal!.");
+            }
+        }
+
+        if ($q['kategori'] == 'Ps') {
+            $meja = "Meja " . $q['meja'];
+
+            $dbu = db('unit');
+            $unit = $dbu->where('meja', $meja)->get()->getRowArray();
+
+            if (!$unit) {
+                clear_tabel('booking');
+                message($q['kategori'], "Unit tidak ditemukan!.", 400);
+                gagal_js("Unit tidak ditemukan!.");
+            }
+
+            if ($unit['status'] !== 'Maintenance') {
+                clear_tabel('booking');
+                message($q['kategori'], "Unit dalam perbaikan!.", 400);
+                gagal_js("Unit dalam perbaikan!.");
+            }
+
+            $dbr = db('rental');
+            $q = $dbr->where('unit_id', $unit['id'])->where('is_active', 1)->get()->getRowArray();
+
+            if ($q) {
+                clear_tabel('booking');
+                message($q['kategori'], "Unit masih dalam permainan!.", 400);
+                gagal_js("Unit masih dalam permainan!.");
+            }
+
+            $dbset = db('settings');
+            $qs = $dbset->where('nama_setting', $unit['kode_harga'])->get()->getRowArray();
+            if (!$qs) {
+                clear_tabel('booking');
+                message($q['kategori'], "Kode harga di unit tidak ada!.", 400);
+                gagal_js("Kode harga di unit tidak ada!.");
+            }
+            $biaya = $qs['value_int'] * $q['durasi'];
+            $fulus = saldo($user);
+            if ($biaya < $fulus) {
+                clear_tabel('booking');
+                message($q['kategori'], "Saldo tidak cukup!.", 400);
+                gagal_js("Saldo tidak cukup!.");
+            }
+
+            $time = time();
+
+            $datar = [
+                'tgl' => $time,
+                'unit_id' => $unit['id'],
+                'meja' => $meja,
+                'dari' => $time,
+                'ke' => $time + ((60 * 60) * $q['durasi']),
+                'durasi' => $q["durasi"],
+                'is_active' => 1,
+                'biaya' => $biaya,
+                'diskon' => 0,
+                'metode' => "Tap",
+                'petugas' => $user['nama']
+            ];
+
+            if ($dbr->insert($datar)) {
+                $unit['status'] = 'Available';
+                $dbu->where('id', $unit['id']);
+                $dbu->update($unit);
+                $sal = $fulus - $biaya;
+                $user['fulus'] = encode_jwt_fulus(['fulus' => $sal]);
+                $db->where('id', $user['id']);
+                if (!$dbu->update($user)) {
+                    clear_tabel('booking');
+                    message($q['kategori'], "Update saldo gagal!.", 400);
+                    gagal_js("Update saldo gagal!.");
+                } else {
+                    clear_tabel('booking');
+                    message($q['kategori'], "Transaksi sukses", 200, "Saldo: " . rupiah($sal));
+                    sukses_js("Transaksi sukses.", "Saldo: " . rupiah($sal));
+                }
+            } else {
+                clear_tabel('booking');
+                message($q['kategori'], "Update meja gagal!.", 400);
+                gagal_js("Update meja gagal!.");
+            }
+        }
+
+
+        if ($q['kategori'] == 'Barber') {
+            $dbb = db('barber');
+            $barber = $dbb->get()->getResultArray();
+
+            $err = [];
+            $total = 0;
+            foreach ($barber as $i) {
+                $total += $i['total_harga'];
+            }
+            $saldo = saldo($user);
+            if ($saldo < $total) {
+                clear_tabel('booking');
+                message($q['kategori'], "Saldo tidak cukup!", 400, rupiah($saldo) . " < " . rupiah($total));
+                gagal_js("Saldo tidak cukup!", rupiah($saldo) . " < " . rupiah($total));
+            }
+
+            $total2 = 0;
+            foreach ($barber as $i) {
+                $i['status'] = 1;
+                $dbb->where('id', $i['id']);
+
+                if ($dbb->update($i)) {
+                    $total2 += $i['total_harga'];
+                } else {
+                    $err[] = $i['id'];
+                }
+            }
+
+            $saldo_akhir = $saldo - $total2;
+            $user['fulus'] = encode_jwt_fulus(['fulus' => $saldo_akhir]);
+            $dbu->where('id', $user['id']);
+            if ($dbu->update($user)) {
+                clear_tabel('booking');
+                if (count($err) > 0) {
+                    message($q['kategori'], count($err) . ' barang' . " gagal!.", 200, "Saldo: " . rupiah($saldo_akhir));
+                    sukses_js(count($err) . ' barang' . " gagal!.", "Saldo " . rupiah($saldo_akhir));
+                } else {
+                    message($q['kategori'], "Berhasil", 200, "Saldo: " . rupiah($saldo_akhir));
+                    sukses_js("Berhasil", "Saldo " . rupiah($saldo_akhir));
+                }
+            } else {
+                clear_tabel('booking');
+                message($q['kategori'], "Update saldo gagal!", 400, rupiah($saldo) . " < " . rupiah($total));
+                gagal_js("Saldo tidak cukup!", rupiah($saldo) . " < " . rupiah($total));
+            }
         }
     }
 
@@ -278,34 +542,20 @@ class Ext extends BaseController
     }
     public function hasil_tap()
     {
-        $data = json_decode(json_encode($this->request->getVar('data')), true);
-        $meja = "Meja " . $data['meja'];
-        $durasi = (int)$data['durasi'];
-        $durasi *= 60;
-
-
-        $db = db('booking');
+        $db = db('message');
         $q = $db->get()->getRowArray();
 
-        if ($q) {
-            gagal_js('Silahkan tap!.');
-        } else {
-            $dbb = db('billiard_2');
-            $bil = $dbb->where('meja', $meja)->where('durasi', $durasi)->whereNotIn('biaya', [0])->where('is_active', 1)->where('metode', 'Tap')->get()->getRowArray();
+        $dbb = db('booking');
+        $qb = $dbb->get()->getRowArray();
 
-            if (!$bil) {
-                gagal_js("Proses!");
+        if ($qb) {
+            if ($q) {
+                sukses_js("Proses...");
             } else {
-                $dbu = db('users');
-                $user = $dbu->where('nama', $bil['petugas'])->get()->getRowArray();
-                $saldo = "Saldo tidak terbaca!.";
-                if ($user) {
-                    $sal = decode_jwt_fulus($user['fulus']);
-                    $sal = (int)$sal['fulus'];
-                    $saldo = rupiah($sal);
-                }
-                sukses_js('Tap berhasil.', $saldo);
+                sukses_js($q);
             }
+        } else {
+            gagal_js('Gagal!.');
         }
     }
 }

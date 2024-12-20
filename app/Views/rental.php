@@ -40,9 +40,9 @@
                                     <?php endfor; ?>
                                     <option <?= ($rental ? ($rental['durasi'] == -1 ? 'selected' : '') : ''); ?> value="-1">Loss Dol</option>
                                 </select>
-                                <button <?= ($i['status'] == 'Maintenance' ? 'disabled' : 'data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Reset"'); ?> data-id="<?= $i['id']; ?>" data-url="reset_play" class="btn_grey btn_rental"><i style="font-size:medium" class="fa-solid fa-rotate"></i></button>
-                                <button <?= ($i['status'] == 'Maintenance' ? 'disabled' : ($rental ? ($rental['durasi'] == -1 ? 'disabled' : 'data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Start/update/add"') : 'data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Start/update/add"')); ?> data-id="<?= $i['id']; ?>" data-url="start_play" class="btn_primary btn_rental"><i style="font-size:medium" class="fa-solid fa-circle-play"></i></button>
-                                <button <?= ($i['status'] == 'Maintenance' ? 'disabled' : 'data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="End/payment"'); ?> data-id="<?= $i['id']; ?>" data-url="end_play" class="btn_purple btn_rental"><i style="font-size:medium" class="fa-solid fa-circle-stop"></i></button>
+                                <button <?= ($i['status'] == 'Maintenance' ? 'disabled' : 'data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Reset"'); ?> data-id="<?= $i['id']; ?>" data-url="reset_play" class="btn_grey btn_rental" data-metode="<?= ($rental && $rental['metode'] == 'Tap' ? 'Tap' : 'Cash'); ?>"><i style="font-size:medium" class="fa-solid fa-rotate"></i></button>
+                                <button <?= ($i['status'] == 'Maintenance' ? 'disabled' : ($rental ? ($rental['durasi'] == -1 ? 'disabled' : 'data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Start/update/add"') : 'data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Start/update/add"')); ?> data-id="<?= $i['id']; ?>" data-url="start_play" class="btn_primary btn_rental" data-metode="<?= ($rental && $rental['metode'] == 'Tap' ? 'Tap' : 'Cash'); ?>"><i style="font-size:medium" class="fa-solid fa-circle-play"></i></button>
+                                <button <?= ($i['status'] == 'Maintenance' ? 'disabled' : 'data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="End/payment"'); ?> data-id="<?= $i['id']; ?>" data-url="end_play" class="btn_purple btn_rental" data-metode="<?= ($rental && $rental['metode'] == 'Tap' ? 'Tap' : 'Cash'); ?>"><i style="font-size:medium" class="fa-solid fa-circle-stop"></i></button>
                             </div>
 
                         </div>
@@ -336,8 +336,14 @@
     $(document).on('click', '.btn_rental', function(e) {
         e.preventDefault();
         let id = $(this).data('id');
+        let metode = $(this).data('metode');
         let url = $(this).data('url');
         let durasi = $('.durasi_' + id).val();
+
+        if (metode == 'Tap') {
+            gagal("Otomatis!.");
+            return;
+        }
 
         if (durasi == '-' && url !== 'reset_play') {
             if (url !== 'end_play') {
