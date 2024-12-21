@@ -621,10 +621,16 @@ class Ext extends BaseController
     public function add_message()
     {
         $jwt = $this->request->getVar('jwt');
-        $data = decode_jwt_fulus($jwt);
+        $encode = decode_jwt_fulus($jwt);
 
         $db = db('message');
 
+        $data = [
+            'status' => $encode['status'],
+            'message' => $encode['message'],
+            'message_2' => $encode['message_2'],
+            'kategori' => $encode['kategori']
+        ];
         if ($db->insert($data)) {
             sukses_arduino("Insert sukses.", $data);
         } else {
