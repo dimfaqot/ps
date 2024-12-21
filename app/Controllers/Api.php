@@ -499,7 +499,6 @@ class Api extends BaseController
         $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
 
         if ($member_id) {
-            sukses_arduino("Ok", $q);
             $user_m = $dbu->where('id', $q['durasi'])->get()->getRowArray();
             if (!$user_m) {
                 clear_tabel('booking');
