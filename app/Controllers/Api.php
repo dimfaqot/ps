@@ -481,7 +481,7 @@ class Api extends BaseController
         clear_tabel('message');
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_fulus($jwt);
-
+        sukses_js('Ok', $decode);
         // kalau dalam jwt ada keu topupId berarti kartu member yang ditap setelah kartu Root
         $member_id = key_exists("member_id", $decode);
 
