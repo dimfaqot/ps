@@ -15,6 +15,15 @@ $routes->post('/api/update_iot_rental', 'Api::update_iot_rental');
 $routes->post('/api/tes_update_iot_rental', 'Api::tes_update_iot_rental');
 $routes->get('/api/iot_notif_pesanan', 'Api::iot_notif_pesanan');
 
+// api rfid
+
+$routes->post('/api/get_booking', 'Api::get_booking');
+$routes->post('/api/end_booking', 'Api::end_booking');
+$routes->post('/api/del_booking', 'Api::del_booking');
+$routes->post('/api/add_message', 'Api::add_message');
+$routes->post('/api/tap_booking/Daftar', 'Api::tap_booking_daftar');
+
+
 $routes->get('/login', 'Login::index');
 
 $routes->post('/auth', 'Login::auth');
@@ -169,16 +178,10 @@ $routes->get('/ext/qr', 'Ext::qr');
 $routes->post('/ext/add_uid', 'Ext::add_uid');
 $routes->get('/booking', 'Ext::booking');
 $routes->post('/get_durasi', 'Ext::get_durasi');
-$routes->post('/get_booking', 'Ext::get_booking');
-$routes->post('/add_booking', 'Ext::add_booking');
-$routes->post('/end_booking', 'Ext::end_booking');
-$routes->post('/del_booking', 'Ext::del_booking');
-$routes->post('/hasil_tap', 'Ext::hasil_tap');
-$routes->post('/hasil_tap_2', 'Ext::hasil_tap_2');
 $routes->post('/daftar/search_db', 'Ext::search_db');
-$routes->post('/tap_booking', 'Ext::tap_booking');
-// $routes->post('/tap_booking/Daftar', 'Ext::tap_booking_daftar');
-$routes->post('/add_message', 'Ext::add_message');
+$routes->post('/hasil_tap', 'Ext::hasil_tap');
+$routes->post('/add_booking', 'Ext::add_booking');
+
 
 
 // BARBER
