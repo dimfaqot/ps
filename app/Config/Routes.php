@@ -177,7 +177,8 @@ $routes->post('/hasil_tap', 'Ext::hasil_tap');
 $routes->post('/hasil_tap_2', 'Ext::hasil_tap_2');
 $routes->post('/daftar/search_db', 'Ext::search_db');
 $routes->post('/tap_booking', 'Ext::tap_booking');
-$routes->post('/tap_booking/Daftar', 'Ext::tap_booking_daftar');
+// $routes->post('/tap_booking/Daftar', 'Ext::tap_booking_daftar');
+$routes->post('/add_message', 'Ext::add_message');
 
 
 // BARBER

@@ -146,6 +146,7 @@ class Ext extends BaseController
 
     public function booking()
     {
+        dd(decode_jwt_fulus("eyJhbGciOiAiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJzdGF0dXMiOiIyMDAiLCJ1aWQiOiJhOWFlYzI3YSJ9.7GOpspG9HY5-S_vXUSVa5Y_htFcxWmM538zltZcyBqI"));
         $db = db('barber');
         $q = $db->get()->getResultArray();
         foreach ($q as $i) {
@@ -616,5 +617,18 @@ class Ext extends BaseController
 
         $q = $db->like('nama', $value, "both")->limit(8)->get()->getResultArray();
         sukses_js('Ok', $q);
+    }
+    public function add_message()
+    {
+        $jwt = $this->request->getVar('jwt');
+        $data = decode_jwt_fulus($jwt);
+
+        $db = db('message');
+
+        if ($db->insert($data)) {
+            sukses_arduino("Insert sukses.", $data);
+        } else {
+            gagal_arduino("Insert gagal.", $data);
+        }
     }
 }
