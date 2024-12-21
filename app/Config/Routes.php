@@ -22,6 +22,7 @@ $routes->post('/api/end_booking', 'Api::end_booking');
 $routes->post('/api/del_booking', 'Api::del_booking');
 $routes->post('/api/add_message', 'Api::add_message');
 $routes->post('/api/tap_booking/Daftar', 'Api::tap_booking_daftar');
+$routes->post('/api/Daftar', 'Api::tap_booking_daftar');
 
 
 $routes->get('/login', 'Login::index');
