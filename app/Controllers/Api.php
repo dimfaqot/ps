@@ -499,6 +499,12 @@ class Api extends BaseController
         $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
 
         if ($member_id) {
+            $uid_exist = $dbu->where('id', $q['durasi'])->where('uid', $decode['uid'])->get()->getRowArray();
+            if ($uid_exist) {
+                clear_tabel('booking');
+                message($q['kategori'], "Uid sudah terdaftar!.", 400);
+                gagal_arduino("Uid sudah terdaftar!.");
+            }
             $user_m = $dbu->where('id', $q['durasi'])->get()->getRowArray();
             if (!$user_m) {
                 clear_tabel('booking');

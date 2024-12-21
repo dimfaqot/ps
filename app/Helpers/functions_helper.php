@@ -800,9 +800,9 @@ function konfirmasi_root($booking, $user)
     if ($user['role'] !== 'Root') {
         clear_tabel('booking');
         message($booking['kategori'], "Akses kartu ditolakl!.", 400);
-        gagal_js('Akses kartu ditolakl!.');
+        gagal_arduino('Akses kartu ditolakl!.');
     } else {
         message($booking['kategori'], "Akses diterima.", 200, "Tap rfid member...");
-        sukses_js('Akses diterima.', 'next');
+        sukses_arduino('Akses diterima.', 'next');
     }
 }
