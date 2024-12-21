@@ -211,7 +211,7 @@ class Ext extends BaseController
 
         if (!$q) {
             message($q['kategori'], "Data booking tidak ditemukan!.", 400);
-            gagal_js('Data booking tidak ditemukan!');
+            gagal_arduino('Data booking tidak ditemukan!');
         }
 
         $dbu = db('users');
@@ -219,28 +219,32 @@ class Ext extends BaseController
         $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
 
         if ($q['kategori'] == "Daftar") {
+            sukses_arduino("Masuk", $q);
             if ($member_id) {
+                sukses_arduino("Ok", $q);
                 $user_m = $dbu->where('id', $q['durasi'])->get()->getRowArray();
                 if (!$user_m) {
                     clear_tabel('booking');
                     message($q['kategori'], "User tidak ada!.", 400);
-                    gagal_js("User tidak ada!.");
+                    gagal_arduino("User tidak ada!.");
                 }
                 $user_m["uid"] = $decode['uid'];
                 $dbu->where('id', $q['durasi']);
                 if ($dbu->update($user_m)) {
                     clear_tabel('booking');
                     message($q['kategori'], "Pendaftaran sukses.", 200);
-                    sukses_js("Pendaftaran sukses.");
+                    sukses_arduino("Pendaftaran sukses.");
                 }
             } else {
+                sukses_arduino("jos");
                 konfirmasi_root($q, $user);
             }
         }
+        sukses_arduino("Los", $q, $user);
 
         if (!$user) {
             message($q['kategori'], "Kartu tidak dikenal!.", 400);
-            gagal_js('Kartu tidak dikenal!.');
+            gagal_arduino('Kartu tidak dikenal!.');
         }
 
         if ($q['kategori'] == 'Topup') {
@@ -252,11 +256,11 @@ class Ext extends BaseController
                     $fulus = $decode_fulus['fulus'];
                     clear_tabel('booking');
                     message($q['kategori'], "Topup berhasil.", 200, rupiah($fulus));
-                    sukses_js("Topup berhasil.", rupiah($fulus));
+                    sukses_arduino("Topup berhasil.", rupiah($fulus));
                 } else {
                     clear_tabel('booking');
                     message($q['kategori'], "Topup gagal!.", 400);
-                    sukses_js("Topup gagal!.");
+                    sukses_arduino("Topup gagal!.");
                 }
             } else {
                 konfirmasi_root($q, $user);
@@ -268,7 +272,7 @@ class Ext extends BaseController
             $fulus = $decode_fulus['fulus'];
             clear_tabel('booking');
             message($q['kategori'], "Saldo", 200, rupiah($fulus));
-            sukses_js("Saldo", rupiah($fulus));
+            sukses_arduino("Saldo", rupiah($fulus));
         }
 
         if ($q['kategori'] == 'Hutang') {
@@ -284,7 +288,7 @@ class Ext extends BaseController
             if ($saldo < $total) {
                 clear_tabel('booking');
                 message($q['kategori'], "Saldo tidak cukup!", 400, rupiah($saldo) . " < " . rupiah($total));
-                gagal_js("Saldo tidak cukup!", rupiah($saldo) . " < " . rupiah($total));
+                gagal_arduino("Saldo tidak cukup!", rupiah($saldo) . " < " . rupiah($total));
             }
 
             $total2 = 0;
@@ -306,15 +310,15 @@ class Ext extends BaseController
                 clear_tabel('booking');
                 if (count($err) > 0) {
                     message($q['kategori'], count($err) . ' barang' . " gagal!.", 200, "Saldo: " . rupiah($saldo_akhir));
-                    sukses_js(count($err) . ' barang' . " gagal!.", "Saldo " . rupiah($saldo_akhir));
+                    sukses_arduino(count($err) . ' barang' . " gagal!.", "Saldo " . rupiah($saldo_akhir));
                 } else {
                     message($q['kategori'], "Berhasil", 200, "Saldo: " . rupiah($saldo_akhir));
-                    sukses_js("Berhasil", "Saldo " . rupiah($saldo_akhir));
+                    sukses_arduino("Berhasil", "Saldo " . rupiah($saldo_akhir));
                 }
             } else {
                 clear_tabel('booking');
                 message($q['kategori'], "Update saldo gagal!", 400, rupiah($saldo) . " < " . rupiah($total));
-                gagal_js("Saldo tidak cukup!", rupiah($saldo) . " < " . rupiah($total));
+                gagal_arduino("Saldo tidak cukup!", rupiah($saldo) . " < " . rupiah($total));
             }
         }
 
@@ -325,13 +329,13 @@ class Ext extends BaseController
             if (!$meja) {
                 clear_tabel('booking');
                 message($q['kategori'], "Meja tidak ditemukan!.", 400);
-                gagal_js("Saldo", "Meja tidak ditemukan!.");
+                gagal_arduino("Saldo", "Meja tidak ditemukan!.");
             }
 
             if ($meja['is_active'] == 1) {
                 clear_tabel('booking');
                 message($q['kategori'], "Meja aktif!.", 400);
-                gagal_js("Meja aktif!.");
+                gagal_arduino("Meja aktif!.");
             }
 
             $harga = (int)$meja['harga'] * (int)$q['durasi'];
@@ -340,7 +344,7 @@ class Ext extends BaseController
             if ($fulus < $harga) {
                 clear_tabel('booking');
                 message($q['kategori'], "Saldo tidak cukup!.", 400);
-                gagal_js("Saldo tidak cukup!.");
+                gagal_arduino("Saldo tidak cukup!.");
             }
 
             $time_now = time();
@@ -372,21 +376,21 @@ class Ext extends BaseController
                     if ($dbu->update($user)) {
                         clear_tabel('booking');
                         message($q['kategori'], "Transaksi sukses", 200, "Saldo: " . rupiah($sal));
-                        sukses_js("Transaksi sukses.", "Saldo: " . rupiah($sal));
+                        sukses_arduino("Transaksi sukses.", "Saldo: " . rupiah($sal));
                     } else {
                         clear_tabel('booking');
                         message($q['kategori'], "Update saldo gagal!.", 400);
-                        gagal_js("Update saldo gagal!.");
+                        gagal_arduino("Update saldo gagal!.");
                     }
                 } else {
                     clear_tabel('booking');
                     message($q['kategori'], "Insert billiard gagal!.", 400);
-                    gagal_js("Insert billiard gagal!.");
+                    gagal_arduino("Insert billiard gagal!.");
                 }
             } else {
                 clear_tabel('booking');
                 message($q['kategori'], "Update meja gagal!.", 400);
-                gagal_js("Update meja gagal!.");
+                gagal_arduino("Update meja gagal!.");
             }
         }
 
@@ -399,13 +403,13 @@ class Ext extends BaseController
             if (!$unit) {
                 clear_tabel('booking');
                 message($q['kategori'], "Unit tidak ditemukan!.", 400);
-                gagal_js("Unit tidak ditemukan!.");
+                gagal_arduino("Unit tidak ditemukan!.");
             }
 
             if ($unit['status'] !== 'Maintenance') {
                 clear_tabel('booking');
                 message($q['kategori'], "Unit dalam perbaikan!.", 400);
-                gagal_js("Unit dalam perbaikan!.");
+                gagal_arduino("Unit dalam perbaikan!.");
             }
 
             $dbr = db('rental');
@@ -414,7 +418,7 @@ class Ext extends BaseController
             if ($q) {
                 clear_tabel('booking');
                 message($q['kategori'], "Unit masih dalam permainan!.", 400);
-                gagal_js("Unit masih dalam permainan!.");
+                gagal_arduino("Unit masih dalam permainan!.");
             }
 
             $dbset = db('settings');
@@ -422,14 +426,14 @@ class Ext extends BaseController
             if (!$qs) {
                 clear_tabel('booking');
                 message($q['kategori'], "Kode harga di unit tidak ada!.", 400);
-                gagal_js("Kode harga di unit tidak ada!.");
+                gagal_arduino("Kode harga di unit tidak ada!.");
             }
             $biaya = $qs['value_int'] * $q['durasi'];
             $fulus = saldo($user);
             if ($biaya < $fulus) {
                 clear_tabel('booking');
                 message($q['kategori'], "Saldo tidak cukup!.", 400);
-                gagal_js("Saldo tidak cukup!.");
+                gagal_arduino("Saldo tidak cukup!.");
             }
 
             $time = time();
@@ -458,16 +462,16 @@ class Ext extends BaseController
                 if (!$dbu->update($user)) {
                     clear_tabel('booking');
                     message($q['kategori'], "Update saldo gagal!.", 400);
-                    gagal_js("Update saldo gagal!.");
+                    gagal_arduino("Update saldo gagal!.");
                 } else {
                     clear_tabel('booking');
                     message($q['kategori'], "Transaksi sukses", 200, "Saldo: " . rupiah($sal));
-                    sukses_js("Transaksi sukses.", "Saldo: " . rupiah($sal));
+                    sukses_arduino("Transaksi sukses.", "Saldo: " . rupiah($sal));
                 }
             } else {
                 clear_tabel('booking');
                 message($q['kategori'], "Update meja gagal!.", 400);
-                gagal_js("Update meja gagal!.");
+                gagal_arduino("Update meja gagal!.");
             }
         }
 
@@ -485,7 +489,7 @@ class Ext extends BaseController
             if ($saldo < $total) {
                 clear_tabel('booking');
                 message($q['kategori'], "Saldo tidak cukup!", 400, rupiah($saldo) . " < " . rupiah($total));
-                gagal_js("Saldo tidak cukup!", rupiah($saldo) . " < " . rupiah($total));
+                gagal_arduino("Saldo tidak cukup!", rupiah($saldo) . " < " . rupiah($total));
             }
 
             $total2 = 0;
@@ -507,66 +511,66 @@ class Ext extends BaseController
                 clear_tabel('booking');
                 if (count($err) > 0) {
                     message($q['kategori'], count($err) . ' barang' . " gagal!.", 200, "Saldo: " . rupiah($saldo_akhir));
-                    sukses_js(count($err) . ' barang' . " gagal!.", "Saldo " . rupiah($saldo_akhir));
+                    sukses_arduino(count($err) . ' barang' . " gagal!.", "Saldo " . rupiah($saldo_akhir));
                 } else {
                     message($q['kategori'], "Berhasil", 200, "Saldo: " . rupiah($saldo_akhir));
-                    sukses_js("Berhasil", "Saldo " . rupiah($saldo_akhir));
+                    sukses_arduino("Berhasil", "Saldo " . rupiah($saldo_akhir));
                 }
             } else {
                 clear_tabel('booking');
                 message($q['kategori'], "Update saldo gagal!", 400, rupiah($saldo) . " < " . rupiah($total));
-                gagal_js("Saldo tidak cukup!", rupiah($saldo) . " < " . rupiah($total));
+                gagal_arduino("Saldo tidak cukup!", rupiah($saldo) . " < " . rupiah($total));
             }
         }
     }
-    // public function tap_booking_daftar()
-    // {
-    //     clear_tabel('message');
-    //     $jwt = $this->request->getVar('jwt');
-    //     $decode = decode_jwt_fulus($jwt);
+    public function tap_booking_daftar()
+    {
+        clear_tabel('message');
+        $jwt = $this->request->getVar('jwt');
+        $decode = decode_jwt_fulus($jwt);
 
-    //     // kalau dalam jwt ada keu topupId berarti kartu member yang ditap setelah kartu Root
-    //     $member_id = key_exists("member_id", $decode);
+        // kalau dalam jwt ada keu topupId berarti kartu member yang ditap setelah kartu Root
+        $member_id = key_exists("member_id", $decode);
 
 
-    //     $db = db('booking');
-    //     $q = $db->get()->getRowArray();
+        $db = db('booking');
+        $q = $db->get()->getRowArray();
 
-    //     if (!$q) {
-    //         message($q['kategori'], "Data booking tidak ditemukan!.", 400);
-    //         gagal_js('Data booking tidak ditemukan!');
-    //     }
+        if (!$q) {
+            message($q['kategori'], "Data booking tidak ditemukan!.", 400);
+            gagal_arduino('Data booking tidak ditemukan!');
+        }
 
-    //     $dbu = db('users');
+        $dbu = db('users');
 
-    //     $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
+        $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
 
-    //     if ($user['role'] !== 'Root') {
-    //         clear_tabel('booking');
-    //         message($q['kategori'], "Akses kartu ditolakl!.", 400);
-    //         gagal_js('Akses kartu ditolakl!.');
-    //     } else {
-    //         message($q['kategori'], "Akses diterima.", 200, "Tap rfid member...");
-    //         sukses_js('Akses diterima.', 'next');
-    //     }
+        if ($user['role'] !== 'Root') {
+            clear_tabel('booking');
+            message($q['kategori'], "Akses kartu ditolakl!.", 400);
+            gagal_arduino('Akses kartu ditolakl!.');
+        } else {
+            message($q['kategori'], "Akses diterima.", 200, "Tap rfid member...");
+            sukses_arduino('Akses diterima.', 'next');
+        }
 
-    //     if ($member_id) {
-    //         sukses_js("Ok", $q);
-    //         $user_m = $dbu->where('id', $q['durasi'])->get()->getRowArray();
-    //         if (!$user_m) {
-    //             clear_tabel('booking');
-    //             message($q['kategori'], "User tidak ada!.", 400);
-    //             gagal_js("User tidak ada!.");
-    //         }
-    //         $user_m["uid"] = $decode['uid'];
-    //         $dbu->where('id', $q['durasi']);
-    //         if ($dbu->update($user_m)) {
-    //             clear_tabel('booking');
-    //             message($q['kategori'], "Pendaftaran sukses.", 200);
-    //             sukses_js("Pendaftaran sukses.");
-    //         }
-    //     }
-    // }
+        if ($member_id) {
+            sukses_arduino("Ok", $q);
+            $user_m = $dbu->where('id', $q['durasi'])->get()->getRowArray();
+            if (!$user_m) {
+                clear_tabel('booking');
+                message($q['kategori'], "User tidak ada!.", 400);
+                gagal_arduino("User tidak ada!.");
+            }
+            $user_m["uid"] = $decode['uid'];
+            $dbu->where('id', $q['durasi']);
+            if ($dbu->update($user_m)) {
+                clear_tabel('booking');
+                message($q['kategori'], "Pendaftaran sukses.", 200);
+                sukses_arduino("Pendaftaran sukses.");
+            }
+        }
+    }
 
     public function del_booking()
     {
@@ -574,7 +578,7 @@ class Ext extends BaseController
         decode_jwt_fulus($jwt);
 
         clear_tabel('booking');
-        sukses_js('Booking dihapus!.');
+        sukses_arduino('Booking dihapus!.');
     }
 
     public function get_booking()
@@ -582,9 +586,9 @@ class Ext extends BaseController
         $db = db('booking');
         $q = $db->get()->getRowArray();
         if ($q) {
-            sukses_js('Silahkan tap!.', $q);
+            sukses_arduino('Silahkan tap!.', $q);
         } else {
-            gagal_js('Silahkan pilih meja!');
+            gagal_arduino('Silahkan pilih meja!');
         }
     }
     public function hasil_tap()

@@ -131,6 +131,36 @@ function sukses_js($pesan, $data = null, $data2 = null, $data3 = null, $data4 = 
     echo json_encode($data);
     die;
 }
+function sukses_arduino($pesan, $data = "", $data2 = "", $data3 = "", $data4 = "", $data5 = "")
+{
+    $data = [
+        'status' => '200',
+        'message' => $pesan,
+        'data' => $data,
+        'data2' => $data2,
+        'data3' => $data3,
+        'data4' => $data4,
+        'data5' => $data5
+    ];
+
+    echo json_encode($data);
+    die;
+}
+function gagal_arduino($pesan, $data = "", $data2 = "", $data3 = "", $data4 = "", $data5 = "")
+{
+    $data = [
+        'status' => '400',
+        'message' => $pesan,
+        'data' => $data,
+        'data2' => $data2,
+        'data3' => $data3,
+        'data4' => $data4,
+        'data5' => $data5
+    ];
+
+    echo json_encode($data);
+    die;
+}
 function sukses_iot($is_active)
 {
     $data = [
