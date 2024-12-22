@@ -501,7 +501,7 @@ class Api extends BaseController
         }
 
         if ($member_uid) {
-            $uid_exist = $dbu->where('id', $q['durasi'])->where('uid', $decode['uid'])->get()->getRowArray();
+            $uid_exist = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
             if ($uid_exist) {
                 clear_tabel('booking');
                 message($q['kategori'], "Uid sudah terdaftar!.", 400);
