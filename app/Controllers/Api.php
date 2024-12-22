@@ -562,8 +562,8 @@ class Api extends BaseController
             $user_m = $dbu->where('id', $q['durasi'])->get()->getRowArray();
             if (!$user_m) {
                 clear_tabel('booking');
-                message($q['kategori'], "User tidak ada!.", 400);
-                gagal_arduino("User tidak ada!.");
+                message($q['kategori'], "Kartu tidak dikenal!.", 400);
+                gagal_arduino("Kartu tidak dikenal!.");
             }
 
             $user_m["fulus"] = saldo($user_m) + ($q["durasi"] * 10000);
@@ -594,11 +594,11 @@ class Api extends BaseController
 
         $dbu = db('users');
         $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
-
+        sukses_js('Ok', $user, saldo($user));
         if (!$user) {
             clear_tabel('booking');
             message($q['kategori'], "Akses kartu ditolakl!.", 400);
-            gagal_arduino('Akses kartu ditolakl!.');
+            gagal_arduino('Kartu tidak dikenal!.');
         }
 
         $saldo = saldo($user);
