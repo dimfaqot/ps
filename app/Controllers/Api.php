@@ -530,21 +530,77 @@ class Api extends BaseController
             konfirmasi_root($q, $user);
         }
     }
+    public function tap_booking_saldo()
+    {
+        $jwt = $this->request->getVar('jwt');
+        $decode = decode_jwt_fulus($jwt);
+
+        // kalau dalam jwt ada keu topupId berarti kartu member yang ditap setelah kartu Root
+        $member_uid = key_exists("member_uid", $decode);
+
+
+        $db = db('booking');
+        $q = $db->get()->getRowArray();
+
+        if (!$q) {
+            message($q['kategori'], "Data booking tidak ditemukan!.", 400);
+            gagal_arduino('Data booking tidak ditemukan!');
+        }
+
+        $dbu = db('users');
+        $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
+
+
+        if ($member_uid == true) {
+            $dba = db('api');
+            $qa = $dba->get()->getRowArray();
+            if (!$qa) {
+                clear_tabel('booking');
+                message($q['kategori'], "Akses admin dibutuhkan!.", 400);
+                gagal_arduino('Akses admin dibutuhkan!.');
+            }
+            $uid_exist = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
+            if ($uid_exist) {
+                clear_tabel('booking');
+                message($q['kategori'], "Uid sudah terdaftar!.", 400);
+                gagal_arduino("Uid sudah terdaftar!.");
+            }
+            $user_m = $dbu->where('id', $q['durasi'])->get()->getRowArray();
+            if (!$user_m) {
+                clear_tabel('booking');
+                message($q['kategori'], "User tidak ada!.", 400);
+                gagal_arduino("User tidak ada!.");
+            }
+            $uid_member = $decode['uid'];
+            if ($uid_member == '') {
+                $uid_member = $decode("member_uid");
+            }
+            $user_m["uid"] = $uid_member;
+            $dbu->where('id', $q['durasi']);
+            if ($dbu->update($user_m)) {
+                message($q['kategori'], "Pendaftaran sukses.", 200);
+                sukses_arduino("Pendaftaran sukses.");
+            }
+        } else {
+            clear_tabel('api');
+            konfirmasi_root($q, $user);
+        }
+    }
 
     public function del_booking()
     {
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_fulus($jwt);
-        $order = $decode['uid'];
-        if ($order == "message") {
+        if ($decode["uid"] == "message") {
             $db = db("message");
             $q = $db->get()->getRowArray();
-            $q['message'] = $decode["member_uid"];
-            $q['status'] = "200";
+            $q['status'] = $decode["member_uid"];
+            $q['message'] = $decode["data3"];
+            $q['kategori'] = $decode["data4"];
             $db->update($q);
-            sukses_arduino($decode["member_uid"]);
+            sukses_arduino($decode["data3"]);
         }
-        clear_tabel($order);
+        clear_tabel($decode);
         sukses_arduino('Booking dihapus!.');
     }
 
