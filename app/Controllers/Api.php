@@ -579,7 +579,8 @@ class Api extends BaseController
             $user_m["fulus"] = encode_jwt_fulus(["fulus" => $saldo]);
             $dbu->where('id', $user_m['id']);
             if ($dbu->update($user_m)) {
-                sukses_arduino("Topup sukses.", rupiah(saldo($user_m)));
+                $user_sal = $dbu->where('uid', $uid_member)->get()->getRowArray();
+                sukses_arduino("Topup sukses.", rupiah(saldo($user_sal)));
             }
         } else {
             clear_tabel('api');
