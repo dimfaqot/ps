@@ -513,7 +513,11 @@ class Api extends BaseController
                 message($q['kategori'], "User tidak ada!.", 400);
                 gagal_arduino("User tidak ada!.");
             }
-            $user_m["uid"] = $decode['uid'];
+            $uid_member = $decode['uid'];
+            if ($uid_member == '') {
+                $uid_member = $decode("member_uid");
+            }
+            $user_m["uid"] = $uid_member;
             $dbu->where('id', $q['durasi']);
             if ($dbu->update($user_m)) {
                 clear_tabel('booking');
