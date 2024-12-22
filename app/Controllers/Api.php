@@ -586,6 +586,107 @@ class Api extends BaseController
             konfirmasi_root($q, $user);
         }
     }
+    public function tap_booking_ps()
+    {
+        $jwt = $this->request->getVar('jwt');
+        $decode = decode_jwt_fulus($jwt);
+
+        $db = db('booking');
+        $q = $db->get()->getRowArray();
+
+        if (!$q) {
+            message($q['kategori'], "Data booking tidak ditemukan!.", 400);
+            gagal_arduino('Data booking tidak ditemukan!');
+        }
+
+        $dbu = db('users');
+        $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
+
+        if (!$user) {
+            clear_tabel('booking');
+            message($q['kategori'], "Akses kartu ditolakl!.", 400);
+            gagal_arduino('Akses kartu ditolakl!.');
+        }
+
+        $meja = "Meja " . $q['meja'];
+
+        $dbu = db('unit');
+        $unit = $dbu->where('meja', $meja)->get()->getRowArray();
+
+        if (!$unit) {
+            clear_tabel('booking');
+            message($q['kategori'], "Unit tidak ditemukan!.", 400);
+            gagal_arduino("Unit tidak ditemukan!.");
+        }
+
+        if ($unit['status'] !== 'Maintenance') {
+            clear_tabel('booking');
+            message($q['kategori'], "Unit dalam perbaikan!.", 400);
+            gagal_arduino("Unit dalam perbaikan!.");
+        }
+
+        $dbr = db('rental');
+        $q = $dbr->where('unit_id', $unit['id'])->where('is_active', 1)->get()->getRowArray();
+
+        if ($q) {
+            clear_tabel('booking');
+            message($q['kategori'], "Unit masih dalam permainan!.", 400);
+            gagal_arduino("Unit masih dalam permainan!.");
+        }
+
+        $dbset = db('settings');
+        $qs = $dbset->where('nama_setting', $unit['kode_harga'])->get()->getRowArray();
+        if (!$qs) {
+            clear_tabel('booking');
+            message($q['kategori'], "Kode harga di unit tidak ada!.", 400);
+            gagal_arduino("Kode harga di unit tidak ada!.");
+        }
+        $biaya = $qs['value_int'] * $q['durasi'];
+        $fulus = saldo($user);
+        if ($biaya < $fulus) {
+            clear_tabel('booking');
+            message($q['kategori'], "Saldo tidak cukup!.", 400);
+            gagal_arduino("Saldo tidak cukup!.");
+        }
+
+        $time = time();
+
+        $datar = [
+            'tgl' => $time,
+            'unit_id' => $unit['id'],
+            'meja' => $meja,
+            'dari' => $time,
+            'ke' => $time + ((60 * 60) * $q['durasi']),
+            'durasi' => $q["durasi"],
+            'is_active' => 1,
+            'biaya' => $biaya,
+            'diskon' => 0,
+            'metode' => "Tap",
+            'petugas' => $user['nama']
+        ];
+
+        if ($dbr->insert($datar)) {
+            $unit['status'] = 'Available';
+            $dbu->where('id', $unit['id']);
+            $dbu->update($unit);
+            $sal = $fulus - $biaya;
+            $user['fulus'] = encode_jwt_fulus(['fulus' => $sal]);
+            $db->where('id', $user['id']);
+            if (!$dbu->update($user)) {
+                clear_tabel('booking');
+                message($q['kategori'], "Update saldo gagal!.", 400);
+                gagal_arduino("Update saldo gagal!.");
+            } else {
+                clear_tabel('booking');
+                message($q['kategori'], "Transaksi sukses", 200, "Saldo: " . rupiah($sal));
+                sukses_arduino("Transaksi sukses.", "Saldo: " . rupiah($sal));
+            }
+        } else {
+            clear_tabel('booking');
+            message($q['kategori'], "Update meja gagal!.", 400);
+            gagal_arduino("Update meja gagal!.");
+        }
+    }
 
     public function del_booking()
     {
@@ -596,7 +697,8 @@ class Api extends BaseController
             $q = $db->get()->getRowArray();
             $q['status'] = $decode["member_uid"];
             $q['message'] = $decode["data3"];
-            $q['kategori'] = $decode["data4"];
+            $q['message_2'] = $decode["data4"];
+            $q['kategori'] = $decode["data5"];
             $db->update($q);
             sukses_arduino($decode["data3"]);
         }
