@@ -797,6 +797,12 @@ function saldo($user)
 
 function konfirmasi_root($booking, $user)
 {
+    if (!$user) {
+        clear_tabel('booking');
+        message($booking['kategori'], "Akses kartu ditolakl!.", 400);
+        gagal_arduino('Akses kartu ditolakl!.');
+    }
+
     if ($user['role'] !== 'Root') {
         clear_tabel('booking');
         message($booking['kategori'], "Akses kartu ditolakl!.", 400);
