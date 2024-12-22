@@ -808,7 +808,15 @@ function konfirmasi_root($booking, $user)
         message($booking['kategori'], "Akses kartu ditolakl!.", 400);
         gagal_arduino('Akses kartu ditolakl!.');
     } else {
-        message($booking['kategori'], "Akses diterima.", 200, "Tap rfid member...");
-        sukses_arduino('Akses diterima.', 'next');
+        $db = db('api');
+        $data = ['status' => 1];
+        if ($db->insert($data)) {
+            message($booking['kategori'], "Akses diterima.", 200, "Tap rfid member...");
+            sukses_arduino('Akses diterima.', 'next');
+        } else {
+            clear_tabel('booking');
+            message($booking['kategori'], "Gagal api!.", 400);
+            gagal_arduino('Gagal api!.');
+        }
     }
 }

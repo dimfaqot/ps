@@ -477,6 +477,7 @@ class Api extends BaseController
     public function tap_booking_daftar()
     {
         clear_tabel('message');
+        clear_tabel('api');
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_fulus($jwt);
 
@@ -494,13 +495,16 @@ class Api extends BaseController
 
         $dbu = db('users');
         $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
-        if (!$user) {
-            clear_tabel('booking');
-            message($q['kategori'], "Akses kartu ditolakl!.", 400);
-            gagal_arduino('Akses kartu ditolakl!.');
-        }
+
 
         if ($member_uid == true) {
+            $dba = db('api');
+            $qa = $db->get()->getRowArray();
+            if (!$qa) {
+                clear_tabel('booking');
+                message($q['kategori'], "Akses admin dibutuhkan!.", 400);
+                gagal_arduino('Akses admin dibutuhkan!.');
+            }
             $uid_exist = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
             if ($uid_exist) {
                 clear_tabel('booking');
