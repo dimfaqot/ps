@@ -536,7 +536,7 @@ class Api extends BaseController
     {
         sukses_arduino("Sukses");
         $jwt = $this->request->getVar('jwt');
-        $encode = decode_jwt_fulus($jwt);
+        decode_jwt_fulus($jwt);
 
         $db = db('booking');
         $q = $db->get()->getRowArray();
