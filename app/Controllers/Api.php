@@ -601,8 +601,6 @@ class Api extends BaseController
         }
 
         $saldo = saldo($user);
-
-        clear_tabel('booking');
         message($q['kategori'], "Cek saldo berhasil.", 200, rupiah($saldo));
         sukses_arduino("Cek saldo berhasil.", rupiah($saldo));
     }
