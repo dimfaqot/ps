@@ -791,8 +791,8 @@ function topup($user, $booking)
 function saldo($user)
 {
     $decode_fulus = decode_jwt_fulus($user['fulus']);
-    $fulus = $decode_fulus['fulus'];
-    sukses_js('Ok', $user, $decode_fulus, $fulus);
+    $fulus = ($decode_fulus['fulus'] == "" ? 0 : $decode_fulus['fulus']);
+    $fulus = (int)$fulus;
     return $fulus;
 }
 
