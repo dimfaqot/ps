@@ -579,7 +579,7 @@ class Api extends BaseController
             $fulus = (int)$fulus;
 
             $saldo = $fulus + ($q["durasi"] * 10000);
-
+            sukses_js("ok", $decode_fulus, $fulus, $saldo);
             $user_m["fulus"] = encode_jwt_fulus(["fulus" => $saldo]);
 
             $dbu->where('id', $user_m['id']);

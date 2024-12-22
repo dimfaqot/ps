@@ -146,12 +146,14 @@ class Ext extends BaseController
 
     public function booking()
     {
-        // dd(decode_jwt_fulus("eyJhbGciOiAiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJtZW1iZXJfdWlkIjoiZjM3NzI0ZTQiLCJ1aWQiOiJmMzc3MjRlNCIsImRhdGEzIjoiIiwiZGF0YTQiOiIiLCJkYXRhNSI6IiJ9.QcE0z07CP3Ag9ZzdpJmjP1sBMghqlPcHfNwDcNOfxnA"));
+        // $encode = encode_jwt_fulus(["fulus" => 1000]);
+        // dd($encode);
+        // dd(decode_jwt_fulus("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmdWx1cyI6MTAwMH0.yjidg0ct8CVkDdASLwiCi0FtNAf8oXYtxY7_HPanf3c"));
+        // dd(decode_jwt_fulus("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmdWx1cyI6IiJ9.2k-maoTA8IIyezEUHe2X0V7X7tmO7MTNmJ-dyzVZzog"));
         // $dbu = db('users');
-        // $user = $dbu->where('id', 1)->get()->getRowArray();
+        // $user = $dbu->where('uid', "098979")->get()->getRowArray();
         // $decode_fulus = decode_jwt_fulus($user['fulus']);
-        // $fulus = ($decode_fulus['fulus'] == "" ? 0 : $decode_fulus['fulus']);
-        // $fulus = (int)$fulus;
+        // $fulus = $decode_fulus['fulus'];
         // dd($fulus);
 
         $db = db('barber');
