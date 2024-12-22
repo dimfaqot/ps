@@ -497,6 +497,7 @@ class Api extends BaseController
         $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
 
         if ($member_uid) {
+            sukses_js("ok", $q);
             $uid_exist = $dbu->where('id', $q['durasi'])->where('uid', $decode['uid'])->get()->getRowArray();
             if ($uid_exist) {
                 clear_tabel('booking');
@@ -517,6 +518,7 @@ class Api extends BaseController
                 sukses_arduino("Pendaftaran sukses.");
             }
         } else {
+            sukses_js("ok", $user);
             if ($user['role'] !== 'Root') {
                 clear_tabel('booking');
                 message($q['kategori'], "Akses kartu ditolakl!.", 400);
