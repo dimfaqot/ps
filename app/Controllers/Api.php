@@ -565,6 +565,7 @@ class Api extends BaseController
             if ($uid_member == '') {
                 $uid_member = $decode("member_uid");
             }
+
             $user_m = $dbu->where('uid', $uid_member)->get()->getRowArray();
             if (!$user_m) {
                 message($q['kategori'], "Kartu tidak dikenal!.", 400);
