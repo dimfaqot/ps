@@ -146,7 +146,13 @@ class Ext extends BaseController
 
     public function booking()
     {
-        dd(decode_jwt_fulus("eyJhbGciOiAiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJ1aWQiOiI5M2FmMTAyYSIsImRhdGEzIjoiIiwiZGF0YTQiOiIiLCJkYXRhNSI6IiJ9.jDYWuTwjLfbddHeqyDoI0Murg-eA1uslAzfK2M9tXOo"));
+        // dd(decode_jwt_fulus("eyJhbGciOiAiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJ1aWQiOiI5M2FmMTAyYSIsImRhdGEzIjoiIiwiZGF0YTQiOiIiLCJkYXRhNSI6IiJ9.jDYWuTwjLfbddHeqyDoI0Murg-eA1uslAzfK2M9tXOo"));
+        // $dbu = db('users');
+        // $user = $dbu->where('uid', "098979")->get()->getRowArray();
+        // $decode_fulus = decode_jwt_fulus($user['fulus']);
+        // $fulus = $decode_fulus['fulus'];
+        // dd($fulus);
+
         $db = db('barber');
         $q = $db->get()->getResultArray();
         foreach ($q as $i) {

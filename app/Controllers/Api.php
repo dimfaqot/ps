@@ -594,7 +594,6 @@ class Api extends BaseController
 
         $dbu = db('users');
         $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
-        sukses_js('Ok', $user, saldo($user));
         if (!$user) {
             clear_tabel('booking');
             message($q['kategori'], "Akses kartu ditolakl!.", 400);
@@ -602,6 +601,7 @@ class Api extends BaseController
         }
 
         $saldo = saldo($user);
+        sukses_js('Ok', $user, saldo($user), $saldo, $q);
         clear_tabel('booking');
         message($q['kategori'], "Cek saldo berhasil.", 200, rupiah($saldo));
         sukses_arduino("Cek saldo berhasil.", rupiah($saldo));
