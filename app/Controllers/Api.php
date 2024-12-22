@@ -510,7 +510,7 @@ class Api extends BaseController
                 clear_tabel('api');
                 gagal_arduino("Uid sudah terdaftar!.");
             }
-            $user_m = $dbu->where('id', $q['durasi'])->get()->getRowArray();
+            $user_m = $dbu->where('id', $q["durasi"])->get()->getRowArray();
             if (!$user_m) {
                 message($q['kategori'], "User tidak ada!.", 400);
                 clear_tabel('booking');
@@ -553,7 +553,6 @@ class Api extends BaseController
 
 
         if ($member_uid == true) {
-            sukses_js('Ok', $jwt);
             $dba = db('api');
             $qa = $dba->get()->getRowArray();
             if (!$qa) {
@@ -561,7 +560,12 @@ class Api extends BaseController
                 clear_tabel('booking');
                 gagal_arduino('Akses admin dibutuhkan!.');
             }
-            $user_m = $dbu->where('id', $q['durasi'])->get()->getRowArray();
+
+            $uid_member = $decode['uid'];
+            if ($uid_member == '') {
+                $uid_member = $decode("member_uid");
+            }
+            $user_m = $dbu->where('uid', $uid_member)->get()->getRowArray();
             if (!$user_m) {
                 message($q['kategori'], "Kartu tidak dikenal!.", 400);
                 clear_tabel('booking');
