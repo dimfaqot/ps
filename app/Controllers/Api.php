@@ -172,7 +172,6 @@ class Api extends BaseController
         $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
 
         if ($q['kategori'] == "Daftar") {
-            sukses_arduino("Masuk", $q);
             if ($member_uid) {
                 sukses_arduino("Ok", $q);
                 $user_m = $dbu->where('id', $q['durasi'])->get()->getRowArray();
@@ -189,7 +188,6 @@ class Api extends BaseController
                     sukses_arduino("Pendaftaran sukses.");
                 }
             } else {
-                sukses_arduino("jos");
                 konfirmasi_root($q, $user);
             }
         }
@@ -519,7 +517,14 @@ class Api extends BaseController
                 sukses_arduino("Pendaftaran sukses.");
             }
         } else {
-            konfirmasi_root($q, $user);
+            if ($user['role'] !== 'Root') {
+                clear_tabel('booking');
+                message($q['kategori'], "Akses kartu ditolakl!.", 400);
+                gagal_arduino('Akses kartu ditolakl!.');
+            } else {
+                message($q['kategori'], "Akses diterima.", 200, "Tap rfid member...");
+                sukses_arduino('Akses diterima.', 'next');
+            }
         }
     }
 
