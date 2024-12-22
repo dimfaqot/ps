@@ -252,7 +252,16 @@ function decode_jwt_fulus($encode_jwt)
 
         return $arr;
     } catch (\Exception $e) { // Also tried JwtException
-        gagal_arduino("300", $e->getMessage());
+        $data = [
+            'status' => '300',
+            'message' => $e->getMessage(),
+            'data' => "",
+            'data2' => "",
+            'data3' => "",
+            'data4' => "",
+            'data5' => ""
+        ];
+        echo json_encode($data);
         die;
     }
 }

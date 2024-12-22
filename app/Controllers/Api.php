@@ -574,7 +574,9 @@ class Api extends BaseController
                 gagal_arduino("Kartu tidak dikenal!.");
             }
 
-            $user_m["fulus"] = encode_jwt_fulus(["fulus" => (saldo($user_m) + ($q["durasi"] * 10000))]);
+            $saldo = saldo($user_m) + ($q["durasi"] * 10000);
+
+            $user_m["fulus"] = encode_jwt_fulus(["fulus" => $saldo]);
             $dbu->where('id', $user_m['id']);
             if ($dbu->update($user_m)) {
                 sukses_arduino("Topup sukses.", rupiah(saldo($user_m)));
