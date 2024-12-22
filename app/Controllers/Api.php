@@ -573,9 +573,9 @@ class Api extends BaseController
                 clear_tabel('api');
                 gagal_arduino("Kartu tidak dikenal!.");
             }
+            sukses_js("ok", $user_m, $decode);
 
             $saldo = saldo($user_m) + ($q["durasi"] * 10000);
-            sukses_js("ok", $saldo, $user_m);
 
             $user_m["fulus"] = encode_jwt_fulus(["fulus" => $saldo]);
 
