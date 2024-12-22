@@ -577,6 +577,35 @@ class Api extends BaseController
             konfirmasi_root($q, $user);
         }
     }
+
+    public function tap_booking_saldo()
+    {
+
+        $jwt = $this->request->getVar('jwt');
+        $decode = decode_jwt_fulus($jwt);
+
+        $db = db('booking');
+        $q = $db->get()->getRowArray();
+
+        if (!$q) {
+            message($q['kategori'], "Data booking tidak ditemukan!.", 400);
+            gagal_arduino('Data booking tidak ditemukan!');
+        }
+
+        $dbu = db('users');
+        $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
+
+        if (!$user) {
+            clear_tabel('booking');
+            message($q['kategori'], "Akses kartu ditolakl!.", 400);
+            gagal_arduino('Akses kartu ditolakl!.');
+        }
+
+        $saldo = saldo($user);
+        clear_tabel('booking');
+        message($q['kategori'], "Cek saldo berhasil.", 200, rupiah($saldo));
+        sukses_arduino("Cek saldo berhasil.", rupiah($saldo));
+    }
     public function tap_booking_ps()
     {
         $jwt = $this->request->getVar('jwt');
