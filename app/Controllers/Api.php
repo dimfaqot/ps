@@ -534,6 +534,7 @@ class Api extends BaseController
 
     public function get_booking()
     {
+        sukses_arduino("Sukses");
         $jwt = $this->request->getVar('jwt');
         $encode = decode_jwt_fulus($jwt);
 
