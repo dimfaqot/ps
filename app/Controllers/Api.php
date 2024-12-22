@@ -522,7 +522,6 @@ class Api extends BaseController
             $user_m["uid"] = $uid_member;
             $dbu->where('id', $q['durasi']);
             if ($dbu->update($user_m)) {
-                clear_tabel('booking');
                 message($q['kategori'], "Pendaftaran sukses.", 200);
                 sukses_arduino("Pendaftaran sukses.");
             }
@@ -536,8 +535,16 @@ class Api extends BaseController
     {
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_fulus($jwt);
-
-        clear_tabel($decode['uid']);
+        $order = $decode['uid'];
+        if ($order == "message") {
+            $db = db("message");
+            $q = $db->get()->getRowArray();
+            $q['message'] = $decode["member_uid"];
+            $q['status'] = "200";
+            $db->update($q);
+            sukses_arduino($decode["member_uid"]);
+        }
+        clear_tabel($order);
         sukses_arduino('Booking dihapus!.');
     }
 
