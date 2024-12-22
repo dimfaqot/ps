@@ -482,7 +482,6 @@ class Api extends BaseController
 
         // kalau dalam jwt ada keu topupId berarti kartu member yang ditap setelah kartu Root
         $member_uid = key_exists("member_uid", $decode);
-        sukses_js("ok", $member_uid);
 
 
         $db = db('booking');
@@ -501,7 +500,7 @@ class Api extends BaseController
             gagal_arduino('Akses kartu ditolakl!.');
         }
 
-        if ($member_uid) {
+        if ($member_uid == true) {
             $uid_exist = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
             if ($uid_exist) {
                 clear_tabel('booking');
