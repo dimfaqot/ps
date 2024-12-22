@@ -534,6 +534,9 @@ class Api extends BaseController
 
     public function get_booking()
     {
+        $jwt = $this->request->getVar('jwt');
+        $encode = decode_jwt_fulus($jwt);
+
         $db = db('booking');
         $q = $db->get()->getRowArray();
         if ($q) {
