@@ -505,14 +505,16 @@ class Api extends BaseController
             }
             $uid_exist = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
             if ($uid_exist) {
-                clear_tabel('booking');
                 message($q['kategori'], "Uid sudah terdaftar!.", 400);
+                clear_tabel('booking');
+                clear_tabel('api');
                 gagal_arduino("Uid sudah terdaftar!.");
             }
             $user_m = $dbu->where('id', $q['durasi'])->get()->getRowArray();
             if (!$user_m) {
-                clear_tabel('booking');
                 message($q['kategori'], "User tidak ada!.", 400);
+                clear_tabel('booking');
+                clear_tabel('api');
                 gagal_arduino("User tidak ada!.");
             }
             $uid_member = $decode['uid'];
@@ -522,7 +524,6 @@ class Api extends BaseController
             $user_m["uid"] = $uid_member;
             $dbu->where('id', $q['durasi']);
             if ($dbu->update($user_m)) {
-                message($q['kategori'], "Pendaftaran sukses.", 200);
                 sukses_arduino("Pendaftaran sukses.");
             }
         } else {
@@ -552,24 +553,25 @@ class Api extends BaseController
 
 
         if ($member_uid == true) {
+            sukses_js('Ok', $jwt);
             $dba = db('api');
             $qa = $dba->get()->getRowArray();
             if (!$qa) {
-                clear_tabel('booking');
                 message($q['kategori'], "Akses admin dibutuhkan!.", 400);
+                clear_tabel('booking');
                 gagal_arduino('Akses admin dibutuhkan!.');
             }
             $user_m = $dbu->where('id', $q['durasi'])->get()->getRowArray();
             if (!$user_m) {
-                clear_tabel('booking');
                 message($q['kategori'], "Kartu tidak dikenal!.", 400);
+                clear_tabel('booking');
+                clear_tabel('api');
                 gagal_arduino("Kartu tidak dikenal!.");
             }
 
             $user_m["fulus"] = saldo($user_m) + ($q["durasi"] * 10000);
             $dbu->where('id', $user_m['id']);
             if ($dbu->update($user_m)) {
-                message($q['kategori'], "Topup berhasil.", 200);
                 sukses_arduino("Topup sukses.", rupiah(saldo($user_m)));
             }
         } else {
@@ -595,13 +597,12 @@ class Api extends BaseController
         $dbu = db('users');
         $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
         if (!$user) {
-            clear_tabel('booking');
             message($q['kategori'], "Akses kartu ditolakl!.", 400);
+            clear_tabel('booking');
             gagal_arduino('Kartu tidak dikenal!.');
         }
 
         $saldo = saldo($user);
-        message($q['kategori'], "Cek saldo berhasil.", 200, rupiah($saldo));
         sukses_arduino("Cek saldo berhasil.", rupiah($saldo));
     }
     public function tap_booking_ps()

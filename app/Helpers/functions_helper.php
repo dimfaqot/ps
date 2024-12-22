@@ -253,10 +253,9 @@ function decode_jwt_fulus($encode_jwt)
         return $arr;
     } catch (\Exception $e) { // Also tried JwtException
         $data = [
-            'status' => '400',
+            'status' => '300',
             'message' => $e->getMessage()
         ];
-
         echo json_encode($data);
         die;
     }
