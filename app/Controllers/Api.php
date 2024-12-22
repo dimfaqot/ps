@@ -156,7 +156,7 @@ class Api extends BaseController
         $decode = decode_jwt_fulus($jwt);
 
         // kalau dalam jwt ada keu topupId berarti kartu member yang ditap setelah kartu Root
-        $member_id = key_exists("member_id", $decode);
+        $member_uid = key_exists("member_uid", $decode);
 
 
         $db = db('booking');
@@ -173,7 +173,7 @@ class Api extends BaseController
 
         if ($q['kategori'] == "Daftar") {
             sukses_arduino("Masuk", $q);
-            if ($member_id) {
+            if ($member_uid) {
                 sukses_arduino("Ok", $q);
                 $user_m = $dbu->where('id', $q['durasi'])->get()->getRowArray();
                 if (!$user_m) {
@@ -201,7 +201,7 @@ class Api extends BaseController
         }
 
         if ($q['kategori'] == 'Topup') {
-            if ($member_id) {
+            if ($member_uid) {
                 if (topup($user, $q)) {
                     $sal = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
                     $decode_fulus = decode_jwt_fulus($sal['fulus']);
@@ -483,7 +483,7 @@ class Api extends BaseController
         $decode = decode_jwt_fulus($jwt);
 
         // kalau dalam jwt ada keu topupId berarti kartu member yang ditap setelah kartu Root
-        $member_id = key_exists("member_id", $decode);
+        $member_uid = key_exists("member_uid", $decode);
 
 
         $db = db('booking');
@@ -498,7 +498,7 @@ class Api extends BaseController
 
         $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
 
-        if ($member_id) {
+        if ($member_uid) {
             $uid_exist = $dbu->where('id', $q['durasi'])->where('uid', $decode['uid'])->get()->getRowArray();
             if ($uid_exist) {
                 clear_tabel('booking');
