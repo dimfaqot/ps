@@ -792,6 +792,7 @@ function saldo($user)
 {
     $decode_fulus = decode_jwt_fulus($user['fulus']);
     $fulus = $decode_fulus['fulus'];
+    sukses_js('Ok', $user, $decode_fulus, $fulus);
     return $fulus;
 }
 
