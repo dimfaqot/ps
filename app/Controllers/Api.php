@@ -477,7 +477,7 @@ class Api extends BaseController
     public function tap_booking_daftar()
     {
         clear_tabel('message');
-        clear_tabel('api');
+
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_fulus($jwt);
 
@@ -529,6 +529,7 @@ class Api extends BaseController
                 sukses_arduino("Pendaftaran sukses.");
             }
         } else {
+            clear_tabel('api');
             konfirmasi_root($q, $user);
         }
     }
