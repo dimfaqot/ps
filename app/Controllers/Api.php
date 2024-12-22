@@ -573,16 +573,22 @@ class Api extends BaseController
                 clear_tabel('api');
                 gagal_arduino("Kartu tidak dikenal!.");
             }
-            sukses_js("ok", $user_m, $decode);
 
-            $saldo = saldo($user_m) + ($q["durasi"] * 10000);
+            $decode_fulus = decode_jwt_fulus($user_m['fulus']);
+            $fulus = ($decode_fulus['fulus'] == "" ? 0 : $decode_fulus['fulus']);
+            $fulus = (int)$fulus;
+
+            $saldo = $fulus + ($q["durasi"] * 10000);
 
             $user_m["fulus"] = encode_jwt_fulus(["fulus" => $saldo]);
 
             $dbu->where('id', $user_m['id']);
             if ($dbu->update($user_m)) {
                 $user_sal = $dbu->where('uid', $uid_member)->get()->getRowArray();
-                sukses_arduino("Topup sukses.", rupiah(saldo($user_sal)));
+                $decode_fulus = decode_jwt_fulus($user_sal['fulus']);
+                $fulus = ($decode_fulus['fulus'] == "" ? 0 : $decode_fulus['fulus']);
+                $fulus = (int)$fulus;
+                sukses_arduino("Topup sukses.", rupiah(saldo($fulus)));
             }
         } else {
             clear_tabel('api');
