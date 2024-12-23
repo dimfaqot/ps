@@ -510,7 +510,7 @@ class Api extends BaseController
                 clear_tabel('api');
                 gagal_arduino("Uid sudah terdaftar!.");
             }
-            $user_m = $dbu->where('id', $q["durasi"])->get()->getRowArray();
+            $user_m = $dbu->where('id', $q["durasi"])->where('role', 'Member')->get()->getRowArray();
             if (!$user_m) {
                 message($q['kategori'], "User tidak ada!.", 400);
                 clear_tabel('booking');
@@ -566,7 +566,7 @@ class Api extends BaseController
                 $uid_member = $decode("member_uid");
             }
 
-            $user_m = $dbu->where('uid', $uid_member)->get()->getRowArray();
+            $user_m = $dbu->where('uid', $uid_member)->where('role', 'Member')->get()->getRowArray();
             if (!$user_m) {
                 message($q['kategori'], "Kartu tidak dikenal!.", 400);
                 clear_tabel('booking');
@@ -605,15 +605,112 @@ class Api extends BaseController
         }
 
         $dbu = db('users');
-        $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
+        $user = $dbu->where('uid', $decode['uid'])->where('role', 'Member')->get()->getRowArray();
         if (!$user) {
-            message($q['kategori'], "Akses kartu ditolakl!.", 400);
+            message($q['kategori'], "Kartu tidak dikenal!.", 400);
             clear_tabel('booking');
             gagal_arduino('Kartu tidak dikenal!.');
         }
 
         $saldo = saldo($user);
         sukses_arduino("Cek saldo berhasil.", rupiah($saldo));
+    }
+
+    public function tap_booking_hutang()
+    {
+        $jwt = $this->request->getVar('jwt');
+        $decode = decode_jwt_fulus($jwt);
+
+        // kalau dalam jwt ada keu topupId berarti kartu member yang ditap setelah kartu Root
+        $member_uid = key_exists("member_uid", $decode);
+
+
+        $db = db('booking');
+        $q = $db->get()->getRowArray();
+
+        if (!$q) {
+            message($q['kategori'], "Data booking tidak ditemukan!.", 400);
+            gagal_arduino('Data booking tidak ditemukan!');
+        }
+
+        $dbu = db('users');
+        $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
+
+        if (!$user) {
+            message($q['kategori'], "Kartu tidak dikenal!.", 400);
+            clear_tabel('booking');
+            gagal_arduino('Kartu tidak dikenal!.');
+        }
+
+        if ($member_uid == true) {
+            $dba = db('api');
+            $qa = $dba->get()->getRowArray();
+            if (!$qa) {
+                message($q['kategori'], "Akses api tidak ditemukan!.", 400);
+                clear_tabel('booking');
+                gagal_arduino('Akses api tidak ditemukan!.');
+            }
+
+            $uid_member = $decode['uid'];
+            if ($uid_member == '') {
+                $uid_member = $decode("member_uid");
+            }
+
+            $user_m = $dbu->where('uid', $uid_member)->where('role', 'Member')->get()->getRowArray();
+            if (!$user_m) {
+                message($q['kategori'], "Kartu tidak dikenal!.", 400);
+                clear_tabel('booking');
+                clear_tabel('api');
+                gagal_arduino('Kartu tidak dikenal!.');
+            }
+
+            if ($qa["status"] !== $member_uid) {
+                message($q['kategori'], "Kartu berbeda!.", 400);
+                clear_tabel('booking');
+                clear_tabel('api');
+                gagal_arduino('Kartu berbeda!.');
+            }
+
+            $dbh = db('hutangs');
+            $qh = $dbh->where('user_id', $user_m['id'])->where('status', 0)->get()->getResultArray();
+            $total = 0;
+            if (!$qh) {
+                sukses_arduino("Hutang tidak ada.");
+            } else {
+                foreach ($qh as $i) {
+                    $total += $i['total_harga'];
+                }
+            }
+            $saldo = saldo($user_m);
+
+            if ($saldo < $total) {
+                gagal_arduino("Saldo tidak cukup!.", rupiah($saldo) . " < " . rupiah($total));
+            } else {
+                $total_2 = 0;
+                foreach ($qh as $i) {
+                    $i['status'] = 1;
+
+                    $dbh->where('id', $i['id']);
+                    if ($db->update($i)) {
+                        $total_2 += $i['total_harga'];
+                    }
+                }
+
+                $sal = $saldo - $total_2;
+                $user_m['fulus'] = encode_jwt_fulus(['fulus' => $sal]);
+                if ($dbu->update($user_m)) {
+                    sukses_arduino("Transaksi sukses", rupiah($sal), rupiah($total_2));
+                }
+            }
+        } else {
+            clear_tabel('api');
+            $db = db('api');
+            $data = ['status' => $user["uid"]];
+            if ($db->insert($data)) {
+                message($q['kategori'], "Akses diterima.", 200, "Tap untuk melunasi...");
+                sukses_arduino('Akses diterima.', 'next', "Tap lagi untuk melunasi...");
+            }
+        }
     }
     public function tap_booking_ps()
     {

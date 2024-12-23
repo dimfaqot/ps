@@ -25,6 +25,7 @@ $routes->post('/api/tap_booking/Daftar', 'Api::tap_booking_daftar');
 $routes->post('/api/Daftar', 'Api::tap_booking_daftar');
 $routes->post('/api/Saldo', 'Api::tap_booking_saldo');
 $routes->post('/api/Topup', 'Api::tap_booking_topup');
+$routes->post('/api/Hutang', 'Api::tap_booking_hutang');
 
 
 $routes->get('/login', 'Login::index');

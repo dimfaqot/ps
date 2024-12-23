@@ -814,7 +814,7 @@ function konfirmasi_root($booking, $user)
         gagal_arduino('Akses kartu ditolakl!.');
     } else {
         $db = db('api');
-        $data = ['status' => 1];
+        $data = ['status' => $user["uid"]];
         if ($db->insert($data)) {
             message($booking['kategori'], "Akses diterima.", 200, "Tap rfid member...");
             sukses_arduino('Akses diterima.', 'next');
