@@ -26,6 +26,7 @@ $routes->post('/api/Saldo', 'Api::tap_booking_saldo');
 $routes->post('/api/Topup', 'Api::tap_booking_topup');
 $routes->post('/api/Hutang', 'Api::tap_booking_hutang');
 $routes->post('/api/Ps', 'Api::tap_booking_ps');
+$routes->post('/api/Billiard', 'Api::tap_booking_billiard');
 
 
 $routes->get('/login', 'Login::index');

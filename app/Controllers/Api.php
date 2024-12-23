@@ -887,8 +887,8 @@ class Api extends BaseController
 
         if (!$user) {
             clear_tabel('booking');
-            message($q['kategori'], "Akses kartu ditolakl!.", 400);
-            gagal_arduino('Akses kartu ditolakl!.');
+            message($q['kategori'], "Kartu tidak terdaftar!.", 400);
+            gagal_arduino('Kartu tidak terdaftar!.');
         }
 
 
@@ -932,7 +932,7 @@ class Api extends BaseController
 
         $meja['is_active'] = 1;
         $meja['start'] = $time_now;
-        sukses_js('Ok', $meja);
+
         $dbm->where('id', $meja['id']);
         if ($dbm->update($meja)) {
             $data = [
