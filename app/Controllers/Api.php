@@ -734,6 +734,7 @@ class Api extends BaseController
 
                 $sal = $saldo - $total_2;
                 $user_m['fulus'] = encode_jwt_fulus(['fulus' => $sal]);
+                sukses_js('Ok', $sal, $user_m, $total_2);
                 if ($dbu->update($user_m)) {
                     sukses_arduino($user['nama'] . " sukses bertransaksi sebesar " . rupiah($total_2), rupiah($sal));
                 }
@@ -743,8 +744,18 @@ class Api extends BaseController
             $db = db('api');
             $data = ['status' => $decode["uid"]];
             if ($db->insert($data)) {
-                message($q['kategori'], $user['nama'] . " berhasil mengakses data.", 200, "Tap untuk melunasi...");
-                sukses_arduino($user["nama"] . ' berhasil mengakses data.', 'next', "Tap lagi untuk melunasi...");
+                $dbh = db('hutangs');
+                $qh = $dbh->where('user_id', $user['id'])->where('status', 0)->get()->getResultArray();
+                $total = 0;
+                foreach ($qh as $i) {
+                    $total += $i['total_harga'];
+                }
+                if ($total <= 0) {
+                    sukses_arduino($user['nama'] . " tidak berhutang.", "stop");
+                } else {
+                    message($q['kategori'], $user['nama'] . " berhasil mengakses data.", 200, "Tap untuk melunasi " . rupiah($total) . "...");
+                    sukses_arduino($user["nama"] . ' berhasil mengakses data.', 'next', "Tap lagi untuk melunasi " . rupiah($total) . "...");
+                }
             }
         }
     }
