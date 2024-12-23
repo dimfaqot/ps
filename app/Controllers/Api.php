@@ -911,8 +911,8 @@ class Api extends BaseController
         if ($user['role'] == "Root") {
             $harga = 0;
         }
-        $decode_fulus = decode_jwt_fulus($user['fulus']);
-        $fulus = (int)$decode_fulus['fulus'];
+
+        $fulus = saldo($user);
         if ($fulus < $harga) {
             clear_tabel('booking');
             message($q['kategori'], $user["nama"] . ", Saldo tidak cukup!.", 400, rupiah($fulus) . " < " . rupiah($harga));
@@ -920,8 +920,7 @@ class Api extends BaseController
         }
 
         $time_now = time();
-        $meja['is_active'] = 1;
-        $meja['start'] = $time_now;
+
 
         $endtime = $time_now + ((60 * 60) * $q['durasi']);
         $durasi_jam = $q['durasi'] * 60;
@@ -930,6 +929,10 @@ class Api extends BaseController
             $endtime = $time_now + ((60 * 60) * 10);
             $durasi_jam = 10 * 60;
         }
+
+        $meja['is_active'] = 1;
+        $meja['start'] = $time_now;
+        sukses_js('Ok', $meja);
         $dbm->where('id', $meja['id']);
         if ($dbm->update($meja)) {
             $data = [
