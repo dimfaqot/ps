@@ -799,9 +799,9 @@ class Api extends BaseController
         }
 
         $dbr = db('rental');
-        $q = $dbr->where('unit_id', $unit['id'])->where('is_active', 1)->get()->getRowArray();
+        $qr = $dbr->where('unit_id', $unit['id'])->where('is_active', 1)->get()->getRowArray();
 
-        if ($q) {
+        if ($qr) {
             clear_tabel('booking');
             message($q['kategori'], "Unit masih dalam permainan!.", 400);
             gagal_arduino("Unit masih dalam permainan!.");
