@@ -659,7 +659,7 @@ class Api extends BaseController
             $check_role = $dbu->where('uid', $qa['status'])->get()->getRowArray();
 
             $dbu->where('uid', $uid_member);
-            if ($check_role['role'] !== 'Role') {
+            if ($check_role['role'] !== 'Root') {
                 $dbu->where('role', 'Member');
             }
             $user_m = $db->get()->getRowArray();
