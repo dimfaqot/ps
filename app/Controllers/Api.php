@@ -682,7 +682,7 @@ class Api extends BaseController
             $qh = $dbh->where('user_id', $user_m['id'])->where('status', 0)->get()->getResultArray();
             $total = 0;
             if (!$qh) {
-                sukses_arduino("Hutang tidak ada.");
+                sukses_arduino("Hutang tidak ada.", $user_m["nama"]);
             } else {
                 foreach ($qh as $i) {
                     $total += $i['total_harga'];
@@ -691,7 +691,7 @@ class Api extends BaseController
             $saldo = saldo($user_m);
 
             if ($saldo < $total) {
-                gagal_arduino("Saldo tidak cukup!.", rupiah($saldo) . " < " . rupiah($total));
+                gagal_arduino("Saldo tidak cukup!.", rupiah($saldo) . " < " . rupiah($total), $user_m["nama"]);
             } else {
                 $total_2 = 0;
                 foreach ($qh as $i) {
@@ -715,7 +715,7 @@ class Api extends BaseController
             $data = ['status' => $decode["uid"]];
             if ($db->insert($data)) {
                 message($q['kategori'], "Akses diterima.", 200, "Tap untuk melunasi...");
-                sukses_arduino('Akses diterima.', 'next', "Tap lagi untuk melunasi...");
+                sukses_arduino('Akses diterima.', 'next', "Tap lagi untuk melunasi...", $user["nama"]);
             }
         }
     }
