@@ -706,7 +706,7 @@ class Api extends BaseController
                 $sal = $saldo - $total_2;
                 $user_m['fulus'] = encode_jwt_fulus(['fulus' => $sal]);
                 if ($dbu->update($user_m)) {
-                    sukses_arduino("Transaksi sukses", rupiah($sal), rupiah($total_2));
+                    sukses_arduino("Transaksi sukses", rupiah($sal), rupiah($total_2), $user_m["nama"]);
                 }
             }
         } else {
