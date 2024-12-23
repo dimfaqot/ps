@@ -792,7 +792,7 @@ class Api extends BaseController
             gagal_arduino("Unit tidak ditemukan!.");
         }
 
-        if ($unit['status'] !== 'Maintenance') {
+        if ($unit['status'] == 'Maintenance') {
             clear_tabel('booking');
             message($q['kategori'], "Unit dalam perbaikan!.", 400);
             gagal_arduino("Unit dalam perbaikan!.");
