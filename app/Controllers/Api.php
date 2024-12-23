@@ -570,9 +570,7 @@ class Api extends BaseController
 
         $durasi_main = $time + ((60 * 60) * $q['durasi']);
         $durasi_jam = $q["durasi"] * 60;
-        if ($user['role'] == "Root") {
-            $durasi_main = $time + ((60 * 60) * 10);
-        }
+
         $datar = [
             'tgl' => $time,
             'unit_id' => $unit['id'],
@@ -665,10 +663,6 @@ class Api extends BaseController
 
         $endtime = $time_now + ((60 * 60) * $q['durasi']);
         $durasi_jam = $q['durasi'] * 60;
-
-        if ($user['role'] == "Root") {
-            $endtime = $time_now + ((60 * 60) * 10);
-        }
 
         $meja['is_active'] = 1;
         $meja['start'] = $time_now;
