@@ -691,6 +691,9 @@ class Api extends BaseController
             $saldo = saldo($user_m);
 
             if ($saldo < $total) {
+                message($q['kategori'], "Saldo tidak cukup!.", 400, rupiah($saldo) . " < " . rupiah($total));
+                clear_tabel('booking');
+                clear_tabel('api');
                 gagal_arduino("Saldo tidak cukup!.", rupiah($saldo) . " < " . rupiah($total), $user_m["nama"]);
             } else {
                 $total_2 = 0;
