@@ -237,6 +237,7 @@
                 data
             }).then(res => {
                 if (res.status == "200") {
+                    hasil_tap(data);
                     $(".date_time").addClass("d-none");
                     let htmy = "";
                     htmy += '<div style="margin-top: 250px;">';
@@ -544,18 +545,18 @@
                             html += '</div>';
                             $('.messages').html(html);
 
-                            if (res.data.status == "end") {
-                                setTimeout(() => {
-                                    post("del_message", {
-                                        id: 0
-                                    }).then(rest => {
-                                        if (rest.status == "200") {
-                                            location.reload();
-                                        }
-                                    })
-                                }, 3000);
+                            // if (res.data.status == "end") {
+                            //     setTimeout(() => {
+                            //         post("del_message", {
+                            //             id: 0
+                            //         }).then(rest => {
+                            //             if (rest.status == "200") {
+                            //                 location.reload();
+                            //             }
+                            //         })
+                            //     }, 3000);
 
-                            }
+                            // }
                         }
 
 
@@ -563,8 +564,6 @@
                 })
             }, 1000);
         }
-
-        hasil_tap();
     </script>
 </body>
 
