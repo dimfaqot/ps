@@ -545,7 +545,7 @@
                             html += '</div>';
                             $('.messages').html(html);
 
-                            if (res.data.status == "end") {
+                            if (res.data.status == "end" || status == "400") {
                                 setTimeout(() => {
                                     post("del_message", {
                                         id: 0
