@@ -704,7 +704,7 @@ class Api extends BaseController
                 gagal_arduino('Kartu berbeda!.');
             }
 
-            $dbh = db('hutangs');
+            $dbh = db('hutang');
             $qh = $dbh->where('user_id', $user_m['id'])->where('status', 0)->get()->getResultArray();
             $total = 0;
             if (!$qh) {
@@ -717,10 +717,10 @@ class Api extends BaseController
             $saldo = saldo($user_m);
 
             if ($saldo < $total) {
-                message($q['kategori'], "Saldo tidak cukup!.", 400, rupiah($saldo) . " < " . rupiah($total));
+                message($q['kategori'], $user_m["nama"] . ", saldo tidak cukup!.", 400, rupiah($saldo) . " < " . rupiah($total));
                 clear_tabel('booking');
                 clear_tabel('api');
-                gagal_arduino("Saldo tidak cukup!.", rupiah($saldo) . " < " . rupiah($total), $user_m["nama"]);
+                gagal_arduino($user_m["nama"] . ", Saldo tidak cukup!.", rupiah($saldo) . " < " . rupiah($total), $user_m["nama"]);
             } else {
                 $total_2 = 0;
                 foreach ($qh as $i) {
@@ -744,7 +744,7 @@ class Api extends BaseController
             $db = db('api');
             $data = ['status' => $decode["uid"]];
             if ($db->insert($data)) {
-                $dbh = db('hutangs');
+                $dbh = db('hutang');
                 $qh = $dbh->where('user_id', $user['id'])->where('status', 0)->get()->getResultArray();
                 $total = 0;
                 foreach ($qh as $i) {
@@ -815,22 +815,31 @@ class Api extends BaseController
             gagal_arduino("Kode harga di unit tidak ada!.");
         }
         $biaya = $qs['value_int'] * $q['durasi'];
+        if ($user['role'] == "Root") {
+            $biaya == 0;
+        }
         $fulus = saldo($user);
-        if ($biaya < $fulus) {
+        if ($biaya > $fulus) {
             clear_tabel('booking');
-            message($q['kategori'], "Saldo tidak cukup!.", 400);
-            gagal_arduino("Saldo tidak cukup!.");
+            message($q['kategori'], $user["nama"] . ", Saldo tidak cukup!.", 400, rupiah($fulus) . " < " . rupiah($biaya));
+            gagal_arduino($user["nama"] . ", Saldo tidak cukup!.", rupiah($fulus) . " < " . rupiah($biaya));
         }
 
         $time = time();
 
+        $durasi_main = $time + ((60 * 60) * $q['durasi']);
+        $durasi_jam = $q["durasi"] * 60;
+        if ($user['role'] == "Root") {
+            $durasi_main = $time + ((60 * 60) * 10);
+            $durasi_jam = 10 * 60;
+        }
         $datar = [
             'tgl' => $time,
             'unit_id' => $unit['id'],
             'meja' => $meja,
             'dari' => $time,
-            'ke' => $time + ((60 * 60) * $q['durasi']),
-            'durasi' => $q["durasi"],
+            'ke' => $durasi_main,
+            'durasi' => $durasi_jam,
             'is_active' => 1,
             'biaya' => $biaya,
             'diskon' => 0,
@@ -851,8 +860,111 @@ class Api extends BaseController
                 gagal_arduino("Update saldo gagal!.");
             } else {
                 clear_tabel('booking');
-                message($q['kategori'], "Transaksi sukses", 200, "Saldo: " . rupiah($sal));
-                sukses_arduino("Transaksi sukses.", "Saldo: " . rupiah($sal));
+                message($q['kategori'], $user['nama'] . " sukses bertansaksi " . rupiah($biaya), 200, rupiah($sal));
+                sukses_arduino($user['nama'] . " sukses bertansaksi " . rupiah($biaya), rupiah($sal));
+            }
+        } else {
+            clear_tabel('booking');
+            message($q['kategori'], "Update meja gagal!.", 400);
+            gagal_arduino("Update meja gagal!.");
+        }
+    }
+    public function tap_booking_billiard()
+    {
+        $jwt = $this->request->getVar('jwt');
+        $decode = decode_jwt_fulus($jwt);
+
+        $db = db('booking');
+        $q = $db->get()->getRowArray();
+
+        if (!$q) {
+            message($q['kategori'], "Data booking tidak ditemukan!.", 400);
+            gagal_arduino('Data booking tidak ditemukan!');
+        }
+
+        $dbu = db('users');
+        $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
+
+        if (!$user) {
+            clear_tabel('booking');
+            message($q['kategori'], "Akses kartu ditolakl!.", 400);
+            gagal_arduino('Akses kartu ditolakl!.');
+        }
+
+
+        $dbm = db('jadwal_2');
+        $meja = $dbm->where('meja', $q['meja'])->get()->getRowArray();
+
+        if (!$meja) {
+            clear_tabel('booking');
+            message($q['kategori'], "Meja tidak ditemukan!.", 400);
+            gagal_arduino("Saldo", "Meja tidak ditemukan!.");
+        }
+
+        if ($meja['is_active'] == 1) {
+            clear_tabel('booking');
+            message($q['kategori'], "Meja aktif!.", 400);
+            gagal_arduino("Meja aktif!.");
+        }
+
+        $harga = (int)$meja['harga'] * (int)$q['durasi'];
+        if ($user['role'] == "Root") {
+            $harga = 0;
+        }
+        $decode_fulus = decode_jwt_fulus($user['fulus']);
+        $fulus = (int)$decode_fulus['fulus'];
+        if ($fulus < $harga) {
+            clear_tabel('booking');
+            message($q['kategori'], $user["nama"] . ", Saldo tidak cukup!.", 400, rupiah($fulus) . " < " . rupiah($harga));
+            gagal_arduino($user["nama"] . ", Saldo tidak cukup!.", rupiah($fulus) . " < " . rupiah($harga));
+        }
+
+        $time_now = time();
+        $meja['is_active'] = 1;
+        $meja['start'] = $time_now;
+
+        $endtime = $time_now + ((60 * 60) * $q['durasi']);
+        $durasi_jam = $q['durasi'] * 60;
+
+        if ($user['role'] == "Root") {
+            $endtime = $time_now + ((60 * 60) * 10);
+            $durasi_jam = 10 * 60;
+        }
+        $dbm->where('id', $meja['id']);
+        if ($dbm->update($meja)) {
+            $data = [
+                'meja_id' => $meja['id'],
+                'meja' => "Meja " . $meja['meja'],
+                'tgl' => $time_now,
+                'durasi' => $durasi_jam,
+                'petugas' => $user['nama'],
+                'biaya' => $harga,
+                'diskon' => 0,
+                'start' => $time_now,
+                'end' => $endtime,
+                'is_active' => 1,
+                'harga' => $meja['harga'],
+                'metode' => 'Tap'
+            ];
+
+            $dbb = db('billiard_2');
+            if ($dbb->insert($data)) {
+                $sal = $fulus - $harga;
+                $user['fulus'] = encode_jwt_fulus(['fulus' => $sal]);
+                $dbu->where('id', $user['id']);
+                if ($dbu->update($user)) {
+                    clear_tabel('booking');
+                    message($q['kategori'], $user['nama'] . " sukses bertransaksi sebesar " . rupiah($harga), 200, "Saldo: " . rupiah($sal));
+                    sukses_arduino($user['nama'] . " sukses bertransaksi sebesar " . rupiah($harga), "Saldo: " . rupiah($sal));
+                } else {
+                    clear_tabel('booking');
+                    message($q['kategori'], "Update saldo gagal!.", 400);
+                    gagal_arduino("Update saldo gagal!.");
+                }
+            } else {
+                clear_tabel('booking');
+                message($q['kategori'], "Insert billiard gagal!.", 400);
+                gagal_arduino("Insert billiard gagal!.");
             }
         } else {
             clear_tabel('booking');
@@ -895,26 +1007,6 @@ class Api extends BaseController
             sukses_arduino('Silahkan tap!.', $q['kategori']);
         } else {
             gagal_arduino('Silahkan pilih meja!');
-        }
-    }
-
-    public function add_message()
-    {
-        $jwt = $this->request->getVar('jwt');
-        $encode = decode_jwt_fulus($jwt);
-
-        $db = db('message');
-
-        $data = [
-            'status' => $encode['status'],
-            'message' => $encode['message'],
-            'message_2' => $encode['message_2'],
-            'kategori' => $encode['kategori']
-        ];
-        if ($db->insert($data)) {
-            sukses_arduino("Insert sukses.", $data);
-        } else {
-            gagal_arduino("Insert gagal.", $data);
         }
     }
 }

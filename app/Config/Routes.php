@@ -21,11 +21,11 @@ $routes->post('/api/get_booking', 'Api::get_booking');
 $routes->post('/api/end_booking', 'Api::end_booking');
 $routes->post('/api/del_booking', 'Api::del_booking');
 $routes->post('/api/add_message', 'Api::add_message');
-$routes->post('/api/tap_booking/Daftar', 'Api::tap_booking_daftar');
 $routes->post('/api/Daftar', 'Api::tap_booking_daftar');
 $routes->post('/api/Saldo', 'Api::tap_booking_saldo');
 $routes->post('/api/Topup', 'Api::tap_booking_topup');
 $routes->post('/api/Hutang', 'Api::tap_booking_hutang');
+$routes->post('/api/Ps', 'Api::tap_booking_ps');
 
 
 $routes->get('/login', 'Login::index');
