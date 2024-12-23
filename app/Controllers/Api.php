@@ -734,7 +734,7 @@ class Api extends BaseController
                 $db->where('id', $q['id']);
                 $db->update($q);
             } else {
-                $data = ['kategori' => $decode["data6"], 'message' => $decode['data3'], 'status' => $decode['member_uid'], 'uang' => $decode['data4'], 'admin' => $decode['data5']];
+                $data = ['kategori' => $decode["data6"], 'message' => $decode['data3'], 'status' => "end", 'uang' => $decode['data4'], 'admin' => $decode['data5']];
                 $db->insert($data);
             }
 
