@@ -662,8 +662,8 @@ class Api extends BaseController
             if ($check_role['role'] !== 'Root') {
                 $dbu->where('role', 'Member');
             }
-            $user_m = $db->get()->getRowArray();
-            sukses_js("Ok", $user_m);
+            $user_m = $dbu->get()->getRowArray();
+            // sukses_js("Ok", $user_m);
             if (!$user_m) {
                 message($q['kategori'], "Kartu tidak dikenal!.", 400);
                 clear_tabel('booking');
