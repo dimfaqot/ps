@@ -498,25 +498,35 @@ class Api extends BaseController
         if ($member_uid == true) {
             $dba = db('api');
             $qa = $dba->get()->getRowArray();
-            if (!$qa) {
+            // api harus ada uid dan uid harus admin
+            if ($qa) {
+                $admin = $dbu->where('uid', $qa['status'])->get()->getRowArray();
+                if (!$admin) {
+                    clear_tabel('booking');
+                    message($q['kategori'], "Akses admin dibutuhkan!.", 400);
+                    gagal_arduino('Akses admin dibutuhkan!.');
+                } else {
+                    if ($admin['role'] !== 'Root') {
+                        clear_tabel('booking');
+                        clear_tabel('api');
+                        message($q['kategori'], "Akses admin dibutuhkan!", 400);
+                        gagal_arduino('Akses admin dibutuhkan!.');
+                    }
+                }
+            } else {
                 clear_tabel('booking');
                 message($q['kategori'], "Akses admin dibutuhkan!.", 400);
                 gagal_arduino('Akses admin dibutuhkan!.');
             }
+
+            // check uid apakah sudah terdaftar/tidak boleh exist
             $uid_exist = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
-            if ($uid_exist) {
-                message($q['kategori'], "Uid sudah terdaftar!.", 400);
-                clear_tabel('booking');
-                clear_tabel('api');
-                gagal_arduino("Uid sudah terdaftar!.");
-            }
+            konfirmasi_uid_exist($uid_exist, $q);
+
+            // check user member apakah ada/tidak boleh tidak ada
             $user_m = $dbu->where('id', $q["durasi"])->where('role', 'Member')->get()->getRowArray();
-            if (!$user_m) {
-                message($q['kategori'], "User tidak ada!.", 400);
-                clear_tabel('booking');
-                clear_tabel('api');
-                gagal_arduino("User tidak ada!.");
-            }
+            konfirmasi_user_exist($user_m, $q);
+
             $uid_member = $decode['uid'];
             if ($uid_member == '') {
                 $uid_member = $decode("member_uid");
@@ -524,7 +534,7 @@ class Api extends BaseController
             $user_m["uid"] = $uid_member;
             $dbu->where('id', $q['durasi']);
             if ($dbu->update($user_m)) {
-                sukses_arduino("Pendaftaran sukses.");
+                sukses_arduino($user_m['nama'] . " sukses didaftarkan.", "", $admin["nama"]);
             }
         } else {
             clear_tabel('api');
@@ -555,11 +565,27 @@ class Api extends BaseController
         if ($member_uid == true) {
             $dba = db('api');
             $qa = $dba->get()->getRowArray();
-            if (!$qa) {
-                message($q['kategori'], "Akses admin dibutuhkan!.", 400);
+            // api harus ada uid dan uid harus admin
+            if ($qa) {
+                $admin = $dbu->where('uid', $qa['status'])->get()->getRowArray();
+                if (!$admin) {
+                    clear_tabel('booking');
+                    message($q['kategori'], "Akses admin dibutuhkan!.", 400);
+                    gagal_arduino('Akses admin dibutuhkan!.');
+                } else {
+                    if ($admin['role'] !== 'Root') {
+                        clear_tabel('booking');
+                        clear_tabel('api');
+                        message($q['kategori'], "Akses admin dibutuhkan!", 400);
+                        gagal_arduino('Akses admin dibutuhkan!.');
+                    }
+                }
+            } else {
                 clear_tabel('booking');
+                message($q['kategori'], "Akses admin dibutuhkan!.", 400);
                 gagal_arduino('Akses admin dibutuhkan!.');
             }
+
 
             $uid_member = $decode['uid'];
             if ($uid_member == '') {
@@ -576,13 +602,13 @@ class Api extends BaseController
 
 
             $fulus = saldo($user_m);
-
-            $saldo = $fulus + ($q["durasi"] * 10000);
+            $tp = ($q["durasi"] * 10000);
+            $saldo = $fulus + $tp;
             $user_m["fulus"] = encode_jwt_fulus(["fulus" => $saldo]);
 
             $dbu->where('id', $user_m['id']);
             if ($dbu->update($user_m)) {
-                sukses_arduino("Topup sukses.", rupiah($saldo));
+                sukses_arduino($user_m['nama'] . " sukses topup sebesar " . rupiah($tp), rupiah($saldo), $admin['nama']);
             }
         } else {
             clear_tabel('api');
@@ -613,7 +639,7 @@ class Api extends BaseController
         }
 
         $saldo = saldo($user);
-        sukses_arduino("Cek saldo berhasil.", rupiah($saldo));
+        sukses_arduino($user['nama'] . " berhasil cek saldo.", rupiah($saldo));
     }
 
     public function tap_booking_hutang()
@@ -709,7 +735,7 @@ class Api extends BaseController
                 $sal = $saldo - $total_2;
                 $user_m['fulus'] = encode_jwt_fulus(['fulus' => $sal]);
                 if ($dbu->update($user_m)) {
-                    sukses_arduino("Transaksi sukses", rupiah($sal), rupiah($total_2), $user_m["nama"]);
+                    sukses_arduino($user['nama'] . " sukses bertransaksi sebesar " . rupiah($total_2), rupiah($sal));
                 }
             }
         } else {
@@ -834,7 +860,8 @@ class Api extends BaseController
             $q['status'] = $decode["member_uid"];
             $q['message'] = $decode["data3"];
             $q['message_2'] = $decode["data4"];
-            $q['kategori'] = $decode["data5"];
+            $q['nama'] = $decode["data5"];
+            $q['kategori'] = $decode["data6"];
             $db->update($q);
             sukses_arduino($decode["data3"]);
         }

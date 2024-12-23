@@ -133,6 +133,7 @@ function sukses_js($pesan, $data = null, $data2 = null, $data3 = null, $data4 = 
 }
 function sukses_arduino($pesan, $data = "", $data2 = "", $data3 = "", $data4 = "", $data5 = "")
 {
+    // nama harus di data2, uang harus data
     $data = [
         'status' => '200',
         'message' => $pesan,
@@ -757,15 +758,16 @@ function clear_tabel($tabel)
     }
 }
 
-function message($kategori, $msg, $status, $msg2 = "")
+function message($kategori, $msg, $status, $msg2 = "", $msg3 = "")
 {
     $db = db('message');
     $q = $db->get()->getRowArray();
     if ($q) {
         $q['kategori'] = $kategori;
         $q['message'] = $msg;
-        $q['message_2'] = $msg2;
+        $q['uang'] = $msg2;
         $q['status'] = $status;
+        $q['admin'] = $msg3;
         $db->where('id', $q['id']);
         $db->update($q);
     } else {
@@ -823,5 +825,25 @@ function konfirmasi_root($booking, $user)
             message($booking['kategori'], "Gagal api!.", 400);
             gagal_arduino('Gagal api!.');
         }
+    }
+}
+
+
+function konfirmasi_uid_exist($uid_exist, $booking)
+{
+    if ($uid_exist) {
+        message($booking['kategori'], "Uid sudah terdaftar!.", 400);
+        clear_tabel('booking');
+        clear_tabel('api');
+        gagal_arduino("Uid sudah terdaftar!.");
+    }
+}
+function konfirmasi_user_exist($user_m, $booking)
+{
+    if (!$user_m) {
+        message($booking['kategori'], "User tidak ada!.", 400);
+        clear_tabel('booking');
+        clear_tabel('api');
+        gagal_arduino("User tidak ada!.");
     }
 }
