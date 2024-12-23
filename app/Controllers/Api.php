@@ -730,6 +730,7 @@ class Api extends BaseController
             $q['uang'] = $decode["data4"];
             $q['admin'] = $decode["data5"];
             $q['kategori'] = $decode["data6"];
+            $db->where('id', $q['id']);
             $db->update($q);
 
             $dbl = db("laporan");
