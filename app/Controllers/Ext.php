@@ -209,7 +209,7 @@ class Ext extends BaseController
         $value = clear($this->request->getVar('value'));
         $db = db('users');
 
-        $q = $db->like('nama', $value, "both")->limit(8)->get()->getResultArray();
+        $q = $db->whereIn('role', ['Member'])->like('nama', $value, "both")->limit(8)->get()->getResultArray();
         sukses_js('Ok', $q);
     }
 
@@ -218,17 +218,17 @@ class Ext extends BaseController
         $db = db('message');
         $q = $db->get()->getRowArray();
 
-        $dbb = db('booking');
-        $qb = $dbb->get()->getRowArray();
-
-        if ($qb) {
-            if ($q) {
-                sukses_js("Proses...");
-            } else {
-                sukses_js($q);
-            }
+        if (!$q) {
+            gagal_js("Tidak ada peesan.!", $q);
         } else {
-            gagal_js('Gagal!.');
+            sukses_js("Sukses.", $q);
         }
+    }
+    public function del_message()
+    {
+        clear_tabel("message");
+        clear_tabel("api");
+        clear_tabel("booking");
+        sukses_js("Delete sukses!.");
     }
 }

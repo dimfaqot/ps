@@ -112,6 +112,15 @@
         </div>
     </div>
 </div>
+
+<!-- modal search_db-->
+<div class="modal fade" id="search_db" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content modal_body_search_db">
+
+        </div>
+    </div>
+</div>
 <script>
     $(document).on('click', '.pembayaran', function(e) {
         e.preventDefault();
@@ -249,6 +258,84 @@
 
     });
 
+    $(document).on('click', '.btn_tap', function(e) {
+        e.preventDefault();
+
+        let html = '';
+        html += '<div class="input_light">';
+        html += '<input autofocus class="search_db_input" placeholder="Ketik sesuatu..." value="" style="width: 100%;" type="text">';
+        html += '<section class="bg_3 sticky-top bg_3" style="z-index:10">';
+        html += '<section style="position:absolute;width:100%" class="bg_3 px-2 body_list_search_db">';
+
+        html += '</section>';
+        html += '</section>';
+        html += '</div>';
+        $('.modal_body_search_db').html(html);
+        let myModal = document.getElementById('search_db');
+        let modal = bootstrap.Modal.getOrCreateInstance(myModal)
+        modal.show();
+
+    })
+    $(document).on('keyup', '.search_db_input', function(e) {
+        e.preventDefault();
+        let value = $(this).val();
+        post('hutang/search_db', {
+            value
+        }).then(res => {
+            if (res.status == '200') {
+                let html = '';
+                res.data.forEach((e, i) => {
+                    html += '<a data-id="' + e.id + '" style="font-size:14px" href="" class="link_3 d-block rounded border-bottom insert_value">' + e.nama + '</a>';
+                })
+
+                $('.body_list_search_db').html(html);
+            } else {
+                gagal_with_button(res.message);
+            }
+        })
+
+    })
+
+    $(document).on('click', '.insert_value', function(e) {
+        e.preventDefault();
+        let id = $(this).data('id');
+        let data = [];
+        let elem_list_belanja = document.querySelectorAll('.list_belanja');
+
+        elem_list_belanja.forEach((e, i) => {
+            let layanan_id = e.getAttribute('data-barang_id');
+            let index = e.getAttribute('data-index');
+
+            let qty = parseInt($('.list_qty_' + index).text());
+            let diskon = parseInt(str_replace(".", "", $('.list_diskon_' + index).text()));
+            let harga = parseInt(str_replace(".", "", $('.list_harga_' + index).text()));
+            let barang = $('.list_barang_' + index).text();
+
+            data.push({
+                layanan_id,
+                qty,
+                diskon
+            });
+        })
+        post('barber/hutang', {
+            data,
+            user_id: id
+        }).then(res => {
+
+            // console.log(args_values);
+            if (res.status == '200') {
+                sukses(res.message);
+                setTimeout(() => {
+                    location.reload();
+                }, 1200);
+
+            } else {
+                gagal_with_button(res.message);
+            }
+        })
+
+
+    })
 
     $(document).on('click', '.btn_cari_barang', function(e) {
         e.preventDefault();
@@ -568,45 +655,45 @@
             }
         })
     })
-    $(document).on('click', '.btn_tap', function(e) {
-        e.preventDefault();
+    // $(document).on('click', '.btn_tap', function(e) {
+    //     e.preventDefault();
 
-        let data = [];
-        let elem_list_belanja = document.querySelectorAll('.list_belanja');
+    //     let data = [];
+    //     let elem_list_belanja = document.querySelectorAll('.list_belanja');
 
-        let total_harga = 0;
-        elem_list_belanja.forEach((e, i) => {
-            let layanan_id = e.getAttribute('data-barang_id');
-            let index = e.getAttribute('data-index');
+    //     let total_harga = 0;
+    //     elem_list_belanja.forEach((e, i) => {
+    //         let layanan_id = e.getAttribute('data-barang_id');
+    //         let index = e.getAttribute('data-index');
 
-            let qty = parseInt($('.list_qty_' + index).text());
-            let diskon = parseInt(str_replace(".", "", $('.list_diskon_' + index).text()));
-            let harga = parseInt(str_replace(".", "", $('.list_harga_' + index).text()));
-            let barang = $('.list_barang_' + index).text();
+    //         let qty = parseInt($('.list_qty_' + index).text());
+    //         let diskon = parseInt(str_replace(".", "", $('.list_diskon_' + index).text()));
+    //         let harga = parseInt(str_replace(".", "", $('.list_harga_' + index).text()));
+    //         let barang = $('.list_barang_' + index).text();
 
-            data.push({
-                layanan_id,
-                qty,
-                diskon
-            });
+    //         data.push({
+    //             layanan_id,
+    //             qty,
+    //             diskon
+    //         });
 
-            total_harga += harga;
-        })
+    //         total_harga += harga;
+    //     })
 
 
-        post('barber/pembayaran_tap', {
-            data
-        }).then(res => {
-            if (res.status == '200') {
-                sukses(res.message);
+    //     post('barber/pembayaran_tap', {
+    //         data
+    //     }).then(res => {
+    //         if (res.status == '200') {
+    //             sukses(res.message);
 
-                $('#pembayaran').on('hidden.bs.modal', function() {
-                    location.reload();
-                });
-            } else {
-                gagal_with_button(res.message);
-            }
-        })
-    })
+    //             $('#pembayaran').on('hidden.bs.modal', function() {
+    //                 location.reload();
+    //             });
+    //         } else {
+    //             gagal_with_button(res.message);
+    //         }
+    //     })
+    // })
 </script>
 <?= $this->endSection() ?>

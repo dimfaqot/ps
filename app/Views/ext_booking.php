@@ -228,12 +228,38 @@
             $('.target_menu').addClass('d-none');
         })
 
+        const saldo = () => {
+            if (!data.kategori) {
+                gagal("Kategori belum dipilih!.");
+                return;
+            }
+            post("add_booking", {
+                data
+            }).then(res => {
+                if (res.status == "200") {
+                    $(".date_time").addClass("d-none");
+                    let htmy = "";
+                    htmy += '<div style="margin-top: 250px;">';
+                    htmy += '<h6 class="text-center text-light">Segera tap kartu...!</h6>';
+                    htmy += '</div>';
+                    $('.messages').html(htmy);
+                }
+            })
+        }
+
+
 
         $(document).on('click', '.btn_menu', function(e) {
             e.preventDefault();
 
 
             let menu = $(this).data('menu');
+            if (menu == "Saldo") {
+                data["kategori"] = "Saldo";
+                $(this).addClass("select");
+                saldo();
+                return;
+            }
 
             $(".durasi").removeClass("d-none");
             $(".target_durasi").addClass("d-none");
@@ -289,6 +315,7 @@
             call_durasi();
 
         })
+
 
 
         $(document).on('click', '.meja', function(e) {
@@ -404,6 +431,12 @@
                 data
             }).then(res => {
                 if (res.status == "200") {
+                    $(".date_time").addClass("d-none");
+                    let htmy = "";
+                    htmy += '<div style="margin-top: 250px;">';
+                    htmy += '<h6 class="text-center text-light">Segera tap kartu...!</h6>';
+                    htmy += '</div>';
+                    $('.messages').html(htmy);
                     sukses(res.message);
                     hasil_tap(data);
                     let x = 0;
@@ -416,11 +449,18 @@
                         if (x < 21) {
                             $('.content').html(html);
                         } else {
-                            gagal("Waktu tap habis!.");
+                            post("del_message", {
+                                id: 0
+                            }).then(rest => {
+                                if (rest.status == "200") {
+                                    gagal("Waktu tap habis!.");
 
-                            setTimeout(() => {
-                                location.reload();
-                            }, 1200);
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 3200);
+                                }
+                            })
+
                         }
                     }, 1000);
                 } else {
@@ -480,7 +520,7 @@
                 if (kategori && kategori !== "Kantin") {
                     get_durasi(kategori);
                 }
-                if (kategori == undefined || kategori == "Topup" || kategori == "Kantin" || kategori == "Daftar" || kategori == "Saldo" || kategori == "Hutang") {
+                if (kategori == undefined || kategori == "Topup" || kategori == "Barber" || kategori == "Daftar" || kategori == "Saldo" || kategori == "Hutang") {
                     clearInterval(intervalId);
                     console.log('Interval stopped after 5 iterations.');
                 }
@@ -493,36 +533,29 @@
                     data
                 }).then(res => {
                     if (res.status == "200") {
-
-                        if (res.data == null) {
-
-                            let htmy = "";
-                            htmy += '<div style="margin-top: 250px;">';
-                            htmy += '<h6 class="text-center text-light">Segera tap kartu...!</h6>';
-                            htmy += '</div>';
-                            $('.messages').html(htmy);
-
-                            setTimeout(() => {
-                                let htmx = "";
-                                htmx += '<div style="margin-top: 250px;">';
-                                htmx += '<h6 class="text-center text-light">Segera tap kartu...!</h6>';
-                                htmx += '</div>';
-                                $('.messages').html(htmx);
-                            }, 2000);
-                        } else {
+                        if (res.data != null) {
                             let html = '';
                             let status = res.data.status;
                             html += '<div style="margin-top: 250px;">';
                             html += '<h6 class="text-center ' + (status == "400" ? "text-danger" : "text-light") + '">' + res.data.message + '</h6>';
-                            if (res.data.message_2 !== "") {
-                                html += '<h5 class="text-center ' + (status == "400" ? "text-danger" : "text-light") + '">' + res.data.message_2 + '</h5>';
+                            if (res.data.uang !== "") {
+                                html += '<h5 class="text-center ' + (status == "400" ? "text-danger" : "text-light") + '">' + res.data.uang + '</h5>';
                             }
                             html += '</div>';
                             $('.messages').html(html);
 
-                            setTimeout(() => {
-                                location.reload();
-                            }, 7000);
+                            if (res.data.status == "end") {
+                                setTimeout(() => {
+                                    post("del_message", {
+                                        id: 0
+                                    }).then(rest => {
+                                        if (rest.status == "200") {
+                                            location.reload();
+                                        }
+                                    })
+                                }, 3000);
+
+                            }
                         }
 
 

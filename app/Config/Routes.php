@@ -27,6 +27,7 @@ $routes->post('/api/Topup', 'Api::tap_booking_topup');
 $routes->post('/api/Hutang', 'Api::tap_booking_hutang');
 $routes->post('/api/Ps', 'Api::tap_booking_ps');
 $routes->post('/api/Billiard', 'Api::tap_booking_billiard');
+$routes->post('/api/Barber', 'Api::tap_booking_barber');
 
 
 $routes->get('/login', 'Login::index');
@@ -186,6 +187,7 @@ $routes->post('/get_durasi', 'Ext::get_durasi');
 $routes->post('/daftar/search_db', 'Ext::search_db');
 $routes->post('/hasil_tap', 'Ext::hasil_tap');
 $routes->post('/add_booking', 'Ext::add_booking');
+$routes->post('/del_message', 'Ext::del_message');
 
 
 
@@ -206,7 +208,7 @@ $routes->post('/pengeluaran_barber/update', 'Pengeluaran_barber::update');
 $routes->get('/barber', 'Barber::index');
 $routes->post('/barber/add', 'Barber::add');
 $routes->post('/barber/pembayaran', 'Barber::pembayaran');
-$routes->post('/barber/pembayaran_tap', 'Barber::pembayaran_tap');
+$routes->post('/barber/hutang', 'Barber::hutang');
 
 // aturan __________________________________
 $routes->get('/aturan', 'Aturan::index');
@@ -223,6 +225,7 @@ $routes->post('/hutang/data_hutang', 'Hutang::data_hutang');
 $routes->post('/hutang/add', 'Hutang::add');
 $routes->post('/hutang/lunas', 'Hutang::lunas');
 $routes->post('/hutang/bayar_lunas', 'Hutang::bayar_lunas');
+$routes->post('/hutang/search_db', 'Hutang::search_db');
 
 // Notif __________________________________
 $routes->get('/firebase_notif', 'Firebase_notif::index');

@@ -286,4 +286,13 @@ class Hutang extends BaseController
             gagal_js('Gagal diinput: ' . implode(", ", $err));
         }
     }
+
+    public function search_db()
+    {
+        $value = clear($this->request->getVar('value'));
+        $db = db('users');
+
+        $q = $db->whereIn('role', ['Member'])->like('nama', $value, "both")->limit(8)->get()->getResultArray();
+        sukses_js('Ok', $q);
+    }
 }

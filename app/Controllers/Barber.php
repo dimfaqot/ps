@@ -75,42 +75,41 @@ class Barber extends BaseController
             gagal_js(implode(", ", $err));
         }
     }
-    public function pembayaran_tap()
+    public function hutang()
     {
-        $data = json_decode(json_encode($this->request->getVar('data')), true);
-
-        $db = db('layanan');
-        $dbk = db('barber');
-
-        $err = [];
-        $total_harga = 0;
+        $data = json_decode(json_encode($this->request->getVar("data")), true);
+        $user_id = clear($this->request->getVar("user_id"));
+        $dbl = db('layanan');
+        $dbh = db('hutang');
+        $dbu = db("users");
+        $user = $dbu->where('id', $user_id)->get()->getRowArray();
+        if (!$user) {
+            gagal_js("User id not found!.");
+        }
+        $no_nota = no_nota("barber");
         foreach ($data as $i) {
-            $q = $db->where('id', $i['layanan_id'])->get()->getRowArray();
+            $q = $dbl->where('id', $i['layanan_id'])->get()->getRowArray();
             if (!$q) {
                 $err[] = 'Id ' . $i['layanan_id'] . ' err';
                 continue;
             }
             $value = [
-                'layanan_id' => $i['layanan_id'],
+                "kategori" => "Barber",
+                "no_nota" => $no_nota,
+                "user_id" => $user['id'],
+                "nama" => $user['nama'],
+                "tgl" => time(),
+                "teller" => user()['nama'],
+                "status" => 0,
+                'barang_id' => $i['layanan_id'],
+                'barang' => $q['layanan'],
+                'harga_satuan' => $q['harga'],
                 'qty' => $i['qty'],
-                'layanan' => $q['layanan'],
-                'harga' => $q['harga'],
-                'tgl' => time(),
-                'diskon' => $i['diskon'],
-                'total_harga' => ($q['harga'] * $i['qty']) - $i['diskon'],
-                'metode' => 'Tap',
-                'status' => 0,
-                'petugas' => user()['nama']
+                'total_harga' => $q['harga'] * $i['qty']
             ];
-            $total_harga += $value['total_harga'];
-            if (!$dbk->insert($value)) {
-                $err[] = 'Insert to barber err';
-            }
+            $dbh->insert($value);
         }
-        if (count($err) <= 0) {
-            sukses_js('Sukses!. Segera tap kartu. Total: ' . $total_harga);
-        } else {
-            gagal_js(implode(", ", $err));
-        }
+
+        sukses_js("Sukses.");
     }
 }
