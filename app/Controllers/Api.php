@@ -708,7 +708,7 @@ class Api extends BaseController
             $qh = $dbh->where('user_id', $user_m['id'])->where('status', 0)->get()->getResultArray();
             $total = 0;
             if (!$qh) {
-                sukses_arduino("Hutang tidak ada.", $user_m["nama"]);
+                sukses_arduino($user_m['nama'] . " tidak berhutang.", $user_m["nama"]);
             } else {
                 foreach ($qh as $i) {
                     $total += $i['total_harga'];
@@ -743,8 +743,8 @@ class Api extends BaseController
             $db = db('api');
             $data = ['status' => $decode["uid"]];
             if ($db->insert($data)) {
-                message($q['kategori'], "Akses diterima.", 200, "Tap untuk melunasi...");
-                sukses_arduino('Akses diterima.', 'next', "Tap lagi untuk melunasi...", $user["nama"]);
+                message($q['kategori'], $user['nama'] . " berhasil mengakses data.", 200, "Tap untuk melunasi...");
+                sukses_arduino($user["nama"] . ' berhasil mengakses data.', 'next', "Tap lagi untuk melunasi...");
             }
         }
     }
@@ -859,10 +859,14 @@ class Api extends BaseController
             $q = $db->get()->getRowArray();
             $q['status'] = $decode["member_uid"];
             $q['message'] = $decode["data3"];
-            $q['message_2'] = $decode["data4"];
-            $q['nama'] = $decode["data5"];
+            $q['uang'] = $decode["data4"];
+            $q['admin'] = $decode["data5"];
             $q['kategori'] = $decode["data6"];
             $db->update($q);
+
+            $dbl = db("laporan");
+            $laporan = ['tgl' => time(), 'kategori' => $decode["data6"], 'message' => $decode['data3'], 'status' => $decode['member_uid'], 'uang' => $decode['data4'], 'admin' => $decode['data5']];
+            $dbl->insert($laporan);
             sukses_arduino($decode["data3"]);
         }
         clear_tabel($decode);

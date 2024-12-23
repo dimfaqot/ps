@@ -771,7 +771,7 @@ function message($kategori, $msg, $status, $msg2 = "", $msg3 = "")
         $db->where('id', $q['id']);
         $db->update($q);
     } else {
-        $data = ['kategori' => $kategori, 'message' => $msg, 'status' => $status, 'message_2' => $msg2];
+        $data = ['kategori' => $kategori, 'message' => $msg, 'status' => $status, 'uang' => $msg2, 'admin' => $msg3];
         $db->insert($data);
     }
 }
@@ -818,7 +818,7 @@ function konfirmasi_root($booking, $user)
         $db = db('api');
         $data = ['status' => $user["uid"]];
         if ($db->insert($data)) {
-            message($booking['kategori'], "Akses diterima.", 200, "Tap rfid member...");
+            message($booking['kategori'], $user['nama'] . " akses diterima.", 200, "Tap rfid member...");
             sukses_arduino('Akses diterima.', 'next');
         } else {
             clear_tabel('booking');
