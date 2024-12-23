@@ -670,8 +670,8 @@ class Api extends BaseController
                 clear_tabel('api');
                 gagal_arduino('Kartu tidak dikenal!.');
             }
-            sukses_arduino('Ok', $qa["status"], $member_uid);
-            if ($qa["status"] !== $member_uid) {
+
+            if ($qa["status"] !== $uid_member) {
                 message($q['kategori'], "Kartu berbeda!.", 400);
                 clear_tabel('booking');
                 clear_tabel('api');
