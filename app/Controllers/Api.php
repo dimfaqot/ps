@@ -663,7 +663,7 @@ class Api extends BaseController
                 $dbu->where('role', 'Member');
             }
             $user_m = $db->get()->getRowArray();
-
+            sukses_js("Ok", $user_m);
             if (!$user_m) {
                 message($q['kategori'], "Kartu tidak dikenal!.", 400);
                 clear_tabel('booking');
