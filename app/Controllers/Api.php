@@ -725,13 +725,18 @@ class Api extends BaseController
         if ($decode["uid"] == "message") {
             $db = db("message");
             $q = $db->get()->getRowArray();
-            $q['status'] = "end";
-            $q['message'] = $decode["data3"];
-            $q['uang'] = $decode["data4"];
-            $q['admin'] = $decode["data5"];
-            $q['kategori'] = $decode["data6"];
-            $db->where('id', $q['id']);
-            $db->update($q);
+            if ($q) {
+                $q['status'] = "end";
+                $q['message'] = $decode["data3"];
+                $q['uang'] = $decode["data4"];
+                $q['admin'] = $decode["data5"];
+                $q['kategori'] = $decode["data6"];
+                $db->where('id', $q['id']);
+                $db->update($q);
+            } else {
+                $data = ['kategori' => $decode["data6"], 'message' => $decode['data3'], 'status' => $decode['member_uid'], 'uang' => $decode['data4'], 'admin' => $decode['data5']];
+                $db->insert($data);
+            }
 
             $dbl = db("laporan");
             $laporan = ['tgl' => time(), 'kategori' => $decode["data6"], 'message' => $decode['data3'], 'status' => $decode['member_uid'], 'uang' => $decode['data4'], 'admin' => $decode['data5']];
