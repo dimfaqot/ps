@@ -656,14 +656,21 @@ class Api extends BaseController
                 $uid_member = $decode("member_uid");
             }
 
-            $user_m = $dbu->where('uid', $uid_member)->where('role', 'Member')->get()->getRowArray();
+            $check_role = $dbu->where('uid', $qa['status'])->get()->getRowArray();
+
+            $dbu->where('uid', $uid_member);
+            if ($check_role['role'] !== 'Role') {
+                $dbu->where('role', 'Member');
+            }
+            $user_m = $db->get()->getRowArray();
+
             if (!$user_m) {
                 message($q['kategori'], "Kartu tidak dikenal!.", 400);
                 clear_tabel('booking');
                 clear_tabel('api');
                 gagal_arduino('Kartu tidak dikenal!.');
             }
-
+            sukses_arduino('Ok', $qa["status"], $member_uid);
             if ($qa["status"] !== $member_uid) {
                 message($q['kategori'], "Kartu berbeda!.", 400);
                 clear_tabel('booking');
@@ -705,7 +712,7 @@ class Api extends BaseController
         } else {
             clear_tabel('api');
             $db = db('api');
-            $data = ['status' => $user["uid"]];
+            $data = ['status' => $decode["uid"]];
             if ($db->insert($data)) {
                 message($q['kategori'], "Akses diterima.", 200, "Tap untuk melunasi...");
                 sukses_arduino('Akses diterima.', 'next', "Tap lagi untuk melunasi...");
