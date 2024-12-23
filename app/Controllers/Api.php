@@ -777,14 +777,14 @@ class Api extends BaseController
 
         if (!$user) {
             clear_tabel('booking');
-            message($q['kategori'], "Akses kartu ditolakl!.", 400);
-            gagal_arduino('Akses kartu ditolakl!.');
+            message($q['kategori'], "Kartu tidak terdaftar!.", 400);
+            gagal_arduino("Kartu tidak terdaftar!.");
         }
 
         $meja = "Meja " . $q['meja'];
 
-        $dbu = db('unit');
-        $unit = $dbu->where('meja', $meja)->get()->getRowArray();
+        $dbun = db('unit');
+        $unit = $dbun->where('unit', $meja)->get()->getRowArray();
 
         if (!$unit) {
             clear_tabel('booking');
@@ -848,12 +848,13 @@ class Api extends BaseController
         ];
 
         if ($dbr->insert($datar)) {
-            $unit['status'] = 'Available';
-            $dbu->where('id', $unit['id']);
-            $dbu->update($unit);
+            $unit['status'] = 'In Game';
+            $dbun->where('id', $unit['id']);
+            $dbun->update($unit);
             $sal = $fulus - $biaya;
             $user['fulus'] = encode_jwt_fulus(['fulus' => $sal]);
-            $db->where('id', $user['id']);
+
+            $dbu->where('id', $user['id']);
             if (!$dbu->update($user)) {
                 clear_tabel('booking');
                 message($q['kategori'], "Update saldo gagal!.", 400);
