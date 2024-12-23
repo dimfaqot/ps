@@ -708,7 +708,7 @@ class Api extends BaseController
             $qh = $dbh->where('user_id', $user_m['id'])->where('status', 0)->get()->getResultArray();
             $total = 0;
             if (!$qh) {
-                sukses_arduino($user_m['nama'] . " tidak berhutang.", $user_m["nama"]);
+                sukses_arduino($user_m['nama'] . " tidak berhutang.");
             } else {
                 foreach ($qh as $i) {
                     $total += $i['total_harga'];
@@ -727,7 +727,7 @@ class Api extends BaseController
                     $i['status'] = 1;
 
                     $dbh->where('id', $i['id']);
-                    if ($db->update($i)) {
+                    if ($dbh->update($i)) {
                         $total_2 += $i['total_harga'];
                     }
                 }
