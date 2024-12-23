@@ -868,7 +868,7 @@ class Api extends BaseController
         if ($decode["uid"] == "message") {
             $db = db("message");
             $q = $db->get()->getRowArray();
-            $q['status'] = $decode["member_uid"];
+            $q['status'] = "end";
             $q['message'] = $decode["data3"];
             $q['uang'] = $decode["data4"];
             $q['admin'] = $decode["data5"];
