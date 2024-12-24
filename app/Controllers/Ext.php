@@ -240,7 +240,6 @@ class Ext extends BaseController
                 }
             }
         }
-        sukses_js('Ok', $res);
         if (!$res) {
             gagal_js("Kosong");
         } else {
