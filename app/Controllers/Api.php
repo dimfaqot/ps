@@ -423,7 +423,8 @@ class Api extends BaseController
                                 'start' => $i['barang_id'],
                                 'end' => $i['barang_id'] + ($i['qty'] * 60),
                                 'is_active' => 0,
-                                'harga' => $i['harga_satuan']
+                                'harga' => $i['harga_satuan'],
+                                "metode" => "Tap"
                             ];
 
                             if ($dbb->insert($value)) {

@@ -98,6 +98,7 @@ class Rental extends BaseController
             'dari' => $time,
             'ke' => ($durasi == -1 ? $durasi : $time + (60 * $durasi)),
             'durasi' => $durasi,
+            'metode' => 'Cash',
             'is_active' => 1,
             'petugas' => user()['nama']
         ];
