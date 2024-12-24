@@ -234,10 +234,13 @@ class Ext extends BaseController
             $user = $dbu->where('uid', $q['status'])->get()->getRowArray();
             if ($user) {
                 $dbh = db("hutang");
-                $res = $dbh->select("tgl,barang,total_harga,kategori")->where('user_id', $user['id'])->get()->getResultArray();
+                $qh = $dbh->select("tgl,barang,total_harga,kategori")->where('status', 0)->where('user_id', $user['id'])->get()->getResultArray();
+                if (count($qh) > 0) {
+                    $res = $qh;
+                }
             }
         }
-
+        sukses_js('Ok', $res);
         if (!$res) {
             gagal_js("Kosong");
         } else {
