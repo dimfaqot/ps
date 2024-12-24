@@ -243,7 +243,7 @@
             $(".target_admin").removeClass("d-none");
         })
 
-
+        let dt_htng = "";
         const get_data_hutang = () => {
             post("ext/data_hutang", {
                 id: 0
@@ -258,7 +258,8 @@
 
         }
 
-        let dt_htng = setInterval(get_data_hutang, 1000);
+
+
         $(document).on('click', '.btn_menu', function(e) {
             e.preventDefault();
 
@@ -270,7 +271,9 @@
                 data["meja"] = 0;
                 $(this).addClass("select");
                 add_booking();
-                if (menu == "Hutang") {}
+                if (menu == "Hutang") {
+                    dt_htng = setInterval(get_data_hutang, 1000);
+                }
                 return;
             }
 
