@@ -102,7 +102,7 @@
         <?= view('booking/top'); ?>
     </div>
     <div class="messages"></div>
-    <div class="data_hutang px-3">
+    <div style="margin-top: 150px;" class="data_hutang text-center px-3">
 
 
     </div>
@@ -244,7 +244,21 @@
         })
 
 
+        const get_data_hutang = () => {
+            post("ext/data_hutang", {
+                id: 0
+            }).then(res => {
+                if (res.status == "200") {
+                    console.log(res.data);
+                    list_data_hutang = res.data;
+                    $(".data_hutang").html('<span style="cursor: pointer;" class="btn_show_data_hutang text-warning text-center py-3 px-4 rounded border border-warning">TAMPILKAN</span>');
+                    clearInterval(dt_htng);
+                }
+            })
 
+        }
+
+        let dt_htng = setInterval(get_data_hutang, 1000);
         $(document).on('click', '.btn_menu', function(e) {
             e.preventDefault();
 
@@ -256,9 +270,7 @@
                 data["meja"] = 0;
                 $(this).addClass("select");
                 add_booking();
-                if (menu == "Hutang") {
-                    data_hutang();
-                }
+                if (menu == "Hutang") {}
                 return;
             }
 
@@ -454,28 +466,9 @@
             })
         }
 
-        const list_data_hutang = undefined;
-        const data_hutang = () => {
-            let intervalId = setInterval(() => {
-                if (list_data_hutang == undefined) {
-                    get_data_hutang();
-                } else {
-                    clearInterval(intervalId);
-                }
-            }, 1000);
-        }
 
-        const get_data_hutang = () => {
-            post("ext/data_hutang", {
-                id: 0
-            }).then(res => {
-                if (res.status == "200") {
-                    list_data_hutang = res.data;
-                    $(".data_hutang").html('<span style="cursor: pointer;" class="btn_show_data_hutang text-center py-3 px-4 rounded border border-info">TAMPILKAN</span>');
-                }
-            })
 
-        }
+
         $(document).on('click', '.btn_show_data_hutang', function(e) {
             e.preventDefault();
             let html = "";
@@ -492,7 +485,7 @@
             html += '<tbody>';
             list_data_hutang.forEach((e, i) => {
                 html += '<tr>';
-                html += '<td style="text-align: center;">' + (e + 1) + '</td>';
+                html += '<td style="text-align: center;">' + (i + 1) + '</td>';
                 html += '<td style="text-align: center;">' + time_php_to_js(e.tgl) + '</td>';
                 html += '<td>' + e.kategori + '</td>';
                 html += '<td>' + e.barang + '</td>';
