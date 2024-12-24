@@ -244,8 +244,8 @@
 
 
             let menu = $(this).data('menu');
-            if (menu == "Saldo") {
-                data["kategori"] = "Saldo";
+            if (menu == "Saldo" || menu == "Hutang") {
+                data["kategori"] = menu;
                 data["durasi"] = 0;
                 data["meja"] = 0;
                 $(this).addClass("select");
