@@ -1,5 +1,5 @@
 <div class="text-center text-info ms-2">
-    <span class="pe-2 tangan btn_topup" data-menu="Topup" style="font-size: 27px;margin-left:-36px"><i class="fa-regular fa-hand-point-right"></i></span>
+    <span class="pe-2 tangan btn_admin" style="font-size: 27px;margin-left:-36px"><i class="fa-regular fa-hand-point-right"></i></span>
     <span style="cursor: pointer;" data-menu="Ps" class="btn_menu py-3 px-4 rounded border border-info">PS</span>
     <span style="cursor: pointer;" data-menu="Billiard" class="btn_menu py-3 px-4 rounded border border-info">BILLIARD</span>
     <span style="cursor: pointer;" data-menu="Hutang" class="btn_menu py-3 px-4 rounded border border-info">HUTANG</span>

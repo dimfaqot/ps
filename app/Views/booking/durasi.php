@@ -1,4 +1,4 @@
-    <div class="rounded target_durasi con d-none px-4 pt-4 mt-4" style="border: 1px solid #242b32;">
+    <div class="rounded target_durasi con d-none px-4 pt-4 mt-4">
         <h6 class="text-center text-light mb-4">DURASI (JAM)</h6>
         <?php for ($i = 1; $i < 10; $i++) : ?>
             <?php if ($i == 1 || $i % 3 == 1): ?>

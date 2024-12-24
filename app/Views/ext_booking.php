@@ -105,6 +105,7 @@
     <div class="content">
 
         <div class="container">
+            <?= view('booking/admin'); ?>
             <?= view('booking/date_time'); ?>
             <?= view('booking/billiard'); ?>
             <?= view('booking/ps'); ?>
@@ -144,17 +145,13 @@
 
         $(document).on('click', '.daftar', function(e) {
             e.preventDefault();
-            if (data.kategori == undefined) {
-                $(this).addClass("select");
-                data['kategori'] = "Daftar";
-            } else if (data.kategori == "Daftar") {
+            if ($(this).hasClass("select")) {
                 $(this).removeClass("select");
-                data = {};
             } else {
-                data = {};
                 $(this).addClass("select");
-                data['kategori'] = "Daftar";
             }
+            $(".topup").removeClass("select");
+            $(".target_topup").addClass("d-none");
 
             let html = '';
             html += '<div class="input_light">';
@@ -195,58 +192,50 @@
             e.preventDefault();
             let id = $(this).data('id');
             data['durasi'] = id;
+            data['kategori'] = "Daftar";
+            data['meja'] = 0;
 
+            $('.div_btn_ok_admin').html('<button class="btn_grey embos mb-4 btn_ok">Ok</button>');
             let myModal = document.getElementById('search_db');
             let modal = bootstrap.Modal.getOrCreateInstance(myModal)
             modal.hide();
 
-            show_btn_ok();
+        })
+        $(document).on('click', '.topup', function(e) {
+            e.preventDefault();
+
+            $(".daftar").removeClass("select");
+            $('.div_btn_ok_admin').html('');
+            remove_cls('durasi', 'select', 'default');
+
+            if ($(this).hasClass("select")) {
+                $(this).removeClass("select");
+                $(".target_topup").addClass("d-none");
+                $(".durasi").addClass("d-none");
+                data = {};
+            } else {
+                $(this).addClass("select");
+                $(".target_topup").removeClass("d-none");
+                $('.durasi').removeClass("d-none");
+                data["kategori"] = "Topup";
+                data["meja"] = 0;
+            }
 
         })
-        $(document).on('click', '.btn_topup', function(e) {
+
+        $(document).on('click', '.btn_admin', function(e) {
             e.preventDefault();
-            let menu = $(this).data('menu');
+
             remove_cls('meja', 'select', 'default');
             remove_cls('durasi', 'select', 'default');
             remove_cls('btn_menu', 'select', 'default');
+            $(".date_time").addClass("d-none");
+            $(".meja").addClass("d-none");
+            $(".durasi").addClass("d-none");
+            $(".target_durasi").addClass("d-none");
 
-
-            if (data.kategori == menu) {
-                $(this).removeClass("select");
-                $(this).removeClass("rounded-circle");
-                $('.date_time').removeClass('d-none');
-                $('.target_topup').addClass('d-none');
-                data = {};
-            } else {
-                $(this).addClass("select rounded-circle");
-                $('.date_time').addClass('d-none');
-                $('.target_topup').removeClass('d-none');
-                data['kategori'] = menu;
-            }
-
-            $('.target_durasi').addClass('d-none');
-            $('.target_menu').addClass('d-none');
+            $(".target_admin").removeClass("d-none");
         })
-
-        const saldo = () => {
-            if (!data.kategori) {
-                gagal("Kategori belum dipilih!.");
-                return;
-            }
-            post("add_booking", {
-                data
-            }).then(res => {
-                if (res.status == "200") {
-                    hasil_tap(data);
-                    $(".date_time").addClass("d-none");
-                    let htmy = "";
-                    htmy += '<div style="margin-top: 250px;">';
-                    htmy += '<h6 class="text-center text-light">Segera tap kartu...!</h6>';
-                    htmy += '</div>';
-                    $('.messages').html(htmy);
-                }
-            })
-        }
 
 
 
@@ -257,18 +246,22 @@
             let menu = $(this).data('menu');
             if (menu == "Saldo") {
                 data["kategori"] = "Saldo";
+                data["durasi"] = 0;
+                data["meja"] = 0;
                 $(this).addClass("select");
-                saldo();
+                add_booking();
                 return;
             }
 
             $(".durasi").removeClass("d-none");
             $(".target_durasi").addClass("d-none");
+            $(".target_admin").addClass("d-none");
+            $(".target_topup").addClass("d-none");
+            $(".div_btn_ok_admin").html("");
+            $(".meja").removeClass("d-none");
+            $(".durasi").removeClass("d-none");
 
             $(".date_time").addClass("d-none"); //hide date time
-
-            $(".daftar").removeClass("select");
-            $(".btn_topup").removeClass("select");
 
             if (data.kategori == undefined) {
                 let elem = document.querySelectorAll('.target_menu');
@@ -366,7 +359,7 @@
             let durasi = $(this).data('durasi');
             let meja = data.meja;
             let kategori = data.kategori;
-            if (meja == undefined && kategori !== "Topup") {
+            if (meja == undefined) {
                 gagal("Meja belum dipilih!.");
                 return;
             }
@@ -391,53 +384,30 @@
                     data.durasi = durasi;
                 }
             }
+            if (data.kategori == "Topup") {
+                $('.div_btn_ok').html('<button class="btn_grey embos mb-4 btn_ok">Ok</button>');
+            } else {
+                show_btn_ok();
 
-            show_btn_ok();
+            }
         })
 
 
         const show_btn_ok = () => {
-            if (data.kategori == "Topup" || data.kategori == "Daftar") {
-                if (data.durasi && data.kategori) {
-                    $('.div_btn_ok').html('<button class="btn_grey embos mb-4 btn_ok">Ok</button>');
-                } else {
-                    $('.div_btn_ok').html('');
-                }
+            if (data.meja && data.durasi && data.kategori) {
+                $('.div_btn_ok').html('<button class="btn_grey embos mb-4 btn_ok">Ok</button>');
             } else {
-                if (data.meja && data.durasi && data.kategori) {
-                    $('.div_btn_ok').html('<button class="btn_grey embos mb-4 btn_ok">Ok</button>');
-                } else {
-                    $('.div_btn_ok').html('');
+                $('.div_btn_ok').html('');
 
-                }
             }
         }
 
-        $(document).on('click', '.btn_ok', function(e) {
-            e.preventDefault();
-            if (!data.kategori) {
-                gagal('Kategori belum dipilih!.');
-                return;
-            }
-            if (!data.meja && data.kategori == 'Ps' && data.kategori == "Billiard") {
-                gagal('Meja belum dipilih!.');
-                return;
-            }
-            if (!data.durasi) {
-                gagal('Durasi belum dipilih!.');
-                return;
-            }
-
+        const add_booking = () => {
             post('add_booking', {
                 data
             }).then(res => {
                 if (res.status == "200") {
                     $(".date_time").addClass("d-none");
-                    let htmy = "";
-                    htmy += '<div style="margin-top: 250px;">';
-                    htmy += '<h6 class="text-center text-light">Segera tap kartu...!</h6>';
-                    htmy += '</div>';
-                    $('.messages').html(htmy);
                     sukses(res.message);
                     hasil_tap(data);
                     let x = 0;
@@ -458,7 +428,7 @@
 
                                     setTimeout(() => {
                                         location.reload();
-                                    }, 3200);
+                                    }, 1000);
                                 }
                             })
 
@@ -468,6 +438,27 @@
                     gagal(res.message);
                 }
             })
+        }
+
+        $(document).on('click', '.btn_ok', function(e) {
+            e.preventDefault();
+            if (!data.kategori) {
+                gagal('Kategori belum dipilih!.');
+                return;
+            }
+            if (!data.meja && data.kategori == 'Ps' && data.kategori == "Billiard") {
+                gagal('Meja belum dipilih!.');
+                return;
+            }
+            if (!data.durasi) {
+                gagal('Durasi belum dipilih!.');
+                return;
+            }
+
+            $('.content').html("");
+
+            add_booking();
+
         })
 
         const get_durasi = (kategori) => {

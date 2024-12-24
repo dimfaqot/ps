@@ -103,7 +103,6 @@ class Hutang extends BaseController
             $db->where('kategori', explode(" ", session('role'))[1]);
         }
         $q = $db->groupBy('no_nota')->orderBy('tgl', 'ASC')->get()->getResultArray();
-
         $dbu = db('users');
         $usr = $dbu->where('id', $id)->get()->getRowArray();
         $jwt = [
@@ -126,6 +125,7 @@ class Hutang extends BaseController
 
             $data[] = $temp;
         }
+
         sukses_js('Koneksi sukses.', $data, $total, $id, ($usr ? $usr['hp'] : ''), $jwt);
     }
 

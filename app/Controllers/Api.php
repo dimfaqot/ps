@@ -378,7 +378,7 @@ class Api extends BaseController
                 gagal_arduino('Kartu berbeda!.');
             }
 
-            $dbh = db('hutang');
+            $dbh = db('hutangs');
             $qh = $dbh->where('user_id', $user_m['id'])->where('status', 0)->get()->getResultArray();
             $total = 0;
             if (!$qh) {
@@ -485,7 +485,7 @@ class Api extends BaseController
             $db = db('api');
             $data = ['status' => $decode["uid"]];
             if ($db->insert($data)) {
-                $dbh = db('hutang');
+                $dbh = db('hutangs');
                 $qh = $dbh->where('user_id', $user['id'])->where('status', 0)->get()->getResultArray();
                 $total = 0;
                 foreach ($qh as $i) {
