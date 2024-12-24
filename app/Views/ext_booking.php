@@ -454,40 +454,57 @@
             })
         }
 
+        const list_data_hutang = undefined;
         const data_hutang = () => {
+            let intervalId = setInterval(() => {
+                if (list_data_hutang == undefined) {
+                    get_data_hutang();
+                } else {
+                    clearInterval(intervalId);
+                }
+            }, 1000);
+        }
+
+        const get_data_hutang = () => {
             post("ext/data_hutang", {
                 id: 0
             }).then(res => {
                 if (res.status == "200") {
-                    let html = "";
-                    html += '<table style="font-size: 13px;" class="mt-5 table table-sm text-light table-bordered border-info">';
-                    html += '<thead>';
-                    html += '<tr>';
-                    html += '<td style="text-align: center;">#</td>';
-                    html += '<td style="text-align: center;">Tgl</td>';
-                    html += '<td style="text-align: center;">Kat</td>';
-                    html += '<td style="text-align: center;">Barang</td>';
-                    html += '<td style="text-align: center;">Harga</td>';
-                    html += '</tr>';
-                    html += '</thead>';
-                    html += '<tbody>';
-                    res.data.forEach((e, i) => {
-                        html += '<tr>';
-                        html += '<td style="text-align: center;">' + (e + 1) + '</td>';
-                        html += '<td style="text-align: center;">' + time_php_to_js(e.tgl) + '</td>';
-                        html += '<td>' + e.kategori + '</td>';
-                        html += '<td>' + e.barang + '</td>';
-                        html += '<td style="text-align: right;">' + angka(e.total_harga) + '</td>';
-                        html += '</tr>';
-
-                    })
-                    html += '</tbody>';
-                    html += '</table>';
-                    $(".data_hutang").html(html);
+                    list_data_hutang = res.data;
+                    $(".data_hutang").html('<span style="cursor: pointer;" class="btn_show_data_hutang text-center py-3 px-4 rounded border border-info">TAMPILKAN</span>');
                 }
             })
 
         }
+        $(document).on('click', '.btn_show_data_hutang', function(e) {
+            e.preventDefault();
+            let html = "";
+            html += '<table style="font-size: 13px;" class="mt-5 table table-sm text-light table-bordered border-info">';
+            html += '<thead>';
+            html += '<tr>';
+            html += '<td style="text-align: center;">#</td>';
+            html += '<td style="text-align: center;">Tgl</td>';
+            html += '<td style="text-align: center;">Kat</td>';
+            html += '<td style="text-align: center;">Barang</td>';
+            html += '<td style="text-align: center;">Harga</td>';
+            html += '</tr>';
+            html += '</thead>';
+            html += '<tbody>';
+            list_data_hutang.forEach((e, i) => {
+                html += '<tr>';
+                html += '<td style="text-align: center;">' + (e + 1) + '</td>';
+                html += '<td style="text-align: center;">' + time_php_to_js(e.tgl) + '</td>';
+                html += '<td>' + e.kategori + '</td>';
+                html += '<td>' + e.barang + '</td>';
+                html += '<td style="text-align: right;">' + angka(e.total_harga) + '</td>';
+                html += '</tr>';
+
+            })
+            html += '</tbody>';
+            html += '</table>';
+            $(".data_hutang").html(html);
+        })
+
 
         $(document).on('click', '.btn_ok', function(e) {
             e.preventDefault();
