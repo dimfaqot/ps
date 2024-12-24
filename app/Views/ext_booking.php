@@ -101,13 +101,14 @@
     <div class="container mt-5">
         <?= view('booking/top'); ?>
     </div>
-    <div class="messages"></div>
-    <div style="margin-top: 150px;" class="data_hutang text-center px-3">
+    <div class="messages">
+
+    </div>
+    <div style="margin-top: 20px;" class="data_hutang text-center px-3">
 
 
     </div>
     <div class="content">
-
         <div class="container">
             <?= view('booking/admin'); ?>
             <?= view('booking/date_time'); ?>
@@ -444,7 +445,7 @@
                     setInterval(() => {
                         x++;
                         let html = '';
-                        html += '<div class="d-flex justify-content-center" style="margin-top: 200px;">';
+                        html += '<div class="d-flex justify-content-center" style="margin-top: 30px;">';
                         html += '<div class="rounded-circle embos text-center p-2 fw-bold" style="cursor:pointer;font-size:111px;width:200px;height:200px;color:#cbf4f0;border:1px solid #3c3e46">' + x + '</div>';
                         html += '</div>';
 
@@ -477,7 +478,7 @@
         $(document).on('click', '.btn_show_data_hutang', function(e) {
             e.preventDefault();
             let html = "";
-            html += '<table style="font-size: 13px;" class="mt-2 table table-sm text-light table-bordered border-info">';
+            html += '<table style="font-size: 13px;" class="table table-sm text-light table-bordered border-info">';
             html += '<thead>';
             html += '<tr>';
             html += '<td style="text-align: center;">#</td>';
@@ -592,7 +593,7 @@
                         if (res.data != null) {
                             let html = '';
                             let status = res.data.status;
-                            html += '<div style="margin-top: 50px;">';
+                            html += '<div style="margin-top: 30px;">';
                             html += '<h6 class="text-center ' + (status == "400" ? "text-danger" : "text-light") + '">' + res.data.message + '</h6>';
                             if (res.data.uang !== "") {
                                 html += '<h5 class="text-center ' + (status == "400" ? "text-danger" : "text-light") + '">' + res.data.uang + '</h5>';
