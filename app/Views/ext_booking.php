@@ -475,7 +475,7 @@
         $(document).on('click', '.btn_show_data_hutang', function(e) {
             e.preventDefault();
             let html = "";
-            html += '<table style="font-size: 13px;" class="mt-5 table table-sm text-light table-bordered border-info">';
+            html += '<table style="font-size: 13px;" class="mt-2 table table-sm text-light table-bordered border-info">';
             html += '<thead>';
             html += '<tr>';
             html += '<td style="text-align: center;">#</td>';
@@ -590,7 +590,7 @@
                         if (res.data != null) {
                             let html = '';
                             let status = res.data.status;
-                            html += '<div style="margin-top: 250px;">';
+                            html += '<div style="margin-top: 50px;">';
                             html += '<h6 class="text-center ' + (status == "400" ? "text-danger" : "text-light") + '">' + res.data.message + '</h6>';
                             if (res.data.uang !== "") {
                                 html += '<h5 class="text-center ' + (status == "400" ? "text-danger" : "text-light") + '">' + res.data.uang + '</h5>';
