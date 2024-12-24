@@ -229,11 +229,13 @@ class Ext extends BaseController
         $res = null;
         $db = db('api');
         $q = $db->get()->getRowArray();
-        $dbu = db('users');
-        $user = $dbu->where('uid', $q['status'])->get()->getRowArray();
-        $dbh = db("hutang");
-        if ($user) {
-            $res = $dbh->select("tgl,barang,total_harga,kategori")->where('user_id', $user['id'])->get()->getResultArray();
+        if ($q) {
+            $dbu = db('users');
+            $user = $dbu->where('uid', $q['status'])->get()->getRowArray();
+            if ($user) {
+                $dbh = db("hutang");
+                $res = $dbh->select("tgl,barang,total_harga,kategori")->where('user_id', $user['id'])->get()->getResultArray();
+            }
         }
 
         if (!$res) {
