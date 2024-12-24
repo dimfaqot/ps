@@ -219,9 +219,28 @@ class Ext extends BaseController
         $q = $db->get()->getRowArray();
 
         if (!$q) {
-            gagal_js("Tidak ada peesan.!", $q);
+            gagal_js("Tidak ada pesan.!");
         } else {
             sukses_js("Sukses.", $q);
+        }
+    }
+    public function data_hutang()
+    {
+        $res = null;
+        $db = db('api');
+        $q = $db->get()->getRowArray();
+        $dbu = db('users');
+        $user = $dbu->where('uid', $q['status'])->get()->getRowArray();
+        $dbh = db("hutang");
+        if ($user) {
+            $res = $dbh->select("tgl,barang,total_harga,kategori")->where('user_id', $user['id'])->get()->getResultArray();
+        }
+
+        if (!$res) {
+            gagal_js("Kosong");
+        } else {
+
+            sukses_js("Sukses.", $res);
         }
     }
     public function del_message()

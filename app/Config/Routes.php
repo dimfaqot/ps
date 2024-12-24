@@ -188,6 +188,7 @@ $routes->post('/daftar/search_db', 'Ext::search_db');
 $routes->post('/hasil_tap', 'Ext::hasil_tap');
 $routes->post('/add_booking', 'Ext::add_booking');
 $routes->post('/del_message', 'Ext::del_message');
+$routes->post('/ext/data_hutang', 'Ext::data_hutang');
 
 
 

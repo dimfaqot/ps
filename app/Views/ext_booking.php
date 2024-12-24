@@ -102,6 +102,10 @@
         <?= view('booking/top'); ?>
     </div>
     <div class="messages"></div>
+    <div class="data_hutang px-3">
+
+
+    </div>
     <div class="content">
 
         <div class="container">
@@ -123,6 +127,8 @@
             </div>
         </div>
     </div>
+    <!-- modal search_db-->
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 
@@ -250,6 +256,9 @@
                 data["meja"] = 0;
                 $(this).addClass("select");
                 add_booking();
+                if (menu == "Hutang") {
+                    data_hutang();
+                }
                 return;
             }
 
@@ -411,13 +420,18 @@
                     sukses(res.message);
                     hasil_tap(data);
                     let x = 0;
+                    let limit = 21;
+                    if (data.kategori == "Hutang") {
+                        limit = 61;
+                    }
                     setInterval(() => {
                         x++;
                         let html = '';
                         html += '<div class="d-flex justify-content-center" style="margin-top: 200px;">';
                         html += '<div class="rounded-circle embos text-center p-2 fw-bold" style="cursor:pointer;font-size:111px;width:200px;height:200px;color:#cbf4f0;border:1px solid #3c3e46">' + x + '</div>';
                         html += '</div>';
-                        if (x < 21) {
+
+                        if (x < limit) {
                             $('.content').html(html);
                         } else {
                             post("del_message", {
@@ -440,6 +454,41 @@
             })
         }
 
+        const data_hutang = () => {
+            post("ext/data_hutang", {
+                id: 0
+            }).then(res => {
+                if (res.status == "200") {
+                    let html = "";
+                    html += '<table style="font-size: 13px;" class="mt-5 table table-sm text-light table-bordered border-info">';
+                    html += '<thead>';
+                    html += '<tr>';
+                    html += '<td style="text-align: center;">#</td>';
+                    html += '<td style="text-align: center;">Tgl</td>';
+                    html += '<td style="text-align: center;">Kat</td>';
+                    html += '<td style="text-align: center;">Barang</td>';
+                    html += '<td style="text-align: center;">Harga</td>';
+                    html += '</tr>';
+                    html += '</thead>';
+                    html += '<tbody>';
+                    res.data.forEach((e, i) => {
+                        html += '<tr>';
+                        html += '<td style="text-align: center;">' + (e + 1) + '</td>';
+                        html += '<td style="text-align: center;">' + time_php_to_js(e.tgl) + '</td>';
+                        html += '<td>' + e.kategori + '</td>';
+                        html += '<td>' + e.barang + '</td>';
+                        html += '<td style="text-align: right;">' + angka(e.total_harga) + '</td>';
+                        html += '</tr>';
+
+                    })
+                    html += '</tbody>';
+                    html += '</table>';
+                    $(".data_hutang").html(html);
+                }
+            })
+
+        }
+
         $(document).on('click', '.btn_ok', function(e) {
             e.preventDefault();
             if (!data.kategori) {
@@ -457,6 +506,7 @@
 
             $('.content').html("");
 
+
             add_booking();
 
         })
@@ -469,7 +519,6 @@
                 if (res.status == "200") {
                     let elem = document.querySelectorAll('.body_content');
                     if (res.data.length <= 0) {
-                        console.log(res.data.length);
                         elem.forEach(elm => {
                             if (elm.classList.contains("active")) {
                                 elm.classList.remove("active");
