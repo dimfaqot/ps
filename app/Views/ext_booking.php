@@ -249,9 +249,11 @@
                 id: 0
             }).then(res => {
                 if (res.status == "200") {
-                    console.log(res.data);
-                    list_data_hutang = res.data;
-                    $(".data_hutang").html('<span style="cursor: pointer;" class="btn_show_data_hutang text-warning text-center py-3 px-4 rounded border border-warning">TAMPILKAN</span>');
+                    if (res.data != null) {
+                        console.log(res.data);
+                        list_data_hutang = res.data;
+                        $(".data_hutang").html('<span style="cursor: pointer;" class="btn_show_data_hutang text-warning text-center py-3 px-4 rounded border border-warning">TAMPILKAN</span>');
+                    }
                     clearInterval(dt_htng);
                 }
             })
