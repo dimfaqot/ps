@@ -28,7 +28,8 @@ $routes->post('/api/Hutang', 'Api::tap_booking_hutang');
 $routes->post('/api/Ps', 'Api::tap_booking_ps');
 $routes->post('/api/Billiard', 'Api::tap_booking_billiard');
 $routes->post('/api/Barber', 'Api::tap_booking_barber');
-
+// bot
+$routes->get('/api/wabot', 'Api::wabot');
 
 $routes->get('/login', 'Login::index');
 
@@ -190,6 +191,7 @@ $routes->post('/add_booking', 'Ext::add_booking');
 $routes->post('/del_message', 'Ext::del_message');
 $routes->post('/ext/data_hutang', 'Ext::data_hutang');
 
+// bot
 
 
 // BARBER

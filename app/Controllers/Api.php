@@ -819,4 +819,9 @@ class Api extends BaseController
             gagal_arduino('Silahkan pilih meja!');
         }
     }
+
+    public function wabot()
+    {
+        return view('api/wabot', ['judul' => "WA BOT"]);
+    }
 }

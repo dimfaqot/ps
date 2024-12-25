@@ -2,6 +2,7 @@
     const baseUrl = "<?= base_url(); ?>";
     let url = '';
 
+
     const loading = (req = true) => {
         if (req === true) {
             $('.waiting').show()
@@ -205,7 +206,32 @@
         }, 1000);
 
     }
+    // async function wa_bot(no_hp, message) {
 
+    //     try {
+    //         const response = await fetch(url);
+    //         if (!response.ok) {
+    //             throw new Error(`Response status: ${response.status}`);
+    //         }
+
+    //         return response.json();
+
+    //     } catch (error) {
+    //         console.error(error.message);
+    //     }
+    // }
+    async function wa_bot(no_hp, message) {
+        loading(true);
+        const url = "https://api.callmebot.com/whatsapp.php?phone=" + no_hp + "&text=" + message + "&apikey=8234961";
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        loading(false);
+        return response.json(); // parses JSON response into native JavaScript objects
+    }
     async function post(url = '', data = {}) {
         loading(true);
         const response = await fetch("<?= base_url(); ?>" + url, {
