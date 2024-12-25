@@ -220,18 +220,18 @@
     //         console.error(error.message);
     //     }
     // }
-    async function wa_bot(no_hp, message) {
-        loading(true);
-        const url = "https://api.callmebot.com/whatsapp.php?phone=" + no_hp + "&text=" + message + "&apikey=8234961";
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-        loading(false);
-        return response.json(); // parses JSON response into native JavaScript objects
-    }
+    // async function wa_bot(no_hp, message) {
+    //     loading(true);
+    //     const url = "https://api.callmebot.com/whatsapp.php?phone=" + no_hp + "&text=" + message + "&apikey=8234961";
+    //     const response = await fetch(url, {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         }
+    //     });
+    //     loading(false);
+    //     return response.json(); // parses JSON response into native JavaScript objects
+    // }
     async function post(url = '', data = {}) {
         loading(true);
         const response = await fetch("<?= base_url(); ?>" + url, {

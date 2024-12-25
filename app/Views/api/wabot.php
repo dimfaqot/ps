@@ -3,24 +3,21 @@
 <?= $this->section('content') ?>
 
 <script>
-    wa_bot("62895346286566", "0907").then(res => {
-        console.log(res);
-    })
-    // async function getData() {
+    async function getData() {
 
-    //     const url = "https://api.callmebot.com/whatsapp.php?phone=62895346286566&text=This+is+a+test2&apikey=8234961";
-    //     try {
-    //         const response = await fetch(url);
-    //         if (!response.ok) {
-    //             throw new Error(`Response status: ${response.status}`);
-    //         }
+        const url = "https://api.callmebot.com/whatsapp.php?phone=62895346286566&text=This+is+a+test2&apikey=8234961";
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
 
-    //         const json = await response.json();
-    //         console.log(json);
-    //     } catch (error) {
-    //         console.error(error.message);
-    //     }
-    // }
-    // getData();
+            const json = await response.json();
+            console.log(json);
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+    getData();
 </script>
 <?= $this->endSection() ?>
