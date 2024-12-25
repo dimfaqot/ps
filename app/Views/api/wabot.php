@@ -5,7 +5,7 @@
 <script>
     async function getData() {
 
-        const url = "https://api.callmebot.com/whatsapp.php?phone=628970576585&text=jjk&apikey=8234961";
+        const url = "https://api.callmebot.com/whatsapp.php?phone=6285175006585&text=jjk&apikey=8234961";
         try {
             const response = await fetch(url);
             if (!response.ok) {
