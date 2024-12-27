@@ -829,7 +829,7 @@ class Api extends BaseController
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_finger($jwt);
         $db = db('users');
-        $q = $db->where('finger', $decode['uid']);
+        $q = $db->where('finger', $decode['uid'])->get()->getRowArray();
 
         if (!$q) {
             gagal_js("Finger tidak terdaftar!.");
