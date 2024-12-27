@@ -266,6 +266,35 @@ function decode_jwt_fulus($encode_jwt)
         die;
     }
 }
+function encode_jwt_finger($data)
+{
+
+    $jwt = JWT::encode($data, getenv("jwt_finger"), 'HS256');
+
+    return $jwt;
+}
+function decode_jwt_finger($encode_jwt)
+{
+    try {
+
+        $decoded = JWT::decode($encode_jwt, new Key(getenv("jwt_fulus"), 'HS256'));
+        $arr = (array)$decoded;
+
+        return $arr;
+    } catch (\Exception $e) { // Also tried JwtException
+        $data = [
+            'status' => '300',
+            'message' => $e->getMessage(),
+            'data' => "",
+            'data2' => "",
+            'data3' => "",
+            'data4' => "",
+            'data5' => ""
+        ];
+        echo json_encode($data);
+        die;
+    }
+}
 
 
 function user()

@@ -824,4 +824,23 @@ class Api extends BaseController
     {
         return view('api/wabot', ['judul' => "WA BOT"]);
     }
+    public function finger_auth()
+    {
+        $jwt = $this->request->getVar('jwt');
+        $decode = decode_jwt_fulus($jwt);
+        $db = db('users');
+        $q = $db->where('finger', $decode['uid']);
+
+        if (!$q) {
+            gagal_js("Finger tidak terdaftar!.");
+        }
+
+        $data = [
+            'id' => $q['id'],
+            'role' => $q['role']
+        ];
+
+        // session()->set($data);
+        sukses_js("Finger ditemukan.", $q['nama']);
+    }
 }

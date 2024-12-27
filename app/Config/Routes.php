@@ -28,6 +28,10 @@ $routes->post('/api/Hutang', 'Api::tap_booking_hutang');
 $routes->post('/api/Ps', 'Api::tap_booking_ps');
 $routes->post('/api/Billiard', 'Api::tap_booking_billiard');
 $routes->post('/api/Barber', 'Api::tap_booking_barber');
+
+// api finger
+$routes->post('/api/finger/auth', 'Api::finger_auth');
+
 // bot
 $routes->get('/api/wabot', 'Api::wabot');
 
