@@ -152,6 +152,7 @@ class Ext extends BaseController
         // $decode_fulus = decode_jwt_fulus($user['fulus']);
         // $fulus = $decode_fulus['fulus'];
         // dd($fulus);
+        // dd(decode_jwt_finger("eyJhbGciOiAiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJ1aWQiOiIxIiwiZGF0YTMiOiIiLCJkYXRhNCI6IiIsImRhdGE1IjoiIiwiZGF0YTYiOiIifQ.A_dvGajjO6CkJZfAE2Rs9bFD1VlPBWONV2Q0bxbfO60"));
 
         $db = db('barber');
         $q = $db->get()->getResultArray();

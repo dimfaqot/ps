@@ -277,7 +277,7 @@ function decode_jwt_finger($encode_jwt)
 {
     try {
 
-        $decoded = JWT::decode($encode_jwt, new Key(getenv("jwt_fulus"), 'HS256'));
+        $decoded = JWT::decode($encode_jwt, new Key(getenv("jwt_finger"), 'HS256'));
         $arr = (array)$decoded;
 
         return $arr;
