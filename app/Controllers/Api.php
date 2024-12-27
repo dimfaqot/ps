@@ -827,7 +827,7 @@ class Api extends BaseController
     public function finger_auth()
     {
         $jwt = $this->request->getVar('jwt');
-        $decode = decode_jwt_fulus($jwt);
+        $decode = decode_jwt_finger($jwt);
         $db = db('users');
         $q = $db->where('finger', $decode['uid']);
 
