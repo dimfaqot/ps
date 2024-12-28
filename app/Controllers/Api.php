@@ -850,7 +850,7 @@ class Api extends BaseController
             'ket' => $val['ket'],
             'poin' => $val['poin'],
             'nama' => $q["nama"],
-            'role' => $q["role"],
+            'role' => "Admin Kantin",
             'user_id' => $q["id"],
             'shift' => $val['shift'],
             'jam' => $val['jam'],
