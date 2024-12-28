@@ -663,14 +663,12 @@ function get_absen($user)
         }
     } else {
         $qat = $dbp->where("aturan", "Terlambat")->get()->getRowArray();
-        sukses_js("Ok", $qat['poin']);
         $data['ket'] = 'Terlambat';
         $po = (round(($data['menit'] - 15) / 10)) + abs($qat["poin"]);
         $data['poin'] = -$po;
         $msg = 'Kamu terlambat ' . $data['diff'] . ' untuk shift ' . $data['shift'] . '.!';
     }
     $data['msg'] = $msg;
-    sukses_js("end", $data['poin']);
     // dd($datas, $tes, $closest, $data);
     return $data;
 }
