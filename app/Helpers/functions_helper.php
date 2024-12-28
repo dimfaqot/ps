@@ -641,15 +641,14 @@ function get_absen($user)
     $q = $db->where('role', $sess)->where('tgl', date('d'))->where('shift', $data['shift'])->whereIn('ket', ['Terlambat', 'Ontime'])->get()->getRowArray();
 
     if ($q) {
-        gagal_with_button(base_url('home'), 'Kamu sudah absen untuk shift ' . $data['shift'] . '!.');
+        gagal_js($user['nama'] . ' sudah absen untuk shift ' . $data['shift'] . '!.');
     }
 
     if ($data['menit'] < 0) {
-        gagal_with_button(base_url('home'), 'Belum waktunya absen untuk shift ' . $data['shift']  . '!.');
+        gagal_js($user["nama"] . ' belum waktunya absen untuk shift ' . $data['shift']  . '!.');
     } else if (round($data['menit'] / 60) > 2) {
-        gagal_with_button(base_url('home'), 'Telat lebih 3 jam!. Absen untuk shift ' . $data['shift'] . ' ditutup!.');
+        gagal_js($user["nama"] . ' telat lebih 3 jam!. Absen untuk shift ' . $data['shift'] . ' ditutup!.');
     }
-
 
 
     $msg = "Kamu tepat waktu.";
