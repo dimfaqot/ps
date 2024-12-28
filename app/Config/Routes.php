@@ -30,7 +30,7 @@ $routes->post('/api/Billiard', 'Api::tap_booking_billiard');
 $routes->post('/api/Barber', 'Api::tap_booking_barber');
 
 // api finger
-$routes->post('/api/finger/auth', 'Api::finger_auth');
+$routes->post('/api/finger/absen', 'Api::finger_absen');
 
 // bot
 $routes->get('/api/wabot', 'Api::wabot');
@@ -41,11 +41,11 @@ $routes->post('/auth', 'Login::auth');
 $routes->get('/logout', 'Login::logout');
 
 // Absen
-$routes->get('/absen', 'Absen::index');
-$routes->get('/qrcode', 'Absen::qrcode');
-$routes->get('/cetak_absen_qrcode', 'Absen::cetak_absen_qrcode');
-$routes->get('/presentation/(:any)', 'Absen::presentation/$1');
-$routes->post('/absen/encode', 'Absen::encode');
+// $routes->get('/absen', 'Absen::index');
+// $routes->get('/qrcode', 'Absen::qrcode');
+// $routes->get('/cetak_absen_qrcode', 'Absen::cetak_absen_qrcode');
+// $routes->get('/presentation/(:any)', 'Absen::presentation/$1');
+// $routes->post('/absen/encode', 'Absen::encode');
 $routes->post('/absen/poin_absen', 'Absen::poin_absen');
 $routes->get('/absen/reset_absen', 'Absen::reset_absen');
 $routes->post('/absen/update_poin', 'Absen::update_poin');

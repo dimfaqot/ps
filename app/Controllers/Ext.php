@@ -146,6 +146,7 @@ class Ext extends BaseController
 
     public function booking()
     {
+
         // dd(decode_jwt_fulus(""));
         // $dbu = db('users');
         // $user = $dbu->where('uid', "098979")->get()->getRowArray();

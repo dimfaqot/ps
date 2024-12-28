@@ -173,7 +173,7 @@ function sukses_iot($is_active)
     die;
 }
 
-function gagal_js($pesan, $data = null, $data2 = null, $data3 = null, $data4 = null)
+function gagal_js($pesan, $data = null, $data2 = null, $data3 = null, $data4 = null, $data5 = null)
 {
     $res = [
         'status' => '400',
@@ -181,7 +181,8 @@ function gagal_js($pesan, $data = null, $data2 = null, $data3 = null, $data4 = n
         'data' => $data,
         'data2' => $data2,
         'data3' => $data3,
-        'data4' => $data4
+        'data4' => $data4,
+        'data5' => $data5
     ];
 
     echo json_encode($res);
@@ -589,11 +590,11 @@ function get_closest($search, $arr)
     return $closest;
 }
 
-function get_absen()
+function get_absen($user)
 {
 
     // $sess = 'Admin Kantin';
-    $sess = session('role');
+    $sess = $user['role'];
     $dbs = db('shift');
     $s = $dbs->where('kategori', $sess)->get()->getResultArray();
 
@@ -635,7 +636,7 @@ function get_absen()
             $data = $i;
         }
     }
-    $tes = [$date_server, $time_server, date('d/m/Y H:i:s', $time_server)];
+    // $tes = [$date_server, $time_server, date('d/m/Y H:i:s', $time_server)];
 
     $db = db('absen');
     $q = $db->where('role', $sess)->where('tgl', date('d'))->where('shift', $data['shift'])->whereIn('ket', ['Terlambat', 'Ontime'])->get()->getRowArray();
@@ -655,16 +656,17 @@ function get_absen()
     $msg = "Kamu tepat waktu.";
 
 
+    $dbp = db('aturan');
     if ($data['menit'] < 16) {
         $data['ket'] = 'Ontime';
-        $dbp = db('aturan');
         $qp = $dbp->where('aturan', $data['ket'])->get()->getRowArray();
         if ($qp) {
             $data['poin'] = $qp['poin'];
         }
     } else {
+        $qat = $dbp->where("aturan", "Terlambat")->get()->getRowArray();
         $data['ket'] = 'Terlambat';
-        $po = (round(($data['menit'] - 15) / 10)) + 1;
+        $po = (round(($data['menit'] - 15) / 10)) + abs($qat["poin"]);
         $data['poin'] = -$po;
         $msg = 'Kamu terlambat ' . $data['diff'] . ' untuk shift ' . $data['shift'] . '.!';
     }

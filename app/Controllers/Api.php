@@ -824,23 +824,54 @@ class Api extends BaseController
     {
         return view('api/wabot', ['judul' => "WA BOT"]);
     }
-    public function finger_auth()
+
+    public function finger_absen()
     {
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_finger($jwt);
         $db = db('users');
-        $q = $db->where('finger', $decode['uid'])->get()->getRowArray();
+        $q = $db->whereNotIn("role", ["Member"])->where('finger', $decode['uid'])->get()->getRowArray();
 
         if (!$q) {
             gagal_js("Finger tidak terdaftar!.");
         }
 
-        $data = [
-            'id' => $q['id'],
-            'role' => $q['role']
+        $val = get_absen($q);
+
+        $value = [
+            'tgl' => date('d', $val['time_server']),
+            'username' => user()['username'],
+            'ket' => $val['ket'],
+            'poin' => $val['poin'],
+            'nama' => user()['nama'],
+            'role' => session('role'),
+            'user_id' => session('id'),
+            'shift' => $val['shift'],
+            'jam' => $val['jam'],
+            'absen' => $val['time_server'],
+            'terlambat' => $val['menit']
         ];
 
-        // session()->set($data);
-        sukses_js("Finger ditemukan.", $q['nama']);
+        $db = db('absen');
+        if ($db->insert($value)) {
+            $dbn = db('notif');
+            $datan = [
+                'kategori' => 'Absen',
+                'pemesan' => $value['nama'],
+                'tgl' => $value['absen'],
+                'harga' => time(),
+                'menu' => ($value['ket'] == 'Ontime' ? 'Absen pada ' . date('H:i', $val['time_server']) : $val['diff']),
+                'meja' => $value['ket'],
+                'qty' => $value['poin']
+            ];
+
+            $dbn->insert($datan);
+
+            if ($val['msg'] == 'Kamu tepat waktu.') {
+                sukses_js($val['msg']);
+            } else {
+                gagal_js($val['msg']);
+            }
+        }
     }
 }
