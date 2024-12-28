@@ -872,10 +872,17 @@ class Api extends BaseController
             ];
 
             if ($dbn->insert($datan)) {
+                $dbm = db("message");
                 if ($val['ket'] == 'Terlambat') {
-                    sukses_js($val['msg']);
+                    $message = ["message" => $val["msg"], "status" => "200", "kategori" => "Absen"];
+                    if ($dbm->insert($message)) {
+                        sukses_js($val['msg']);
+                    }
                 } else {
-                    gagal_js($val['msg']);
+                    $message = ["message" => $val["msg"], "status" => "400", "kategori" => "Absen"];
+                    if ($dbm->insert($message)) {
+                        gagal_js($val['msg']);
+                    }
                 }
             } else {
                 gagal_js("Insert notif gagal!.");
