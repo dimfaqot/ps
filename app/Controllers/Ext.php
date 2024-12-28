@@ -178,8 +178,22 @@ class Ext extends BaseController
     public function add_booking()
     {
         $data = json_decode(json_encode($this->request->getVar('data')), true);
-        clear_tabel('booking');
         $db = db('booking');
+        $qb = $db->get()->getResultArray();
+        if ($qb) {
+            gagal_js("Mohon tunggu, transaksi lain sedang berlangsung!.", 1);
+        }
+        $dba = db("api");
+        $qa = $dba->get()->getResultArray();
+        if ($qa) {
+            gagal_js("Mohon tunggu, transaksi lain sedang berlangsung!.", 1);
+        }
+        $dbm = db("message");
+        $qm = $dbm->get()->getResultArray();
+        if ($qm) {
+            gagal_js("Mohon tunggu, transaksi lain sedang berlangsung!.", 1);
+        }
+
         if ($db->insert($data)) {
             sukses_js('Sukses. Silahkan tap dalam 20 detik!.');
         } else {

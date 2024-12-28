@@ -128,8 +128,16 @@
             </div>
         </div>
     </div>
-    <!-- modal search_db-->
+    <!-- modal menunggu-->
+    <div class="modal fade" id="menunggu" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background-color: transparent;">
+                <div class="modal-body text-center modal_body_menunggu" style="margin-top: -80px;">
 
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 
@@ -251,7 +259,6 @@
             }).then(res => {
                 if (res.status == "200") {
                     if (res.data != null) {
-                        console.log(res.data);
                         list_data_hutang = res.data;
                         $(".data_hutang").html('<span style="cursor: pointer;" class="btn_show_data_hutang text-warning text-center py-3 px-4 rounded border border-warning">TAMPILKAN</span>');
                     }
@@ -429,45 +436,129 @@
             }
         }
 
+
+        let countdown = (res) => {
+            $(".date_time").addClass("d-none");
+            sukses(res.message);
+            hasil_tap(data);
+            let x = 0;
+            let limit = 21;
+            if (data.kategori == "Hutang") {
+                limit = 61;
+            }
+            setInterval(() => {
+                x++;
+                let html = '';
+                html += '<div class="d-flex justify-content-center" style="margin-top: 30px;">';
+                html += '<div class="rounded-circle embos text-center p-2 fw-bold" style="cursor:pointer;font-size:111px;width:200px;height:200px;color:#cbf4f0;border:1px solid #3c3e46">' + x + '</div>';
+                html += '</div>';
+
+                if (x < limit) {
+                    $('.content').html(html);
+                } else {
+                    post("del_message", {
+                        id: 0
+                    }).then(rest => {
+                        if (rest.status == "200") {
+                            gagal("Waktu tap habis!.");
+
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1000);
+                        }
+                    })
+
+                }
+            }, 1000);
+        }
+
+        let menunggu_booking = "";
+        const booking = () => {
+            post("add_booking", {
+                data
+            }).then(res => {
+                if (res.status == "200") {
+                    let myModal = document.getElementById('menunggu');
+                    let modal = bootstrap.Modal.getOrCreateInstance(myModal)
+                    modal.hide();
+                    countdown(res);
+                    clearInterval(menunggu_booking);
+                }
+            })
+
+        }
+
         const add_booking = () => {
             post('add_booking', {
                 data
             }).then(res => {
                 if (res.status == "200") {
-                    $(".date_time").addClass("d-none");
-                    sukses(res.message);
-                    hasil_tap(data);
-                    let x = 0;
-                    let limit = 21;
-                    if (data.kategori == "Hutang") {
-                        limit = 61;
-                    }
-                    setInterval(() => {
-                        x++;
-                        let html = '';
-                        html += '<div class="d-flex justify-content-center" style="margin-top: 30px;">';
-                        html += '<div class="rounded-circle embos text-center p-2 fw-bold" style="cursor:pointer;font-size:111px;width:200px;height:200px;color:#cbf4f0;border:1px solid #3c3e46">' + x + '</div>';
-                        html += '</div>';
+                    countdown(res);
+                    // $(".date_time").addClass("d-none");
+                    // sukses(res.message);
+                    // hasil_tap(data);
+                    // let x = 0;
+                    // let limit = 21;
+                    // if (data.kategori == "Hutang") {
+                    //     limit = 61;
+                    // }
+                    // setInterval(() => {
+                    //     x++;
+                    //     let html = '';
+                    //     html += '<div class="d-flex justify-content-center" style="margin-top: 30px;">';
+                    //     html += '<div class="rounded-circle embos text-center p-2 fw-bold" style="cursor:pointer;font-size:111px;width:200px;height:200px;color:#cbf4f0;border:1px solid #3c3e46">' + x + '</div>';
+                    //     html += '</div>';
 
-                        if (x < limit) {
-                            $('.content').html(html);
-                        } else {
-                            post("del_message", {
-                                id: 0
-                            }).then(rest => {
-                                if (rest.status == "200") {
-                                    gagal("Waktu tap habis!.");
+                    //     if (x < limit) {
+                    //         $('.content').html(html);
+                    //     } else {
+                    //         post("del_message", {
+                    //             id: 0
+                    //         }).then(rest => {
+                    //             if (rest.status == "200") {
+                    //                 gagal("Waktu tap habis!.");
 
-                                    setTimeout(() => {
-                                        location.reload();
-                                    }, 1000);
-                                }
-                            })
+                    //                 setTimeout(() => {
+                    //                     location.reload();
+                    //                 }, 1000);
+                    //             }
+                    //         })
 
-                        }
-                    }, 1000);
+                    //     }
+                    // }, 1000);
                 } else {
-                    gagal(res.message);
+                    if (res.data == 1) {
+                        let html = "";
+                        html += '<div class="spinner-grow text-primary" role="status">';
+                        html += '<span class="visually-hidden">Loading...</span>';
+                        html += '</div>';
+                        html += '<div class="spinner-grow text-secondary" role="status">';
+                        html += '<span class="visually-hidden">Loading...</span>';
+                        html += '</div>';
+                        html += '<div class="spinner-grow text-success" role="status">';
+                        html += '<span class="visually-hidden">Loading...</span>';
+                        html += '</div>';
+                        html += '<div class="spinner-grow text-danger" role="status">';
+                        html += '<span class="visually-hidden">Loading...</span>';
+                        html += '</div>';
+                        html += '<div class="spinner-grow text-warning" role="status">';
+                        html += '<span class="visually-hidden">Loading...</span>';
+                        html += '</div>';
+                        html += '<div class="spinner-grow text-info" role="status">';
+                        html += '<span class="visually-hidden">Loading...</span>';
+                        html += '</div>';
+                        html += '<div class="text-danger">';
+                        html += 'Mohon tunggu, transaksi lain sedang berlangsung!.';
+                        html += '</div>';
+                        $(".modal_body_menunggu").html(html);
+                        let myModal = document.getElementById('menunggu');
+                        let modal = bootstrap.Modal.getOrCreateInstance(myModal)
+                        modal.show();
+
+                        menunggu_booking = setInterval(booking, 1000);
+                    } else {
+                        gagal(res.message);
+                    }
                 }
             })
         }
