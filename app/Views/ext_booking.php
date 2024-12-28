@@ -276,10 +276,10 @@
 
             let menu = $(this).data('menu');
             if (menu == "Saldo" || menu == "Hutang") {
+                $(this).addClass("select");
                 data["kategori"] = menu;
                 data["durasi"] = 0;
                 data["meja"] = 0;
-                $(this).addClass("select");
                 add_booking();
                 if (menu == "Hutang") {
                     dt_htng = setInterval(get_data_hutang, 1000);
@@ -287,10 +287,10 @@
                 return;
             }
             if (menu == "Absen") {
+                $(this).addClass("select");
                 data["kategori"] = menu;
                 data["durasi"] = 0;
                 data["meja"] = 0;
-                $(this).addClass("select");
                 add_booking();
             }
 

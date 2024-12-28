@@ -857,7 +857,7 @@ class Api extends BaseController
             'absen' => $val['time_server'],
             'terlambat' => $val['menit']
         ];
-
+        sukses_js("Tes", $value);
         $db = db('absen');
         if ($db->insert($value)) {
             $dbn = db('notif');
