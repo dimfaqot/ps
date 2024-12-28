@@ -653,7 +653,6 @@ function get_absen($user)
         gagal_js($user["nama"] . ' telat lebih 3 jam!. Absen untuk shift ' . $data['shift'] . ' ditutup!.');
     }
 
-    sukses_js($data);
 
     $msg = "Kamu tepat waktu.";
 
@@ -678,6 +677,7 @@ function get_absen($user)
         $msg = 'Kamu terlambat ' . $data['diff'] . ' untuk shift ' . $data['shift'] . '.!';
     }
     $data['msg'] = $msg;
+    sukses_js($data);
     return $data;
 }
 
