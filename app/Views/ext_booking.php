@@ -501,38 +501,6 @@
             }).then(res => {
                 if (res.status == "200") {
                     countdown(res);
-                    // $(".date_time").addClass("d-none");
-                    // sukses(res.message);
-                    // hasil_tap(data);
-                    // let x = 0;
-                    // let limit = 21;
-                    // if (data.kategori == "Hutang") {
-                    //     limit = 61;
-                    // }
-                    // setInterval(() => {
-                    //     x++;
-                    //     let html = '';
-                    //     html += '<div class="d-flex justify-content-center" style="margin-top: 30px;">';
-                    //     html += '<div class="rounded-circle embos text-center p-2 fw-bold" style="cursor:pointer;font-size:111px;width:200px;height:200px;color:#cbf4f0;border:1px solid #3c3e46">' + x + '</div>';
-                    //     html += '</div>';
-
-                    //     if (x < limit) {
-                    //         $('.content').html(html);
-                    //     } else {
-                    //         post("del_message", {
-                    //             id: 0
-                    //         }).then(rest => {
-                    //             if (rest.status == "200") {
-                    //                 gagal("Waktu tap habis!.");
-
-                    //                 setTimeout(() => {
-                    //                     location.reload();
-                    //                 }, 1000);
-                    //             }
-                    //         })
-
-                    //     }
-                    // }, 1000);
                 } else {
                     if (res.data == 1) {
                         let html = "";

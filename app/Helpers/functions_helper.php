@@ -598,6 +598,7 @@ function get_absen($user)
     $dbs = db('shift');
     $s = $dbs->where('kategori', $sess)->get()->getResultArray();
     if (!$s) {
+        message("Absen", "Data shift tidak ada!.", "400");
         gagal_js("Data shift tidak ada!.");
     }
 
@@ -644,12 +645,15 @@ function get_absen($user)
     $q = $db->where('role', $sess)->where('tgl', date('d'))->where('shift', $data['shift'])->whereIn('ket', ['Terlambat', 'Ontime'])->get()->getRowArray();
 
     if ($q) {
+        message("Absen", $user['nama'] . ' sudah absen', "400", 'untuk shift ' . $data['shift'] . '!.');
         gagal_js($user['nama'] . ' sudah absen untuk shift ' . $data['shift'] . '!.');
     }
 
     if ($data['menit'] < 0) {
+        message("Absen", $user['nama'] . ' belum waktunya absen', "400", 'untuk shift ' . $data['shift']  . '!.');
         gagal_js($user["nama"] . ' belum waktunya absen untuk shift ' . $data['shift']  . '!.');
     } else if (round($data['menit'] / 60) > 2) {
+        message("Absen", $user['nama'] . ' telat lebih 3 jam!.', "400", 'Absen untuk shift ' . $data['shift'] . ' ditutup!.');
         gagal_js($user["nama"] . ' telat lebih 3 jam!. Absen untuk shift ' . $data['shift'] . ' ditutup!.');
     }
 
@@ -664,11 +668,13 @@ function get_absen($user)
         if ($qp) {
             $data['poin'] = $qp['poin'];
         } else {
+            message("Absen", 'Data poin ontime tidak ada!.', "400");
             gagal_js("Data poin ontime tidak ada!.");
         }
     } else {
         $qat = $dbp->where("aturan", "Terlambat")->get()->getRowArray();
         if (!$qat) {
+            message("Absen", 'Data poin terlambat tidak ada!.', "400");
             gagal_js("Data poin terlambat tidak ada!.");
         }
         $data['ket'] = 'Terlambat';
