@@ -876,11 +876,15 @@ class Api extends BaseController
                 if ($val['ket'] == 'Terlambat') {
                     $message = ["message" => $val["msg"], "status" => "200", "kategori" => "Absen"];
                     if ($dbm->insert($message)) {
+                        clean_path('booking');
+                        clean_path('api');
                         sukses_js($val['msg']);
                     }
                 } else {
                     $message = ["message" => $val["msg"], "status" => "400", "kategori" => "Absen"];
                     if ($dbm->insert($message)) {
+                        clean_path('booking');
+                        clean_path('api');
                         gagal_js($val['msg']);
                     }
                 }
