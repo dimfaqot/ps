@@ -447,7 +447,6 @@
         let countdown = (res) => {
             $(".date_time").addClass("d-none");
             sukses(res.message);
-            hasil_tap(data);
             let x = 0;
             let limit = 21;
             if (data.kategori == "Hutang") {
@@ -485,6 +484,7 @@
                 data
             }).then(res => {
                 if (res.status == "200") {
+                    hasil_tap(data);
                     let myModal = document.getElementById('menunggu');
                     let modal = bootstrap.Modal.getOrCreateInstance(myModal)
                     modal.hide();
@@ -500,6 +500,7 @@
                 data
             }).then(res => {
                 if (res.status == "200") {
+                    hasil_tap(data);
                     countdown(res);
                 } else {
                     if (res.data == 1) {
