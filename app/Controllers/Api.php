@@ -835,24 +835,23 @@ class Api extends BaseController
         //     gagal_js("Menu absen belum dipilih!.");
         // }
 
-        $db = db('users');
-        $q = $db->whereNotIn("role", ["Member"])->where('finger', $decode['uid'])->get()->getRowArray();
+        $dbu = db('users');
+        $q = $dbu->whereNotIn("role", ["Member"])->where('finger', $decode['uid'])->get()->getRowArray();
 
         if (!$q) {
             gagal_js("Finger tidak terdaftar!.");
         }
 
         $val = get_absen($q);
-        sukses_js("Tes", $val);
 
         $value = [
             'tgl' => date('d', $val['time_server']),
-            'username' => user()['username'],
+            'username' => $q["username"],
             'ket' => $val['ket'],
             'poin' => $val['poin'],
-            'nama' => user()['nama'],
-            'role' => session('role'),
-            'user_id' => session('id'),
+            'nama' => $q["nama"],
+            'role' => $q["role"],
+            'user_id' => $q["id"],
             'shift' => $val['shift'],
             'jam' => $val['jam'],
             'absen' => $val['time_server'],
