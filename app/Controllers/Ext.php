@@ -147,6 +147,16 @@ class Ext extends BaseController
     public function booking()
     {
 
+        // $db = db('users');
+        // $q = $db->whereNotIn("role", ["Member"])->where('finger', 1)->get()->getRowArray();
+
+        // if (!$q) {
+        //     gagal_js("Finger tidak terdaftar!.");
+        // }
+
+        // $val = get_absen($q);
+        // dd($val['msg']);
+
         // dd(decode_jwt_fulus(""));
         // $dbu = db('users');
         // $user = $dbu->where('uid', "098979")->get()->getRowArray();
