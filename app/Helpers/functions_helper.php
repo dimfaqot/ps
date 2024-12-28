@@ -639,7 +639,6 @@ function get_absen($user)
         }
     }
     // $tes = [$date_server, $time_server, date('d/m/Y H:i:s', $time_server)];
-    sukses_js($data);
 
     $db = db('absen');
     $q = $db->where('role', $sess)->where('tgl', date('d'))->where('shift', $data['shift'])->whereIn('ket', ['Terlambat', 'Ontime'])->get()->getRowArray();
@@ -654,6 +653,7 @@ function get_absen($user)
         gagal_js($user["nama"] . ' telat lebih 3 jam!. Absen untuk shift ' . $data['shift'] . ' ditutup!.');
     }
 
+    sukses_js($data);
 
     $msg = "Kamu tepat waktu.";
 
