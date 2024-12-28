@@ -593,8 +593,8 @@ function get_closest($search, $arr)
 function get_absen($user)
 {
 
-    $sess = 'Admin Kantin';
-    // $sess = $user['role'];
+    // $sess = 'Admin Kantin';
+    $sess = $user['role'];
     $dbs = db('shift');
     $s = $dbs->where('kategori', $sess)->get()->getResultArray();
     if (!$s) {
