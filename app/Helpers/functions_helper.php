@@ -677,7 +677,7 @@ function get_absen($user)
         $msg = 'Kamu terlambat ' . $data['diff'] . ' untuk shift ' . $data['shift'] . '.!';
     }
     $data['msg'] = $msg;
-    // dd($datas, $tes, $closest, $data);
+    sukses_js($data["msg"], $data["ket"], $data["poin"], $data["Shift"], $data["jam"]);
     return $data;
 }
 
