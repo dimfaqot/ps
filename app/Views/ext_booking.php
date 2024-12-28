@@ -292,6 +292,7 @@
                 data["durasi"] = 0;
                 data["meja"] = 0;
                 add_booking();
+                return;
             }
 
             $(".durasi").removeClass("d-none");
