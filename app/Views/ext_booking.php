@@ -286,6 +286,13 @@
                 }
                 return;
             }
+            if (menu == "Absen") {
+                data["kategori"] = menu;
+                data["durasi"] = 0;
+                data["meja"] = 0;
+                $(this).addClass("select");
+                add_booking();
+            }
 
             $(".durasi").removeClass("d-none");
             $(".target_durasi").addClass("d-none");
