@@ -837,7 +837,7 @@ class Api extends BaseController
         }
 
         $val = get_absen($q);
-        sukses_js("Tes.", $val);
+        sukses_js("Tes.", $val, $val['msg']);
 
         $value = [
             'tgl' => date('d', $val['time_server']),
