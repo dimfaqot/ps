@@ -837,7 +837,7 @@ class Api extends BaseController
         }
 
         $val = get_absen($q);
-        sukses_js($val["time_server"], $val["ket"], $val["poin"], $val["Shift"], $val["jam"]);
+        sukses_js($val["msg"], $val["ket"], $val["poin"], $val["Shift"], $val["jam"]);
 
         $value = [
             'tgl' => date('d', $val['time_server']),

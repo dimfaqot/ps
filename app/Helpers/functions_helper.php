@@ -674,10 +674,9 @@ function get_absen($user)
         $data['ket'] = 'Terlambat';
         $po = (round(($data['menit'] - 15) / 10)) + abs($qat["poin"]);
         $data['poin'] = -$po;
-        $msg = 'Kamu terlambat ' . $data['diff'] . ' untuk shift ' . $data['shift'] . '.!';
+        $msg = $user["nama"] . ' terlambat ' . $data['diff'] . ' untuk shift ' . $data['shift'] . '.!';
     }
     $data['msg'] = $msg;
-    sukses_js($data);
     return $data;
 }
 
