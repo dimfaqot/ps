@@ -829,6 +829,12 @@ class Api extends BaseController
     {
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_finger($jwt);
+        $dbb = db("booking");
+        $qb = $dbb->where('Kategori', "Absen")->get()->getRowArray();
+        if (!$qb) {
+            gagal_js("Menu absen belum dipilih!.");
+        }
+
         $db = db('users');
         $q = $db->whereNotIn("role", ["Member"])->where('finger', $decode['uid'])->get()->getRowArray();
 
