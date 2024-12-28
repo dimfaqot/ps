@@ -866,7 +866,7 @@ class Api extends BaseController
             ];
 
             if ($dbn->insert($datan)) {
-                if ($val['msg'] == 'Kamu tepat waktu.') {
+                if ($val['ket'] == 'Terlambat') {
                     sukses_js($val['msg']);
                 } else {
                     gagal_js($val['msg']);
