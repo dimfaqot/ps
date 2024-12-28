@@ -597,7 +597,7 @@ function get_absen($user)
     $sess = $user['role'];
     $dbs = db('shift');
     $s = $dbs->where('kategori', $sess)->get()->getResultArray();
-
+    sukses_js("ok", $s);
 
     // $time_shift = strtotime('2024-11-22 00:00:00');
     // $time_server = strtotime('2024-11-23 01:00:00');
