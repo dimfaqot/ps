@@ -597,6 +597,9 @@ function get_absen($user)
     // $sess = $user['role'];
     $dbs = db('shift');
     $s = $dbs->where('kategori', $sess)->get()->getResultArray();
+    if (!$s) {
+        gagal_js("Data shift tidak ada!.");
+    }
 
     // $time_shift = strtotime('2024-11-22 00:00:00');
     // $time_server = strtotime('2024-11-23 01:00:00');
@@ -660,9 +663,14 @@ function get_absen($user)
         $qp = $dbp->where('aturan', $data['ket'])->get()->getRowArray();
         if ($qp) {
             $data['poin'] = $qp['poin'];
+        } else {
+            gagal_js("Data poin ontime tidak ada!.");
         }
     } else {
         $qat = $dbp->where("aturan", "Terlambat")->get()->getRowArray();
+        if (!$qat) {
+            gagal_js("Data poin terlambat tidak ada!.");
+        }
         $data['ket'] = 'Terlambat';
         $po = (round(($data['menit'] - 15) / 10)) + abs($qat["poin"]);
         $data['poin'] = -$po;
