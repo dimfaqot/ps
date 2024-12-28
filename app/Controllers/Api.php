@@ -865,13 +865,17 @@ class Api extends BaseController
                 'qty' => $value['poin']
             ];
 
-            $dbn->insert($datan);
-
-            if ($val['msg'] == 'Kamu tepat waktu.') {
-                sukses_js($val['msg']);
+            if ($dbn->insert($datan)) {
+                if ($val['msg'] == 'Kamu tepat waktu.') {
+                    sukses_js($val['msg']);
+                } else {
+                    gagal_js($val['msg']);
+                }
             } else {
-                gagal_js($val['msg']);
+                gagal_js("Insert notif gagal!.");
             }
+        } else {
+            gagal_js("Insert absen gagal!.");
         }
     }
 }
