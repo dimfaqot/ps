@@ -656,6 +656,7 @@ function get_absen($user)
 
     $msg = "Kamu tepat waktu.";
 
+    sukses_js($data["menit"], $data["time_shift"], $data["Shift"], $data);
 
     $dbp = db('aturan');
     if ($data['menit'] < 16) {
@@ -677,7 +678,6 @@ function get_absen($user)
         $msg = 'Kamu terlambat ' . $data['diff'] . ' untuk shift ' . $data['shift'] . '.!';
     }
     $data['msg'] = $msg;
-    sukses_js($data["msg"], $data["ket"], $data["poin"], $data["Shift"], $data["jam"]);
     return $data;
 }
 
