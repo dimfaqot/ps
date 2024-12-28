@@ -639,6 +639,7 @@ function get_absen($user)
         }
     }
     // $tes = [$date_server, $time_server, date('d/m/Y H:i:s', $time_server)];
+    sukses_js($data);
 
     $db = db('absen');
     $q = $db->where('role', $sess)->where('tgl', date('d'))->where('shift', $data['shift'])->whereIn('ket', ['Terlambat', 'Ontime'])->get()->getRowArray();
@@ -656,7 +657,6 @@ function get_absen($user)
 
     $msg = "Kamu tepat waktu.";
 
-    sukses_js($data["menit"], $data["time_shift"], $data["Shift"], $data);
 
     $dbp = db('aturan');
     if ($data['menit'] < 16) {
