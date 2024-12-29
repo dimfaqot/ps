@@ -612,19 +612,23 @@
 
                         });
                     } else {
+                        let actives = [];
                         res.data.forEach(e => {
-                            elem.forEach(el => {
-                                let meja = el.dataset.meja;
-                                if (meja == e.meja) {
-                                    el.classList.remove("default");
-                                    el.classList.add("active");
-                                    $(".div_durasi_" + e.meja).text(e.durasi);
-                                } else {
-                                    el.classList.remove("active");
-                                    el.classList.add("default");
-                                    $(".div_durasi_" + el.dataset.meja).text("0h 0m");
-                                }
-                            });
+                            $(".body_content_" + e.meja).removeClass("default");
+                            $(".body_content_" + e.meja).addClass("active");
+                            $(".div_durasi_" + e.meja).text(e.durasi);
+                            // elem.forEach(el => {
+                            //     let meja = el.dataset.meja;
+                            //     if (meja == e.meja) {
+                            //         el.classList.remove("default");
+                            //         el.classList.add("active");
+                            //         $(".div_durasi_" + meja).text(e.durasi);
+                            //     } else {
+                            //         el.classList.remove("active");
+                            //         el.classList.add("default");
+                            //         $(".div_durasi_" + el.dataset.meja).text("0h 0m");
+                            //     }
+                            // });
                         })
 
                     }
