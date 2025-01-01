@@ -196,7 +196,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                     html_ps += '<div class="d-flex justify-content-center gap-2 my-2">';
                 }
                 html_ps += '<div class="rounded-circle embos2 text-center fw-bold btn_meja_' + e.meja + ' btn_meja ' + (e.is_active == 1 ? 'active' : 'default') + '" data-meja="' + e.meja + '" data-is_active="' + e.is_active + '" style="cursor:pointer;padding:13px 5px 5px 6px;font-size:35px;width: 85px;height:85px;color:#7c6f3e;border:1px solid #fce882">';
-                html_ps += '<div class="text-center" style="font-size:9px;margin-bottom:-13px">MEJA</div>' + e.meja;
+                html_ps += '<div class="text-center" style="font-size:9px;margin-bottom:-8px">MEJA</div>' + e.meja;
                 html_ps += '<div class="text-center div_durasi_' + e.meja + '" style="font-size:9px;margin-top:-5px"></div>';
                 html_ps += '</div>';
                 if (i % 4 == 3) {
@@ -208,7 +208,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                     html_billiard += '<div class="d-flex justify-content-center gap-2 my-2">';
                 }
                 html_billiard += '<div class="rounded-circle embos2 text-center fw-bold btn_meja_' + e.meja + ' btn_meja ' + (e.is_active == 1 ? 'active' : 'default') + '" data-meja="' + e.meja + '" data-is_active="' + e.is_active + '" style="cursor:pointer;padding:13px 5px 5px 6px;font-size:35px;width: 85px;height:85px;color:#7c6f3e;border:1px solid #fce882">';
-                html_billiard += '<div class="text-center" style="font-size:9px;margin-bottom:-13px">MEJA</div>' + e.meja;
+                html_billiard += '<div class="text-center" style="font-size:9px;margin-bottom:-8px">MEJA</div>' + e.meja;
                 html_billiard += '<div class="text-center div_durasi_' + e.meja + '" style="font-size:9px;margin-top:-5px"></div>';
                 html_billiard += '</div>';
                 if (i % 4 == 3) {

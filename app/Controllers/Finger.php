@@ -95,6 +95,13 @@ class Finger extends BaseController
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_finger($jwt);
 
+        $dbu = db('users');
+        $q = $dbu->whereNotIn("role", ["Member"])->where('finger', $decode['uid'])->get()->getRowArray();
+
+        if (!$q) {
+            gagal_js("Finger tidak terdaftar!.");
+        }
+
         message($decode["uid"], $decode["data3"], $decode["data2"], $decode["data4"], $decode["data5"]);
         sukses_js("Add message sukses.");
     }
