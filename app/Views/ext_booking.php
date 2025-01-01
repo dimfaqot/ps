@@ -728,8 +728,8 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                 }
 
                 if (menu == "Topup") {
+                    data["meja"] = 0;
                     call_durasi(menu.toLowerCase());
-                    // data["meja"] = 0;
                 }
 
 
