@@ -149,14 +149,14 @@ class Ext extends BaseController
 
         // dd(decode_jwt_fulus("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmdWx1cyI6MH0.xMR3V0PQ703flTaEkOgrnUiKC76BHAeptjAtj323ohk"));
 
-        $db = db("users");
-        $q = $db->get()->getResultArray();
+        // $db = db("users");
+        // $q = $db->get()->getResultArray();
 
-        foreach ($q as $i) {
-            $i['fulus'] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmdWx1cyI6MH0.xMR3V0PQ703flTaEkOgrnUiKC76BHAeptjAtj323ohk";
-            $db->where('id', $i['id']);
-            $db->update($i);
-        }
+        // foreach ($q as $i) {
+        //     $i['fulus'] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmdWx1cyI6MH0.xMR3V0PQ703flTaEkOgrnUiKC76BHAeptjAtj323ohk";
+        //     $db->where('id', $i['id']);
+        //     $db->update($i);
+        // }
         // $db = db('users');
         // $q = $db->whereNotIn("role", ["Member"])->where('finger', 1)->get()->getRowArray();
 
