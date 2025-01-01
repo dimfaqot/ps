@@ -597,7 +597,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                 sukses(res.message);
                 let x = 0;
                 let limit = 21;
-                if (data.kategori == "Hutang") {
+                if (data.kategori == "Hutang" || data.kategori == "Add" || data.kategori == "Delete") {
                     limit = 61;
                 }
                 setInterval(() => {
