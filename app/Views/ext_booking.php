@@ -143,7 +143,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="background-color: transparent;border:none">
                 <div class="d-flex justify-content-center">
-                    <div class="div_judul_menunggu px-3 border-bottom border-warning text-warning" style="margin-top:-300px;margin-bottom:300px"></div>
+                    <div class="div_judul_menunggu px-3 border-bottom border-warning text-warning" style="margin-top:-100px;margin-bottom:100px"></div>
                 </div>
                 <div class="modal-body text-center modal_body_menunggu" style="margin-top: -150px;">
 
