@@ -158,7 +158,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             <div class="modal-content" style="background-color: transparent;border:none">
                 <div class="modal-body text-center">
                     <div class="d-flex justify-content-center gap-2 py-2 rounded border border-info">
-                        <div class="embos countdown text-center mt-1" style="color:#cbf4f0;width:30px;height:30px;font-size:16px;border-radius:50%;;border:1px solid #3c3e46"></div>
+                        <div class="embos countdown text-center mt-1 pt-1" style="color:#cbf4f0;width:30px;height:30px;font-size:16px;border-radius:50%;;border:1px solid #3c3e46"></div>
                         <div class="text-light div_message_hutang" style="font-size: x-large;">
                             TAP UNTUK MELUNASI
                         </div>
