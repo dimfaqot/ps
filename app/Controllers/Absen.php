@@ -19,49 +19,52 @@ class Absen extends BaseController
         $data = encode_jwt(json_decode(json_encode($this->request->getVar('data')), true));
         sukses_js('Jwt Sukses.', $data);
     }
-    // public function presentation($jwt)
-    // {
+    public function presentation($jwt)
+    {
+        $user = user();
+        if (!$user) {
+            gagal(base_url('login'), "Kamu belum login!.");
+        }
+        $val = get_absen($user);
 
-    //     $val = get_absen();
+        $value = [
+            'tgl' => date('d', $val['time_server']),
+            'username' => user()['username'],
+            'ket' => $val['ket'],
+            'poin' => $val['poin'],
+            'nama' => user()['nama'],
+            'role' => session('role'),
+            'user_id' => session('id'),
+            'shift' => $val['shift'],
+            'jam' => $val['jam'],
+            'absen' => $val['time_server'],
+            'terlambat' => $val['menit']
+        ];
 
-    //     $value = [
-    //         'tgl' => date('d', $val['time_server']),
-    //         'username' => user()['username'],
-    //         'ket' => $val['ket'],
-    //         'poin' => $val['poin'],
-    //         'nama' => user()['nama'],
-    //         'role' => session('role'),
-    //         'user_id' => session('id'),
-    //         'shift' => $val['shift'],
-    //         'jam' => $val['jam'],
-    //         'absen' => $val['time_server'],
-    //         'terlambat' => $val['menit']
-    //     ];
+        $db = db('absen');
+        if ($db->insert($value)) {
+            $dbn = db('notif');
+            $datan = [
+                'kategori' => 'Absen',
+                'pemesan' => $value['nama'],
+                'tgl' => $value['absen'],
+                'harga' => time(),
+                'menu' => ($value['ket'] == 'Ontime' ? 'Absen pada ' . date('H:i', $val['time_server']) : $val['diff']),
+                'meja' => $value['ket'],
+                'qty' => $value['poin']
+            ];
 
-    //     $db = db('absen');
-    //     if ($db->insert($value)) {
-    //         $dbn = db('notif');
-    //         $datan = [
-    //             'kategori' => 'Absen',
-    //             'pemesan' => $value['nama'],
-    //             'tgl' => $value['absen'],
-    //             'harga' => time(),
-    //             'menu' => ($value['ket'] == 'Ontime' ? 'Absen pada ' . date('H:i', $val['time_server']) : $val['diff']),
-    //             'meja' => $value['ket'],
-    //             'qty' => $value['poin']
-    //         ];
+            $dbn->insert($datan);
 
-    //         $dbn->insert($datan);
-
-    //         if ($val['msg'] == 'Kamu tepat waktu.') {
-    //             sukses(base_url('home'), $val['msg']);
-    //         } else {
-    //             gagal_with_button(base_url('home'), $val['msg']);
-    //         }
-    //     } else {
-    //         gagal_with_button(base_url('home'), 'Absen gagal!.');
-    //     }
-    // }
+            if ($val['msg'] == 'Kamu tepat waktu.') {
+                sukses(base_url('home'), $val['msg']);
+            } else {
+                gagal_with_button(base_url('home'), $val['msg']);
+            }
+        } else {
+            gagal_with_button(base_url('home'), 'Absen gagal!.');
+        }
+    }
 
     public function poin_absen()
     {

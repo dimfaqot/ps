@@ -537,16 +537,19 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
 
             const tangan = () => {
                 setInterval(() => {
-                    $(".tangan").removeClass("text-danger");
-                    $(".tangan").addClass("text-primary");
-                }, 500);
-                setInterval(() => {
-                    $(".tangan").addClass("text-danger");
-                    $(".tangan").removeClass("text-primary");
-                }, 1000);
+                    if ($(".tangan").hasClass("text-danger")) {
+                        $(".tangan").removeClass("text-danger");
+                        $(".tangan").addClass("text-primary");
+
+                    } else {
+                        $(".tangan").addClass("text-danger");
+                        $(".tangan").removeClass("text-primary");
+
+                    }
+                }, 600);
             }
 
-            tangan();
+
 
             const remove_cls = (cls, rmv, add) => {
                 let elem = document.querySelectorAll('.' + cls);
@@ -832,6 +835,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                 modalM.hide();
                 $(this).html("");
             })
+            tangan();
         </script>
 </body>
 
