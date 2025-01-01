@@ -868,6 +868,31 @@ function konfirmasi_root($booking, $user)
         }
     }
 }
+function konfirmasi_root_finger($booking, $user)
+{
+    if (!$user) {
+        clear_tabel('booking');
+        message($booking['kategori'], "Finger tidak ditemukan!.", 400);
+        gagal_js('Finger tidak ditemukan!.');
+    }
+
+    if ($user['role'] !== 'Root') {
+        clear_tabel('booking');
+        message($booking['kategori'], "Finger ditolakl!.", 400);
+        gagal_js('Finger ditolakl!.');
+    } else {
+        $db = db('api');
+        $data = ['status' => $user["finger"]];
+        if ($db->insert($data)) {
+            message($booking['kategori'], $user['nama'] . " akses diterima.", 200, "Sentuh finger member...");
+            sukses_js($user['nama'] . ' akses diterima.', 'next');
+        } else {
+            clear_tabel('booking');
+            message($booking['kategori'], "Gagal api!.", 400);
+            gagal_js('Gagal api!.');
+        }
+    }
+}
 
 
 function konfirmasi_uid_exist($uid_exist, $booking)
@@ -886,5 +911,23 @@ function konfirmasi_user_exist($user_m, $booking)
         clear_tabel('booking');
         clear_tabel('api');
         gagal_arduino("User tidak ada!.");
+    }
+}
+function konfirmasi_uid_exist_finger($uid_exist, $booking)
+{
+    if ($uid_exist) {
+        message($booking['kategori'], "Finger sudah terdaftar!.", 400);
+        clear_tabel('booking');
+        clear_tabel('api');
+        gagal_js("Finger sudah terdaftar!.");
+    }
+}
+function konfirmasi_user_exist_finger($user_m, $booking)
+{
+    if (!$user_m) {
+        message($booking['kategori'], "User tidak ada!.", 400);
+        clear_tabel('booking');
+        clear_tabel('api');
+        gagal_js("User tidak ada!.");
     }
 }

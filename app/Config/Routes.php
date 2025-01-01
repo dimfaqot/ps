@@ -31,7 +31,9 @@ $routes->post('/api/Barber', 'Api::tap_booking_barber');
 
 // api finger
 $routes->post('/finger/get_booking', 'Finger::get_booking');
-$routes->post('/finger/absen', 'Finger::absen');
+$routes->post('/finger/Del_message', 'Finger::del_message');
+$routes->post('/finger/Delete', 'Finger::delete');
+$routes->post('/finger/Absen', 'Finger::absen');
 $routes->post('/finger/add_message', 'Finger::add_message');
 $routes->post('/finger/add', 'Finger::add');
 
