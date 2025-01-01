@@ -824,4 +824,77 @@ class Api extends BaseController
             gagal_arduino('Silahkan pilih meja!');
         }
     }
+
+    public function tap_booking_remove()
+    {
+        $jwt = $this->request->getVar('jwt');
+        $decode = decode_jwt_fulus($jwt);
+
+        // kalau dalam jwt ada keu topupId berarti kartu member yang ditap setelah kartu Root
+        $member_uid = key_exists("member_uid", $decode);
+
+
+        $db = db('booking');
+        $q = $db->get()->getRowArray();
+
+        if (!$q) {
+            message($q['kategori'], "Data booking tidak ditemukan!.", 400);
+            gagal_arduino('Data booking tidak ditemukan!');
+        }
+
+        $dbu = db('users');
+        $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
+
+
+        if ($member_uid == true) {
+            $dba = db('api');
+            $qa = $dba->get()->getRowArray();
+            // api harus ada uid dan uid harus admin
+            if ($qa) {
+                $admin = $dbu->where('uid', $qa['status'])->get()->getRowArray();
+                if (!$admin) {
+                    clear_tabel('booking');
+                    message($q['kategori'], "Akses admin dibutuhkan!.", 400);
+                    gagal_arduino('Akses admin dibutuhkan!.');
+                } else {
+                    if ($admin['role'] !== 'Root') {
+                        clear_tabel('booking');
+                        clear_tabel('api');
+                        message($q['kategori'], "Akses admin dibutuhkan!", 400);
+                        gagal_arduino('Akses admin dibutuhkan!.');
+                    }
+                }
+            } else {
+                clear_tabel('booking');
+                message($q['kategori'], "Akses admin dibutuhkan!.", 400);
+                gagal_arduino('Akses admin dibutuhkan!.');
+            }
+
+
+            $uid_member = $decode['uid'];
+            if ($uid_member == '') {
+                $uid_member = $decode("member_uid");
+            }
+
+            $user_m = $dbu->where('uid', $uid_member)->where('role', 'Member')->get()->getRowArray();
+            if (!$user_m) {
+                message($q['kategori'], "Kartu tidak dikenal!.", 400);
+                clear_tabel('booking');
+                clear_tabel('api');
+                gagal_arduino("Kartu tidak dikenal!.");
+            }
+
+
+
+            $user_m["uid"] = time();
+
+            $dbu->where('id', $user_m['id']);
+            if ($dbu->update($user_m)) {
+                sukses_arduino("Kartu " . $user_m['nama'] . " sukses dihapus.", "", $admin['nama']);
+            }
+        } else {
+            clear_tabel('api');
+            konfirmasi_root($q, $user);
+        }
+    }
 }

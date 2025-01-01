@@ -631,9 +631,9 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                                 let html = '';
                                 let status = res.data.status;
 
-                                html += '<h6 class="text-center ' + (status == "200" ? "text-light" : "text-danger") + '">' + res.data.message + '</h6>';
+                                html += '<h6 class="text-center ' + (status == "400" ? "text-danger" : "text-light") + '">' + res.data.message + '</h6>';
                                 if (res.data.uang !== "") {
-                                    html += '<h5 class="text-center ' + (status == "200" ? "text-light" : "text-danger") + '">' + res.data.uang + '</h5>';
+                                    html += '<h5 class="text-center ' + (status == "400" ? "text-danger" : "text-light") + '">' + res.data.uang + '</h5>';
                                 }
 
                                 $('.body_message').html(html);
