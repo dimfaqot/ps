@@ -887,6 +887,7 @@ class Api extends BaseController
 
 
             $user_m["uid"] = time();
+            $user_m["fulus"] = encode_jwt_fulus(["fulus" => 0]);
 
             $dbu->where('id', $user_m['id']);
             if ($dbu->update($user_m)) {
