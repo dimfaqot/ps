@@ -147,6 +147,16 @@ class Ext extends BaseController
     public function booking()
     {
 
+        // dd(decode_jwt_fulus("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmdWx1cyI6MH0.xMR3V0PQ703flTaEkOgrnUiKC76BHAeptjAtj323ohk"));
+
+        $db = db("users");
+        $q = $db->get()->getResultArray();
+
+        foreach ($q as $i) {
+            $i['fulus'] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmdWx1cyI6MH0.xMR3V0PQ703flTaEkOgrnUiKC76BHAeptjAtj323ohk";
+            $db->where('id', $i['id']);
+            $db->update($i);
+        }
         // $db = db('users');
         // $q = $db->whereNotIn("role", ["Member"])->where('finger', 1)->get()->getRowArray();
 
@@ -165,14 +175,14 @@ class Ext extends BaseController
         // dd($fulus);
         // dd(decode_jwt_finger("eyJhbGciOiAiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJ1aWQiOiIxIiwiZGF0YTMiOiIiLCJkYXRhNCI6IiIsImRhdGE1IjoiIiwiZGF0YTYiOiIifQ.A_dvGajjO6CkJZfAE2Rs9bFD1VlPBWONV2Q0bxbfO60"));
 
-        $db = db('barber');
-        $q = $db->get()->getResultArray();
-        foreach ($q as $i) {
-            $i['metode'] = 'Cash';
-            $i['status'] = 1;
-            $db->where('id', $i['id']);
-            $db->update($i);
-        }
+        // $db = db('barber');
+        // $q = $db->get()->getResultArray();
+        // foreach ($q as $i) {
+        //     $i['metode'] = 'Cash';
+        //     $i['status'] = 1;
+        //     $db->where('id', $i['id']);
+        //     $db->update($i);
+        // }
         return view('ext_booking', ['judul' => 'BOOKING']);
     }
     public function add_booking()
