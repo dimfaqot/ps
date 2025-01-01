@@ -242,10 +242,17 @@ class Ext extends BaseController
     }
     public function search_db()
     {
+        $kategori = clear($this->request->getVar('kategori'));
         $value = clear($this->request->getVar('value'));
         $db = db('users');
 
-        $q = $db->whereIn('role', ['Member'])->like('nama', $value, "both")->limit(8)->get()->getResultArray();
+        $db;
+        if ($kategori == "Add" || $kategori == "Delete") {
+            $db->whereNotIn("role", "Member");
+        } else {
+            $db->whereIn('role', ['Member']);
+        }
+        $q = $db->like('nama', $value, "both")->limit(8)->get()->getResultArray();
         sukses_js('Ok', $q);
     }
 
