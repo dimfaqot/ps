@@ -505,7 +505,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                 let value = $(this).val();
                 let kategori = $(this).data("kategori");
                 post('daftar/search_db', {
-                    kategori: data.kategori,
+                    kategori,
                     value
                 }).then(res => {
                     if (res.status == '200') {

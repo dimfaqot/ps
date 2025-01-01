@@ -248,7 +248,7 @@ class Ext extends BaseController
 
         $db;
         if ($kategori == "Add" || $kategori == "Delete") {
-            $db->whereNotIn("role", "Member");
+            $db->whereNotIn("role", ["Member"]);
         } else {
             $db->whereIn('role', ['Member']);
         }
