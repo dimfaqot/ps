@@ -226,6 +226,7 @@ $routes->post('/barber/hutang', 'Barber::hutang');
 $routes->get('/aturan', 'Aturan::index');
 $routes->post('/aturan/add', 'Aturan::add');
 $routes->post('/aturan/update', 'Aturan::update');
+$routes->post('/aturan/tap', 'Aturan::tap');
 
 // Hutang __________________________________
 $routes->get('/hutang', 'Hutang::index');

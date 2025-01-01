@@ -11,6 +11,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
         <?php if (session('role') == 'Root'): ?>
             <button data-bs-toggle="modal" class="btn_info mb-2" data-bs-target="#modal_user">Users</button>
             <a href="<?= base_url('absen/reset_absen'); ?>" class="btn_danger mb-2">Reset Absen</a>
+            <a href="" class="btn_purple btn_tap mb-2">Tap</a>
         <?php endif; ?>
         <button data-id="<?= session('id'); ?>" data-nama="<?= user()['nama']; ?>" class="btn_primary mb-2 fw-bold poin_absen">POIN: <?= poin_absen(session('id'))['poin']; ?></button>
     </div>
@@ -142,6 +143,34 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
         </div>
     </div>
 </div>
+<!-- Modal detail tap-->
+<div class="modal fade" id="tap" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body body_tap">
+                <div class="d-flex gap-2 mb-3">
+                    <select class="form-select form-select-sm tap_tahun filter_tap">
+                        <?php foreach (get_tahuns('billiard') as $i) : ?>
+                            <option <?= ($i == date('Y') ? 'selected' : ''); ?> value="<?= $i; ?>"><?= $i; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <select class="form-select form-select-sm tap_bulan filter_tap">
+                        <?php foreach (bulan() as $i): ?>
+                            <option <?= ($i['angka'] == date('m' ? 'selected' : '')); ?> value="<?= $i['angka']; ?>"><?= $i['angka']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <select class="form-select form-select-sm tap_kategori filter_tap">
+                        <?php foreach (options("Bidang") as $i): ?>
+                            <option <?= ($i['value'] == "Billiard" ? 'selected' : ''); ?> value="<?= $i['value']; ?>"><?= $i['value']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="body_value_tap"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!-- Modal user-->
@@ -188,6 +217,9 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
     </div>
 </div>
 <script>
+    // let myModal = document.getElementById('tap');
+    // let modal = bootstrap.Modal.getOrCreateInstance(myModal)
+    // modal.show();
     $(document).on('click', '.koperasi', function(e) {
         e.preventDefault();
 
@@ -672,6 +704,80 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
         }).then(res => {
             if (res.status == "200") {
                 sukses(res.message);
+            } else {
+                gagal(res.message);
+            }
+        })
+
+    })
+
+    $(document).on('click', '.btn_tap', function(e) {
+        e.preventDefault();
+
+        let myModal = document.getElementById('tap');
+        let modal = bootstrap.Modal.getOrCreateInstance(myModal)
+        modal.show();
+
+    })
+    $(document).on('change', '.filter_tap', function(e) {
+        e.preventDefault();
+        let tahun = $(".tap_tahun").val();
+        let bulan = $(".tap_bulan").val();
+        let kategori = $(".tap_kategori").val();
+        if (tahun == "") {
+            gagal("Tahun belum dipilih!.");
+            return;
+        }
+        if (bulan == "") {
+            gagal("Bulan belum dipilih!.");
+            return;
+        }
+        if (kategori == "") {
+            gagal("Kategori belum dipilih!.");
+            return;
+        }
+        if (kategori == "Kantin") {
+            gagal("Kantin belum ada!.");
+            return;
+        }
+        post("aturan/tap", {
+            tahun,
+            bulan,
+            kategori
+        }).then(res => {
+            if (res.status == "200") {
+                let total = 0;
+                let html = "";
+                if (res.data.length == 0) {
+                    html += '<span class="text_danger">Data tidak ditemukan!.</span>';
+                } else {
+                    html += '<h6 class="total_tap"></h6>';
+                    html += '<table class="table table-sm table-bordered">';
+                    html += '<thead>';
+                    html += '<tr>';
+                    html += '<th class="text-center">#</th>';
+                    html += '<th class="text-center">Tgl</th>';
+                    html += '<th class="text-center">Barang</th>';
+                    html += '<th class="text-center">Harga</th>';
+                    html += '</tr>';
+                    html += '</thead>';
+                    html += '<tbody>';
+                    res.data.forEach((e, i) => {
+                        total += parseInt(e.harga);
+                        html += '<tr>';
+                        html += '<td class="text-center">' + (i + 1) + '</td>';
+                        html += '<td class="text-center">' + e.tgl + '</td>';
+                        html += '<td>' + e.barang + '</td>';
+                        html += '<td class="text-end">' + angka(e.harga) + '</td>';
+                        html += '</tr>';
+                    })
+
+                    html += '</tbody>';
+                    html += '</table>';
+                }
+
+                $(".body_value_tap").html(html);
+                $(".total_tap").text("TOTAL: " + angka(total));
             } else {
                 gagal(res.message);
             }
