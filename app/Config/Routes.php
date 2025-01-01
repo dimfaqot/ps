@@ -20,7 +20,6 @@ $routes->get('/api/iot_notif_pesanan', 'Api::iot_notif_pesanan');
 $routes->post('/api/get_booking', 'Api::get_booking');
 $routes->post('/api/end_booking', 'Api::end_booking');
 $routes->post('/api/del_booking', 'Api::del_booking');
-$routes->post('/api/add_message', 'Api::add_message');
 $routes->post('/api/Daftar', 'Api::tap_booking_daftar');
 $routes->post('/api/Saldo', 'Api::tap_booking_saldo');
 $routes->post('/api/Topup', 'Api::tap_booking_topup');
@@ -30,7 +29,10 @@ $routes->post('/api/Billiard', 'Api::tap_booking_billiard');
 $routes->post('/api/Barber', 'Api::tap_booking_barber');
 
 // api finger
-$routes->post('/api/finger/absen', 'Api::finger_absen');
+$routes->post('/finger/get_booking', 'Finger::get_booking');
+$routes->post('/finger/absen', 'Finger::absen');
+$routes->post('/finger/add_message', 'Finger::add_message');
+$routes->post('/finger/add', 'Finger::add');
 
 // bot
 $routes->get('/api/wabot', 'Api::wabot');
@@ -190,7 +192,7 @@ $routes->post('/ext/add_uid', 'Ext::add_uid');
 $routes->get('/booking', 'Ext::booking');
 $routes->post('/get_durasi', 'Ext::get_durasi');
 $routes->post('/daftar/search_db', 'Ext::search_db');
-$routes->post('/hasil_tap', 'Ext::hasil_tap');
+$routes->post('/message_server', 'Ext::message_server');
 $routes->post('/add_booking', 'Ext::add_booking');
 $routes->post('/del_message', 'Ext::del_message');
 $routes->post('/ext/data_hutang', 'Ext::data_hutang');

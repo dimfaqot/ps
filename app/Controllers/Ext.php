@@ -239,7 +239,7 @@ class Ext extends BaseController
         sukses_js('Ok', $q);
     }
 
-    public function hasil_tap()
+    public function message_server()
     {
         $db = db('message');
         $q = $db->get()->getRowArray();
@@ -269,7 +269,6 @@ class Ext extends BaseController
         if (!$res) {
             gagal_js("Kosong");
         } else {
-
             sukses_js("Sukses.", $res);
         }
     }

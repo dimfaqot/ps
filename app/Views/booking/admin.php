@@ -1,9 +1,18 @@
-<div class="target_admin d-none text-center mt-5">
-    <span class="border border-warning text-warning rounded me-1 p-3 daftar" style="font-size:x-small;cursor:pointer">
-        <i class="fa-regular fa-user"></i> DAFTAR
-    </span>
-    <span class="div_btn_ok_admin me-1"></span>
-    <span class="border border-warning text-warning rounded p-3 topup" style="font-size:x-small;cursor:pointer">
-        <i class="fa-regular fa-user"></i> TOPUP
-    </span>
+<div class="div_admin">
+    <div class="rounded div_angka_topup px-4 pt-4 mt-5">
+        <h6 class="text-center text-light mb-4">TOPUP</h6>
+        <?php for ($i = 1; $i < 10; $i++) : ?>
+            <?php $angka = ($i == 7 ? 10 : ($i == 8 ? 20 : ($i == 9 ? 30 : $i))); ?>
+            <?php if ($i == 1 || $i % 3 == 1): ?>
+                <div class="d-flex justify-content-center gap-5 mb-5">
+                <?php endif; ?>
+                <div class="rounded-circle embos text-center p-2 fw-bold angka_topup" data-durasi="<?= $angka; ?>" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32"><?= $angka; ?></div>
+                <?php if ($i > 0 && $i % 3 == 0): ?>
+                </div>
+            <?php endif; ?>
+        <?php endfor; ?>
+        <div class="sticky-bottom d-grid div_btn_ok">
+
+        </div>
+    </div>
 </div>

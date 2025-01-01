@@ -806,6 +806,11 @@ class Api extends BaseController
             gagal_arduino("Saldo tidak cukup!", rupiah($saldo) . " < " . rupiah($total));
         }
     }
+
+    public function wabot()
+    {
+        return view('api/wabot', ['judul' => "WA BOT"]);
+    }
     public function get_booking()
     {
         $jwt = $this->request->getVar('jwt');
@@ -817,81 +822,6 @@ class Api extends BaseController
             sukses_arduino('Silahkan tap!.', $q['kategori']);
         } else {
             gagal_arduino('Silahkan pilih meja!');
-        }
-    }
-
-    public function wabot()
-    {
-        return view('api/wabot', ['judul' => "WA BOT"]);
-    }
-
-    public function finger_absen()
-    {
-        $jwt = $this->request->getVar('jwt');
-        $decode = decode_jwt_finger($jwt);
-        $dbb = db("booking");
-        $qb = $dbb->where('Kategori', "Absen")->get()->getRowArray();
-        if (!$qb) {
-            gagal_js("Menu absen belum dipilih!.");
-        }
-
-        $dbu = db('users');
-        $q = $dbu->whereNotIn("role", ["Member"])->where('finger', $decode['uid'])->get()->getRowArray();
-
-        if (!$q) {
-            gagal_js("Finger tidak terdaftar!.");
-        }
-
-        $val = get_absen($q);
-
-        $value = [
-            'tgl' => date('d', $val['time_server']),
-            'username' => $q["username"],
-            'ket' => $val['ket'],
-            'poin' => $val['poin'],
-            'nama' => $q["nama"],
-            'role' => $q["role"],
-            'user_id' => $q["id"],
-            'shift' => $val['shift'],
-            'jam' => $val['jam'],
-            'absen' => $val['time_server'],
-            'terlambat' => $val['menit']
-        ];
-        $db = db('absen');
-        if ($db->insert($value)) {
-            $dbn = db('notif');
-            $datan = [
-                'kategori' => 'Absen',
-                'pemesan' => $value['nama'],
-                'tgl' => $value['absen'],
-                'harga' => time(),
-                'menu' => ($value['ket'] == 'Ontime' ? 'Absen pada ' . date('H:i', $val['time_server']) : $val['diff']),
-                'meja' => $value['ket'],
-                'qty' => $value['poin']
-            ];
-
-            if ($dbn->insert($datan)) {
-                $dbm = db("message");
-                if ($val['ket'] == 'Terlambat') {
-                    $message = ["message" => $val["msg"], "status" => "200", "kategori" => "Absen"];
-                    if ($dbm->insert($message)) {
-                        clean_path('booking');
-                        clean_path('api');
-                        sukses_js($val['msg']);
-                    }
-                } else {
-                    $message = ["message" => $val["msg"], "status" => "400", "kategori" => "Absen"];
-                    if ($dbm->insert($message)) {
-                        clean_path('booking');
-                        clean_path('api');
-                        gagal_js($val['msg']);
-                    }
-                }
-            } else {
-                gagal_js("Insert notif gagal!.");
-            }
-        } else {
-            gagal_js("Insert absen gagal!.");
         }
     }
 }
