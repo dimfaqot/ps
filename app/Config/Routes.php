@@ -35,7 +35,7 @@ $routes->post('/finger/Del_message', 'Finger::del_message');
 $routes->post('/finger/Delete', 'Finger::delete');
 $routes->post('/finger/Absen', 'Finger::absen');
 $routes->post('/finger/add_message', 'Finger::add_message');
-$routes->post('/finger/add', 'Finger::add');
+$routes->post('/finger/Add', 'Finger::add');
 
 // bot
 $routes->get('/api/wabot', 'Api::wabot');
