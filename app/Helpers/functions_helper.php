@@ -525,6 +525,7 @@ function is_menu_active($grup)
 
 function get_tahuns($tabel)
 {
+
     $db = db($tabel);
     $q = $db->get()->getResultArray();
 

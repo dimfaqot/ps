@@ -50,7 +50,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
                     <h6 class="d-flex gap-1">
                         <a href="" class="btn btn-sm btn-light koperasi" data-usaha="Billiard" style="font-size: medium;"><i class="fa-solid fa-piggy-bank"></i></a>
                         <select class="form-select get_pendapatan" data-tabel="billiard">
-                            <?php foreach (get_tahuns('billiard') as $i) : ?>
+                            <?php foreach (get_tahuns('billiard_2') as $i) : ?>
                                 <option <?= ($i == date('Y') ? 'selected' : ''); ?> value="<?= $i; ?>"><?= $i; ?></option>
                             <?php endforeach; ?>
                             <option value="All">All</option>
