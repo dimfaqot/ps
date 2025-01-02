@@ -840,10 +840,6 @@ class Api extends BaseController
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_fulus($jwt);
 
-        // kalau dalam jwt ada keu topupId berarti kartu member yang ditap setelah kartu Root
-        $member_uid = key_exists("member_uid", $decode);
-
-
         $db = db('booking');
         $q = $db->get()->getRowArray();
 
@@ -855,57 +851,36 @@ class Api extends BaseController
         $dbu = db('users');
         $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
 
+        if (!$user) {
+            clear_tabel('booking');
+            message($q['kategori'], "Akses kartu ditolakl!.", 400);
+            gagal_arduino('Akses kartu ditolakl!.');
+        }
 
-        if ($member_uid == true) {
-            $dba = db('api');
-            $qa = $dba->get()->getRowArray();
-            // api harus ada uid dan uid harus admin
-            if ($qa) {
-                $admin = $dbu->where('uid', $qa['status'])->get()->getRowArray();
-                if (!$admin) {
-                    clear_tabel('booking');
-                    message($q['kategori'], "Akses admin dibutuhkan!.", 400);
-                    gagal_arduino('Akses admin dibutuhkan!.');
-                } else {
-                    if ($admin['role'] !== 'Root') {
-                        clear_tabel('booking');
-                        clear_tabel('api');
-                        message($q['kategori'], "Akses admin dibutuhkan!", 400);
-                        gagal_arduino('Akses admin dibutuhkan!.');
-                    }
-                }
-            } else {
-                clear_tabel('booking');
-                message($q['kategori'], "Akses admin dibutuhkan!.", 400);
-                gagal_arduino('Akses admin dibutuhkan!.');
-            }
+        if ($user['role'] !== 'Root') {
+            clear_tabel('booking');
+            message($q['kategori'], "Akses kartu ditolakl!.", 400);
+            gagal_arduino('Akses kartu ditolakl!.');
+        }
 
-
-            $uid_member = $decode['uid'];
-            if ($uid_member == '') {
-                $uid_member = $decode("member_uid");
-            }
-
-            $user_m = $dbu->where('uid', $uid_member)->where('role', 'Member')->get()->getRowArray();
-            if (!$user_m) {
-                message($q['kategori'], "Kartu tidak dikenal!.", 400);
-                clear_tabel('booking');
-                clear_tabel('api');
-                gagal_arduino("Kartu tidak dikenal!.");
-            }
-
-
-
-            $user_m["uid"] = time();
-            $user_m["fulus"] = encode_jwt_fulus(["fulus" => 0]);
-
-            $dbu->where('id', $user_m['id']);
-            if ($dbu->update($user_m)) {
-                sukses_arduino("Kartu " . $user_m['nama'] . " sukses dihapus.", "", $admin['nama']);
-            }
-        } else {
+        $user_m = $dbu->where('id', $q['durasi'])->whereNotIn('role', ["Root"])->get()->getRowArray();
+        if (!$user_m) {
+            message($q['kategori'], "Kartu tidak dikenal!.", 400);
+            clear_tabel('booking');
             clear_tabel('api');
-            konfirmasi_root($q, $user);
+            gagal_arduino("Kartu tidak dikenal!.");
+        }
+
+        $user_m["uid"] = time();
+        $user_m["fulus"] = encode_jwt_fulus(["fulus" => 0]);
+
+        $dbu->where('id', $user_m['id']);
+        if ($dbu->update($user_m)) {
+            sukses_arduino("Kartu " . $user_m['nama'] . " sukses dihapus.", "", $user['nama']);
+        } else {
+            clear_tabel('booking');
+            message($q['kategori'], "Hapus data gagal!.", 400);
+            gagal_arduino("Hapus data gagal!.");
         }
     }
 }
