@@ -822,7 +822,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
     })
 
     let data_saldo_tap = [];
-    $(document).on('click', '.filter_saldo_tap', function(e) {
+    $(document).on('change', '.filter_saldo_tap', function(e) {
         e.preventDefault();
         let tahun = $(".tap_tahun").val();
         let bulan = $(".tap_bulan").val();
@@ -850,7 +850,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
                 if (res.data4 == "Root") {
                     html += '<div class="div_total_filter_tap_hapus"></div>';
                 }
-                html += '<div class="form-check form-check-inline form-switch mb-2">';
+                html += '<div class="form-check form-check-inline form-switch my-2">';
                 html += '<input class="form-check-input jenis" name="jenis" type="radio" role="switch" value="in">';
                 html += '<label class="form-check-label">In</label>';
                 html += '</div>';
@@ -861,7 +861,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
                 if (res.data4 == "Root") {
                     html += '<div class="form-check form-check-inline form-switch">';
                     html += '<input class="form-check-input jenis" name="jenis" type="radio" role="switch" value="hapus">';
-                    html += '<label class="form-check-label">Out</label>';
+                    html += '<label class="form-check-label">Remove</label>';
                     html += '</div>';
                 }
                 html += '<input class="form-control mt-1 form-control-sm cari" type="text" placeholder="Cari nama...">'
@@ -900,7 +900,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
             }
             $(".body_saldo_tap").html(html);
             $(".div_total_filter_tap").html('FILTER: ' + angka(total_masuk) + ' - ' + angka(total_keluar) + ' = ' + angka(total_masuk - total_keluar) + '');
-            $(".div_total_filter_tap_hapus").html('HAPUS: ' + angka(total_masuk) + ' - ' + angka(total_keluar) + ' = ' + angka(total_masuk - total_keluar) + '');
+            $(".div_total_filter_tap_hapus").html('HAPUS: ' + angka(total_hapus));
         })
     })
 
