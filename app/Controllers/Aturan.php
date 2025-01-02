@@ -59,36 +59,36 @@ class Aturan extends BaseController
         }
     }
 
-    public function tap()
-    {
-        $tahun = clear($this->request->getVar("tahun"));
-        $bulan = clear($this->request->getVar("bulan"));
-        $kategori = clear($this->request->getVar("kategori"));
+    // public function tap()
+    // {
+    //     $tahun = clear($this->request->getVar("tahun"));
+    //     $bulan = clear($this->request->getVar("bulan"));
+    //     $kategori = clear($this->request->getVar("kategori"));
 
-        $tabel = "billiard_2";
-        if ($kategori !== "Billiard") {
-            if ($kategori == "Ps") {
-                $tabel = "rental";
-            } else {
-                $tabel = strtolower($kategori);
-            }
-        }
+    //     $tabel = "billiard_2";
+    //     if ($kategori !== "Billiard") {
+    //         if ($kategori == "Ps") {
+    //             $tabel = "rental";
+    //         } else {
+    //             $tabel = strtolower($kategori);
+    //         }
+    //     }
 
-        $db = db($tabel);
-        $q = $db->where("metode", "Tap")->get()->getResultArray();
-        $data = [];
-        foreach ($q as $i) {
-            if (date("Y", $i['tgl']) == $tahun && date("m", $i['tgl']) == $bulan) {
-                $val = [
-                    "tgl" => date("d/m/Y", $i['tgl']),
-                    "barang" => ($kategori == "Barber" ? $i["layanan"] : ($kategori == "Kantin" ? $i["barang"] : $i["meja"])),
-                    "harga" => ($kategori == "Billiard" || $kategori == "Ps" ? $i["biaya"] : $i["total_harga"])
-                ];
+    //     $db = db($tabel);
+    //     $q = $db->where("metode", "Tap")->get()->getResultArray();
+    //     $data = [];
+    //     foreach ($q as $i) {
+    //         if (date("Y", $i['tgl']) == $tahun && date("m", $i['tgl']) == $bulan) {
+    //             $val = [
+    //                 "tgl" => date("d/m/Y", $i['tgl']),
+    //                 "barang" => ($kategori == "Barber" ? $i["layanan"] : ($kategori == "Kantin" ? $i["barang"] : $i["meja"])),
+    //                 "harga" => ($kategori == "Billiard" || $kategori == "Ps" ? $i["biaya"] : $i["total_harga"])
+    //             ];
 
-                $data[] = $val;
-            }
-        }
+    //             $data[] = $val;
+    //         }
+    //     }
 
-        sukses_js("Ok", $data);
-    }
+    //     sukses_js("Ok", $data);
+    // }
 }

@@ -932,3 +932,25 @@ function konfirmasi_user_exist_finger($user_m, $booking)
         gagal_js("User tidak ada!.");
     }
 }
+
+function saldo_tap($kategori, $uang, $user, $petugas = [])
+{
+    $dbt = db("topup");
+    $topup = [
+        "tgl" => time(),
+        "jenis" => ($kategori == "Topup" ? "in" : "out"),
+        "kategori" => $kategori,
+        "petugas" => (key_exists("nama", $petugas) ? $petugas["nama"] : ""),
+        "jml" => $uang,
+        "user_id" => $user["id"],
+        "uid" => $user["uid"],
+        "nama" => $user["nama"]
+
+    ];
+    if (!$dbt->insert($topup)) {
+        message($kategori, "Insert ke tabel topup gagal!.", 400);
+        clear_tabel('booking');
+        clear_tabel('api');
+        gagal_arduino("Insert ke tabel topup gagal!.");
+    }
+}

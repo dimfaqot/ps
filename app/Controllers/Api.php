@@ -235,6 +235,7 @@ class Api extends BaseController
         $dbu = db('users');
         $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
 
+        $petugas = [];
 
         if ($member_uid == true) {
             $dba = db('api');
@@ -253,6 +254,7 @@ class Api extends BaseController
                         message($q['kategori'], "Akses admin dibutuhkan!", 400);
                         gagal_arduino('Akses admin dibutuhkan!.');
                     }
+                    $petugas = $admin;
                 }
             } else {
                 clear_tabel('booking');
@@ -282,7 +284,13 @@ class Api extends BaseController
 
             $dbu->where('id', $user_m['id']);
             if ($dbu->update($user_m)) {
+                saldo_tap($q['kategori'], $tp, $user_m, $petugas);
                 sukses_arduino($user_m['nama'] . " sukses topup sebesar " . rupiah($tp), rupiah($saldo), $admin['nama']);
+            } else {
+                message($q['kategori'], "Topup gagal!.", 400);
+                clear_tabel('booking');
+                clear_tabel('api');
+                gagal_arduino("Topup gagal!.");
             }
         } else {
             clear_tabel('api');
@@ -599,7 +607,7 @@ class Api extends BaseController
                 message($q['kategori'], "Update saldo gagal!.", 400);
                 gagal_arduino("Update saldo gagal!.");
             } else {
-                clear_tabel('booking');
+                saldo_tap($q['kategori'], $biaya, $user);
                 message($q['kategori'], $user['nama'] . " sukses bertansaksi " . rupiah($biaya), 200, rupiah($sal));
                 sukses_arduino($user['nama'] . " sukses bertansaksi " . rupiah($biaya), rupiah($sal));
             }
@@ -691,6 +699,7 @@ class Api extends BaseController
                 $user['fulus'] = encode_jwt_fulus(['fulus' => $sal]);
                 $dbu->where('id', $user['id']);
                 if ($dbu->update($user)) {
+                    saldo_tap($q['kategori'], $harga, $user);
                     clear_tabel('booking');
                     message($q['kategori'], $user['nama'] . " sukses bertransaksi sebesar " . rupiah($harga), 200, "Saldo: " . rupiah($sal));
                     sukses_arduino($user['nama'] . " sukses bertransaksi sebesar " . rupiah($harga), "Saldo: " . rupiah($sal));
@@ -793,6 +802,7 @@ class Api extends BaseController
         $dbu->where('id', $user['id']);
         if ($dbu->update($user)) {
             clear_tabel('booking');
+            saldo_tap($q['kategori'], $total2, $user);
             if (count($err) > 0) {
                 message($q['kategori'], count($err) . ' barang' . " gagal!.", 200, "Saldo: " . rupiah($saldo_akhir));
                 sukses_arduino(count($err) . ' barang' . " gagal!.", "Saldo " . rupiah($saldo_akhir));

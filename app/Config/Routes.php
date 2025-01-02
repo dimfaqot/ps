@@ -74,6 +74,7 @@ $routes->post('/home/add_tabungan', 'Home::add_tabungan');
 $routes->post('/home/pembayaran_kantin_barcode', 'Home::pembayaran_kantin_barcode');
 $routes->post('/home/pindah_ke_hutang', 'Home::pindah_ke_hutang');
 $routes->post('/home/hapus_pesanan', 'Home::hapus_pesanan');
+$routes->post('/home/saldo_tap', 'Home::saldo_tap');
 // $routes->get('/home/replace', 'Home::replace');
 
 // users ____________________________________
@@ -226,7 +227,7 @@ $routes->post('/barber/hutang', 'Barber::hutang');
 $routes->get('/aturan', 'Aturan::index');
 $routes->post('/aturan/add', 'Aturan::add');
 $routes->post('/aturan/update', 'Aturan::update');
-$routes->post('/aturan/tap', 'Aturan::tap');
+// $routes->post('/aturan/tap', 'Aturan::tap');
 
 // Hutang __________________________________
 $routes->get('/hutang', 'Hutang::index');

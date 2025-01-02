@@ -323,4 +323,40 @@ class Home extends BaseController
             sukses_js('Data sukses dipindah.');
         }
     }
+    public function saldo_tap()
+    {
+        $tahun = clear($this->request->getVar("tahun"));
+        $bulan = clear($this->request->getVar("bulan"));
+        $db = db('topup');
+
+        $topup = $db->orderBy('tgl', "DESC")->get()->getResultArray();
+        $data = [];
+        $total_masuk = 0;
+        $total_keluar = 0;
+        foreach ($topup as $i) {
+            if ($i['jenis'] == "in") {
+                $total_masuk += $i['jml'];
+            }
+            if ($i['jenis'] == "out") {
+                $total_keluar += $i['jml'];
+            }
+            if ($tahun == "All" && $bulan == "All") {
+                $data[] = $i;
+            } elseif ($tahun == "All" && $bulan !== "All") {
+                if (date("m", $i['tgl']) == $bulan) {
+                    $data[] = $i;
+                }
+            } elseif ($tahun !== "All" && $bulan == "All") {
+                if (date("Y", $i['tgl']) == $tahun) {
+                    $data[] = $i;
+                }
+            } elseif ($tahun !== "All" && $bulan !== "All") {
+                if (date("m", $i['tgl']) == $bulan && date("Y", $i['tgl']) == $tahun) {
+                    $data[] = $i;
+                }
+            }
+        }
+
+        sukses_js("Ok", $data, $total_masuk, $total_keluar);
+    }
 }

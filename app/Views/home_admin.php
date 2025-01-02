@@ -11,8 +11,9 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
         <?php if (session('role') == 'Root'): ?>
             <button data-bs-toggle="modal" class="btn_info mb-2" data-bs-target="#modal_user">Users</button>
             <a href="<?= base_url('absen/reset_absen'); ?>" class="btn_danger mb-2">Reset Absen</a>
-            <a href="" class="btn_purple btn_tap mb-2">Tap</a>
         <?php endif; ?>
+        <a href="" class="btn_purple btn_saldo_tap mb-2">Tap</a>
+        <a href="" class="btn_success data_tap mb-2">Data Tap</a>
         <button data-id="<?= session('id'); ?>" data-nama="<?= user()['nama']; ?>" class="btn_primary mb-2 fw-bold poin_absen">POIN: <?= poin_absen(session('id'))['poin']; ?></button>
     </div>
 
@@ -21,7 +22,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
             <div class="div_card bg_primary border border-primary text-white" style="border-radius:5px;">
                 <div class="d-flex justify-content-between">
                     <h6>
-                        <i class="fa-brands fa-playstation mb-1"></i> PENDAPATAN PS
+                        <i class="fa-brands fa-playstation mb-1"></i> PS
                         <div style="font-weight: normal;font-size:x-small" class="total_rental"></div>
                     </h6>
                     <h6 class="d-flex gap-1">
@@ -34,6 +35,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
                         </select>
                     </h6>
                 </div>
+                <div style="font-weight: normal;font-size:x-small; margin-top:-5px" class="mb-1 div_data_tap_rental"></div>
                 <div class="card p-2">
                     <canvas id="chart_rental" style="width:100%;"></canvas>
                 </div>
@@ -44,7 +46,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
             <div class="div_card bg_success border border-success text-white" style="border-radius:5px;">
                 <div class="d-flex justify-content-between">
                     <h6>
-                        <i class="fa-solid fa-bowling-ball mb-1"></i> PENDAPATAN BILLIARD
+                        <i class="fa-solid fa-bowling-ball mb-1"></i> BILLIARD
                         <div style="font-weight: normal;font-size:x-small" class="total_billiard"></div>
                     </h6>
                     <h6 class="d-flex gap-1">
@@ -57,6 +59,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
                         </select>
                     </h6>
                 </div>
+                <div style="font-weight: normal;font-size:x-small; margin-top:-5px" class="mb-1 div_data_tap_billiard"></div>
                 <div class="card p-2">
                     <canvas id="chart_billiard" style="width:100%;"></canvas>
                 </div>
@@ -67,7 +70,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
             <div class="div_card bg_purple border border-success text-white" style="border-radius:5px;">
                 <div class="d-flex justify-content-between">
                     <h6>
-                        <i class="fa-solid fa-shop mb-1"></i> PENDAPATAN KANTIN
+                        <i class="fa-solid fa-shop mb-1"></i> KANTIN
                         <div style="font-weight: normal;font-size:x-small" class="total_kantin"></div>
                     </h6>
                     <h6 class="d-flex gap-1">
@@ -80,6 +83,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
                         </select>
                     </h6>
                 </div>
+                <div style="font-weight: normal;font-size:x-small; margin-top:-5px" class="mb-1 div_data_tap_kantin"></div>
                 <div class="card p-2">
                     <canvas id="chart_kantin" style="width:100%;"></canvas>
                 </div>
@@ -90,7 +94,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
             <div class="div_card bg_main border border-success text-white" style="border-radius:5px;">
                 <div class="d-flex justify-content-between">
                     <h6>
-                        <i class="fa-solid fa-scissors"></i> PENDAPATAN BARBER
+                        <i class="fa-solid fa-scissors"></i> BARBER
                         <div style="font-weight: normal;font-size:x-small" class="total_barber"></div>
                     </h6>
                     <h6 class="d-flex gap-1">
@@ -103,6 +107,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
                         </select>
                     </h6>
                 </div>
+                <div style="font-weight: normal;font-size:x-small;margin-top:-5px" class="div_data_tap_barber mb-1"></div>
                 <div class="card p-2">
                     <canvas id="chart_barber" style="width:100%;"></canvas>
                 </div>
@@ -143,29 +148,36 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
         </div>
     </div>
 </div>
-<!-- Modal detail tap-->
-<div class="modal fade" id="tap" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- Modal data tap-->
+<div class="modal fade" id="data_tap" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-body body_tap">
+            <div class="modal-body body_data_tap">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal saldo tap-->
+<div class="modal fade" id="saldo_tap" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
                 <div class="d-flex gap-2 mb-3">
-                    <select class="form-select form-select-sm tap_tahun filter_tap">
-                        <?php foreach (get_tahuns('billiard') as $i) : ?>
+                    <select class="form-select form-select-sm tap_tahun filter_saldo_tap">
+                        <?php foreach (get_tahuns('topup') as $i) : ?>
                             <option <?= ($i == date('Y') ? 'selected' : ''); ?> value="<?= $i; ?>"><?= $i; ?></option>
                         <?php endforeach; ?>
+                        <option value="All">All</option>
                     </select>
-                    <select class="form-select form-select-sm tap_bulan filter_tap">
+                    <select class="form-select form-select-sm tap_bulan filter_saldo_tap">
                         <?php foreach (bulan() as $i): ?>
                             <option <?= ($i['angka'] == date('m' ? 'selected' : '')); ?> value="<?= $i['angka']; ?>"><?= $i['angka']; ?></option>
                         <?php endforeach; ?>
-                    </select>
-                    <select class="form-select form-select-sm tap_kategori filter_tap">
-                        <?php foreach (options("Bidang") as $i): ?>
-                            <option <?= ($i['value'] == "Billiard" ? 'selected' : ''); ?> value="<?= $i['value']; ?>"><?= $i['value']; ?></option>
-                        <?php endforeach; ?>
+                        <option value="All">All</option>
                     </select>
                 </div>
-                <div class="body_value_tap"></div>
+                <div class="body_saldo_tap"></div>
 
             </div>
         </div>
@@ -497,7 +509,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
         return res;
 
     }
-
+    let data_tap = {};
     const chart_html = (tabel, tahun) => {
 
         const bulans = <?= json_encode(bulan()); ?>;
@@ -512,9 +524,11 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
         }).then(res => {
             if (res.status == '200') {
                 // total pemasukan
+
                 let total_m = 0;
                 res.data.forEach((val, idx) => {
                     total_m += val.total;
+                    data_tap[tabel] = val.data;
                 })
 
                 // total pengeluaran
@@ -524,7 +538,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
                 })
                 $('.total_' + tabel).text(angka(total_m) + ' - ' + angka(total_p) + ' = ' + ((total_m - total_p) < 0 ? '-' : '') + angka((total_m - total_p).toString()));
 
-
+                data_tap["total_" + tabel] = total_m - total_p;
                 valueX = [];
 
                 // res.data.forEach(e => {
@@ -652,6 +666,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
                 html += '</thead>';
                 html += '<tbody>';
                 let total = 0;
+
                 data.forEach((e, i) => {
                     total += parseInt(e.poin);
                     html += '<tr>';
@@ -711,84 +726,208 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
 
     })
 
-    $(document).on('click', '.btn_tap', function(e) {
-        e.preventDefault();
 
-        let myModal = document.getElementById('tap');
-        let modal = bootstrap.Modal.getOrCreateInstance(myModal)
-        modal.show();
-
-    })
-    $(document).on('change', '.filter_tap', function(e) {
-        e.preventDefault();
-        let tahun = $(".tap_tahun").val();
-        let bulan = $(".tap_bulan").val();
-        let kategori = $(".tap_kategori").val();
-        if (tahun == "") {
-            gagal("Tahun belum dipilih!.");
-            return;
-        }
-        if (bulan == "") {
-            gagal("Bulan belum dipilih!.");
-            return;
-        }
-        if (kategori == "") {
-            gagal("Kategori belum dipilih!.");
-            return;
-        }
-        if (kategori == "Kantin") {
-            gagal("Kantin belum ada!.");
-            return;
-        }
-        post("aturan/tap", {
-            tahun,
-            bulan,
-            kategori
-        }).then(res => {
-            if (res.status == "200") {
-                let total = 0;
-                let html = "";
-                if (res.data.length == 0) {
-                    html += '<span class="text_danger">Data tidak ditemukan!.</span>';
-                } else {
-                    html += '<h6 class="total_tap"></h6>';
-                    html += '<table class="table table-sm table-bordered">';
-                    html += '<thead>';
-                    html += '<tr>';
-                    html += '<th class="text-center">#</th>';
-                    html += '<th class="text-center">Tgl</th>';
-                    html += '<th class="text-center">Barang</th>';
-                    html += '<th class="text-center">Harga</th>';
-                    html += '</tr>';
-                    html += '</thead>';
-                    html += '<tbody>';
-                    res.data.forEach((e, i) => {
-                        total += parseInt(e.harga);
-                        html += '<tr>';
-                        html += '<td class="text-center">' + (i + 1) + '</td>';
-                        html += '<td class="text-center">' + e.tgl + '</td>';
-                        html += '<td>' + e.barang + '</td>';
-                        html += '<td class="text-end">' + angka(e.harga) + '</td>';
-                        html += '</tr>';
-                    })
-
-                    html += '</tbody>';
-                    html += '</table>';
-                }
-
-                $(".body_value_tap").html(html);
-                $(".total_tap").text("TOTAL: " + angka(total));
-            } else {
-                gagal(res.message);
-            }
-        })
-
-    })
 
     chart_html('rental', '<?= date('Y'); ?>');
     chart_html('billiard', '<?= date('Y'); ?>');
     chart_html('kantin', '<?= date('Y'); ?>');
     chart_html('barber', '<?= date('Y'); ?>');
+
+    $(document).on('click', '.data_tap', function(e) {
+        e.preventDefault();
+
+        let datas = ["rental", "billiard", "kantin", "barber"];
+
+        datas.forEach(e => {
+            let harga = "biaya";
+            if (e == "rental" || e == "barber") {
+                harga = "total_harga";
+            }
+            let data = data_tap[e];
+            let total_tap = 0;
+            let saldo = data_tap["total_" + e];
+
+            data.forEach(el => {
+                if (el.metode == "Tap") {
+                    total_tap += parseInt(el[harga]);
+                }
+            })
+            let text = '- ' + angka(total_tap) + ' = ' + (angka(saldo - total_tap));
+            $(".div_data_tap_" + e).html('<a href="" class="btn_tap" data-order="' + e + '" style="font-style:italic;font-weight:bold;text-decoration:none;color:white">' + text + '</a>');
+        })
+
+    })
+
+    $(document).on('click', '.btn_tap', function(e) {
+        e.preventDefault();
+        let order = $(this).data("order");
+        let harga = "biaya";
+        if (order == "rental" || order == "barber") {
+            harga = "total_harga";
+        }
+        let barang = "meja";
+        if (order == "barber") {
+            barang = "layanan";
+        }
+        if (order == "kantin") {
+            barang = "barang";
+        }
+        let data = data_tap[order];
+        let total_tap = 0;
+        let saldo = data_tap["total_" + order];
+
+        let html = "";
+        if (data.length == 0) {
+            html += '<span class="text_danger">Data tidak ditemukan!.</span>';
+        } else {
+            html += '<h6 class="total_tap"></h6>';
+            html += '<table class="table table-sm table-bordered">';
+            html += '<thead>';
+            html += '<tr>';
+            html += '<th class="text-center">#</th>';
+            html += '<th class="text-center">Tgl</th>';
+            html += '<th class="text-center">Barang</th>';
+            html += '<th class="text-center">Harga</th>';
+            html += '</tr>';
+            html += '</thead>';
+            html += '<tbody>';
+            data.forEach((e, i) => {
+                if (e.metode == "Tap") {
+                    total_tap += parseInt(e[harga]);
+                    html += '<tr>';
+                    html += '<td class="text-center">' + (i + 1) + '</td>';
+                    html += '<td class="text-center">' + time_php_to_js(e.tgl) + '</td>';
+                    html += '<td>' + e[barang] + '</td>';
+                    html += '<td class="text-end">' + angka(e[harga]) + '</td>';
+                    html += '</tr>';
+                }
+            })
+            html += '</tbody>';
+            html += '</table>';
+        }
+
+        $(".body_data_tap").html(html);
+        $(".total_tap").html('TOTAL : <span class="text-danger">' + angka(saldo) + '</span> - ' + angka(total_tap) + ' = ' + angka(saldo - total_tap));
+        let myModal = document.getElementById('data_tap');
+        let modal = bootstrap.Modal.getOrCreateInstance(myModal)
+        modal.show();
+
+    })
+
+    $(document).on('click', '.btn_saldo_tap', function(e) {
+        e.preventDefault();
+        let myModal = document.getElementById('saldo_tap');
+        let modal = bootstrap.Modal.getOrCreateInstance(myModal)
+        modal.show();
+    })
+
+    let data_saldo_tap = [];
+    $(document).on('click', '.filter_saldo_tap', function(e) {
+        e.preventDefault();
+        let tahun = $(".tap_tahun").val();
+        let bulan = $(".tap_bulan").val();
+
+        if (tahun == "" || bulan == "") {
+            gagal("Tahun/bulan belum dipilih!.");
+            return;
+        }
+
+        post("home/saldo_tap", {
+            tahun,
+            bulan
+        }).then(res => {
+            let html = "";
+            let total_masuk = 0;
+            let total_keluar = 0;
+            if (res.data.length == 0) {
+                html += '<span class="text_danger">Data tidak ditemukan!.</span>';
+            } else {
+                data_saldo_tap = res.data;
+
+                html += '<h6>TOTAL: ' + angka(res.data2) + ' - ' + angka(res.data3) + ' = ' + angka(res.data2 - res.data3) + '</h6>';
+                html += '<h6 class="div_total_filter_tap"></h6>';
+                html += '<div class="form-check form-check-inline form-switch mb-2">';
+                html += '<input class="form-check-input jenis" name="jenis" type="radio" role="switch" value="in">';
+                html += '<label class="form-check-label">In</label>';
+                html += '</div>';
+                html += '<div class="form-check form-check-inline form-switch">';
+                html += '<input class="form-check-input jenis" name="jenis" type="radio" role="switch" value="out">';
+                html += '<label class="form-check-label">Out</label>';
+                html += '</div>';
+                html += '<input class="form-control mt-1 form-control-sm cari" type="text" placeholder="Cari nama...">'
+                html += '<table class="table table-sm table-bordered">';
+                html += '<thead>';
+                html += '<tr>';
+                html += '<th class="text-center">#</th>';
+                html += '<th class="text-center">Tgl</th>';
+                html += '<th class="text-center">Pet</th>';
+                html += '<th class="text-center">Nama</th>';
+                html += '<th class="text-center">Uang</th>';
+                html += '</tr>';
+                html += '</thead>';
+                html += '<tbody class="tabel_search">';
+
+                res.data.forEach((e, i) => {
+                    if (e.jenis == "in") {
+                        total_masuk += parseInt(e.jml);
+                    }
+                    if (e.jenis == "out") {
+                        total_keluar += parseInt(e.jml);
+                    }
+                    html += '<tr>';
+                    html += '<td class="text-center">' + (i + 1) + '</td>';
+                    html += '<td class="text-center">' + time_php_to_js(e.tgl) + '</td>';
+                    html += '<td>' + e.petugas + '</td>';
+                    html += '<td>' + e.user + '</td>';
+                    html += '<td class="text-end">' + angka(e.jml) + '</td>';
+                    html += '</tr>';
+                })
+                html += '</tbody>';
+                html += '</table>';
+            }
+            $(".body_saldo_tap").html(html);
+            $(".div_total_filter_tap").html('FILTER: ' + angka(total_masuk) + ' - ' + angka(total_keluar) + ' = ' + angka(total_masuk - total_keluar) + '');
+        })
+    })
+
+    $(document).on('keyup', '.cari', function(e) {
+        e.preventDefault();
+        let value = $(this).val().toLowerCase();
+        $('.tabel_search tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+
+    });
+
+    $(document).on('change', '.jenis', function(e) {
+        e.preventDefault();
+        let jenis = $(this).val();
+        let total = 0;
+        let html = "";
+        if (data_saldo_tap.length == 0) {
+            html += '<span class="text_danger">Data tidak ditemukan!.</span>';
+        } else {
+            data_saldo_tap.forEach((e, i) => {
+                if (e.jenis == jenis) {
+                    total += parseInt(e.jml);
+                    html += '<tr>';
+                    html += '<td class="text-center">' + (i + 1) + '</td>';
+                    html += '<td class="text-center">' + time_php_to_js(e.tgl) + '</td>';
+                    html += '<td>' + e.petugas + '</td>';
+                    html += '<td>' + e.user + '</td>';
+                    html += '<td class="text-end">' + angka(e.jml) + '</td>';
+                    html += '</tr>';
+                }
+            })
+            html += '<tr>';
+            html += '<th class="text-end" colspan="5">';
+            html += 'TOTAL: ' + angka(total);
+            html += '</th>';
+            html += '</tr>';
+        }
+        $(".tabel_search").html(html);
+
+    });
 </script>
 
 <?= $this->endSection() ?>
