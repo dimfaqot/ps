@@ -944,7 +944,7 @@ function saldo_tap($kategori, $uang, $user, $petugas = [])
         "jml" => $uang,
         "user_id" => $user["id"],
         "uid" => $user["uid"],
-        "nama" => $user["nama"]
+        "user" => $user["nama"]
 
     ];
     if (!$dbt->insert($topup)) {
