@@ -870,12 +870,13 @@ class Api extends BaseController
             clear_tabel('api');
             gagal_arduino("Kartu tidak dikenal!.");
         }
-
+        $saldo = decode_jwt_fulus($user_m["fulus"]);
         $user_m["uid"] = time();
         $user_m["fulus"] = encode_jwt_fulus(["fulus" => 0]);
 
         $dbu->where('id', $user_m['id']);
         if ($dbu->update($user_m)) {
+            saldo_tap($q["kategori"], $saldo["fulus"], $user_m);
             sukses_arduino("Kartu " . $user_m['nama'] . " sukses dihapus.", "", $user['nama']);
         } else {
             clear_tabel('booking');

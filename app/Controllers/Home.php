@@ -328,12 +328,14 @@ class Home extends BaseController
         $tahun = clear($this->request->getVar("tahun"));
         $bulan = clear($this->request->getVar("bulan"));
         $db = db('topup');
-
         $topup = $db->orderBy('tgl', "DESC")->get()->getResultArray();
         $data = [];
         $total_masuk = 0;
         $total_keluar = 0;
         foreach ($topup as $i) {
+            if (session("role") !== "Root" && $i['jenis'] == "hapus") {
+                continue;
+            }
             if ($i['jenis'] == "in") {
                 $total_masuk += $i['jml'];
             }
@@ -357,6 +359,6 @@ class Home extends BaseController
             }
         }
 
-        sukses_js("Ok", $data, $total_masuk, $total_keluar);
+        sukses_js("Ok", $data, $total_masuk, $total_keluar, session('role'));
     }
 }

@@ -938,7 +938,7 @@ function saldo_tap($kategori, $uang, $user, $petugas = [])
     $dbt = db("topup");
     $topup = [
         "tgl" => time(),
-        "jenis" => ($kategori == "Topup" ? "in" : "out"),
+        "jenis" => ($kategori == "Remove" ? 'hapus' : ($kategori == "Topup" ? "in" : "out")),
         "kategori" => $kategori,
         "petugas" => (key_exists("nama", $petugas) ? $petugas["nama"] : ""),
         "jml" => $uang,

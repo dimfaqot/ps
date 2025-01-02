@@ -839,13 +839,17 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
             let html = "";
             let total_masuk = 0;
             let total_keluar = 0;
+            let total_hapus = 0;
             if (res.data.length == 0) {
                 html += '<span class="text_danger">Data tidak ditemukan!.</span>';
             } else {
                 data_saldo_tap = res.data;
 
                 html += '<h6>TOTAL: ' + angka(res.data2) + ' - ' + angka(res.data3) + ' = ' + angka(res.data2 - res.data3) + '</h6>';
-                html += '<h6 class="div_total_filter_tap"></h6>';
+                html += '<div class="div_total_filter_tap"></div>';
+                if (res.data4 == "Root") {
+                    html += '<div class="div_total_filter_tap_hapus"></div>';
+                }
                 html += '<div class="form-check form-check-inline form-switch mb-2">';
                 html += '<input class="form-check-input jenis" name="jenis" type="radio" role="switch" value="in">';
                 html += '<label class="form-check-label">In</label>';
@@ -854,6 +858,12 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
                 html += '<input class="form-check-input jenis" name="jenis" type="radio" role="switch" value="out">';
                 html += '<label class="form-check-label">Out</label>';
                 html += '</div>';
+                if (res.data4 == "Root") {
+                    html += '<div class="form-check form-check-inline form-switch">';
+                    html += '<input class="form-check-input jenis" name="jenis" type="radio" role="switch" value="hapus">';
+                    html += '<label class="form-check-label">Out</label>';
+                    html += '</div>';
+                }
                 html += '<input class="form-control mt-1 form-control-sm cari" type="text" placeholder="Cari nama...">'
                 html += '<table class="table table-sm table-bordered">';
                 html += '<thead>';
@@ -874,6 +884,9 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
                     if (e.jenis == "out") {
                         total_keluar += parseInt(e.jml);
                     }
+                    if (res.data4 == "Root" && e.jenis == "hapus") {
+                        total_hapus += parseInt(e.jml);
+                    }
                     html += '<tr>';
                     html += '<td class="text-center">' + (i + 1) + '</td>';
                     html += '<td class="text-center">' + time_php_to_js(e.tgl) + '</td>';
@@ -887,6 +900,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
             }
             $(".body_saldo_tap").html(html);
             $(".div_total_filter_tap").html('FILTER: ' + angka(total_masuk) + ' - ' + angka(total_keluar) + ' = ' + angka(total_masuk - total_keluar) + '');
+            $(".div_total_filter_tap_hapus").html('HAPUS: ' + angka(total_masuk) + ' - ' + angka(total_keluar) + ' = ' + angka(total_masuk - total_keluar) + '');
         })
     })
 
