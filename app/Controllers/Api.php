@@ -944,13 +944,13 @@ class Api extends BaseController
             message($q['kategori'], "Kartu tidak terdaftar!.", 400, $order);
             gagal_arduino('Kartu tidak terdaftar!.');
         }
-        sukses_js("Ok", $user);
-        if ($user["role"] !== "Root" && $user["role"] !== "Admin Billiard") {
+        if ($user["role"] == "Member") {
             clear_tabel('booking');
             message($q['kategori'], "Butuh akses petugas!.", 400, $order);
             gagal_arduino("Butuh akses petugas!.");
         }
 
+        sukses_js("Ok", $order);
         if ($order == "Ps") {
             $dbr = db('rental');
             $qr = $db->where("meja", "Meja " . $q['meja'])->where("is_active", 1)->where('durasi', -1)->get()->getRowArray();
