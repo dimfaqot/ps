@@ -229,9 +229,11 @@ class Ext extends BaseController
                 if ($kategori == 'ps') {
                     $dur = explode(":", durasi($i['ke'], time()));
                     $val['durasi'] = ($i['durasi'] == -1 ? "Open" : $dur[0] . "h " . $dur[1] . "m");
+                    $val['harga'] = biaya_per_menit($i['harga'], $i['dari'], time());
                 } else {
                     $dur = explode(":", durasi($i['end'], time()));
                     $val['durasi'] = ($i['durasi'] == 0 ? "Open" : $dur[0] . "h " . $dur[1] . "m");
+                    $val['harga'] = biaya_per_menit($i['harga'], $i['start'], time());
                 }
 
                 $res[] = $val;

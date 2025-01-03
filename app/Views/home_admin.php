@@ -746,7 +746,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
             let data = data_tap[e];
             let total_tap = 0;
             let saldo = data_tap["total_" + e];
-
+            console.log(data);
             data.forEach(el => {
                 if (el.metode == "Tap") {
                     total_tap += parseInt(el[harga]);
@@ -871,6 +871,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
                 html += '<th class="text-center">#</th>';
                 html += '<th class="text-center">Tgl</th>';
                 html += '<th class="text-center">Pet</th>';
+                html += '<th class="text-center">Kat</th>';
                 html += '<th class="text-center">Nama</th>';
                 html += '<th class="text-center">Uang</th>';
                 html += '</tr>';
@@ -891,6 +892,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
                     html += '<td class="text-center">' + (i + 1) + '</td>';
                     html += '<td class="text-center">' + time_php_to_js(e.tgl) + '</td>';
                     html += '<td>' + e.petugas + '</td>';
+                    html += '<td>' + e.kategori + '</td>';
                     html += '<td>' + e.user + '</td>';
                     html += '<td class="text-end">' + angka(e.jml) + '</td>';
                     html += '</tr>';
@@ -928,6 +930,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
                     html += '<td class="text-center">' + (i + 1) + '</td>';
                     html += '<td class="text-center">' + time_php_to_js(e.tgl) + '</td>';
                     html += '<td>' + e.petugas + '</td>';
+                    html += '<td>' + e.kategori + '</td>';
                     html += '<td>' + e.user + '</td>';
                     html += '<td class="text-end">' + angka(e.jml) + '</td>';
                     html += '</tr>';

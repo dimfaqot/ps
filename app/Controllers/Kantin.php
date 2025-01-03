@@ -71,6 +71,7 @@ class Kantin extends BaseController
                 'tgl' => time(),
                 'qty' => $i['qty'],
                 'diskon' => $i['diskon'],
+                'metode' => "Cash",
                 'total_harga' => ($q['harga_satuan'] * $i['qty']) - $i['diskon'],
                 'petugas' => user()['nama']
             ];

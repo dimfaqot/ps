@@ -55,6 +55,8 @@ class Rental extends BaseController
             'dari' => $time,
             'ke' => ($durasi == -1 ? $durasi : $time + (60 * $durasi)),
             'durasi' => $durasi,
+            'metode' => 'Cash',
+            'harga' => harga_ps($qu['unit']),
             'is_active' => 1,
             'petugas' => user()['nama']
         ];
@@ -99,6 +101,7 @@ class Rental extends BaseController
             'ke' => ($durasi == -1 ? $durasi : $time + (60 * $durasi)),
             'durasi' => $durasi,
             'metode' => 'Cash',
+            'harga' => harga_ps($qu['unit']),
             'is_active' => 1,
             'petugas' => user()['nama']
         ];

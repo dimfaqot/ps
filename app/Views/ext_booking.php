@@ -17,7 +17,6 @@ foreach ($q as $i) {
 
 $db = db('jadwal_2');
 $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
-
 ?>
 <!doctype html>
 <html lang="en">
@@ -151,30 +150,36 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             </div>
         </div>
     </div>
+    <!-- modal open-->
+    <div class="modal fade bg-dark" id="open" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background-color: transparent;border:none">
+                <div class="text-danger text-center" data-bs-dismiss="modal" style="cursor:pointer;margin-top:-200px;margin-bottom:50px;font-size:x-large"><i class="fa-solid fa-circle-xmark"></i></div>
+                <div class="d-flex justify-content-center">
+                    <div class="div_judul_menunggu px-3 border-bottom border-warning text-warning"></div>
+                </div>
+                <h6 class="text-center div_pesan_konfirmasi mt-3 text-secondary fst-italic">Selesaikan dan lakukan pembayaran?</h6>
+                <div class="d-flex justify-content-center mt-2">
+                    <h6 class="text-center harga_cara_bayar px-3 pb-2 text-light border-light border-bottom">Selesaikan dan lakukan pembayaran?</h6>
+                </div>
+                <div class="d-flex justify-content-center gap-3 mt-3 body_open">
+
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- modal hutang-->
     <div class="modal fade bg-dark" id="data_hutang" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content" style="background-color: transparent;border:none">
                 <div class="modal-body text-center">
-                    <div class="d-flex justify-content-center gap-2 py-2 rounded border border-info">
+                    <div class="d-flex justify-content-center gap-2 py-2">
                         <div class="embos countdown text-center mt-1 pt-1" style="color:#cbf4f0;width:30px;height:30px;font-size:16px;border-radius:50%;;border:1px solid #3c3e46"></div>
                         <div class="text-light div_message_hutang" style="font-size: x-large;">
                             TAP UNTUK MELUNASI
                         </div>
-                    </div>
-
-                    <div class="body_message my-2 p-1" style="border:1px dashed white">
-                        <div class="d-flex gap-2 justify-content-center text-light">
-                            <div class="spinner-border spinner-border-sm mt-1 text-light" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                            <div style="font-style: italic;">processing...</div>
-                        </div>
-                    </div>
-                    <div style="text-align: left;" class="total_hutang fw-bold text-warning"></div>
-                    <div class="modal_body_data_hutang mt-2">
-
                     </div>
                 </div>
             </div>
@@ -187,6 +192,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             // let modal = bootstrap.Modal.getOrCreateInstance(myModal)
             // modal.show();
             let data = {};
+            let kode_bayar = <?= json_encode(kode_bayar()); ?>;
             let data_ps = <?= json_encode($ps); ?>;
             let html_ps = "";
             let data_billiard = <?= json_encode($billiard); ?>;
@@ -269,6 +275,9 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                     <div class="rounded-circle embos text-center px-2 pt-3 fw-bold btn_durasi" data-durasi="7" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">7</div>
                     <div class="rounded-circle embos text-center px-2 pt-3 mx-4 fw-bold btn_durasi" data-durasi="8" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">8</div>
                     <div class="rounded-circle embos text-center px-2 pt-3 fw-bold btn_durasi" data-durasi="9" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">9</div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                    <div class="embos text-center border-warning rounded-pill text-warning py-2 px-5 fw-bold angka_durasi" data-durasi="0" style="cursor:pointer;font-size:x-large;height:55px;">Open</div>
                     </div>
                     </div>`,
                 meja_ps: html_ps,
@@ -353,7 +362,24 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                 modal.show();
 
             }
+            const show_modal_konfirmasi = (msg, order, data1 = undefined, data2 = undefined, data3 = undefined, data4 = undefined) => {
+                let html = "";
+                html += '<div class="d-flex justify-content-center gap-3">';
+                html += '<div class="spinner-border text-danger" role="status">';
+                html += '<span class="visually-hidden">Loading...</span>';
+                html += '</div>';
+                html += '<div>' + msg + '</div>';
+                html += '</div>';
+                $('.div_pesan_konfirmasi').html(html);
 
+                let html2 = "";
+                html2 += '<button type="button" ' + (data1 !== undefined ? 'data-data1="' + data1 + '"' : '') + ' ' + (data2 !== undefined ? 'data-data2="' + data2 + '"' : '') + ' ' + (data3 !== undefined ? 'data-data3="' + data3 + '"' : '') + ' ' + (data4 !== undefined ? 'data-data4="' + data4 + '"' : '') + ' data-order="' + order + '" class="btn_konfirmasi btn px-5 btn-outline-light"><i class="fa-solid fa-chevron-right"></i> LANJUT</button>';
+                html2 += '<button type="button" data-bs-dismiss="modal" class="btn px-5 btn-outline-secondary"><i class="fa-solid fa-ban"></i> BATAL</button>';
+                $('.body_open').html(html2);
+                let modal = document.getElementById('open');
+                let myModal = bootstrap.Modal.getOrCreateInstance(modal)
+                myModal.show();
+            }
             const menunggu = (message = "Menunggu") => {
                 let html = "";
                 html += '<div class="btn_close_menunggu" style="cursor:pointer">';
@@ -465,24 +491,33 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                             let btn_meja = document.querySelectorAll(".btn_meja");
                             let durasi_active = [];
                             let index_active = [];
+                            let harga_active = [];
                             res.data.forEach(e => {
                                 btn_meja.forEach((elem, i) => {
                                     if (elem.dataset.meja == e.meja) {
                                         index_active.push(i);
                                         durasi_active.push(e.durasi);
+                                        harga_active.push(e.harga);
                                     }
                                 })
                             })
 
+                            let x = 0;
                             for (let i = 0; i < btn_meja.length; i++) {
-                                let x = 0;
                                 if (index_active.includes(i)) {
+                                    let durasi = durasi_active[x];
                                     $(".btn_meja_" + btn_meja[i].dataset.meja).removeClass("default");
                                     $(".btn_meja_" + btn_meja[i].dataset.meja).addClass("active");
-                                    $(".div_durasi_" + btn_meja[i].dataset.meja).text(durasi_active[x++]);
+                                    $(".div_durasi_" + btn_meja[i].dataset.meja).text(durasi);
+                                    if (durasi == "Open") {
+                                        $(".btn_meja_" + btn_meja[i].dataset.meja).addClass("open");
+                                        $(".btn_meja_" + btn_meja[i].dataset.meja).attr("data-harga", harga_active[x]);
+                                    }
+                                    x++;
                                 } else {
                                     $(".btn_meja_" + btn_meja[i].dataset.meja).addClass("default");
                                     $(".btn_meja_" + btn_meja[i].dataset.meja).removeClass("active");
+                                    $(".btn_meja_" + btn_meja[i].dataset.meja).removeClass("open");
                                     $(".div_durasi_" + btn_meja[i].dataset.meja).text("Available");
                                 }
 
@@ -610,6 +645,9 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                         $(".countdown").text(x);
                         $(".countdown").removeClass("d-none");
                     } else {
+                        clearInterval(interval_booking);
+                        clearInterval(ingterval_hutang);
+                        clearInterval(interval_durasi);
                         post("del_message", {
                             id: 0
                         }).then(rest => {
@@ -617,7 +655,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                                 $(".body_message").html('<h5 class="text-danger">Waktu habis!.</h5>');
                                 setTimeout(() => {
                                     location.reload();
-                                }, 1000);
+                                }, 2000);
                             }
                         })
 
@@ -651,7 +689,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                                                 location.reload();
                                             }
                                         })
-                                    }, 3000);
+                                    }, 2000);
 
                                 }
                             }
@@ -694,26 +732,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                     interval_booking = setInterval(add_booking, 1000);
                     return;
                 }
-                // if (menu == "Absen") {
-                //     $(this).addClass("select");
-                //     data = {
-                //         kategori: menu,
-                //         durasi: 0,
-                //         meja: 0
-                //     }
-                //     interval_booking = setInterval(add_booking, 1000);
-                //     return;
-                // }
-                // if (menu == "Hutang") {
-                //     $(this).addClass("select");
-                //     data = {
-                //         kategori: menu,
-                //         durasi: 0,
-                //         meja: 0
-                //     }
-                //     interval_booking = setInterval(add_booking, 1000);
-                //     return;
-                // }
+
                 if (menu == "Daftar" || menu == "Add" || menu == "Remove" || menu == "Delete") {
                     $(this).addClass("select");
                     show_search_db(menu);
@@ -734,6 +753,14 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                 if (menu == "Topup") {
                     data["meja"] = 0;
                     call_durasi(menu.toLowerCase());
+                }
+
+                if (menu == "Tap" || menu == "Cash") {
+                    let kat = $(this).data("kategori");
+                    let mej = $(this).data("meja");
+                    let harga = $(this).data("harga");
+                    show_modal_konfirmasi("YAKIN BAYAR DENGAN <span class='fst-italic fw-bold text-warning'>" + menu.toUpperCase() + "</span>?", "cara_bayar", menu, kat, mej, harga);
+                    return;
                 }
 
 
@@ -762,9 +789,23 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                 let kategori = data.kategori;
 
                 if (kategori == "Ps" || kategori == "Billiard") {
-                    if ($(this).hasClass("active")) {
-                        gagal("Meja sedang digunakan!.");
+                    if ($(this).hasClass("open")) {
+                        let harga = $(this).data("harga");
+                        let html = "";
+                        html += '<button type="button" data-harga="' + harga + '" data-kategori="' + kategori + '" data-meja="' + meja + '" data-menu="Tap" class="btn_menu btn px-5 btn-outline-success"><i class="fa-solid fa-money-check"></i> TAP</button>';
+                        html += '<button type="button" data-harga="' + harga + '" data-kategori="' + kategori + '" data-meja="' + meja + '" data-menu="Cash" class="btn_menu btn px-5 btn-outline-info"><i class="fa-solid fa-hand-holding-dollar"></i> Cash</button>';
+                        $('.body_open').html(html);
+                        let modal = document.getElementById('open');
+                        let myModal = bootstrap.Modal.getOrCreateInstance(modal)
+                        myModal.show();
+
+                        $(".harga_cara_bayar").text(angka(harga, 'Rp. '));
                         return;
+                    } else {
+                        if ($(this).hasClass("active")) {
+                            gagal("Meja sedang digunakan!.");
+                            return;
+                        }
                     }
                 }
 
@@ -835,6 +876,27 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                 modalM.hide();
                 $(this).html("");
             })
+
+            $(document).on('click', '.btn_konfirmasi', function(e) {
+                e.preventDefault();
+                let order = $(this).data("order");
+
+                if (order == "cara_bayar") {
+                    let order = $(this).data("data2"); //yang dibayar ps atau billiard?
+                    data = {
+                        kategori: $(this).data("data1"),
+                        harga: $(this).data("data4"),
+                        durasi: kode_bayar[order],
+                        meja: $(this).data("data3")
+                    }
+                    interval_booking = setInterval(add_booking, 1000);
+                    let myModal = document.getElementById('open');
+                    let modal = bootstrap.Modal.getOrCreateInstance(myModal)
+                    modal.hide();
+                    return;
+                }
+            })
+
             tangan();
         </script>
 </body>

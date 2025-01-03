@@ -428,6 +428,22 @@ function get_harga_rental()
 
     return $res;
 }
+function harga_ps($meja)
+{
+    $db = db("unit");
+    $res = 0;
+    $q = $db->where("unit", $meja)->get()->getRowArray();
+
+    if ($q) {
+        $dbs = db('settings');
+        $qs = $dbs->where('nama_setting', $q['kode_harga'])->get()->getRowArray();
+        if ($qs) {
+            $res = $qs['value_int'];
+        }
+    }
+
+    return $res;
+}
 function get_harga_billiard()
 {
     $db = db('settings');
@@ -562,11 +578,12 @@ function durasi($start, $end)
 
 function biaya_per_menit($harga, $start, $end)
 {
+
     $diff = $end - $start;
     $menit = ceil($diff / 60);
+
     $harga_per_menit = ceil($harga / 60);
     $harga = $harga_per_menit * $menit;
-
 
     $exp = explode('.', rupiah($harga));
     if (count($exp) >= 2) {
@@ -575,6 +592,9 @@ function biaya_per_menit($harga, $start, $end)
             $temp .= ".000";
             $harga = rp_to_int($temp);
         }
+    }
+    if ($harga < 1000) {
+        return 1000;
     }
 
     return $harga;
@@ -953,4 +973,34 @@ function saldo_tap($kategori, $uang, $user, $petugas = [])
         clear_tabel('api');
         gagal_arduino("Insert ke tabel topup gagal!.");
     }
+}
+
+function kode_bayar($order = null)
+{
+    $data = options("Kode Bayar");
+    $res = [];
+
+    foreach ($data as $i) {
+        $exp = explode("_", $i['value']);
+        $res[$exp[0]] = $exp[1];
+    }
+    if ($order == null) {
+        return $res;
+    } else {
+        foreach ($res as $k => $i) {
+            if ($i == $order) {
+                return $k;
+            }
+        }
+    }
+}
+
+function nama_tabel($order)
+{
+    $res = 'rental';
+    if ($order == "Billiard") {
+        $res = 'billiard_2';
+    }
+
+    return $res;
 }

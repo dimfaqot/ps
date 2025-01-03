@@ -28,6 +28,8 @@ $routes->post('/api/Remove', 'Api::tap_booking_remove');
 $routes->post('/api/Ps', 'Api::tap_booking_ps');
 $routes->post('/api/Billiard', 'Api::tap_booking_billiard');
 $routes->post('/api/Barber', 'Api::tap_booking_barber');
+$routes->post('/api/Cash', 'Api::tap_booking_cash');
+$routes->post('/api/Tap', 'Api::tap_booking_tap');
 
 // api finger
 $routes->post('/finger/get_booking', 'Finger::get_booking');

@@ -235,6 +235,7 @@ class Hutang extends BaseController
                     'tgl' => time(),
                     'qty' => $i['qty'],
                     'diskon' => $diskon_item,
+                    'metode' => "Cash",
                     'total_harga' => $i['total_harga'] - $diskon_item,
                     'petugas' => user()['nama']
                 ];
@@ -261,6 +262,7 @@ class Hutang extends BaseController
                     'petugas' => user()['nama'],
                     'biaya' => $i['total_harga'],
                     'diskon' => end($exp_nota),
+                    'metode' => "Cash",
                     'start' => $i['barang_id'],
                     'end' => $i['barang_id'] + ($i['qty'] * 60),
                     'is_active' => 0,
