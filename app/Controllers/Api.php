@@ -1119,7 +1119,7 @@ class Api extends BaseController
 
                     $dbu->where('id', $qu['id']);
                     if ($dbu->update($qu)) {
-                        saldo_tap($q['kategori'], $qr["meja"], $q['harga'], $user);
+                        saldo_tap($order, $qr["meja"], $q['harga'], $user);
                         clear_tabel('booking');
                         // message($q['kategori'], $user['nama'] . " sukses bertransaksi sebesar " . rupiah($harga), 200, "Saldo: " . rupiah($sal));
                         sukses_arduino($user['nama'] . " sukses bertransaksi sebesar " . rupiah($q['harga']), "Saldo: " . rupiah($sisa));
@@ -1175,7 +1175,7 @@ class Api extends BaseController
                     $qm['start'] = 0;
                     $dbm->where('id', $qm['id']);
                     if ($dbm->update($qm)) {
-                        saldo_tap($q['kategori'], $qb['meja'], $q['harga'], $user);
+                        saldo_tap($order, $qb['meja'], $q['harga'], $user);
                         sukses_arduino($user['nama'] . " sukses bertransaksi sebesar " . rupiah($q['harga']), "Saldo: " . rupiah($sisa));
                     } else {
                         clear_tabel('booking');
