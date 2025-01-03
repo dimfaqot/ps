@@ -1085,7 +1085,7 @@ class Api extends BaseController
 
         if ($order == "Ps") {
             $dbr = db('rental');
-            $qr = $db->where("id", $q['meja'])->where("is_active", 1)->where('durasi', -1)->get()->getRowArray();
+            $qr = $dbr->where("id", $q['meja'])->where("is_active", 1)->where('durasi', -1)->get()->getRowArray();
 
             if (!$qr) {
                 clear_tabel('booking');
@@ -1142,7 +1142,7 @@ class Api extends BaseController
         if ($order == "Billiard") {
 
             $dbb = db('billiard_2');
-            $qb = $db->where("id", $q['meja'])->where("is_active", 1)->where('durasi', 0)->get()->getRowArray();
+            $qb = $dbb->where("id", $q['meja'])->where("is_active", 1)->where('durasi', 0)->get()->getRowArray();
             sukses_js("Ok", $order, $user, $saldo, $q, $qb);
 
             if (!$qb) {
