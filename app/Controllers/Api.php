@@ -699,7 +699,7 @@ class Api extends BaseController
 
         $meja['is_active'] = 1;
         $meja['start'] = $time_now;
-        sukses_js("ok", $meja);
+
         $dbm->where('id', $meja['id']);
         if ($dbm->update($meja)) { //update meja
             $data = [
@@ -716,7 +716,7 @@ class Api extends BaseController
                 'harga' => $meja['harga'],
                 'metode' => 'Tap'
             ];
-
+            sukses_js("ok", $data);
             $dbb = db('billiard_2');
             if ($dbb->insert($data)) { //update billiard
                 if ($q["durasi"] == 0) {
