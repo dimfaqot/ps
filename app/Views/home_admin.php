@@ -799,7 +799,12 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
     chart_html('kantin', '<?= date('Y'); ?>');
     chart_html('barber', '<?= date('Y'); ?>');
 
-
+    $(document).on('click', '.btn_saldo_tap', function(e) {
+        e.preventDefault();
+        let myModal = document.getElementById('saldo_tap');
+        let modal = bootstrap.Modal.getOrCreateInstance(myModal)
+        modal.show();
+    })
 
     let data_saldo_tap = [];
     $(document).on('change', '.filter_saldo_tap', function(e) {
