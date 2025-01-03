@@ -374,7 +374,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
 
                 let html2 = "";
                 html2 += '<button type="button" ' + (data1 !== undefined ? 'data-data1="' + data1 + '"' : '') + ' ' + (data2 !== undefined ? 'data-data2="' + data2 + '"' : '') + ' ' + (data3 !== undefined ? 'data-data3="' + data3 + '"' : '') + ' ' + (data4 !== undefined ? 'data-data4="' + data4 + '"' : '') + ' data-order="' + order + '" class="btn_konfirmasi btn px-5 btn-outline-light"><i class="fa-solid fa-chevron-right"></i> LANJUT</button>';
-                html2 += '<button type="button" data-bs-dismiss="modal" class="btn px-5 btn-outline-secondary"><i class="fa-solid fa-ban"></i> BATAL</button>';
+                html2 += '<button type="button" data-bs-dismiss="modal" class="btn ms-3 px-5 btn-outline-secondary"><i class="fa-solid fa-ban"></i> BATAL</button>';
                 $('.body_open').html(html2);
                 let modal = document.getElementById('open');
                 let myModal = bootstrap.Modal.getOrCreateInstance(modal)
@@ -797,7 +797,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                         let meja_id = $(this).data("meja_id");
                         let html = "";
                         html += '<button type="button" data-harga="' + harga + '" data-kategori="' + kategori + '" data-meja="' + meja_id + '" data-menu="Tap" class="btn_menu btn px-5 btn-outline-success"><i class="fa-solid fa-money-check"></i> TAP</button>';
-                        html += '<button type="button" data-harga="' + harga + '" data-kategori="' + kategori + '" data-meja="' + meja_id + '" data-menu="Cash" class="btn_menu btn px-5 btn-outline-info"><i class="fa-solid fa-hand-holding-dollar"></i> Cash</button>';
+                        html += '<button type="button" data-harga="' + harga + '" data-kategori="' + kategori + '" data-meja="' + meja_id + '" data-menu="Cash" class="btn_menu ms-3 btn px-5 btn-outline-info"><i class="fa-solid fa-hand-holding-dollar"></i> Cash</button>';
                         $('.body_open').html(html);
                         let modal = document.getElementById('open');
                         let myModal = bootstrap.Modal.getOrCreateInstance(modal)
