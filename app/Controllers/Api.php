@@ -1139,12 +1139,12 @@ class Api extends BaseController
                 gagal_arduino("Update ps gagal!.");
             }
         }
+        sukses_js("Ok", $order, $user, $saldo, $q['harga']);
         if ($order == "Billiard") {
 
             $dbb = db('billiard_2');
             $qb = $db->where("id", $q['meja'])->where("is_active", 1)->where('durasi', 0)->get()->getRowArray();
 
-            sukses_js("Ok", $order, $user, $saldo, $q['harga'], $qb);
             if (!$qb) {
                 clear_tabel('booking');
                 message($q['kategori'], "Data tabel billiard tidak ditemukan!.", 400, $order);
