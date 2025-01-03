@@ -950,7 +950,7 @@ class Api extends BaseController
             gagal_arduino("Butuh akses petugas!.");
         }
 
-        sukses_js("Ok", $order);
+
         if ($order == "Ps") {
             $dbr = db('rental');
             $qr = $db->where("meja", "Meja " . $q['meja'])->where("is_active", 1)->where('durasi', -1)->get()->getRowArray();
