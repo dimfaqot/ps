@@ -1158,6 +1158,7 @@ class Api extends BaseController
             $qb['metode'] = "Tap";
             $qb['durasi'] = round((time() - $qb['start']) / 60);
 
+            sukses_js("ok", $qb);
 
             $dbb->where('id', $qb['id']);
             if ($dbb->update($qb)) {
