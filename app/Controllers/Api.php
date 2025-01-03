@@ -1012,7 +1012,7 @@ class Api extends BaseController
             $qb['metode'] = "Cash";
             $qb['durasi'] = round((time() - $qb['start']) / 60);
 
-
+            sukses_js("Ok", $qb);
             $dbb->where('id', $qb['id']);
             if ($dbb->update($qb)) {
                 $dbm = db("jadwal_2");
