@@ -277,7 +277,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                     <div class="rounded-circle embos text-center px-2 pt-3 fw-bold btn_durasi" data-durasi="9" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">9</div>
                     </div>
                     <div class="d-flex justify-content-center">
-                    <div class="embos text-center border-warning rounded-pill text-warning py-2 px-5 fw-bold angka_durasi" data-durasi="0" style="cursor:pointer;font-size:x-large;height:55px;">Open</div>
+                    <div class="embos text-center border-warning rounded-pill text-warning py-2 px-5 pt-3 fw-bold btn_durasi" data-durasi="0" style="cursor:pointer;font-size:x-large;height:55px;">Open</div>
                     </div>
                     </div>`,
                 meja_ps: html_ps,
