@@ -123,7 +123,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             <div class="d-flex justify-content-center div_menu"></div>
             <div class="body_meja mt-4"></div>
             <div class="body_durasi"></div>
-            <div class="body_btn_ok d-grid"></div>
+            <div class="body_btn_ok mt-3 d-grid"></div>
             <?= view('booking/date_time'); ?>
         </div>
     </div>
