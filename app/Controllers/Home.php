@@ -376,12 +376,10 @@ class Home extends BaseController
         $data = [];
         $total = 0;
         foreach ($topup as $i) {
-            if ($i["kategori"] == $kategori || $i['kategori'] == "Hutang") {
-                if ($i['jenis'] == "out") {
-                    if (date("n", $i['tgl']) == $bulan && date("Y", $i['tgl']) == $tahun) {
-                        $total += $i['jml'];
-                        $data[] = $i;
-                    }
+            if ($i["jenis"] == $kategori  && $i['jenis'] == "out") {
+                if (date("n", $i['tgl']) == $bulan && date("Y", $i['tgl']) == $tahun) {
+                    $total += $i['jml'];
+                    $data[] = $i;
                 }
             }
         }

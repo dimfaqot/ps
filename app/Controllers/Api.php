@@ -437,7 +437,7 @@ class Api extends BaseController
 
                             if ($dbb->insert($value)) {
                                 $total_2 += $i['total_harga'];
-                                saldo_tap($q["kategori"], $value['meja'], $saldo["fulus"], $user_m);
+                                saldo_tap($i["kategori"], $value['meja'], $saldo["fulus"], $user_m);
                             }
                         }
 
@@ -458,7 +458,7 @@ class Api extends BaseController
                             ];
 
                             if ($dbk->insert($value)) {
-                                saldo_tap($q["kategori"], $value['barang'], $saldo["fulus"], $user_m);
+                                saldo_tap($i["kategori"], $value['barang'], $saldo["fulus"], $user_m);
                                 $total_2 += $i['total_harga'];
                             }
                         }
@@ -479,7 +479,7 @@ class Api extends BaseController
                             ];
                             $dbb = db('barber');
                             if ($dbk->insert($value)) {
-                                saldo_tap($q["kategori"], '', $saldo["layanan"], $user_m);
+                                saldo_tap($i["kategori"], '', $saldo["layanan"], $user_m);
                                 $total_2 += $i['total_harga'];
                             }
                         }
