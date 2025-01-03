@@ -696,6 +696,10 @@ class Api extends BaseController
 
         $endtime = $time_now + ((60 * 60) * $q['durasi']);
         $durasi_jam = $q['durasi'] * 60;
+        if ($q['durasi'] == 0) {
+            $endtime = 0;
+            $durasi_jam = 0;
+        }
 
         $meja['is_active'] = 1;
         $meja['start'] = $time_now;
@@ -716,7 +720,7 @@ class Api extends BaseController
                 'harga' => $meja['harga'],
                 'metode' => 'Tap'
             ];
-            sukses_js("ok", $data);
+
             $dbb = db('billiard_2');
             if ($dbb->insert($data)) { //update billiard
                 if ($q["durasi"] == 0) {
