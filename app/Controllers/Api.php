@@ -950,10 +950,10 @@ class Api extends BaseController
             gagal_arduino("Butuh akses petugas!.");
         }
 
-
+        $no_meja = "Meja " . $q['meja'];
         if ($order == "Ps") {
             $dbr = db('rental');
-            $qr = $db->where("meja", "Meja " . $q['meja'])->where("is_active", 1)->where('durasi', -1)->get()->getRowArray();
+            $qr = $db->where("meja", $no_meja)->where("is_active", 1)->where('durasi', -1)->get()->getRowArray();
 
             if (!$qr) {
                 clear_tabel('booking');
@@ -997,7 +997,7 @@ class Api extends BaseController
         if ($order == "Billiard") {
 
             $dbb = db('billiard_2');
-            $qb = $db->where("meja", "Meja " . $q['meja'])->where("is_active", 1)->where('durasi', 0)->get()->getRowArray();
+            $qb = $db->where("meja", $no_meja)->where("is_active", 1)->where('durasi', 0)->get()->getRowArray();
             sukses_js("ok", $qb);
             if (!$qb) {
                 clear_tabel('booking');
