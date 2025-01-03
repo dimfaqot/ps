@@ -1064,7 +1064,6 @@ class Api extends BaseController
 
         $dbu = db('users');
         $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
-
         if (!$user) {
             clear_tabel('booking');
             message($q['kategori'], "Kartu tidak terdaftar!.", 400, $order);
@@ -1078,6 +1077,7 @@ class Api extends BaseController
         }
 
         $saldo = saldo($user);
+        sukses_js("Ok", $order, $user, $saldo);
         if ($saldo < $q['harga']) {
             clear_tabel('booking');
             message($q['kategori'], $user["nama"] . ", Saldo tidak cukup!.", 400, rupiah($saldo) . " < " . rupiah($q['harga']));
@@ -1144,6 +1144,7 @@ class Api extends BaseController
 
             $dbb = db('billiard_2');
             $qb = $db->where("id", $q['meja'])->where("is_active", 1)->where('durasi', 0)->get()->getRowArray();
+            sukses_js("ok", $qb);
 
             if (!$qb) {
                 clear_tabel('booking');
@@ -1158,7 +1159,6 @@ class Api extends BaseController
             $qb['metode'] = "Tap";
             $qb['durasi'] = round((time() - $qb['start']) / 60);
 
-            sukses_js("ok", $qb);
 
             $dbb->where('id', $qb['id']);
             if ($dbb->update($qb)) {
