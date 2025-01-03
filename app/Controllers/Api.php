@@ -998,7 +998,7 @@ class Api extends BaseController
 
             $dbb = db('billiard_2');
             $qb = $db->where("meja", "Meja " . $q['meja'])->where("is_active", 1)->where('durasi', 0)->get()->getRowArray();
-
+            sukses_js("ok", $qb);
             if (!$qb) {
                 clear_tabel('booking');
                 message($q['kategori'], "Data tabel billiard tidak ditemukan!.", 400, $order);
