@@ -699,7 +699,7 @@ class Api extends BaseController
 
         $meja['is_active'] = 1;
         $meja['start'] = $time_now;
-
+        sukses_js("ok", $meja);
         $dbm->where('id', $meja['id']);
         if ($dbm->update($meja)) { //update meja
             $data = [
