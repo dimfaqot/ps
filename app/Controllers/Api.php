@@ -580,6 +580,10 @@ class Api extends BaseController
 
         $durasi_main = $time + ((60 * 60) * $q['durasi']);
         $durasi_jam = $q["durasi"] * 60;
+        if ($q['durasi'] == 0) {
+            $durasi_jam = -1;
+            $durasi_main = -1;
+        }
 
         $datar = [
             'tgl' => $time,
@@ -600,18 +604,25 @@ class Api extends BaseController
             $unit['status'] = 'In Game';
             $dbun->where('id', $unit['id']);
             $dbun->update($unit);
-            $sal = $fulus - $biaya;
-            $user['fulus'] = encode_jwt_fulus(['fulus' => $sal]);
 
-            $dbu->where('id', $user['id']);
-            if (!$dbu->update($user)) {
+            if ($q["durasi"] == 0) {
                 clear_tabel('booking');
-                message($q['kategori'], "Update saldo gagal!.", 400);
-                gagal_arduino("Update saldo gagal!.");
+                message($q['kategori'], $user['nama'] . " sukses open ps " . $meja . ".", 200);
+                sukses_arduino($user['nama'] . " sukses open billiard " . $meja . ".");
             } else {
-                saldo_tap($q['kategori'], $biaya, $user);
-                message($q['kategori'], $user['nama'] . " sukses bertansaksi " . rupiah($biaya), 200, rupiah($sal));
-                sukses_arduino($user['nama'] . " sukses bertansaksi " . rupiah($biaya), rupiah($sal));
+                $sal = $fulus - $biaya;
+                $user['fulus'] = encode_jwt_fulus(['fulus' => $sal]);
+
+                $dbu->where('id', $user['id']);
+                if (!$dbu->update($user)) {
+                    clear_tabel('booking');
+                    message($q['kategori'], "Update saldo gagal!.", 400);
+                    gagal_arduino("Update saldo gagal!.");
+                } else {
+                    saldo_tap($q['kategori'], $biaya, $user);
+                    message($q['kategori'], $user['nama'] . " sukses bertansaksi " . rupiah($biaya), 200, rupiah($sal));
+                    sukses_arduino($user['nama'] . " sukses bertansaksi " . rupiah($biaya), rupiah($sal));
+                }
             }
         } else {
             clear_tabel('booking');
@@ -707,8 +718,8 @@ class Api extends BaseController
             if ($dbb->insert($data)) { //update billiard
                 if ($q["durasi"] == 0) {
                     clear_tabel('booking');
-                    message($q['kategori'], $user['nama'] . " open billiard " . $data['meja'], 200);
-                    sukses_arduino($user['nama'] . " open billiard " . $data['meja']);
+                    message($q['kategori'], $user['nama'] . " sukses open billiard " . $data['meja'] . ".", 200);
+                    sukses_arduino($user['nama'] . " sukses open billiard " . $data['meja'] . ".");
                 } else {
                     $sal = $fulus - $harga;
                     $user['fulus'] = encode_jwt_fulus(['fulus' => $sal]);
