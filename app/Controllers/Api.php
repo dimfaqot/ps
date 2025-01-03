@@ -1077,7 +1077,6 @@ class Api extends BaseController
         }
 
         $saldo = saldo($user);
-        sukses_js("Ok", $order, $user, $saldo);
         if ($saldo < $q['harga']) {
             clear_tabel('booking');
             message($q['kategori'], $user["nama"] . ", Saldo tidak cukup!.", 400, rupiah($saldo) . " < " . rupiah($q['harga']));
@@ -1144,8 +1143,8 @@ class Api extends BaseController
 
             $dbb = db('billiard_2');
             $qb = $db->where("id", $q['meja'])->where("is_active", 1)->where('durasi', 0)->get()->getRowArray();
-            sukses_js("ok", $qb);
 
+            sukses_js("Ok", $order, $user, $saldo, $q['harga'], $qb);
             if (!$qb) {
                 clear_tabel('booking');
                 message($q['kategori'], "Data tabel billiard tidak ditemukan!.", 400, $order);
