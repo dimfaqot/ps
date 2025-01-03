@@ -944,7 +944,7 @@ class Api extends BaseController
             message($q['kategori'], "Kartu tidak terdaftar!.", 400, $order);
             gagal_arduino('Kartu tidak terdaftar!.');
         }
-
+        sukses_js("Ok", $user);
         if ($user["role"] !== "Root" && $user["role"] !== "Admin Billiard") {
             clear_tabel('booking');
             message($q['kategori'], "Butuh akses petugas!.", 400, $order);
@@ -1012,7 +1012,7 @@ class Api extends BaseController
             $qb['metode'] = "Cash";
             $qb['durasi'] = round((time() - $qb['start']) / 60);
 
-            sukses_js("Ok", $qb);
+
             $dbb->where('id', $qb['id']);
             if ($dbb->update($qb)) {
                 $dbm = db("jadwal_2");
