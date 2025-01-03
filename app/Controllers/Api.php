@@ -529,12 +529,20 @@ class Api extends BaseController
         $dbu = db('users');
         $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
 
+
+
         if (!$user) {
             clear_tabel('booking');
             message($q['kategori'], "Kartu tidak terdaftar!.", 400);
             gagal_arduino("Kartu tidak terdaftar!.");
         }
-
+        if ($q['durasi'] == 0) {
+            if ($user["role"] == "Member") {
+                clear_tabel('booking');
+                message($q['kategori'], "Butuh akses petugas!.", 400);
+                gagal_arduino("Butuh akses petugas!.");
+            }
+        }
         $meja = "Meja " . $q['meja'];
 
         $dbun = db('unit');
@@ -655,7 +663,7 @@ class Api extends BaseController
         }
 
         if ($q['durasi'] == 0) {
-            if ($user["role"] !== "Root" && $user["role"] !== "Admin Billiard") {
+            if ($user["role"] == "Member") {
                 clear_tabel('booking');
                 message($q['kategori'], "Butuh akses petugas!.", 400);
                 gagal_arduino("Butuh akses petugas!.");
@@ -950,10 +958,10 @@ class Api extends BaseController
             gagal_arduino("Butuh akses petugas!.");
         }
 
-        $no_meja = "Meja " . $q['meja'];
+
         if ($order == "Ps") {
             $dbr = db('rental');
-            $qr = $dbr->where("meja", $no_meja)->where("is_active", 1)->where('durasi', -1)->get()->getRowArray();
+            $qr = $dbr->where("id", $q["meja"])->where("is_active", 1)->where('durasi', -1)->get()->getRowArray();
 
             if (!$qr) {
                 clear_tabel('booking');
@@ -972,7 +980,7 @@ class Api extends BaseController
             $dbr->where('id', $qr['id']);
             if ($dbr->update($qr)) {
                 $dbu = db("unit");
-                $qu = $dbu->where("meja", $qr['meja'])->get()->getRowArray();
+                $qu = $dbu->where("id", $qr['unit_id'])->get()->getRowArray();
                 if (!$qu) {
                     clear_tabel('booking');
                     message($q['kategori'], "Data meja tidak ditemukan!.", 400, $order);
@@ -982,7 +990,7 @@ class Api extends BaseController
 
                 $dbu->where('id', $qu['id']);
                 if ($dbu->update($qu)) {
-                    sukses_arduino($user['nama'] . " menerima pembayaran " . $order . " meja " . $q['meja'], angka($q['harga']));
+                    sukses_arduino($user['nama'] . " menerima pembayaran " . $order . " " . $qr['meja'], angka($q['harga']));
                 } else {
                     clear_tabel('booking');
                     message($q['kategori'], "Meja gagal diupdate!.", 400, $order);
@@ -997,7 +1005,7 @@ class Api extends BaseController
         if ($order == "Billiard") {
 
             $dbb = db('billiard_2');
-            $qb = $dbb->where("meja", $no_meja)->where("is_active", 1)->where('durasi', 0)->get()->getRowArray();
+            $qb = $dbb->where("id", $q['meja'])->where("is_active", 1)->where('durasi', 0)->get()->getRowArray();
             if (!$qb) {
                 clear_tabel('booking');
                 message($q['kategori'], "Data tabel billiard tidak ditemukan!.", 400, $order);
@@ -1015,7 +1023,7 @@ class Api extends BaseController
             $dbb->where('id', $qb['id']);
             if ($dbb->update($qb)) {
                 $dbm = db("jadwal_2");
-                $qm = $dbm->where("meja", $q['meja'])->get()->getRowArray();
+                $qm = $dbm->where("id", $qb['meja_id'])->get()->getRowArray();
                 if (!$qm) {
                     clear_tabel('booking');
                     message($q['kategori'], "Data meja tidak ditemukan!.", 400, $order);
@@ -1025,7 +1033,7 @@ class Api extends BaseController
                 $qm['start'] = 0;
                 $dbm->where('id', $qm['id']);
                 if ($dbm->update($qm)) {
-                    sukses_arduino($user['nama'] . " menerima pembayaran " . $order . " meja " . $q['meja'], angka($q['harga']));
+                    sukses_arduino($user['nama'] . " menerima pembayaran " . $order . " " . $qb['meja'], angka($q['harga']));
                 } else {
                     clear_tabel('booking');
                     message($q['kategori'], "Meja gagal diupdate!.", 400, $order);
@@ -1068,6 +1076,7 @@ class Api extends BaseController
             message($q['kategori'], "Kartu ditolak!.", 400, $order);
             gagal_arduino("Kartu ditolak!.");
         }
+
         $saldo = saldo($user);
         if ($saldo < $q['harga']) {
             clear_tabel('booking');
@@ -1077,7 +1086,7 @@ class Api extends BaseController
 
         if ($order == "Ps") {
             $dbr = db('rental');
-            $qr = $db->where("meja", "Meja " . $q['meja'])->where("is_active", 1)->where('durasi', -1)->get()->getRowArray();
+            $qr = $db->where("id", $q['meja'])->where("is_active", 1)->where('durasi', -1)->get()->getRowArray();
 
             if (!$qr) {
                 clear_tabel('booking');
@@ -1095,13 +1104,13 @@ class Api extends BaseController
 
             $dbr->where('id', $qr['id']);
             if ($dbr->update($qr)) {
-                $sisa = $saldo - $q['harga'];
+                $sisa = $saldo - $qr['harga'];
                 $user['fulus'] = encode_jwt_fulus(["fulus" => $sisa]);
                 $dbu->where('id', $user['id']);
                 if ($dbu->update($user)) {
 
                     $dbu = db("unit");
-                    $qu = $dbu->where("meja", $qr['meja'])->get()->getRowArray();
+                    $qu = $dbu->where("id", $qr['unit_id'])->get()->getRowArray();
                     if (!$qu) {
                         clear_tabel('booking');
                         message($q['kategori'], "Data meja tidak ditemukan!.", 400, $order);
@@ -1111,7 +1120,7 @@ class Api extends BaseController
 
                     $dbu->where('id', $qu['id']);
                     if ($dbu->update($qu)) {
-                        saldo_tap($q['kategori'], "Meja " . $q['meja'], $q['harga'], $user);
+                        saldo_tap($q['kategori'], $qr["meja"], $q['harga'], $user);
                         clear_tabel('booking');
                         // message($q['kategori'], $user['nama'] . " sukses bertransaksi sebesar " . rupiah($harga), 200, "Saldo: " . rupiah($sal));
                         sukses_arduino($user['nama'] . " sukses bertransaksi sebesar " . rupiah($q['harga']), "Saldo: " . rupiah($sisa));
@@ -1134,7 +1143,7 @@ class Api extends BaseController
         if ($order == "Billiard") {
 
             $dbb = db('billiard_2');
-            $qb = $db->where("meja", "Meja " . $q['meja'])->where("is_active", 1)->where('durasi', 0)->get()->getRowArray();
+            $qb = $db->where("id", $q['meja'])->where("is_active", 1)->where('durasi', 0)->get()->getRowArray();
 
             if (!$qb) {
                 clear_tabel('booking');
@@ -1157,7 +1166,7 @@ class Api extends BaseController
                 $dbu->where('id', $user['id']);
                 if ($dbu->update($user)) {
                     $dbm = db("jadwal_2");
-                    $qm = $dbm->where("meja", $q['meja'])->get()->getRowArray();
+                    $qm = $dbm->where("id", $qb['meja_id'])->get()->getRowArray();
                     if (!$qm) {
                         clear_tabel('booking');
                         message($q['kategori'], "Data meja tidak ditemukan!.", 400, $order);
@@ -1167,7 +1176,7 @@ class Api extends BaseController
                     $qm['start'] = 0;
                     $dbm->where('id', $qm['id']);
                     if ($dbm->update($qm)) {
-                        saldo_tap($q['kategori'], "Meja " . $q['meja'], $q['harga'], $user);
+                        saldo_tap($q['kategori'], $qb['meja'], $q['harga'], $user);
                         sukses_arduino($user['nama'] . " sukses bertransaksi sebesar " . rupiah($q['harga']), "Saldo: " . rupiah($sisa));
                     } else {
                         clear_tabel('booking');

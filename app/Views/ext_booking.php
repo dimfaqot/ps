@@ -492,12 +492,14 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                             let durasi_active = [];
                             let index_active = [];
                             let harga_active = [];
+                            let meja_id_active = [];
                             res.data.forEach(e => {
                                 btn_meja.forEach((elem, i) => {
                                     if (elem.dataset.meja == e.meja) {
                                         index_active.push(i);
                                         durasi_active.push(e.durasi);
                                         harga_active.push(e.harga);
+                                        meja_id_active.push(e.id);
                                     }
                                 })
                             })
@@ -512,6 +514,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                                     if (durasi == "Open") {
                                         $(".btn_meja_" + btn_meja[i].dataset.meja).addClass("open");
                                         $(".btn_meja_" + btn_meja[i].dataset.meja).attr("data-harga", harga_active[x]);
+                                        $(".btn_meja_" + btn_meja[i].dataset.meja).attr("data-meja_id", meja_id_active[x]);
                                     }
                                     x++;
                                 } else {
@@ -791,9 +794,10 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                 if (kategori == "Ps" || kategori == "Billiard") {
                     if ($(this).hasClass("open")) {
                         let harga = $(this).data("harga");
+                        let meja_id = $(this).data("meja_id");
                         let html = "";
-                        html += '<button type="button" data-harga="' + harga + '" data-kategori="' + kategori + '" data-meja="' + meja + '" data-menu="Tap" class="btn_menu btn px-5 btn-outline-success"><i class="fa-solid fa-money-check"></i> TAP</button>';
-                        html += '<button type="button" data-harga="' + harga + '" data-kategori="' + kategori + '" data-meja="' + meja + '" data-menu="Cash" class="btn_menu btn px-5 btn-outline-info"><i class="fa-solid fa-hand-holding-dollar"></i> Cash</button>';
+                        html += '<button type="button" data-harga="' + harga + '" data-kategori="' + kategori + '" data-meja="' + meja_id + '" data-menu="Tap" class="btn_menu btn px-5 btn-outline-success"><i class="fa-solid fa-money-check"></i> TAP</button>';
+                        html += '<button type="button" data-harga="' + harga + '" data-kategori="' + kategori + '" data-meja="' + meja_id + '" data-menu="Cash" class="btn_menu btn px-5 btn-outline-info"><i class="fa-solid fa-hand-holding-dollar"></i> Cash</button>';
                         $('.body_open').html(html);
                         let modal = document.getElementById('open');
                         let myModal = bootstrap.Modal.getOrCreateInstance(modal)
