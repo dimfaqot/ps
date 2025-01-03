@@ -953,7 +953,7 @@ function konfirmasi_user_exist_finger($user_m, $booking)
     }
 }
 
-function saldo_tap($kategori, $uang, $user, $petugas = [])
+function saldo_tap($kategori, $barang, $uang, $user, $petugas = [])
 {
     $dbt = db("topup");
     $topup = [
@@ -962,6 +962,7 @@ function saldo_tap($kategori, $uang, $user, $petugas = [])
         "kategori" => $kategori,
         "petugas" => (key_exists("nama", $petugas) ? $petugas["nama"] : ""),
         "jml" => $uang,
+        "barang" => $barang,
         "user_id" => $user["id"],
         "uid" => $user["uid"],
         "user" => $user["nama"]

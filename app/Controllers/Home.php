@@ -361,4 +361,31 @@ class Home extends BaseController
 
         sukses_js("Ok", $data, $total_masuk, $total_keluar, session('role'));
     }
+    public function saldo_tap_by_katagori()
+    {
+        $tahun = clear($this->request->getVar("tahun"));
+        $bulan = clear($this->request->getVar("bulan"));
+        $kategori = upper_first(clear($this->request->getVar("tabel")));
+
+        if ($kategori == "rental") {
+            $kategori = "Ps";
+        }
+
+        $db = db('topup');
+        $topup = $db->orderBy('tgl', "DESC")->get()->getResultArray();
+        $data = [];
+        $total = 0;
+        foreach ($topup as $i) {
+            if ($i["kategori"] == $kategori || $i['kategori'] == "Hutang") {
+                if ($i['jenis'] == "out") {
+                    if (date("n", $i['tgl']) == $bulan && date("Y", $i['tgl']) == $tahun) {
+                        $total += $i['jml'];
+                        $data[] = $i;
+                    }
+                }
+            }
+        }
+
+        sukses_js("Ok", $data, $total);
+    }
 }

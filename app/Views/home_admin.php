@@ -13,7 +13,6 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
             <a href="<?= base_url('absen/reset_absen'); ?>" class="btn_danger mb-2">Reset Absen</a>
         <?php endif; ?>
         <a href="" class="btn_purple btn_saldo_tap mb-2">Tap</a>
-        <a href="" class="btn_success data_tap mb-2">Data Tap</a>
         <button data-id="<?= session('id'); ?>" data-nama="<?= user()['nama']; ?>" class="btn_primary mb-2 fw-bold poin_absen">POIN: <?= poin_absen(session('id'))['poin']; ?></button>
     </div>
 
@@ -289,6 +288,50 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
         })
 
     })
+
+    const get_tap = (tabel, bulan, tahun) => {
+        post("home/saldo_tap_by_katagori", {
+            tahun,
+            tabel,
+            bulan
+        }).then(res => {
+            let html = "";
+
+            if (res.data.length == 0) {
+                html += '<span class="text_danger">Data tidak ditemukan!.</span>';
+            } else {
+                html += '<h6>TOTAL: ' + angka(res.data2) + '</h6>';
+                html += '<table class="table table-striped table-bordered table-sm">';
+                html += '<thead>';
+                html += '<tr>';
+                html += '<th style="text-align: center;" scope="row">#</th>';
+                html += '<th style="text-align: center;" scope="row">Tgl</th>';
+                html += '<th style="text-align: center;" scope="row">Pet.</th>';
+                html += '<th style="text-align: center;" scope="row">Kat.</th>';
+                html += '<th style="text-align: center;" scope="row">Barang</th>';
+                html += '<th style="text-align: center;" scope="row">Nama</th>';
+                html += '<th style="text-align: center;" scope="row">Jml</th>';
+                html += '</tr>';
+                html += '</thead>';
+                html += '<tbody class="tabel_search">';
+                res.data.forEach((e, i) => {
+                    html += '<tr>';
+                    html += '<td class="text-center">' + (i + 1) + '</td>';
+                    html += '<td class="text-center">' + time_php_to_js(e.tgl) + '</td>';
+                    html += '<td>' + e.petugas + '</td>';
+                    html += '<td>' + e.kategori + '</td>';
+                    html += '<td>' + e.barang + '</td>';
+                    html += '<td>' + e.user + '</td>';
+                    html += '<td class="text-end">' + angka(e.jml) + '</td>';
+                    html += '</tr>';
+                })
+                html += '</tbody>';
+                html += '</table>';
+            }
+            $('.tabel_pendapatan').html(html);
+        })
+    }
+
     $(document).on('click', '.save_tabungan', function(e) {
         e.preventDefault();
 
@@ -406,6 +449,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
     const content_table = (order, tabel, data, index) => {
         let html = '';
 
+        html += '<div class="tabel_pendapatan">';
         html += '<table class="table table-striped table-bordered table-sm">';
         html += '<thead>';
         html += '<tr>';
@@ -500,6 +544,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
 
         html += '</tbody>';
         html += '</table>';
+        html += '</div>';
 
         let res = {
             total_m,
@@ -509,7 +554,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
         return res;
 
     }
-    let data_tap = {};
+
     const chart_html = (tabel, tahun) => {
 
         const bulans = <?= json_encode(bulan()); ?>;
@@ -526,9 +571,20 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
                 // total pemasukan
 
                 let total_m = 0;
+                let total_tap = 0;
+
+                let jml = "biaya";
+                if (tabel == 'kantin' || tabel == "barber") {
+                    jml = "total_harga";
+                }
                 res.data.forEach((val, idx) => {
                     total_m += val.total;
-                    data_tap[tabel] = val.data;
+
+                    val.data.forEach(t => {
+                        if (t.metode == "Tap") {
+                            total_tap += parseInt(t[jml]);
+                        }
+                    });
                 })
 
                 // total pengeluaran
@@ -538,7 +594,10 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
                 })
                 $('.total_' + tabel).text(angka(total_m) + ' - ' + angka(total_p) + ' = ' + ((total_m - total_p) < 0 ? '-' : '') + angka((total_m - total_p).toString()));
 
-                data_tap["total_" + tabel] = total_m - total_p;
+                // total tap
+                let jml_tap = (total_m - total_p) - total_tap;
+                $(".div_data_tap_" + tabel).text("- " + angka(total_tap) + " = " + angka(jml_tap));
+
                 valueX = [];
 
                 // res.data.forEach(e => {
@@ -588,6 +647,9 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
                             html += '<li class="nav-item">';
                             html += '<a class="nav-link detail_data" data-order="pengeluaran" aria-current="page" href="#">Pengeluaran</a>';
                             html += '</li>';
+                            html += '<li class="nav-item">';
+                            html += '<a class="nav-link detail_data" data-order="tap" data-bulan="' + index + '" data-tahun="' + tahun + '" data-tabel="' + tabel + '" aria-current="page" href="#">Tap</a>';
+                            html += '</li>';
                             html += '</ul>';
                             html += '<div class="content_table">';
                             html += body_table.html;
@@ -609,14 +671,18 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
                             $(document).on('click', '.detail_data', function(e) {
                                 e.preventDefault();
                                 let order = $(this).data('order');
-                                let content = content_table(order, tabel, (order == 'pemasukan' ? res.data : res.data2), index);
-
                                 let elem = document.querySelectorAll('.detail_data');
 
                                 elem.forEach(e => {
                                     e.classList.remove('active');
                                 })
                                 $(this).addClass('active');
+                                if (order == "tap") {
+                                    get_tap($(this).data("tabel"), $(this).data("bulan"), $(this).data("tahun"));
+                                    return;
+                                }
+                                let content = content_table(order, tabel, (order == 'pemasukan' ? res.data : res.data2), index);
+
                                 $('.content_table').html(content.html);
                             })
 
@@ -733,93 +799,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
     chart_html('kantin', '<?= date('Y'); ?>');
     chart_html('barber', '<?= date('Y'); ?>');
 
-    $(document).on('click', '.data_tap', function(e) {
-        e.preventDefault();
 
-        let datas = ["rental", "billiard", "kantin", "barber"];
-
-        datas.forEach(e => {
-            let harga = "biaya";
-            if (e == "rental" || e == "barber") {
-                harga = "total_harga";
-            }
-            let data = data_tap[e];
-            let total_tap = 0;
-            let saldo = data_tap["total_" + e];
-            console.log(data);
-            data.forEach(el => {
-                if (el.metode == "Tap") {
-                    total_tap += parseInt(el[harga]);
-                }
-            })
-            let text = '- ' + angka(total_tap) + ' = ' + (angka(saldo - total_tap));
-            $(".div_data_tap_" + e).html('<a href="" class="btn_tap" data-order="' + e + '" style="font-style:italic;font-weight:bold;text-decoration:none;color:white">' + text + '</a>');
-        })
-
-    })
-
-    $(document).on('click', '.btn_tap', function(e) {
-        e.preventDefault();
-        let order = $(this).data("order");
-        let harga = "biaya";
-        if (order == "rental" || order == "barber") {
-            harga = "total_harga";
-        }
-        let barang = "meja";
-        if (order == "barber") {
-            barang = "layanan";
-        }
-        if (order == "kantin") {
-            barang = "barang";
-        }
-        let data = data_tap[order];
-        let total_tap = 0;
-        let saldo = data_tap["total_" + order];
-
-        let html = "";
-        if (data.length == 0) {
-            html += '<span class="text_danger">Data tidak ditemukan!.</span>';
-        } else {
-            html += '<h6 class="total_tap"></h6>';
-            html += '<table class="table table-sm table-bordered">';
-            html += '<thead>';
-            html += '<tr>';
-            html += '<th class="text-center">#</th>';
-            html += '<th class="text-center">Tgl</th>';
-            html += '<th class="text-center">Barang</th>';
-            html += '<th class="text-center">Harga</th>';
-            html += '</tr>';
-            html += '</thead>';
-            html += '<tbody>';
-            data.forEach((e, i) => {
-                if (e.metode == "Tap") {
-                    total_tap += parseInt(e[harga]);
-                    html += '<tr>';
-                    html += '<td class="text-center">' + (i + 1) + '</td>';
-                    html += '<td class="text-center">' + time_php_to_js(e.tgl) + '</td>';
-                    html += '<td>' + e[barang] + '</td>';
-                    html += '<td class="text-end">' + angka(e[harga]) + '</td>';
-                    html += '</tr>';
-                }
-            })
-            html += '</tbody>';
-            html += '</table>';
-        }
-
-        $(".body_data_tap").html(html);
-        $(".total_tap").html('TOTAL : <span class="text-danger">' + angka(saldo) + '</span> - ' + angka(total_tap) + ' = ' + angka(saldo - total_tap));
-        let myModal = document.getElementById('data_tap');
-        let modal = bootstrap.Modal.getOrCreateInstance(myModal)
-        modal.show();
-
-    })
-
-    $(document).on('click', '.btn_saldo_tap', function(e) {
-        e.preventDefault();
-        let myModal = document.getElementById('saldo_tap');
-        let modal = bootstrap.Modal.getOrCreateInstance(myModal)
-        modal.show();
-    })
 
     let data_saldo_tap = [];
     $(document).on('change', '.filter_saldo_tap', function(e) {
