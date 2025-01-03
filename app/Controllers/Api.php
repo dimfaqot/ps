@@ -998,7 +998,6 @@ class Api extends BaseController
 
             $dbb = db('billiard_2');
             $qb = $dbb->where("meja", $no_meja)->where("is_active", 1)->where('durasi', 0)->get()->getRowArray();
-
             if (!$qb) {
                 clear_tabel('booking');
                 message($q['kategori'], "Data tabel billiard tidak ditemukan!.", 400, $order);
@@ -1012,6 +1011,7 @@ class Api extends BaseController
             $qb['metode'] = "Cash";
             $qb['durasi'] = round((time() - $qb['start']) / 60);
 
+            sukses_js("Ok", $qb);
 
             $dbb->where('id', $qb['id']);
             if ($dbb->update($qb)) {
