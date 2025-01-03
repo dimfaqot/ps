@@ -585,19 +585,21 @@ function biaya_per_menit($harga, $start, $end)
     $harga_per_menit = ceil($harga / 60);
     $harga = $harga_per_menit * $menit;
 
-    $exp = explode('.', rupiah($harga));
-    if (count($exp) >= 2) {
-        if (end($exp) !== '000') {
-            $temp = (int)$exp[0] + 1;
-            $temp .= ".000";
-            $harga = rp_to_int($temp);
-        }
-    }
+
     if ($harga < 1000) {
         return 1000;
+    } else {
+        $res = 0;
+        $exp = explode('.', rupiah($harga));
+        if (count($exp) >= 2) {
+            if (end($exp) !== '000') {
+                $temp = (int)$exp[0] + 1;
+                $temp .= ".000";
+                $res = rp_to_int($temp);
+            }
+        }
+        return $res;
     }
-
-    return $harga;
 }
 
 function get_closest($search, $arr)
