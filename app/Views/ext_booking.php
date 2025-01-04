@@ -519,17 +519,17 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                         let harga_active = [];
                         let meja_id_active = [];
                         res.data.forEach(e => {
-                            if (!$(".btn_meja_" + e.meja).hasClass("active")) {
-                                let durasi = e.durasi;
-                                $(".btn_meja_" + e.meja).removeClass("default");
-                                $(".btn_meja_" + e.meja).addClass("active");
-                                $(".div_durasi_" + e.meja).text(durasi);
-                                if (durasi == "Open") {
-                                    $(".btn_meja_" + e.meja).addClass("open");
-                                    $(".btn_meja_" + e.meja).attr("data-harga", e.harga);
-                                    $(".btn_meja_" + e.meja).attr("data-meja_id", e.id);
-                                }
+                            // if (!$(".btn_meja_" + e.meja).hasClass("active")) {
+                            let durasi = e.durasi;
+                            $(".btn_meja_" + e.meja).removeClass("default");
+                            $(".btn_meja_" + e.meja).addClass("active");
+                            $(".div_durasi_" + e.meja).text(durasi);
+                            if (durasi == "Open") {
+                                $(".btn_meja_" + e.meja).addClass("open");
+                                $(".btn_meja_" + e.meja).attr("data-harga", e.harga);
+                                $(".btn_meja_" + e.meja).attr("data-meja_id", e.id);
                             }
+                            // }
                             // else {
                             //     if ($(".btn_meja_" + e.meja).hasClass("active")) {
                             //         $(".btn_meja_" + e.meja).addClass("default");
