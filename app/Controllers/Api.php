@@ -1271,7 +1271,7 @@ class Api extends BaseController
                 gagal_arduino("Saldo", "Data tabel jadwal ditemukan!.");
             }
             $dbb = db('billiard_2');
-            $qb = $dbb->where("id", $q['meja'])->where("is_active", 1)->where('durasi', 0)->get()->getRowArray();
+            $qb = $dbb->where("meja_id", $qm['id'])->where("is_active", 1)->where('durasi', 0)->get()->getRowArray();
             if (!$qb) {
                 clear_tabel('booking');
                 message($q['kategori'], "Data tabel billiard tidak ditemukan!.", 400, $order);
