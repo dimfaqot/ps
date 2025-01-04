@@ -503,61 +503,43 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
         let interval_durasi = "";
         const get_durasi = () => {
             if (data.kategori == "Ps" || data.kategori == "Billiard") {
+                // let btn_meja = document.querySelectorAll(".btn_meja");
+                // btn_meja.forEach(e => {
+                //     $(".btn_meja_" + e.dataset.meja).addClass("default");
+                //     $(".btn_meja_" + e.dataset.meja).removeClass("active");
+                //     $(".btn_meja_" + e.dataset.meja).removeClass("open");
+                //     $(".div_durasi_" + e.dataset.meja).text("Available");
+                // })
                 post('get_durasi', {
                     kategori: data.kategori.toLowerCase()
                 }).then(res => {
                     if (res.status == "200") {
-                        let btn_meja = document.querySelectorAll(".btn_meja");
                         let durasi_active = [];
                         let index_active = [];
                         let harga_active = [];
                         let meja_id_active = [];
                         res.data.forEach(e => {
-                            btn_meja.forEach((elem, i) => {
-                                if (elem.dataset.meja == e.meja) {
-                                    // index_active.push(i);
-                                    // durasi_active.push(e.durasi);
-                                    // harga_active.push(e.harga);
-                                    // meja_id_active.push(e.id);
-                                    let durasi = e.durasi;
-                                    $(".btn_meja_" + btn_meja[i].dataset.meja).removeClass("default");
-                                    $(".btn_meja_" + btn_meja[i].dataset.meja).addClass("active");
-                                    $(".div_durasi_" + btn_meja[i].dataset.meja).text(durasi);
-                                    if (durasi == "Open") {
-                                        $(".btn_meja_" + btn_meja[i].dataset.meja).addClass("open");
-                                        $(".btn_meja_" + btn_meja[i].dataset.meja).attr("data-harga", e.harga);
-                                        $(".btn_meja_" + btn_meja[i].dataset.meja).attr("data-meja_id", e.id);
-                                    }
-                                } else {
-                                    $(".btn_meja_" + btn_meja[i].dataset.meja).addClass("default");
-                                    $(".btn_meja_" + btn_meja[i].dataset.meja).removeClass("active");
-                                    $(".btn_meja_" + btn_meja[i].dataset.meja).removeClass("open");
-                                    $(".div_durasi_" + btn_meja[i].dataset.meja).text("Available");
+                            if (!$(".btn_meja_" + e.meja).hasClass("active")) {
+                                let durasi = e.durasi;
+                                $(".btn_meja_" + e.meja).removeClass("default");
+                                $(".btn_meja_" + e.meja).addClass("active");
+                                $(".div_durasi_" + e.meja).text(durasi);
+                                if (durasi == "Open") {
+                                    $(".btn_meja_" + e.meja).addClass("open");
+                                    $(".btn_meja_" + e.meja).attr("data-harga", e.harga);
+                                    $(".btn_meja_" + e.meja).attr("data-meja_id", e.id);
                                 }
-                            })
+                            }
+                            // else {
+                            //     if ($(".btn_meja_" + e.meja).hasClass("active")) {
+                            //         $(".btn_meja_" + e.meja).addClass("default");
+                            //         $(".btn_meja_" + e.meja).removeClass("active");
+                            //         $(".btn_meja_" + e.meja).removeClass("open");
+                            //         $(".div_durasi_" + e.meja).text("Available");
+                            //     }
+                            // }
+
                         })
-
-                        // for (let i = 0; i < btn_meja.length; i++) {
-                        //     let x = 0;
-                        //     if (index_active.includes(i)) {
-                        //         let durasi = durasi_active[x];
-                        //         $(".btn_meja_" + btn_meja[i].dataset.meja).removeClass("default");
-                        //         $(".btn_meja_" + btn_meja[i].dataset.meja).addClass("active");
-                        //         $(".div_durasi_" + btn_meja[i].dataset.meja).text(durasi);
-                        //         if (durasi == "Open") {
-                        //             $(".btn_meja_" + btn_meja[i].dataset.meja).addClass("open");
-                        //             $(".btn_meja_" + btn_meja[i].dataset.meja).attr("data-harga", harga_active[x]);
-                        //             $(".btn_meja_" + btn_meja[i].dataset.meja).attr("data-meja_id", meja_id_active[x]);
-                        //         }
-                        //         x++;
-                        //     } else {
-                        //         $(".btn_meja_" + btn_meja[i].dataset.meja).addClass("default");
-                        //         $(".btn_meja_" + btn_meja[i].dataset.meja).removeClass("active");
-                        //         $(".btn_meja_" + btn_meja[i].dataset.meja).removeClass("open");
-                        //         $(".div_durasi_" + btn_meja[i].dataset.meja).text("Available");
-                        //     }
-
-                        // }
 
 
                     } else {
