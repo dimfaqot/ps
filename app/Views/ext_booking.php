@@ -119,8 +119,8 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
 
     <!-- <div style="margin-top: 30px;" class="data_hutang text-center px-3"></div> -->
     <div class="content mt-5">
-        <div class="container mt-5">
-            <div class="d-flex justify-content-center div_menu"></div>
+        <div class="container">
+            <div class="d-flex justify-content-center div_menu pt-5"></div>
             <div class="body_meja mt-4"></div>
             <div class="body_durasi"></div>
             <div class="body_btn_ok mt-3 d-grid"></div>
