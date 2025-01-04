@@ -190,12 +190,12 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             <div class="modal-content text-light" style="background-color: transparent;border:none">
                 <div class="text-danger text-center close_modal_panel mt-4 mb-3" style="cursor:pointer;font-size:x-large"><i class="fa-solid fa-circle-xmark"></i></div>
                 <div class="d-flex justify-content-center gap-3">
-                    <button class="rounded-pill default btn_panel text-light px-4 pb-1" data-menu="Ps" style="font-size: small;">PS</button>
-                    <button class="rounded-pill default btn_panel text-light px-4 pb-1" data-menu="Billiard" style="font-size: small;">BILLIARD</button>
-                    <button class="rounded-pill default btn_panel text-light px-4 pb-1" data-menu="Kantin" style="font-size: small;">KANTIN</button>
+                    <button class="rounded-pill default btn_panel text-light px-4 py-1" data-menu="Ps" style="font-size: small;">PS</button>
+                    <button class="rounded-pill default btn_panel text-light px-4 py-1" data-menu="Billiard" style="font-size: small;">BILLIARD</button>
+                    <button class="rounded-pill default btn_panel text-light px-4 py-1" data-menu="Kantin" style="font-size: small;">KANTIN</button>
                 </div>
                 <div class="d-flex justify-content-center gap-3 mt-3">
-                    <button class="rounded-pill default btn_panel text-light px-4 pb-1" data-menu="Others" style="font-size: small;">OTHERS</button>
+                    <button class="rounded-pill default btn_panel text-light px-4 py-1" data-menu="Others" style="font-size: small;">OTHERS</button>
                 </div>
 
                 <div class="body_panel mt-3"></div>
@@ -290,7 +290,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                     <div class="rounded-circle embos text-center px-2 pt-3 mx-4 fw-bold btn_durasi" data-durasi="5" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">5</div>
                     <div class="rounded-circle embos text-center px-2 pt-3 fw-bold btn_durasi" data-durasi="6" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">6</div>
                     </div>
-                    <div class="d-flex justify-content-center gap-5 mb-5">
+                    <div class="d-flex justify-content-center gap-5 mb-3">
                     <div class="rounded-circle embos text-center px-2 pt-3 fw-bold btn_durasi" data-durasi="7" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">7</div>
                     <div class="rounded-circle embos text-center px-2 pt-3 mx-4 fw-bold btn_durasi" data-durasi="8" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">8</div>
                     <div class="rounded-circle embos text-center px-2 pt-3 fw-bold btn_durasi" data-durasi="9" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">9</div>
