@@ -252,7 +252,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                     </div>`,
             admin: `<span class="pe-2 tangan" data-menu="member" style="font-size: 27px;margin-top:-12px"><i class="fa-regular fa-hand-point-right"></i></span>
                     <div class="text-center text-info ms-2">
-                        <span style="cursor: pointer;" data-men u="Daftar" class="btn_menu py-2 px-4 border rounded border-info">DAFTAR</span>
+                        <span style="cursor: pointer;" data-menu="Daftar" class="btn_menu py-2 px-4 border rounded border-info">DAFTAR</span>
                         <span style="cursor: pointer;" data-menu="Remove" class="btn_menu py-2 px-4 rounded border border-info">REMOVE</span>
                         <span style="cursor: pointer;" data-menu="Topup" class="btn_menu py-2 px-4 rounded border border-info">TOPUP</span>
                         <div style="margin-top: 30px;"></div>
@@ -765,7 +765,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             if (menu == "Daftar" || menu == "Add" || menu == "Remove" || menu == "Delete") {
                 $(this).addClass("select");
                 show_search_db(menu);
-                $(".btn_close_menunggu").html('<div class="mb-5 text-danger" style="font-size:x-large;margin-top:-100px"><i class="fa-solid fa-circle-xmark"></i></div>');
+                $(".btn_close_menunggu").html('<div class="mb-5 text-danger" style="font-size:x-large;margin-top:-200px"><i class="fa-solid fa-circle-xmark"></i></div>');
                 return;
             }
 
