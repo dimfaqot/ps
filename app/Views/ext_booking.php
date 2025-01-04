@@ -188,7 +188,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
     <div class="modal fade bg-dark" id="panel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content text-light" style="background-color: transparent;border:none">
-                <div class="text-danger text-center close_modal_panel mt-4" style="cursor:pointer;margin-bottom:50px;font-size:x-large"><i class="fa-solid fa-circle-xmark"></i></div>
+                <div class="text-danger text-center close_modal_panel mt-4 mb-3" style="cursor:pointer;font-size:x-large"><i class="fa-solid fa-circle-xmark"></i></div>
                 <div class="d-flex justify-content-center gap-3">
                     <button class="rounded-pill default btn_panel text-light px-4 pb-1" data-menu="Ps" style="font-size: small;">PS</button>
                     <button class="rounded-pill default btn_panel text-light px-4 pb-1" data-menu="Billiard" style="font-size: small;">BILLIARD</button>
