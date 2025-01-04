@@ -523,8 +523,8 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                             })
                         })
 
-                        let x = 0;
                         for (let i = 0; i < btn_meja.length; i++) {
+                            let x = 0;
                             if (index_active.includes(i)) {
                                 let durasi = durasi_active[x];
                                 $(".btn_meja_" + btn_meja[i].dataset.meja).removeClass("default");
