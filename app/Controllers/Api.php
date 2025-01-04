@@ -1194,4 +1194,110 @@ class Api extends BaseController
             }
         }
     }
+
+    public function tap_booking_panel()
+    {
+        $jwt = $this->request->getVar('jwt');
+        $decode = decode_jwt_fulus($jwt);
+
+        $db = db('booking');
+        $q = $db->get()->getRowArray();
+
+        if (!$q) {
+            message($q['kategori'], "Data booking tidak ditemukan!.", 400);
+            gagal_arduino('Data booking tidak ditemukan!');
+        }
+
+        $order = kode_bayar($q['durasi']);
+
+        $dbu = db('users');
+        $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
+
+        if (!$user) {
+            clear_tabel('booking');
+            message($q['kategori'], "Kartu tidak terdaftar!.", 400, $order);
+            gagal_arduino('Kartu tidak terdaftar!.');
+        }
+        if ($user["role"] == "Member") {
+            clear_tabel('booking');
+            message($q['kategori'], "Butuh akses petugas!.", 400, $order);
+            gagal_arduino("Butuh akses petugas!.");
+        }
+        if ($order == "Ps") {
+            $dbu = db("unit");
+            $qu = $dbu->where("unit", "Meja " . $q['meja'])->get()->getRowArray();
+            if (!$qu) {
+                clear_tabel('booking');
+                message($q['kategori'], "Data tabel unit tidak ditemukan!.", 400, $order);
+                gagal_arduino("Saldo", "Data tabel unit ditemukan!.");
+            }
+
+            $dbr = db('rental');
+            $qr = $dbr->where("unit_id", $qu["id"])->where("is_active", 1)->where('durasi', -1)->get()->getRowArray();
+
+            if (!$qr) {
+                clear_tabel('booking');
+                message($q['kategori'], "Ps open tidak ditemukan!.", 400, $order);
+                gagal_arduino("Saldo", "Ps open ditemukan!.");
+            }
+
+            $qr['is_active'] = 0;
+
+            $dbr->where('id', $qr['id']);
+            if ($dbr->update($qr)) {
+                $qu['status'] = "Available";
+
+                $dbu->where('id', $qu['id']);
+                if ($dbu->update($qu)) {
+                    sukses_arduino($user['nama'] . " mematikan tv " . $order . " " . $qr['meja']);
+                } else {
+                    clear_tabel('booking');
+                    message($q['kategori'], "Meja gagal diupdate!.", 400, $order);
+                    gagal_arduino("Meja gagal diupdate!.");
+                }
+            } else {
+                clear_tabel('booking');
+                message($q['kategori'], "Update ps gagal!.", 400, $order);
+                gagal_arduino("Update ps gagal!.");
+            }
+        }
+        if ($order == "Billiard") {
+
+            $dbm = db('jadwal_2');
+            $qm = $dbm->where("meja", $q['meja'])->get()->getRowArray();
+            if (!$qm) {
+                clear_tabel('booking');
+                message($q['kategori'], "Data tabel jadwal tidak ditemukan!.", 400, $order);
+                gagal_arduino("Saldo", "Data tabel jadwal ditemukan!.");
+            }
+            $dbb = db('billiard_2');
+            $qb = $dbb->where("id", $q['meja'])->where("is_active", 1)->where('durasi', 0)->get()->getRowArray();
+            if (!$qb) {
+                clear_tabel('booking');
+                message($q['kategori'], "Data tabel billiard tidak ditemukan!.", 400, $order);
+                gagal_arduino("Saldo", "Data tabel billiard ditemukan!.");
+            }
+
+            $qb['is_active'] = 0;
+
+
+            $dbb->where('id', $qb['id']);
+            if ($dbb->update($qb)) {
+                $qm['is_active'] = 0;
+                $qm['start'] = 0;
+                $dbm->where('id', $qm['id']);
+                if ($dbm->update($qm)) {
+                    sukses_arduino($user['nama'] . " mematikan lampu " . $order . " " . $qb['meja'], angka($q['harga']));
+                } else {
+                    clear_tabel('booking');
+                    message($q['kategori'], "Meja gagal diupdate!.", 400, $order);
+                    gagal_arduino("Meja gagal diupdate!.");
+                }
+            } else {
+                clear_tabel('booking');
+                message($q['kategori'], "Update billiard gagal!.", 400, $order);
+                gagal_arduino("Update billiard gagal!.");
+            }
+        }
+    }
 }
