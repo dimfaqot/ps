@@ -180,6 +180,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                         <div class="text-light div_message_hutang" style="font-size: x-large;">
                             TAP UNTUK MELUNASI
                         </div>
+                        <div class="modal_body_data_hutang"></div>
                     </div>
                 </div>
             </div>
@@ -371,12 +372,12 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             html += '</table>';
 
             $(".total_hutang").text("TOTAL: " + angka(total));
+            $(".modal_body_data_hutang").html(html);
 
             let menunggu = document.getElementById('menunggu');
             let modalM = bootstrap.Modal.getOrCreateInstance(menunggu)
             modalM.hide();
-            console.log(html);
-            $(".modal_body_data_hutang").html(html);
+
             let myModal = document.getElementById('data_hutang');
             let modal = bootstrap.Modal.getOrCreateInstance(myModal)
             modal.show();
