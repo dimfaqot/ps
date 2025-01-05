@@ -770,8 +770,6 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
         $(document).on("click", ".btn_menu", function(e) {
             e.preventDefault();
             $(".date_time").addClass("d-none");
-            let html = spinner("Proses...");
-            $(".content").html(html);
             // semua clas select dihapus
             remove_cls("btn_menu", "select");
             let menu = $(this).data("menu");
@@ -784,6 +782,8 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                     durasi: 0,
                     meja: 0
                 }
+                let html = spinner("Proses...");
+                $(".content").html(html);
                 interval_booking = setInterval(add_booking, 4000);
                 return;
             }
@@ -862,13 +862,14 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                 }
                 data["durasi"] = kode_bayar[menu];
                 data["meja"] = meja;
+                $(".modal_body_menunggu").html("");
+                let menunggu = document.getElementById('panel');
+                let modalM = bootstrap.Modal.getOrCreateInstance(menunggu)
+                modalM.hide();
+                let html = spinner("Proses...");
+                $(".content").html(html);
                 interval_booking = setInterval(add_booking, 4000);
-                $(".body_panel").html(spinner("Proses..."));
-                setInterval(() => {
-                    let menunggu = document.getElementById('panel');
-                    let modalM = bootstrap.Modal.getOrCreateInstance(menunggu)
-                    modalM.hide();
-                }, 2000);
+
                 return;
             }
             let kategori = data.kategori;
@@ -963,7 +964,8 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                 gagal("Kategori/meja/durasi belum dipilih!.");
             }
 
-            $('.content').html("");
+            let html = spinner("Proses...");
+            $(".content").html(html);
             interval_booking = setInterval(add_booking, 4000);
         })
         $(document).on('click', '.btn_close_menunggu', function(e) {
@@ -987,6 +989,8 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                     durasi: kode_bayar[order],
                     meja: $(this).data("data3")
                 }
+                let html = spinner("Proses...");
+                $(".content").html(html);
                 interval_booking = setInterval(add_booking, 4000);
                 let myModal = document.getElementById('open');
                 let modal = bootstrap.Modal.getOrCreateInstance(myModal)

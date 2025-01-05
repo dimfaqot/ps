@@ -1235,7 +1235,7 @@ class Api extends BaseController
         }
         if ($order == "Ps") {
             $dbu = db("unit");
-            $qu = $dbu->where("unit", "Meja " . $q['meja'])->get()->getRowArray();
+            $qu = $dbu->where("unit", "Meja " . $q['meja'])->where('is_active', 1)->get()->getRowArray();
             if (!$qu) {
                 clear_tabel('booking');
                 message($q['kategori'], "Data tabel unit tidak ditemukan!.", 400, $order);
@@ -1275,7 +1275,7 @@ class Api extends BaseController
         if ($order == "Billiard") {
 
             $dbm = db('jadwal_2');
-            $qm = $dbm->where("meja", $q['meja'])->get()->getRowArray();
+            $qm = $dbm->where("meja", $q['meja'])->where('is_active', 1)->get()->getRowArray();
             if (!$qm) {
                 clear_tabel('booking');
                 message($q['kategori'], "Data tabel jadwal tidak ditemukan!.", 400, $order);
