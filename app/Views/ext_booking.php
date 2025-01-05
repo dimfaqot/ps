@@ -465,7 +465,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
 
                     // jika hutang maka memanggil data hutang
                     if (data.kategori == "Hutang") {
-                        ingterval_hutang = setInterval(get_data_hutang, 3000); //memanggil data hutang
+                        ingterval_hutang = setInterval(get_data_hutang, 1000); //memanggil data hutang
                     } else {
                         clearInterval(ingterval_hutang); //antri booking
                     }
@@ -486,11 +486,11 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             post("ext/data_hutang", {
                 id: 0
             }).then(res => {
-                if (res.status == "200") {
-                    if (res.data != null) {
-                        show_data_hutang(res.data);
-                        interval_blink_message = setInterval(blink_message, 1000);
-                    }
+
+                if (res.data != null) {
+                    show_data_hutang(res.data);
+                    interval_blink_message = setInterval(blink_message, 1000);
+
                     clearInterval(ingterval_hutang);
                 } else {
                     $(".div_message_hutang").addClass("text-info");
