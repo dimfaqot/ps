@@ -181,6 +181,15 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                             TAP UNTUK MELUNASI
                         </div>
                     </div>
+                    <div class="body_message my-2 p-1" style="border:1px dashed white">
+                        <div class="d-flex gap-2 justify-content-center text-light">
+                            <div class="spinner-border spinner-border-sm mt-1 text-light" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <div style="font-style: italic;">processing...</div>
+                        </div>
+                    </div>
+
                     <div style="text-align: left;" class="total_hutang fw-bold text-warning"></div>
                     <div class="modal_body_data_hutang mt-2">
 
@@ -347,6 +356,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
 
 
         const show_data_hutang = (list_data_hutang) => {
+            $(".modal_body_menunggu").html("");
             let html = "";
 
             html += '<table style="font-size: 13px;" class="table table-sm text-light table-bordered border-info">';
