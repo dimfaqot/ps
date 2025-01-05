@@ -513,7 +513,7 @@ class Api extends BaseController
                     message($q['kategori'], $user['nama'] . " tidak berhutang.", "end");
                     sukses_arduino($user['nama'] . " tidak berhutang.", "stop");
                 } else {
-                    message($q['kategori'], $user['nama'] . " berhasil mengakses data.", "end", "Tap untuk melunasi " . rupiah($total) . "...");
+                    message($q['kategori'], $user['nama'] . " berhasil mengakses data.", "200", "Tap untuk melunasi " . rupiah($total) . "...");
                     sukses_arduino($user["nama"] . ' berhasil mengakses data.', 'next', "Tap lagi untuk melunasi " . rupiah($total) . "...");
                 }
             }
