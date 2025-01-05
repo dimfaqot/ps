@@ -276,10 +276,12 @@ class Ext extends BaseController
         $res = null;
         $db = db('api');
         $q = $db->get()->getRowArray();
+        $uid = null;
         if ($q) {
             $dbu = db('users');
             $user = $dbu->where('uid', $q['status'])->get()->getRowArray();
             if ($user) {
+                $uid = $user['uid'];
                 $dbh = db("hutang");
                 $qh = $dbh->select("tgl,barang,total_harga,kategori")->where('status', 0)->where('user_id', $user['id'])->get()->getResultArray();
                 if (count($qh) > 0) {
@@ -290,7 +292,49 @@ class Ext extends BaseController
         if (!$res) {
             gagal_js("Kosong");
         } else {
-            sukses_js("Sukses.", $res);
+            sukses_js("Sukses.", $res, $uid);
+        }
+    }
+    public function bayar_hutang_cash()
+    {
+        $uid = clear($this->request->getVar('uid'));
+        $db = db('booking');
+        $q = $db->get()->getRowArray();
+
+        $dbu = db('users');
+        $user = $dbu->where('uid', $uid)->get()->getRowArray();
+        if ($user) {
+            $dba = db('api');
+            $qa = $dba->get()->getRowArray();
+            if (!$qa) {
+                clear_tabel('booking');
+                clear_tabel('message');
+                gagal_js("Akses api tidak ditemukan!.");
+            }
+
+            if ($qa["status"] !== $uid) {
+                clear_tabel('booking');
+                clear_tabel('api');
+                clear_tabel('message');
+                gagal_js("Data uid api berbeda!.");
+            }
+
+            $q['kategori'] = "Loan";
+
+            $db->where('id', $q['id']);
+            if ($db->update($q)) {
+                sukses_js("Silahkan tap kartu petugas.");
+            } else {
+                clear_tabel('booking');
+                clear_tabel('api');
+                clear_tabel('message');
+                gagal_js("Update kategori gagal!.");
+            }
+        } else {
+            clear_tabel('booking');
+            clear_tabel('api');
+            clear_tabel('message');
+            gagal_js("User tidak ditemukan!.");
         }
     }
     public function del_message()

@@ -161,7 +161,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                 </div>
                 <h6 class="text-center div_pesan_konfirmasi mt-3 text-secondary fst-italic">Selesaikan dan lakukan pembayaran?</h6>
                 <div class="d-flex justify-content-center mt-2">
-                    <h6 class="text-center harga_cara_bayar px-3 pb-2 text-light border-light border-bottom">Selesaikan dan lakukan pembayaran?</h6>
+                    <h6 class="text-center harga_cara_bayar px-3 pb-2 text-light border-light border-bottom"></h6>
                 </div>
                 <div class="d-flex justify-content-center gap-3 mt-3 body_open">
 
@@ -188,6 +188,9 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                             </div>
                             <div style="font-style: italic;">processing...</div>
                         </div>
+                    </div>
+                    <div class="d-grid div_bayar_hutang_cash">
+                        <button type="button" class="bayar_hutang_cash btn btn-outline-info"><i class="fa-solid fa-hand-holding-dollar"></i> Cash</button>
                     </div>
 
                     <div style="text-align: left;" class="total_hutang fw-bold text-warning"></div>
@@ -220,7 +223,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 
     <script>
-        // let myModal = document.getElementById('panel');
+        // let myModal = document.getElementById('data_hutang');
         // let modal = bootstrap.Modal.getOrCreateInstance(myModal)
         // modal.show();
         let data = {};
@@ -355,11 +358,11 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
         }
 
 
-        const show_data_hutang = (list_data_hutang) => {
+        const show_data_hutang = (list_data_hutang, uid) => {
             $(".modal_body_menunggu").html("");
             let html = "";
 
-            html += '<table style="font-size: 13px;" class="table table-sm text-light table-bordered border-info">';
+            html += '<table style="font-size: 13px;" data-uid="' + uid + '" class="table tabel_hutang table-sm text-light table-bordered border-info">';
             html += '<thead>';
             html += '<tr>';
             html += '<td style="text-align: center;">#</td>';
@@ -386,6 +389,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             html += '</table>';
 
             $(".total_hutang").text("TOTAL: " + angka(total));
+            $(".total_hutang").attr("data-total_hutang", total);
             $(".modal_body_data_hutang").html(html);
 
             let menunggu = document.getElementById('menunggu');
@@ -467,11 +471,9 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
         let interval_blink_message = "";
         const blink_message = () => {
             if ($(".div_message_hutang").hasClass("text-light")) {
-                console.log("ada");
                 $(".div_message_hutang").removeClass("text-light");
                 $(".div_message_hutang").addClass("text-info");
             } else {
-                console.log("tidak ada");
                 $(".div_message_hutang").removeClass("text-info");
                 $(".div_message_hutang").addClass("text-light");
             }
@@ -594,7 +596,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             }).then(res => {
 
                 if (res.data != null) {
-                    show_data_hutang(res.data);
+                    show_data_hutang(res.data, res.data2);
                     interval_blink_message = setInterval(blink_message, 1000);
 
                     clearInterval(interval_hutang);
@@ -1007,6 +1009,50 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                 modal.hide();
                 return;
             }
+
+            if (order == "bayar_hutang_cash") {
+                let uid = $(this).data("data1");
+                let total = $(this).data("data2");
+
+                let open = document.getElementById('open');
+                let modalO = bootstrap.Modal.getOrCreateInstance(open)
+                modalO.hide();
+                $(".div_bayar_hutang_cash").html("");
+                $(".div_message").html("");
+                $(".div_message_hutang").html("");
+                let myModal = document.getElementById('data_hutang');
+                let modal = bootstrap.Modal.getOrCreateInstance(myModal)
+                modal.show();
+
+                post('ext/bayar_hutang_cash', {
+                    uid,
+                    total
+                }).then(res => {
+                    if (res.status == "200") {
+                        $(".div_message_hutang").html('<h5 class="text-success">' + res.message + '</h5>');
+
+                    } else {
+                        $(".div_message_hutang").html('<h5 class="text-danger">' + res.message + '</h5>');
+                        setTimeout(() => {
+                            location.reload();
+                        }, 3000);
+                    }
+                })
+            }
+        })
+        $(document).on('click', '.bayar_hutang_cash', function(e) {
+            e.preventDefault();
+            let uid = $(".tabel_hutang").data("uid");
+            let total = $(".total_hutang").data("total_hutang");
+            $(".harga_cara_bayar").text(angka(total, 'Rp. '));
+
+            let myModal = document.getElementById('data_hutang');
+            let modal = bootstrap.Modal.getOrCreateInstance(myModal)
+            modal.hide();
+            show_modal_konfirmasi("YAKIN BAYAR DENGAN <span class='fst-italic fw-bold text-warning'>Cash</span>?", "bayar_hutang_cash", uid, total);
+
+
+
         })
 
         tangan();

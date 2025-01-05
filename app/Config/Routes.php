@@ -31,6 +31,7 @@ $routes->post('/api/Barber', 'Api::tap_booking_barber');
 $routes->post('/api/Cash', 'Api::tap_booking_cash');
 $routes->post('/api/Tap', 'Api::tap_booking_tap');
 $routes->post('/api/Panel', 'Api::tap_booking_panel');
+$routes->post('/api/Loan', 'Api::tap_booking_Loan');
 
 // api finger
 $routes->post('/finger/get_booking', 'Finger::get_booking');
@@ -204,6 +205,7 @@ $routes->post('/message_server', 'Ext::message_server');
 $routes->post('/add_booking', 'Ext::add_booking');
 $routes->post('/del_message', 'Ext::del_message');
 $routes->post('/ext/data_hutang', 'Ext::data_hutang');
+$routes->post('/ext/bayar_hutang_cash', 'Ext::bayar_hutang_cash');
 
 // bot
 

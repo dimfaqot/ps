@@ -519,6 +519,134 @@ class Api extends BaseController
             }
         }
     }
+    public function tap_booking_load()
+    {
+        $jwt = $this->request->getVar('jwt');
+        $decode = decode_jwt_fulus($jwt);
+
+        $db = db('booking');
+        $q = $db->get()->getRowArray();
+
+        if (!$q) {
+            message($q['kategori'], "Data booking tidak ditemukan!.", 400);
+            gagal_arduino('Data booking tidak ditemukan!');
+        }
+
+        $dbu = db('users');
+        $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
+
+        if (!$user) {
+            message($q['kategori'], "Kartu tidak dikenal!.", 400);
+            clear_tabel('booking');
+            gagal_arduino('Kartu tidak dikenal!.');
+        }
+
+        if ($user['role'] == "Member") {
+            message($q['kategori'], "Butuh akses petugas!.", 400);
+            clear_tabel('booking');
+            gagal_arduino('Butuh akses petugas!.');
+        }
+
+
+        $dba = db('api');
+        $qa = $dba->get()->getRowArray();
+        if (!$qa) {
+            message($q['kategori'], "Akses api tidak ditemukan!.", 400);
+            clear_tabel('booking');
+            gagal_arduino('Akses api tidak ditemukan!.');
+        }
+
+        $uid_member = $qa['status'];
+
+
+        $user_m = $dbu->where('uid', $uid_member)->get()->getRowArray();
+
+
+        $dbh = db('hutang');
+        $qh = $dbh->where('user_id', $user_m['id'])->where('status', 0)->get()->getResultArray();
+
+        $total = 0;
+        foreach ($qh as $i) {
+            $i['status'] = 1;
+            $i['tgl_lunas'] = time();
+            $i['dibayar_kpd'] = $user['nama'];
+
+            $dbh->where('id', $i['id']);
+            if ($dbh->update($i)) {
+                if ($i['kategori'] == "Billiard") {
+                    $dbm = db('jadwal_2');
+                    $mj = explode(" ", $i['barang']);
+                    $meja = $dbm->where('meja', end($mj))->get()->getRowArray();
+
+                    $dbb = db("billiard_2");
+                    $exp_nota = explode("|", $i['no_nota']);
+                    $value = [
+                        'meja_id' => $meja['id'],
+                        // 'no_nota' => $no_nota,
+                        'meja' => 'Meja ' . $meja['meja'],
+                        'tgl' => time(),
+                        'durasi' => $i['qty'],
+                        'petugas' => $user['nama'],
+                        'biaya' => $i['total_harga'],
+                        'diskon' => end($exp_nota),
+                        'start' => $i['barang_id'],
+                        'end' => $i['barang_id'] + ($i['qty'] * 60),
+                        'is_active' => 0,
+                        'harga' => $i['harga_satuan'],
+                        "metode" => "Cash"
+                    ];
+
+                    if ($dbb->insert($value)) {
+                        $total += $i['total_harga'];
+                    }
+                }
+
+                if ($i['kategori'] == "Kantin") {
+                    $no_nota = no_nota('Kantin');
+                    $dbk = db('kantin');
+                    $value = [
+                        'barang_id' => $i['barang_id'],
+                        'no_nota' => $no_nota,
+                        'barang' => $i['barang'],
+                        'harga_satuan' => $i['harga_satuan'],
+                        'tgl' => time(),
+                        'qty' => $i['qty'],
+                        'diskon' => 0,
+                        'metode' => "Cash",
+                        'total_harga' => $i['total_harga'],
+                        'petugas' => $user['nama']
+                    ];
+
+                    if ($dbk->insert($value)) {
+                        $total += $i['total_harga'];
+                    }
+                }
+                if ($i['kategori'] == "Barber") {
+                    $value = [
+                        'layanan_id' => $i['barang_id'],
+                        'layanan' => $i['barang'],
+                        'harga' => $i['harga_satuan'],
+                        'qty' => $i['qty'],
+                        "tgl" => time(),
+                        'total_harga' => $i['total_harga'],
+                        "user_id" => $i['user_id'],
+                        "petugas" => $user['nama'],
+                        "diskon" => 0,
+                        "metode" => "Cash",
+                        "status" => 1,
+                        "user_id" => $i['user_id']
+                    ];
+                    $dbb = db('barber');
+                    if ($dbk->insert($value)) {
+                        $total += $i['total_harga'];
+                    }
+                }
+            }
+        }
+
+        message($q['kategori'], $user_m['nama'] . " sukses membayar hutang sebesar " . rupiah($total), "end", "kepada " . $user['nama']);
+        sukses_arduino($user_m['nama'] . " sukses membayar hutang sebesar " . rupiah($total), "kepada " . $user['nama']);
+    }
     public function tap_booking_ps()
     {
         $jwt = $this->request->getVar('jwt');
