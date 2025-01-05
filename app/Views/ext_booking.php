@@ -465,7 +465,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
 
                     // jika hutang maka memanggil data hutang
                     if (data.kategori == "Hutang") {
-                        ingterval_hutang = setInterval(get_data_hutang, 1000); //memanggil data hutang
+                        ingterval_hutang = setInterval(get_data_hutang, 3000); //memanggil data hutang
                     } else {
                         clearInterval(ingterval_hutang); //antri booking
                     }
