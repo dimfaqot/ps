@@ -547,7 +547,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             }).then(res => {
                 if (res.status == "200") {
                     clearInterval(interval_booking); //antri booking
-                    interval_message_server = setInterval(message_server(), 1000); //memanggil data hutang
+                    interval_message_server = setInterval(message_server, 1000); //memanggil data hutang
                     interval_countdown = setInterval(countdown, 1000); //memanggil data hutang
                     if (modal_show("menunggu") == 0) {
                         menunggu('<h5 class="text-light">Menunggu tap/finger...</h5>');
