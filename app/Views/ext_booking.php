@@ -515,7 +515,6 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                         $('.body_message').html(html);
 
                         if (status == "end" || status == "400") {
-                            clearInterval(interval_message_server);
                             clearInterval(interval_hutang);
                             clearInterval(interval_booking);
                             clearInterval(interval_durasi);
