@@ -313,7 +313,7 @@ class Api extends BaseController
         }
 
         $dbu = db('users');
-        $user = $dbu->where('uid', $decode['uid'])->where('role', 'Member')->get()->getRowArray();
+        $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
         if (!$user) {
             message($q['kategori'], "Kartu tidak dikenal!.", 400);
             clear_tabel('booking');
