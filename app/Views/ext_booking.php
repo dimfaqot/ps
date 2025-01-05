@@ -180,8 +180,8 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                         <div class="text-light div_message_hutang" style="font-size: x-large;">
                             TAP UNTUK MELUNASI
                         </div>
-                        <div class="modal_body_data_hutang"></div>
                     </div>
+                    <div class="modal_body_data_hutang"></div>
                 </div>
             </div>
         </div>
