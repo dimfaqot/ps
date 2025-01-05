@@ -181,7 +181,11 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                             TAP UNTUK MELUNASI
                         </div>
                     </div>
-                    <div class="modal_body_data_hutang"></div>
+                    <div style="text-align: left;" class="total_hutang fw-bold text-warning"></div>
+                    <div class="modal_body_data_hutang mt-2">
+
+                    </div>
+
                 </div>
             </div>
         </div>
