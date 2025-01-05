@@ -375,6 +375,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             let menunggu = document.getElementById('menunggu');
             let modalM = bootstrap.Modal.getOrCreateInstance(menunggu)
             modalM.hide();
+            console.log(html);
             $(".modal_body_data_hutang").html(html);
             let myModal = document.getElementById('data_hutang');
             let modal = bootstrap.Modal.getOrCreateInstance(myModal)
