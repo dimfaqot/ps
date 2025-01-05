@@ -439,6 +439,20 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             modal.show();
         }
 
+        const spinner = (text) => {
+            let html = "";
+            html += '<div class="d-flex justify-content-center">';
+            html += '<div class="spinner-border text-light" role="status">';
+            html += '<span class="visually-hidden">Loading...</span>';
+            html += '</div>';
+            html += '<div class="text-light">';
+            html += text;
+            html += '</div>';
+            html += '</div>';
+
+            return html;
+        }
+
 
         let interval_blink_message = "";
         const blink_message = () => {
@@ -453,7 +467,80 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             }
         }
 
+        let interval_countdown = "";
+        let x = 0;
+        let limit = 21;
+        let countdown = () => {
+            x++;
+            if (data.kategori == "Hutang" || data.kategori == "Add" || data.kategori == "Delete") {
+                limit = 61;
+            }
+
+            if (x < limit) {
+                $(".countdown").text(x);
+                $(".countdown").removeClass("d-none");
+            } else {
+                clearInterval(interval_countdown);
+                clearInterval(interval_booking);
+                clearInterval(interval_hutang);
+                clearInterval(interval_durasi);
+                post("del_message", {
+                    id: 0
+                }).then(rest => {
+                    if (rest.status == "200") {
+                        $(".body_message").html('<h5 class="text-danger">Waktu habis!.</h5>');
+                        setTimeout(() => {
+                            location.reload();
+                        }, 2000);
+                    }
+                })
+
+            }
+        }
+        let interval_message_server = "";
+        const message_server = () => {
+            post('message_server', {
+                data
+            }).then(res => {
+                if (res.status == "200") {
+                    if (res.data != null) {
+                        let html = '';
+                        let status = res.data.status;
+
+                        html += '<h6 class="text-center ' + (status == "400" ? "text-danger" : "text-light") + '">' + res.data.message + '</h6>';
+                        if (res.data.uang !== "") {
+                            html += '<h5 class="text-center ' + (status == "400" ? "text-danger" : "text-light") + '">' + res.data.uang + '</h5>';
+                        }
+
+                        $('.body_message').html(html);
+
+                        if (status == "end" || status == "400") {
+                            clearInterval(interval_message_server);
+                            clearInterval(interval_hutang);
+                            clearInterval(interval_booking);
+                            clearInterval(interval_durasi);
+                            setTimeout(() => {
+                                post("del_message", {
+                                    id: 0
+                                }).then(rest => {
+                                    if (rest.status == "200") {
+
+                                        location.reload();
+                                    }
+                                })
+                            }, 2000);
+
+                        }
+                    }
+
+
+                }
+            })
+        }
+
+
         let interval_booking = "";
+        let sudah_masuk = 0; //data sudah masuk db
         const add_booking = () => {
 
             post('add_booking', {
@@ -461,8 +548,8 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             }).then(res => {
                 if (res.status == "200") {
                     clearInterval(interval_booking); //antri booking
-                    message_server(data); //pesan dari server
-                    countdown(res); //durasi waktu proses
+                    interval_message_server = setInterval(message_server(), 1000); //memanggil data hutang
+                    interval_countdown = setInterval(countdown, 1000); //memanggil data hutang
                     if (modal_show("menunggu") == 0) {
                         menunggu('<h5 class="text-light">Menunggu tap/finger...</h5>');
                     } else {
@@ -471,14 +558,18 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
 
                     // jika hutang maka memanggil data hutang
                     if (data.kategori == "Hutang") {
-                        ingterval_hutang = setInterval(get_data_hutang, 1000); //memanggil data hutang
+                        interval_hutang = setInterval(get_data_hutang, 1000); //memanggil data hutang
                     } else {
-                        clearInterval(ingterval_hutang); //antri booking
+                        clearInterval(interval_hutang); //antri booking
                     }
                 } else {
-                    if (res.data == 1) {
-                        if (modal_show("menunggu") == 0) {
-                            menunggu('<h5 class="text-danger">' + res.message + '</h5>');
+                    if (res.data == 1) { //ada transaksi lain
+                        if (sudah_masuk == 0) {
+                            sudah_masuk = 1;
+                            if (modal_show("menunggu") == 0) {
+                                menunggu('<h5 class="text-danger">' + res.message + '</h5>');
+                            }
+
                         }
                     } else {
                         gagal(res.message);
@@ -487,7 +578,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             })
         }
 
-        let ingterval_hutang = "";
+        let interval_hutang = "";
         const get_data_hutang = () => {
             post("ext/data_hutang", {
                 id: 0
@@ -497,7 +588,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                     show_data_hutang(res.data);
                     interval_blink_message = setInterval(blink_message, 1000);
 
-                    clearInterval(ingterval_hutang);
+                    clearInterval(interval_hutang);
                 } else {
                     $(".div_message_hutang").addClass("text-info");
                     clearInterval(interval_blink_message);
@@ -659,74 +750,6 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
 
         }
 
-        let countdown = (res) => {
-            sukses(res.message);
-            let x = 0;
-            let limit = 21;
-            if (data.kategori == "Hutang" || data.kategori == "Add" || data.kategori == "Delete") {
-                limit = 61;
-            }
-            setInterval(() => {
-                x++;
-
-                if (x < limit) {
-                    $(".countdown").text(x);
-                    $(".countdown").removeClass("d-none");
-                } else {
-                    clearInterval(interval_booking);
-                    clearInterval(ingterval_hutang);
-                    clearInterval(interval_durasi);
-                    post("del_message", {
-                        id: 0
-                    }).then(rest => {
-                        if (rest.status == "200") {
-                            $(".body_message").html('<h5 class="text-danger">Waktu habis!.</h5>');
-                            setTimeout(() => {
-                                location.reload();
-                            }, 2000);
-                        }
-                    })
-
-                }
-            }, 1000);
-        }
-
-        const message_server = (data) => {
-            setInterval(() => {
-                post('message_server', {
-                    data
-                }).then(res => {
-                    if (res.status == "200") {
-                        if (res.data != null) {
-                            let html = '';
-                            let status = res.data.status;
-
-                            html += '<h6 class="text-center ' + (status == "400" ? "text-danger" : "text-light") + '">' + res.data.message + '</h6>';
-                            if (res.data.uang !== "") {
-                                html += '<h5 class="text-center ' + (status == "400" ? "text-danger" : "text-light") + '">' + res.data.uang + '</h5>';
-                            }
-
-                            $('.body_message').html(html);
-
-                            if (status == "end" || status == "400") {
-                                setTimeout(() => {
-                                    post("del_message", {
-                                        id: 0
-                                    }).then(rest => {
-                                        if (rest.status == "200") {
-                                            location.reload();
-                                        }
-                                    })
-                                }, 2000);
-
-                            }
-                        }
-
-
-                    }
-                })
-            }, 1000);
-        }
 
 
         $(document).on("click", ".tangan", function(e) {
@@ -740,14 +763,16 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             call_btn_ok();
         })
         // URUTAN PROSES
-        // memanggil interval_booking = setInterval(add_booking, 1000); untuk antrian memasukkan ke table booking
+        // memanggil interval_booking = setInterval(add_booking, 4000); untuk antrian memasukkan ke table booking
         // di fungsi add booking memanggil pesan dari server(message_server), hitung mundur durasi (countdown)
         // fungsi add booking juga menghentikan setinterval clearInterval(interval_booking) jika status return 200
-        // di .btn_men menu yang eksekusinya dengan tombol ok maka interval_booking = setInterval(add_booking, 1000); dipanggil pada saat btn_ok diklik
+        // di .btn_men menu yang eksekusinya dengan tombol ok maka interval_booking = setInterval(add_booking, 4000); dipanggil pada saat btn_ok diklik
         // menu Saldo dan Hutang tanpa melalui btn_ok maka interval_booking = setInterval(add_booking, 1000) langsung dipanggil
         $(document).on("click", ".btn_menu", function(e) {
             e.preventDefault();
             $(".date_time").addClass("d-none");
+            let html = spinner("Proses...");
+            $(".content").html(html);
             // semua clas select dihapus
             remove_cls("btn_menu", "select");
             let menu = $(this).data("menu");
@@ -760,7 +785,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                     durasi: 0,
                     meja: 0
                 }
-                interval_booking = setInterval(add_booking, 1000);
+                interval_booking = setInterval(add_booking, 4000);
                 return;
             }
 
@@ -824,19 +849,6 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             }
             call_btn_ok();
         })
-        const spinner = (text) => {
-            let html = "";
-            html += '<div class="d-flex justify-content-center">';
-            html += '<div class="spinner-border text-light" role="status">';
-            html += '<span class="visually-hidden">Loading...</span>';
-            html += '</div>';
-            html += '<div class="text-light">';
-            html += text;
-            html += '</div>';
-            html += '</div>';
-
-            return html;
-        }
 
         $(document).on("click", ".btn_meja", function(e) {
             e.preventDefault();
@@ -851,7 +863,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                 }
                 data["durasi"] = kode_bayar[menu];
                 data["meja"] = meja;
-                interval_booking = setInterval(add_booking, 1000);
+                interval_booking = setInterval(add_booking, 4000);
                 $(".body_panel").html(spinner("Proses..."));
                 setInterval(() => {
                     let menunggu = document.getElementById('panel');
@@ -953,7 +965,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             }
 
             $('.content').html("");
-            interval_booking = setInterval(add_booking, 1000);
+            interval_booking = setInterval(add_booking, 4000);
         })
         $(document).on('click', '.btn_close_menunggu', function(e) {
             e.preventDefault();
@@ -976,7 +988,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                     durasi: kode_bayar[order],
                     meja: $(this).data("data3")
                 }
-                interval_booking = setInterval(add_booking, 1000);
+                interval_booking = setInterval(add_booking, 4000);
                 let myModal = document.getElementById('open');
                 let modal = bootstrap.Modal.getOrCreateInstance(myModal)
                 modal.hide();
