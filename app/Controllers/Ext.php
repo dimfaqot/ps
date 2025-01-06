@@ -201,6 +201,7 @@ class Ext extends BaseController
                 }
             } else {
                 if ($db->insert($data)) {
+
                     sukses_js('Reload sukses.');
                 } else {
                     gagal_js('Reload gagal!.');

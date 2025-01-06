@@ -1471,6 +1471,7 @@ class Api extends BaseController
         clear_tabel("booking");
         clear_tabel("message");
         clear_tabel("api");
-        sukses_js("Reload sukses.");
+        message($q['kategori'], "Reload sukses!.", "end");
+        sukses_arduino("Reload sukses.");
     }
 }
