@@ -921,7 +921,7 @@ class Api extends BaseController
             $dbl->insert($laporan);
             sukses_arduino($decode["data3"]);
         }
-        clear_tabel($decode);
+        clear_tabel(($decode == "msg" ? "message" : $decode));
         sukses_arduino('Booking dihapus!.');
     }
 
