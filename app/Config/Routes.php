@@ -31,7 +31,8 @@ $routes->post('/api/Barber', 'Api::tap_booking_barber');
 $routes->post('/api/Cash', 'Api::tap_booking_cash');
 $routes->post('/api/Tap', 'Api::tap_booking_tap');
 $routes->post('/api/Panel', 'Api::tap_booking_panel');
-$routes->post('/api/Loan', 'Api::tap_booking_Loan');
+$routes->post('/api/Loan', 'Api::tap_booking_loan');
+$routes->post('/api/Reload', 'Api::tap_booking_reload');
 
 // api finger
 $routes->post('/finger/get_booking', 'Finger::get_booking');

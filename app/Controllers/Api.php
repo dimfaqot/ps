@@ -1440,4 +1440,37 @@ class Api extends BaseController
             }
         }
     }
+
+    public function tap_booking_reload()
+    {
+        $jwt = $this->request->getVar('jwt');
+        $decode = decode_jwt_fulus($jwt);
+
+        $db = db('booking');
+        $q = $db->get()->getRowArray();
+
+        if (!$q) {
+            message($q['kategori'], "Data booking tidak ditemukan!.", 400);
+            gagal_arduino('Data booking tidak ditemukan!');
+        }
+
+        $dbu = db('users');
+        $user = $dbu->where('uid', $decode['uid'])->get()->getRowArray();
+
+        if (!$user) {
+            clear_tabel('booking');
+            message($q['kategori'], "Kartu tidak terdaftar!.", 400);
+            gagal_arduino('Kartu tidak terdaftar!.');
+        }
+        if ($user["role"] !== "Root") {
+            clear_tabel('booking');
+            message($q['kategori'], "Harus Mbahdim!.", 400);
+            gagal_arduino("Harus Mbahdim!.");
+        }
+
+        clear_tabel("booking");
+        clear_tabel("message");
+        clear_tabel("api");
+        sukses_js("Reload sukses.");
+    }
 }

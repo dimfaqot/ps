@@ -190,24 +190,42 @@ class Ext extends BaseController
         $data = json_decode(json_encode($this->request->getVar('data')), true);
         $db = db('booking');
         $qb = $db->get()->getResultArray();
-        if ($qb) {
-            gagal_js("Mohon tunggu, transaksi lain sedang berlangsung!.", 1);
-        }
-        $dba = db("api");
-        $qa = $dba->get()->getResultArray();
-        if ($qa) {
-            gagal_js("Mohon tunggu, transaksi lain sedang berlangsung!.", 1);
-        }
-        $dbm = db("message");
-        $qm = $dbm->get()->getResultArray();
-        if ($qm) {
-            gagal_js("Mohon tunggu, transaksi lain sedang berlangsung!.", 1);
-        }
-
-        if ($db->insert($data)) {
-            sukses_js('Sukses. Silahkan tap dalam 20 detik!.');
+        if ($data['kategeri'] == "Reload") {
+            if ($qb) {
+                $qb['kategori'] = "Reload";
+                $db->where('id', $qb['id']);
+                if ($db->update($qb)) {
+                    sukses_js('Reload sukses.');
+                } else {
+                    gagal_js('Reload gagal!.');
+                }
+            } else {
+                if ($db->insert($data)) {
+                    sukses_js('Reload sukses.');
+                } else {
+                    gagal_js('Reload gagal!.');
+                }
+            }
         } else {
-            gagal_js('Order gagal!.');
+            if ($qb) {
+                gagal_js("Mohon tunggu, transaksi lain sedang berlangsung!.", 1);
+            }
+            $dba = db("api");
+            $qa = $dba->get()->getResultArray();
+            if ($qa) {
+                gagal_js("Mohon tunggu, transaksi lain sedang berlangsung!.", 1);
+            }
+            $dbm = db("message");
+            $qm = $dbm->get()->getResultArray();
+            if ($qm) {
+                gagal_js("Mohon tunggu, transaksi lain sedang berlangsung!.", 1);
+            }
+
+            if ($db->insert($data)) {
+                sukses_js('Sukses. Silahkan tap dalam 20 detik!.');
+            } else {
+                gagal_js('Order gagal!.');
+            }
         }
     }
 

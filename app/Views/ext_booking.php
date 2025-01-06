@@ -273,6 +273,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                         <span style="cursor: pointer;" data-menu="Remove" class="btn_menu py-2 px-4 rounded border border-info">REMOVE</span>
                         <span style="cursor: pointer;" data-menu="Topup" class="btn_menu py-2 px-4 rounded border border-info">TOPUP</span>
                         <div style="margin-top: 30px;"></div>
+                        <span style="cursor: pointer;" data-menu="Reload" class="btn_menu py-2 px-1 text-danger"><i class="fa-solid fa-arrows-rotate"></i></span>
                         <span style="cursor: pointer;" data-menu="Add" class="btn_menu py-2 px-4 rounded border border-info">ADD</span>
                         <span style="cursor: pointer;" data-menu="Delete" class="btn_menu py-2 px-4 rounded border border-info">DELETE</span>
                         <span style="cursor: pointer;" data-menu="Panel" class="btn_menu py-2 px-4 rounded border border-info">PANEL</span>
@@ -787,7 +788,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             let menu = $(this).data("menu");
             // mengisi jusul untuk modal menunggu
             $(".div_judul_menunggu").text(menu.toUpperCase());
-            if (menu == "Saldo" || menu == "Absen" || menu == "Hutang") {
+            if (menu == "Saldo" || menu == "Absen" || menu == "Hutang" || menu == "Reload") {
                 $(this).addClass("select");
                 data = {
                     kategori: menu,
