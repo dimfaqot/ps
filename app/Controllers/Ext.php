@@ -190,7 +190,7 @@ class Ext extends BaseController
         $data = json_decode(json_encode($this->request->getVar('data')), true);
         $db = db('booking');
         $qb = $db->get()->getResultArray();
-        if ($data['kategeri'] == "Reload") {
+        if ($data['kategori'] == "Reload") {
             if ($qb) {
                 $qb['kategori'] = "Reload";
                 $db->where('id', $qb['id']);
