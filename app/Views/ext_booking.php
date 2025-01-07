@@ -223,7 +223,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 
     <script>
-        // let myModal = document.getElementById('data_hutang');
+        // let myModal = document.getElementById('open');
         // let modal = bootstrap.Modal.getOrCreateInstance(myModal)
         // modal.show();
         let data = {};
@@ -413,8 +413,13 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             $('.div_pesan_konfirmasi').html(html);
 
             let html2 = "";
-            html2 += '<button type="button" ' + (data1 !== undefined ? 'data-data1="' + data1 + '"' : '') + ' ' + (data2 !== undefined ? 'data-data2="' + data2 + '"' : '') + ' ' + (data3 !== undefined ? 'data-data3="' + data3 + '"' : '') + ' ' + (data4 !== undefined ? 'data-data4="' + data4 + '"' : '') + ' data-order="' + order + '" class="btn_konfirmasi btn px-5 btn-outline-light"><i class="fa-solid fa-chevron-right"></i> LANJUT</button>';
-            html2 += '<button type="button" data-bs-dismiss="modal" class="btn ms-3 px-5 btn-outline-secondary"><i class="fa-solid fa-ban"></i> BATAL</button>';
+            if (order == "cara_absen") {
+                html2 += '<button data-cara_absen="1" type="button" data-order="' + order + '" class="btn_konfirmasi btn px-5 btn-outline-light"><i class="fa-solid fa-fingerprint"></i> FINGER</button>';
+                html2 += '<button data-cara_absen="2" type="button" data-order="' + order + '" class="btn_konfirmasi btn ms-3 px-5 btn-outline-light"><i class="fa-solid fa-credit-card"></i> TAP</button>';
+            } else {
+                html2 += '<button type="button" ' + (data1 !== undefined ? 'data-data1="' + data1 + '"' : '') + ' ' + (data2 !== undefined ? 'data-data2="' + data2 + '"' : '') + ' ' + (data3 !== undefined ? 'data-data3="' + data3 + '"' : '') + ' ' + (data4 !== undefined ? 'data-data4="' + data4 + '"' : '') + ' data-order="' + order + '" class="btn_konfirmasi btn px-5 btn-outline-light"><i class="fa-solid fa-chevron-right"></i> LANJUT</button>';
+                html2 += '<button type="button" data-bs-dismiss="modal" class="btn ms-3 px-5 btn-outline-secondary"><i class="fa-solid fa-ban"></i> BATAL</button>';
+            }
             $('.body_open').html(html2);
             let modal = document.getElementById('open');
             let myModal = bootstrap.Modal.getOrCreateInstance(modal)
@@ -468,6 +473,15 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             return html;
         }
 
+        const hide_show_modal = (id, order = "show") => {
+            let myModal = document.getElementById(id);
+            let modal = bootstrap.Modal.getOrCreateInstance(myModal);
+            if (order == "hide") {
+                modal.hide();
+            } else {
+                modal.show();
+            }
+        }
 
         let interval_blink_message = "";
         const blink_message = () => {
@@ -788,7 +802,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             let menu = $(this).data("menu");
             // mengisi jusul untuk modal menunggu
             $(".div_judul_menunggu").text(menu.toUpperCase());
-            if (menu == "Saldo" || menu == "Absen" || menu == "Hutang" || menu == "Reload") {
+            if (menu == "Saldo" || menu == "Hutang" || menu == "Reload") {
                 $(this).addClass("select");
                 data = {
                     kategori: menu,
@@ -798,6 +812,12 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                 let html = spinner("Proses...");
                 $(".content").html(html);
                 interval_booking = setInterval(add_booking, 4000);
+                return;
+            }
+            if (menu == "Absen") {
+                $(this).addClass("select");
+                data["kategori"] = menu;
+                show_modal_konfirmasi("Pilih cara absen!.", "cara_absen");
                 return;
             }
 
@@ -1039,6 +1059,15 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                         }, 3000);
                     }
                 })
+            }
+
+            if (order == "cara_absen") {
+                let cara_absen = $(this).data("cara_absen");
+                data["durasi"] = cara_absen;
+                let html = spinner("Proses...");
+                $(".content").html(html);
+                hide_show_modal("open", "hide");
+                interval_booking = setInterval(add_booking, 4000);
             }
         })
         $(document).on('click', '.bayar_hutang_cash', function(e) {

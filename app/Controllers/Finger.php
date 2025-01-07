@@ -12,7 +12,7 @@ class Finger extends BaseController
         $db = db('booking');
         $q = $db->get()->getRowArray();
         if ($q) {
-            sukses_js('Silahkan sentuh fingerprint!.', $q['kategori']);
+            sukses_js('Silahkan sentuh fingerprint!.', $q['kategori'], $q['durasi']);
         } else {
             gagal_js('Silahkan pilih menu!');
         }

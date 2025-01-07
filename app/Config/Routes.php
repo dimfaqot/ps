@@ -33,6 +33,8 @@ $routes->post('/api/Tap', 'Api::tap_booking_tap');
 $routes->post('/api/Panel', 'Api::tap_booking_panel');
 $routes->post('/api/Loan', 'Api::tap_booking_loan');
 $routes->post('/api/Reload', 'Api::tap_booking_reload');
+$routes->post('/api/Absen', 'Api::tap_booking_absen');
+$routes->post('/api/tidak_absen', 'Api::tidak_absen');
 
 // api finger
 $routes->post('/finger/get_booking', 'Finger::get_booking');
