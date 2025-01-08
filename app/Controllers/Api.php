@@ -1001,11 +1001,11 @@ class Api extends BaseController
     {
         $jwt = $this->request->getVar('jwt');
         decode_jwt_fulus($jwt);
-
+        tidak_absen();
         $db = db('booking');
         $q = $db->get()->getRowArray();
         if ($q) {
-            sukses_arduino('Silahkan tap!.', $q['kategori']);
+            sukses_arduino('Silahkan tap!.', $q['kategori'], $q['durasi']);
         } else {
             gagal_arduino('Silahkan pilih meja!');
         }
@@ -1484,7 +1484,9 @@ class Api extends BaseController
         $q = $dbu->whereNotIn("role", ["Member"])->where('uid', $decode['uid'])->get()->getRowArray();
 
         if (!$q) {
-            gagal_js("Finger tidak terdaftar!.");
+            clear_tabel('booking');
+            message($q['kategori'], "Kartu tidak terdaftar!.", 400);
+            gagal_js("Kartu tidak terdaftar!.");
         }
 
         $val = get_absen($q);
@@ -1516,48 +1518,26 @@ class Api extends BaseController
             ];
 
             if ($dbn->insert($datan)) {
-                $dbm = db("message");
                 if ($val['ket'] == 'Terlambat') {
-                    $message = ["message" => $val["msg"], "status" => "200", "kategori" => "Absen"];
-                    if ($dbm->insert($message)) {
-                        clean_path('booking');
-                        clean_path('api');
-                        sukses_js($val['msg']);
-                    }
+                    message($q['kategori'], $val['msg'], "400");
+                    clean_path('booking');
+                    clean_path('api');
+                    sukses_js($val['msg']);
                 } else {
-                    $message = ["message" => $val["msg"], "status" => "400", "kategori" => "Absen"];
-                    if ($dbm->insert($message)) {
-                        clean_path('booking');
-                        clean_path('api');
-                        gagal_js($val['msg']);
-                    }
+                    message($q['kategori'], $val['msg'], "end");
+                    clean_path('booking');
+                    clean_path('api');
+                    sukses_js($val['msg']);
                 }
             } else {
+                clean_path('booking');
+                message($q['kategori'], "Insert notif gagal!", 400);
                 gagal_js("Insert notif gagal!.");
             }
         } else {
+            clean_path('booking');
+            message($q['kategori'], "Insert absen gagal!", 400);
             gagal_js("Insert absen gagal!.");
         }
-    }
-    public function tidak_absen()
-    {
-        $jwt = $this->request->getVar('jwt');
-        $decode = decode_jwt_fulus($jwt);
-
-        $dba = db('absen');
-        $dbs = db('shift');
-
-        $qs = $dbs->whereNotIn("kategori", ["Root"])->get()->getResultArray();
-
-        $times = [];
-        foreach ($qs as $i) {
-        }
-
-
-        $data = [];
-        $qa = $dba->where('tgl', date("j"))->get()->getRowArray();
-
-        $dateString = "2025-01-06 14:30:00";
-        $timestamp = strtotime(date("Y-m-d "));
     }
 }

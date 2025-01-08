@@ -218,7 +218,7 @@
             html += '<div class="bg_success_bright rounded px-1" style="font-size:x-small;padding-top:2px">' + tgl_notif.getDate() + '/' + (tgl_notif.getMonth() + 1) + '/' + tgl_notif.getFullYear() + ' ' + tgl_notif.getHours() + ':' + (tgl_notif.getMinutes() + 1) + '</div>';
             html += '<div class="px-2 rounded bg_warning_light">' + e.kategori + '</div>';
             if (e.kategori == 'Absen') {
-                html += '<div>' + e.pemesan + '  ' + (e.meja == 'Ontime' ? 'Ontime <i class="fa-solid fa-thumbs-up text_success"></i>' : 'Terlambat <i class="fa-solid fa-thumbs-down text_danger"></i>') + '</div>';
+                html += '<div>' + e.pemesan + '  ' + (e.meja == 'Ontime' ? e.meja + ' <i class="fa-solid fa-thumbs-up text_success"></i>' : e.meja + ' <i class="fa-solid fa-thumbs-down text_danger"></i>') + '</div>';
             }
             if (e.kategori == 'Pesanan') {
                 html += '<div>Meja ' + e.meja + '</div>';

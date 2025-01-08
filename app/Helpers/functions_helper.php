@@ -1007,3 +1007,67 @@ function nama_tabel($order)
 
     return $res;
 }
+
+function tidak_absen()
+{
+    $dba = db('absen');
+    $dbs = db('shift');
+    $qs = $dbs->whereNotIn("kategori", ["Root"])->get()->getResultArray();
+
+    $jam_now = (int)date("H");
+    $tgl = (int)date("j");
+    $res = null;
+    foreach ($qs as $i) {
+        $jam = explode(".", $i['jam']);
+        $jam_terlambat = (int)$jam[0] + 3;
+
+        if ($jam_now > $jam_terlambat) {
+            $qa = $dba->where('tgl', $tgl)->where('role', $i['kategori'])->where('shift', $i['shift'])->get()->getRowArray();
+            if (!$qa) {
+                $dbu = db('users');
+                $qu = $dbu->where('uid', $i['uid'])->get()->getRowArray();
+
+                $dbat = db('aturan');
+                $qat = $dbat->where('aturan', "Ghoib")->get()->getRowArray();
+                if (!$qu) {
+                    dd("User tidak ditemukan!.");
+                }
+                if (!$qat) {
+                    dd("Aturan tidak ditemukan!.");
+                }
+
+                $value = [
+                    'tgl' => $tgl,
+                    'username' => $qu["username"],
+                    'ket' => "Ghoib",
+                    'poin' => $qat['poin'],
+                    'nama' => $qu["nama"],
+                    'role' => $qu["role"],
+                    'user_id' => $qu["id"],
+                    'shift' => $i['shift'],
+                    'jam' => $i['jam'],
+                    'absen' => time(),
+                    'terlambat' => 180
+                ];
+
+
+                if ($dba->insert($value)) {
+                    $dbn = db('notif');
+                    $datan = [
+                        'kategori' => 'Absen',
+                        'pemesan' => $value['nama'],
+                        'tgl' => $value['absen'],
+                        'harga' => time(),
+                        'menu' => "Tidak Absen",
+                        'meja' => $value['ket'],
+                        'qty' => $value['poin']
+                    ];
+
+                    if ($dbn->insert($datan)) {
+                        $res[] = $qu['nama'];
+                    }
+                }
+            }
+        }
+    }
+}
