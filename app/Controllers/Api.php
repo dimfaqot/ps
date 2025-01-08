@@ -1480,25 +1480,33 @@ class Api extends BaseController
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_fulus($jwt);
 
-        $dbu = db('users');
-        $q = $dbu->whereNotIn("role", ["Member"])->where('uid', $decode['uid'])->get()->getRowArray();
+        $db = db('booking');
+        $q = $db->get()->getRowArray();
 
         if (!$q) {
-            clear_tabel('booking');
-            message($q['kategori'], "Kartu tidak terdaftar!.", 400);
-            gagal_js("Kartu tidak terdaftar!.");
+            message('Gagal', "Data booking tidak ditemukan!.", 400);
+            gagal_arduino('Data booking tidak ditemukan!');
         }
 
-        $val = get_absen($q);
+        $dbu = db('users');
+        $user = $dbu->whereNotIn("role", ["Member"])->where('uid', $decode['uid'])->get()->getRowArray();
+
+        if (!$user) {
+            clear_tabel('booking');
+            message($q['kategori'], "Kartu tidak terdaftar!.", 400);
+            gagal_arduino('Kartu tidak terdaftar!.');
+        }
+
+        $val = get_absen($user);
 
         $value = [
             'tgl' => date('d', $val['time_server']),
-            'username' => $q["username"],
+            'username' => $user["username"],
             'ket' => $val['ket'],
             'poin' => $val['poin'],
-            'nama' => $q["nama"],
-            'role' => $q["role"],
-            'user_id' => $q["id"],
+            'nama' => $user["nama"],
+            'role' => $user["role"],
+            'user_id' => $user["id"],
             'shift' => $val['shift'],
             'jam' => $val['jam'],
             'absen' => $val['time_server'],
