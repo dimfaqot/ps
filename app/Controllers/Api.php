@@ -1570,8 +1570,8 @@ class Api extends BaseController
         $user = $dbu->whereNotIn("role", ["Member"])->where('uid', $decode['uid'])->get()->getRowArray();
 
         if (!$user) {
-            clear_tabel('booking');
             message($q['kategori'], "Kartu tidak terdaftar!.", 400);
+            clear_tabel('booking');
             gagal_arduino('Kartu tidak terdaftar!.');
         }
 
