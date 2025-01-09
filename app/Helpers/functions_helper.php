@@ -668,8 +668,8 @@ function get_absen($user)
     $q = $db->where('role', $sess)->where('tgl', date('d'))->where('shift', $data['shift'])->whereIn('ket', ['Terlambat', 'Ontime'])->get()->getRowArray();
 
     if ($q) {
-        message("Absen", $user['nama'] . ' sudah absen', "400", 'untuk shift ' . $data['shift'] . '!.');
-        gagal_js($user['nama'] . ' sudah absen untuk shift ' . $data['shift'] . '!.');
+        message("Absen", 'Absen shift ' . $data['shift'] . ' sudah dilakukan!.', "400");
+        gagal_js('Absen shift ' . $data['shift'] . ' sudah dilakukan!.');
     }
 
     if ($data['menit'] < 0) {
