@@ -948,6 +948,11 @@ class Api extends BaseController
         }
         $dbb = db('barber');
         $barber = $dbb->where('user_id', $user['id'])->where('status', 0)->get()->getResultArray();
+        if (!$barber) {
+            clear_tabel('booking');
+            message($q['kategori'], "Data transaksi belum dibuat!.", 400);
+            gagal_arduino('Data transaksi belum dibuat!.');
+        }
 
         $err = [];
         $total = 0;
@@ -980,11 +985,11 @@ class Api extends BaseController
         if ($dbu->update($user)) {
             clear_tabel('booking');
             if (count($err) > 0) {
-                message($q['kategori'], count($err) . ' barang' . " gagal!.", "end", "Saldo: " . rupiah($saldo_akhir));
-                sukses_arduino(count($err) . ' barang' . " gagal!.", "Saldo " . rupiah($saldo_akhir));
+                message($q['kategori'], count($err) . ' barang' . " gagal!. " . $user['nama'] . " sukses sebesar " . rupiah($total2), "end", "Saldo: " . rupiah($saldo_akhir));
+                sukses_arduino(count($err) . ' barang' . " gagal!.  " . $user['nama'] . " sukses sebesar " . rupiah($total2), "Saldo " . rupiah($saldo_akhir));
             } else {
-                message($q['kategori'], "Berhasil", "end", "Saldo: " . rupiah($saldo_akhir));
-                sukses_arduino("Berhasil", "Saldo " . rupiah($saldo_akhir));
+                message($q['kategori'],  $user['nama'] . " berhasil transaksi sebesar " . rupiah($total2), "end", "Saldo: " . rupiah($saldo_akhir));
+                sukses_arduino($user['nama'] . " berhasil transaksi sebesar " . rupiah($total2), "Saldo " . rupiah($saldo_akhir));
             }
         } else {
             clear_tabel('booking');
