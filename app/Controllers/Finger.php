@@ -63,15 +63,11 @@ class Finger extends BaseController
                 if ($val['ket'] == 'Terlambat') {
                     $message = ["message" => $val["msg"], "status" => "200", "kategori" => "Absen"];
                     if ($dbm->insert($message)) {
-                        clean_path('booking');
-                        clean_path('api');
                         sukses_js($val['msg']);
                     }
                 } else {
                     $message = ["message" => $val["msg"], "status" => "400", "kategori" => "Absen"];
                     if ($dbm->insert($message)) {
-                        clean_path('booking');
-                        clean_path('api');
                         gagal_js($val['msg']);
                     }
                 }
@@ -123,19 +119,19 @@ class Finger extends BaseController
             if ($qa) {
                 $admin = $dbu->whereNotIn("role", "Member")->where('finger', $qa['status'])->get()->getRowArray();
                 if (!$admin) {
-                    clear_tabel('booking');
+
                     message($q['kategori'], "Finger admin dibutuhkan!.", 400);
                     gagal_js('Finger admin dibutuhkan!.');
                 } else {
                     if ($admin['role'] !== 'Root') {
-                        clear_tabel('booking');
-                        clear_tabel('api');
+
+
                         message($q['kategori'], "Finger admin dibutuhkan!", 400);
                         gagal_js('Finger admin dibutuhkan!.');
                     }
                 }
             } else {
-                clear_tabel('booking');
+
                 message($q['kategori'], "Finger admin dibutuhkan!.", 400);
                 gagal_js('Finger admin dibutuhkan!.');
             }
@@ -158,7 +154,7 @@ class Finger extends BaseController
                 sukses_js($user_m['nama'] . " sukses didaftarkan.", "", $admin["nama"]);
             }
         } else {
-            clear_tabel('api');
+
             konfirmasi_root_finger($q, $user);
         }
     }
@@ -195,19 +191,19 @@ class Finger extends BaseController
             if ($qa) {
                 $admin = $dbu->whereNotIn("role", "Member")->where('finger', $qa['status'])->get()->getRowArray();
                 if (!$admin) {
-                    clear_tabel('booking');
+
                     message($q['kategori'], "Finger admin dibutuhkan!.", 400);
                     gagal_js('Finger admin dibutuhkan!.');
                 } else {
                     if ($admin['role'] !== 'Root') {
-                        clear_tabel('booking');
-                        clear_tabel('api');
+
+
                         message($q['kategori'], "Finger admin dibutuhkan!", 400);
                         gagal_js('Finger admin dibutuhkan!.');
                     }
                 }
             } else {
-                clear_tabel('booking');
+
                 message($q['kategori'], "Finger admin dibutuhkan!.", 400);
                 gagal_js('Finger admin dibutuhkan!.');
             }
@@ -230,7 +226,7 @@ class Finger extends BaseController
                 sukses_js($user_m['nama'] . " sukses dihapus.", "", $admin["nama"]);
             }
         } else {
-            clear_tabel('api');
+
             konfirmasi_root_finger($q, $user);
         }
     }
