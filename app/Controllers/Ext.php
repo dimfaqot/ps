@@ -363,4 +363,16 @@ class Ext extends BaseController
         clear_tabel("booking");
         sukses_js("Delete sukses!.");
     }
+    public function data_poin()
+    {
+        $db = db('booking');
+        $q = $db->get()->getRowArray();
+
+        if (!$q) {
+            message('Gagal', "Data booking tidak ditemukan!.", 400);
+        }
+
+        $data = poin_absen($q['durasi'], 'Tap');
+        sukses_js('Data ditemukan.', $data['data'], $data['poin']);
+    }
 }

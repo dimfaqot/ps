@@ -186,7 +186,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                             <div class="spinner-border spinner-border-sm mt-1 text-light" role="status">
                                 <span class="visually-hidden">Loading...</span>
                             </div>
-                            <div style="font-style: italic;">processing...</div>
+                            <div class="div_body_processing" style="font-style: italic;">processing...</div>
                         </div>
                     </div>
                     <div class="d-grid div_bayar_hutang_cash">
@@ -405,6 +405,51 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             modal.show();
 
         }
+        const show_data_poin = (list_data_poin, uid) => {
+            $(".modal_body_menunggu").html("");
+            let html = "";
+
+            html += '<table style="font-size: 13px;" data-uid="' + uid + '" class="table tabel_poin table-sm text-light table-bordered border-info">';
+            html += '<thead>';
+            html += '<tr>';
+            html += '<td style="text-align: center;">#</td>';
+            html += '<td style="text-align: center;">Tgl</td>';
+            html += '<td style="text-align: center;">Jenis</td>';
+            html += '<td style="text-align: center;">Ket</td>';
+            html += '<td style="text-align: center;">Poin</td>';
+            html += '</tr>';
+            html += '</thead>';
+            html += '<tbody>';
+            let total = 0;
+            list_data_poin.forEach((e, i) => {
+                total += parseInt(e.poin);
+                html += '<tr>';
+                html += '<td style="text-align: center;">' + (i + 1) + '</td>';
+                html += '<td style="text-align: center;">' + e.tgl + '</td>';
+                html += '<td style="text-align:left">' + (e.ket == "Ontime" || e.ket == "Terlambat" || e.ket == "Ghoib" ? "Absen" : "Aturan") + '</td>';
+                html += '<td style="text-align:left">' + e.ket + '</td>';
+                html += '<td style="text-align: right;">' + e.poin + '</td>';
+                html += '</tr>';
+
+            })
+            html += '</tbody>';
+            html += '</table>';
+
+            $(".div_message_hutang").text(list_data_poin[0].nama.toUpperCase());
+            $(".div_body_processing").text("Data ditemukan.");
+            $(".total_hutang").text("TOTAL: " + total);
+            $(".div_bayar_hutang_cash").text("");
+            $(".modal_body_data_hutang").html(html);
+
+            let menunggu = document.getElementById('menunggu');
+            let modalM = bootstrap.Modal.getOrCreateInstance(menunggu)
+            modalM.hide();
+
+            let myModal = document.getElementById('data_hutang');
+            let modal = bootstrap.Modal.getOrCreateInstance(myModal)
+            modal.show();
+
+        }
         const show_modal_konfirmasi = (msg, order, data1 = undefined, data2 = undefined, data3 = undefined, data4 = undefined) => {
             let html = "";
             html += '<div class="d-flex justify-content-center gap-3">';
@@ -589,7 +634,13 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                     if (data.kategori == "Hutang") {
                         interval_hutang = setInterval(get_data_hutang, 1000); //memanggil data hutang
                     } else {
-                        clearInterval(interval_hutang); //antri booking
+                        clearInterval(interval_hutang);
+                    }
+                    // jika poin maka memanggil data poin
+                    if (data.kategori == "Poin") {
+                        interval_poin = setInterval(get_data_poin, 1000); //memanggil data poin
+                    } else {
+                        clearInterval(interval_poin);
                     }
                 } else {
                     if (res.data == 1) { //ada transaksi lain
@@ -618,6 +669,24 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                     interval_blink_message = setInterval(blink_message, 1000);
 
                     clearInterval(interval_hutang);
+                } else {
+                    $(".div_message_hutang").addClass("text-info");
+                    clearInterval(interval_blink_message);
+                }
+            })
+
+        }
+        let interval_poin = "";
+        const get_data_poin = () => {
+            post("ext/data_poin", {
+                id: 0
+            }).then(res => {
+
+                if (res.data != null) {
+                    show_data_poin(res.data, res.data2);
+                    interval_blink_message = setInterval(blink_message, 1000);
+
+                    clearInterval(interval_poin);
                 } else {
                     $(".div_message_hutang").addClass("text-info");
                     clearInterval(interval_blink_message);
@@ -805,7 +874,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             let menu = $(this).data("menu");
             // mengisi jusul untuk modal menunggu
             $(".div_judul_menunggu").text(menu.toUpperCase());
-            if (menu == "Saldo" || menu == "Hutang" || menu == "Reload" || menu == "Barber") {
+            if (menu == "Saldo" || menu == "Hutang" || menu == "Reload" || menu == "Barber" || menu == "Poin") {
                 $(this).addClass("select");
                 data = {
                     kategori: menu,

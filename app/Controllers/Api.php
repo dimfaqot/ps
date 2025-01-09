@@ -1533,24 +1533,56 @@ class Api extends BaseController
             if ($dbn->insert($datan)) {
                 if ($val['ket'] == 'Terlambat') {
                     message($q['kategori'], $val['msg'], "400");
-                    clean_path('booking');
-                    clean_path('api');
+                    clear_tabel('booking');
+                    clear_tabel('api');
                     sukses_js($val['msg']);
                 } else {
                     message($q['kategori'], $val['msg'], "end");
-                    clean_path('booking');
-                    clean_path('api');
+                    clear_tabel('booking');
+                    clear_tabel('api');
                     sukses_js($val['msg']);
                 }
             } else {
-                clean_path('booking');
+                clear_tabel('booking');
                 message($q['kategori'], "Insert notif gagal!", 400);
                 gagal_js("Insert notif gagal!.");
             }
         } else {
-            clean_path('booking');
+            clear_tabel('booking');
             message($q['kategori'], "Insert absen gagal!", 400);
             gagal_js("Insert absen gagal!.");
+        }
+    }
+    public function tap_booking_poin()
+    {
+        $jwt = $this->request->getVar('jwt');
+        $decode = decode_jwt_fulus($jwt);
+
+        $db = db('booking');
+        $q = $db->get()->getRowArray();
+
+        if (!$q) {
+            message('Gagal', "Data booking tidak ditemukan!.", 400);
+            gagal_arduino('Data booking tidak ditemukan!');
+        }
+
+        $dbu = db('users');
+        $user = $dbu->whereNotIn("role", ["Member"])->where('uid', $decode['uid'])->get()->getRowArray();
+
+        if (!$user) {
+            clear_tabel('booking');
+            message($q['kategori'], "Kartu tidak terdaftar!.", 400);
+            gagal_arduino('Kartu tidak terdaftar!.');
+        }
+
+        $q['durasi'] = $user['id'];
+        $db->where('id', $q['id']);
+        if ($db->update($q)) {
+            message($q['kategori'], 'Id detected.', '200', $user['nama']);
+            sukses_js('Id detected. ' . $user['nma']);
+        } else {
+            message($q['kategori'], 'Insert id failded.', '400');
+            gagal_js('Insert id failed.');
         }
     }
 }

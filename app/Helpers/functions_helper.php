@@ -709,13 +709,16 @@ function get_absen($user)
     return $data;
 }
 
-function poin_absen($id)
+function poin_absen($id, $order = null)
 {
     $db = db('absen');
 
     $q = $db->where('user_id', $id)->orderBy('absen', 'ASC')->get()->getResultArray();
-
-
+    if ($order !== null) {
+        if (!$q) {
+            gagal_js("Data tidak ditemukan!.");
+        }
+    }
     $poin = 100;
     foreach ($q as $i) {
         $poin = $poin + $i['poin'];
