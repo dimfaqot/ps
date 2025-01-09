@@ -260,23 +260,26 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
         const menus = {
             member: `<span class="pe-2 tangan" data-menu="admin" style="font-size: 27px;margin-top:-12px"><i class="fa-regular fa-hand-point-right"></i></span>
                     <div class="text-center text-info ms-2">
-                        <span style="cursor: pointer;" data-menu="Absen" class="btn_menu py-2 px-4 border rounded border-info">ABSEN</span>
+                        <span style="cursor: pointer;" data-menu="Barber" class="btn_menu py-2 px-4 border rounded border-info">BARBER</span>
                         <span style="cursor: pointer;" data-menu="Ps" class="btn_menu py-2 px-4 rounded border border-info">PS</span>
                         <span style="cursor: pointer;" data-menu="Billiard" class="btn_menu py-2 px-4 rounded border border-info">BILLIARD</span>
                         <div style="margin-top: 30px;"></div>
                         <span style="cursor: pointer;" data-menu="Hutang" class="btn_menu py-2 px-4 rounded border border-info">HUTANG</span>
                         <span style="cursor: pointer;" data-menu="Saldo" class="btn_menu py-2 px-4 rounded border border-info">SALDO</span>
-                    </div>`,
+                        </div>`,
             admin: `<span class="pe-2 tangan" data-menu="member" style="font-size: 27px;margin-top:-12px"><i class="fa-regular fa-hand-point-right"></i></span>
-                    <div class="text-center text-info ms-2">
+                        <div class="text-center text-info ms-2">
+                        <span style="cursor: pointer;" data-menu="Absen" class="btn_menu py-2 px-4 border rounded border-info">ABSEN</span>
+                        <span style="cursor: pointer;" data-menu="Poin" class="btn_menu py-2 px-4 rounded border border-info">POIN</span>
+                        <span style="cursor: pointer;" data-menu="Panel" class="btn_menu py-2 px-4 rounded border border-info">PANEL</span>
+                        <div style="margin-top: 30px;"></div>
+                        <span style="cursor: pointer;" data-menu="Topup" class="btn_menu py-2 px-4 rounded border border-info">TOPUP</span>
                         <span style="cursor: pointer;" data-menu="Daftar" class="btn_menu py-2 px-4 border rounded border-info">DAFTAR</span>
                         <span style="cursor: pointer;" data-menu="Remove" class="btn_menu py-2 px-4 rounded border border-info">REMOVE</span>
-                        <span style="cursor: pointer;" data-menu="Topup" class="btn_menu py-2 px-4 rounded border border-info">TOPUP</span>
                         <div style="margin-top: 30px;"></div>
-                        <span style="cursor: pointer;" data-menu="Reload" class="btn_menu py-2 px-1 text-danger"><i class="fa-solid fa-arrows-rotate"></i></span>
+                        <span style="cursor: pointer;" data-menu="Reload" class="btn_menu py-2 px-4 rounded border border-danger text-danger"><i class="fa-solid fa-arrows-rotate"></i> RELOAD</span>
                         <span style="cursor: pointer;" data-menu="Add" class="btn_menu py-2 px-4 rounded border border-info">ADD</span>
                         <span style="cursor: pointer;" data-menu="Delete" class="btn_menu py-2 px-4 rounded border border-info">DELETE</span>
-                        <span style="cursor: pointer;" data-menu="Panel" class="btn_menu py-2 px-4 rounded border border-info">PANEL</span>
                     </div>`,
             topup: `<div class="rounded px-4 pt-4">
                     <h6 class="text-center text-light mb-4">TOPUP</h6>
@@ -802,7 +805,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             let menu = $(this).data("menu");
             // mengisi jusul untuk modal menunggu
             $(".div_judul_menunggu").text(menu.toUpperCase());
-            if (menu == "Saldo" || menu == "Hutang" || menu == "Reload") {
+            if (menu == "Saldo" || menu == "Hutang" || menu == "Reload" || menu == "Barber") {
                 $(this).addClass("select");
                 data = {
                     kategori: menu,
