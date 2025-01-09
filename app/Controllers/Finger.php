@@ -61,7 +61,7 @@ class Finger extends BaseController
             if ($dbn->insert($datan)) {
                 $dbm = db("message");
                 if ($val['ket'] == 'Terlambat') {
-                    $message = ["message" => $val["msg"], "status" => "200", "kategori" => "Absen"];
+                    $message = ["message" => $val["msg"], "status" => "end", "kategori" => "Absen"];
                     if ($dbm->insert($message)) {
                         sukses_js($val['msg']);
                     }

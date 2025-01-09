@@ -1074,3 +1074,25 @@ function tidak_absen()
         }
     }
 }
+
+function laporan_arduino()
+{
+    $dbb = db('booking');
+    $qb = $dbb->get()->getRowArray();
+    $data = [];
+    $data['tgl'] = time();
+    if ($qb) {
+        $data['kategori'] = $qb['kategori'];
+    }
+    $dbm = db('message');
+    $qm = $dbm->get()->getRowArray();
+    if ($qm) {
+        $data['message'] = $qm['message'];
+        $data['status'] = $qm['status'];
+        $data['uang'] = $qm['uang'];
+        $data['admin'] = $qm['admin'];
+    }
+
+    $db = db('laporan');
+    $db->insert($data);
+}

@@ -358,6 +358,7 @@ class Ext extends BaseController
     }
     public function del_message()
     {
+        laporan_arduino();
         clear_tabel("message");
         clear_tabel("api");
         clear_tabel("booking");

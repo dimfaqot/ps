@@ -598,7 +598,6 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                                     id: 0
                                 }).then(rest => {
                                     if (rest.status == "200") {
-
                                         location.reload();
                                     }
                                 })
