@@ -1092,7 +1092,8 @@ function laporan_arduino()
         $data['uang'] = $qm['uang'];
         $data['admin'] = $qm['admin'];
     }
-
-    $db = db('laporan');
-    $db->insert($data);
+    if (count($data) > 1) {
+        $db = db('laporan');
+        $db->insert($data);
+    }
 }
