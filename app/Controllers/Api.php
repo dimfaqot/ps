@@ -1580,7 +1580,7 @@ class Api extends BaseController
 
         sukses_js("Sukses", $res['status'], $jam);
     }
-    public function get_itag_press()
+    public function itag_press()
     {
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_finger($jwt);
