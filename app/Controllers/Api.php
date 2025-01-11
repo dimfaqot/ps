@@ -1545,10 +1545,10 @@ class Api extends BaseController
     {
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_finger($jwt);
-        $id = $decode['uid'];
+        $nama = $decode['uid'];
 
         $db = db('perangkat');
-        $q = $db->get()->getRowArray();
+        $q = $db->get()->getResultArray();
 
         $jam = (int)date('H');
 
@@ -1556,28 +1556,50 @@ class Api extends BaseController
         foreach ($q as $i) {
             if ($jam == 0 && $i['otomatis'] == 1) {
                 $i['otomatis'] = 0;
-                $db->where('id', $id);
+                $db->where('nama', $nama);
                 $db->update($i);
             } else {
                 if ($jam == $i['nyala'] && $i['otomatis'] == 0 && $i['status'] == 0) {
                     $i['status'] = 1;
                     $i['otomatis'] = 1;
-                    $db->where('id', $id);
+                    $db->where('nama', $nama);
                     $db->update($i);
                 }
                 if ($jam == $i['mati'] && $i['otomatis'] == 0 && $i['status'] == 1) {
                     $i['otomatis'] = 1;
                     $i['status'] = 0;
-                    $db->where('id', $id);
+                    $db->where('nama', $nama);
                     $db->update($i);
                 }
             }
 
-            if ($i['id'] == $id) {
+            if ($i['nama'] == $nama) {
                 $res = $i;
             }
         }
 
         sukses_js("Sukses", $res['status'], $jam);
+    }
+    public function get_itag_press()
+    {
+        $jwt = $this->request->getVar('jwt');
+        $decode = decode_jwt_finger($jwt);
+        $nama = $decode['uid'];
+
+        $db = db('perangkat');
+        $q = $db->where('nama', $nama)->get()->getRowArray();
+
+        if (!$q) {
+            gagal_arduino('Perangkat tidak ditemukan!.');
+        }
+
+        $q['status'] = ($q['status'] == 0 ? 1 : 0);
+        $db->where('id', $q['id']);
+
+        if ($db->update($q)) {
+            sukses_js("Sukses", $q['status']);
+        } else {
+            gagal_js("Gagal", $q['status']);
+        }
     }
 }
