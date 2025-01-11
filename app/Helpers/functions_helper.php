@@ -238,6 +238,31 @@ function decode_jwt($encode_jwt)
         die;
     }
 }
+function encode_jwt_santri($data)
+{
+    $jwt = JWT::encode($data, getenv('jwt_santri'), 'HS256');
+
+    return $jwt;
+}
+
+function decode_jwt_santri($encode_jwt)
+{
+    try {
+
+        $decoded = JWT::decode($encode_jwt, new Key(getenv('jwt_santri'), 'HS256'));
+        $arr = (array)$decoded;
+
+        return $arr;
+    } catch (\Exception $e) { // Also tried JwtException
+        $data = [
+            'status' => '400',
+            'message' => $e->getMessage()
+        ];
+
+        echo json_encode($data);
+        die;
+    }
+}
 function encode_jwt_fulus($data)
 {
 

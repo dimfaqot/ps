@@ -36,6 +36,8 @@ $routes->post('/api/Reload', 'Api::tap_booking_reload');
 $routes->post('/api/Absen', 'Api::tap_booking_absen');
 $routes->post('/api/Poin', 'Api::tap_booking_poin');
 
+$routes->post('/api/get_perangkat', 'Api::get_perangkat');
+
 // api finger
 $routes->post('/finger/get_booking', 'Finger::get_booking');
 $routes->post('/finger/Del_message', 'Finger::del_message');
@@ -43,6 +45,7 @@ $routes->post('/finger/Delete', 'Finger::delete');
 $routes->post('/finger/Absen', 'Finger::absen');
 $routes->post('/finger/add_message', 'Finger::add_message');
 $routes->post('/finger/Add', 'Finger::add');
+
 
 // bot
 $routes->get('/api/wabot', 'Api::wabot');
@@ -90,6 +93,7 @@ $routes->get('/users', 'User::index');
 $routes->post('/users/add', 'User::add');
 $routes->post('/users/update', 'User::update');
 $routes->post('/users/get_uid', 'User::get_uid');
+$routes->post('/users/santri/update', 'User::update_santri');
 
 
 // options __________________________________

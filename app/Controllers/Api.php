@@ -195,6 +195,11 @@ class Api extends BaseController
 
             // check user member apakah ada/tidak boleh tidak ada
             $user_m = $dbu->where('id', $q["durasi"])->where('role', 'Member')->get()->getRowArray();
+            if ($user_m['uid'] !== '') {
+                message($q['kategori'], "Kartu anggota sudah dibuat!.", 400);
+                gagal_arduino('Kartu anggota sudah dibuat!.');
+            }
+
             konfirmasi_user_exist($user_m, $q);
 
             $uid_member = $decode['uid'];
@@ -999,7 +1004,7 @@ class Api extends BaseController
             gagal_arduino("Kartu tidak dikenal!.");
         }
         $saldo = decode_jwt_fulus($user_m["fulus"]);
-        $user_m["uid"] = time();
+        $user_m["uid"] = '';
         $user_m["fulus"] = encode_jwt_fulus(["fulus" => 0]);
 
         $dbu->where('id', $user_m['id']);
@@ -1383,6 +1388,26 @@ class Api extends BaseController
                 gagal_arduino("Update billiard gagal!.");
             }
         }
+        if ($order == "Others") {
+
+            $dbo = db('perangkat');
+            $qo = $dbo->where("id", $q['meja'])->get()->getRowArray();
+            if (!$qo) {
+                message($q['kategori'], "Data perangkat tidak ditemukan!.", 400, $order);
+                gagal_arduino("Saldo", "Data perangkat tidak ditemukan!.");
+            }
+
+            $qo['status'] = ($qo['status'] == 0 ? 1 : 0);
+
+            $dbo->where('id', $qo['id']);
+            if ($dbo->update($qo)) {
+                message($q['kategori'], $user['nama'] . " mematikan " . $qo['jenis'] . " " . $qo['nama'] . ".", "end");
+                sukses_arduino($user['nama'] . " mematikan " . $qo['jenis'] . " " . $qo['nama'] . ".");
+            } else {
+                message($q['kategori'], "Update perangkat gagal!.", 400, $order);
+                gagal_arduino("Update perangkat gagal!.");
+            }
+        }
     }
 
     public function tap_booking_reload()
@@ -1515,5 +1540,44 @@ class Api extends BaseController
             message($q['kategori'], 'Insert id failded.', '400');
             gagal_js('Insert id failed.');
         }
+    }
+    public function get_perangkat()
+    {
+        $jwt = $this->request->getVar('jwt');
+        $decode = decode_jwt_finger($jwt);
+        $id = $decode['uid'];
+
+        $db = db('perangkat');
+        $q = $db->get()->getRowArray();
+
+        $jam = (int)date('H');
+
+        $res = [];
+        foreach ($q as $i) {
+            if ($jam == 0 && $i['otomatis'] == 1) {
+                $i['otomatis'] = 0;
+                $db->where('id', $id);
+                $db->update($i);
+            } else {
+                if ($jam == $i['nyala'] && $i['otomatis'] == 0 && $i['status'] == 0) {
+                    $i['status'] = 1;
+                    $i['otomatis'] = 1;
+                    $db->where('id', $id);
+                    $db->update($i);
+                }
+                if ($jam == $i['mati'] && $i['otomatis'] == 0 && $i['status'] == 1) {
+                    $i['otomatis'] = 1;
+                    $i['status'] = 0;
+                    $db->where('id', $id);
+                    $db->update($i);
+                }
+            }
+
+            if ($i['id'] == $id) {
+                $res = $i;
+            }
+        }
+
+        sukses_js("Sukses", $res['status'], $jam);
     }
 }

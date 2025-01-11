@@ -49,6 +49,31 @@ class Database extends Config
             'time'     => 'H:i:s',
         ],
     ];
+    public array $santri = [
+        'DSN'          => '',
+        'hostname'     => 'localhost',
+        'username'     => '',
+        'password'     => '',
+        'database'     => '',
+        'DBDriver'     => 'MySQLi',
+        'DBPrefix'     => '',
+        'pConnect'     => false,
+        'DBDebug'      => true,
+        'charset'      => 'utf8mb4',
+        'DBCollat'     => 'utf8mb4_general_ci',
+        'swapPre'      => '',
+        'encrypt'      => false,
+        'compress'     => false,
+        'strictOn'     => false,
+        'failover'     => [],
+        'port'         => 3306,
+        'numberNative' => false,
+        'dateFormat'   => [
+            'date'     => 'Y-m-d',
+            'datetime' => 'Y-m-d H:i:s',
+            'time'     => 'H:i:s',
+        ],
+    ];
 
     //    /**
     //     * Sample database connection for SQLite3.
@@ -187,6 +212,7 @@ class Database extends Config
         ],
     ];
 
+
     public function __construct()
     {
         parent::__construct();
@@ -197,5 +223,8 @@ class Database extends Config
         if (ENVIRONMENT === 'testing') {
             $this->defaultGroup = 'tests';
         }
+        $this->santri['database'] = getenv('db_name_santri');
+        $this->santri['username'] = getenv('db_username_santri');
+        $this->santri['password'] = getenv('db_pass_santri');
     }
 }

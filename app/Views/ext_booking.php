@@ -1,4 +1,5 @@
 <?php
+dd((int)"00");
 $db = db('unit');
 $q = $db->whereNotIn('status', ['Maintenance'])->orderBy('id', 'ASC')->get()->getResultArray();
 $dbr = db('rental');
@@ -17,6 +18,9 @@ foreach ($q as $i) {
 
 $db = db('jadwal_2');
 $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
+$db = db('perangkat');
+$others = $db->orderBy('id', 'ASC')->get()->getResultArray();
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -209,9 +213,6 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                 <div class="d-flex justify-content-center gap-3">
                     <button class="rounded-pill default btn_panel text-light px-4 py-1" data-menu="Ps" style="font-size: small;">PS</button>
                     <button class="rounded-pill default btn_panel text-light px-4 py-1" data-menu="Billiard" style="font-size: small;">BILLIARD</button>
-                    <button class="rounded-pill default btn_panel text-light px-4 py-1" data-menu="Kantin" style="font-size: small;">KANTIN</button>
-                </div>
-                <div class="d-flex justify-content-center gap-3 mt-3">
                     <button class="rounded-pill default btn_panel text-light px-4 py-1" data-menu="Others" style="font-size: small;">OTHERS</button>
                 </div>
 
@@ -232,6 +233,8 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
         let html_ps = "";
         let data_billiard = <?= json_encode($billiard); ?>;
         let html_billiard = "";
+        let data_others = <?= json_encode($others); ?>;
+        let html_others = "";
         data_ps.forEach((e, i) => {
             if (i % 4 == 0) {
                 html_ps += '<div class="d-flex justify-content-center gap-2 my-2">';
@@ -256,6 +259,17 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                 html_billiard += '</div>';
             }
         })
+
+        html_others += '<div class="container text-center">';
+        html_others += '<div class="row g-2">';
+        data_others.forEach((e, i) => {
+            html_others += '<div class="col-4">';
+            html_others += '<div class="rounded border ' + (e.status == 1 ? "border-light text-light" : "border-secondary text-secondary") + ' py-1 btn_meja btn_meja_' + e.id + '" data-meja="' + e.id + '" data-menu="Others" style="font-size: 16px;">' + e.nama + '</div>';
+            html_others += '</div>';
+        })
+
+        html_others += '</div>';
+        html_others += '</div>';
 
         const menus = {
             member: `<span class="pe-2 tangan" data-menu="admin" style="font-size: 27px;margin-top:-12px"><i class="fa-regular fa-hand-point-right"></i></span>
@@ -322,6 +336,7 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                     </div>`,
             meja_ps: html_ps,
             meja_billiard: html_billiard,
+            meja_others: html_others,
             btn_ok: '<button class="btn_grey embos mt-3 btn_ok">Ok</button>'
         }
         const modal_show = (id) => {
@@ -957,15 +972,37 @@ $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             e.preventDefault();
             // semua clas select dihapus
             let meja = $(this).data("meja");
-
+            let menu = $(this).data("menu");
             if (data.kategori == "Panel") {
-                let menu = $(this).data("menu");
+                if (menu == "Others") {
+                    if ($(this).hasClass("border-secondary")) {
+                        $(this).removeClass("border-secondary");
+                        $(this).removeClass("text-secondary");
+                        $(this).addClass("border-light");
+                        $(this).addClass("text-light");
+                    } else {
+                        $(this).addClass("border-secondary");
+                        $(this).addClass("text-secondary");
+                        $(this).removeClass("border-light");
+                        $(this).removeClass("text-light");
+                    }
+                } else {
+                    if ($(this).hasClass("active")) {
+                        $(this).removeClass("active");
+                        $(this).addClass("default");
+                    } else {
+                        $(this).addClass("active");
+                        $(this).removeClass("default");
+                    }
+                }
+
                 if (kode_bayar[menu] == undefined) {
                     gagal("Kosong!.");
                     return;
                 }
                 data["durasi"] = kode_bayar[menu];
                 data["meja"] = meja;
+
                 $(".modal_body_menunggu").html("");
                 let menunggu = document.getElementById('panel');
                 let modalM = bootstrap.Modal.getOrCreateInstance(menunggu)

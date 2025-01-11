@@ -2,7 +2,6 @@
     const baseUrl = "<?= base_url(); ?>";
     let url = '';
 
-
     const loading = (req = true) => {
         if (req === true) {
             $('.waiting').show()

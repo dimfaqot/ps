@@ -5,9 +5,16 @@
     <button type="button" class="btn_success mb-3" data-bs-toggle="modal" data-bs-target="#add_<?= menu()['controller']; ?>">
         Add User
     </button>
+    <button type="button" class="btn_purple btn_santri" data-order="update">
+        Update Santri
+    </button>
+    <button type="button" class="btn_primary btn_santri" data-order="check">
+        Check Santri
+    </button>
 
     <?php if (count($data) == 0) : ?>
-        <div class="div_list text_warning"><i class="fa-solid fa-ban"></i> Data not found!.</div>
+        <div class=" div_list text_warning"><i class="fa-solid fa-ban"></i> Data not found!.
+        </div>
     <?php else : ?>
         <?php foreach ($data as $i) : ?>
             <div class="div_list">
@@ -84,8 +91,26 @@
         </div>
     </div>
 </div>
+<!-- Modal santri-->
+<div class="modal fade" id="santri" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="d-flex justify-content-between border border-bottom px-4 py-1">
+                <div>Santri</div>
+                <div><a href="" data-bs-dismiss="modal" style="text-decoration: none;"><i class="fa-solid fa-circle-xmark"></i></a></div>
+            </div>
+            <div class="modal-body body_santri">
+
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <script>
+    // let myModal = document.getElementById('santri');
+    // let modal = bootstrap.Modal.getOrCreateInstance(myModal)
+    // modal.show();
     const get_uid = (id = undefined) => {
         post("users/get_uid", {
             id
@@ -182,5 +207,45 @@
             get_uid();
         }, 1000);
     });
+
+    $(document).on("click", ".btn_santri", function(e) {
+        e.preventDefault();
+        let order = $(this).data("order");
+        post('users/santri/' + order, {
+            order
+        }).then(res => {
+            if (res.status == "200") {
+                let html = "";
+                html += '<div class="total_santri">JUMLAH: ' + res.data.length + '</div>';
+                html += '<table style="font-size: 13px;" class="table table-sm table-sm table-bordered border-secondary">';
+                html += '<thead>';
+                html += '<tr>';
+                html += '<td style="text-align: center;">#</td>';
+                html += '<td style="text-align: center;">Nama</td>';
+                html += '<td style="text-align: center;">Ket</td>';
+                html += '</tr>';
+                html += '</thead>';
+                html += '<tbody>';
+                let total = 0;
+                res.data.forEach((e, i) => {
+                    total += parseInt(e.total_harga);
+                    html += '<tr>';
+                    html += '<td style="text-align: center;">' + (i + 1) + '</td>';
+                    html += '<td>' + e.nama + '</td>';
+                    html += '<td class="' + (e.ket == "Success" ? '' : 'text-danger') + '">' + e.ket + '</td>';
+                    html += '</tr>';
+
+                })
+                html += '</tbody>';
+                html += '</table>';
+
+                $(".body_santri").html(html);
+
+                let modal = document.getElementById('santri');
+                let modalM = bootstrap.Modal.getOrCreateInstance(modal)
+                modalM.show();
+            }
+        })
+    })
 </script>
 <?= $this->endSection() ?>

@@ -137,4 +137,52 @@ class User extends BaseController
             sukses_js('Isi', $q);
         }
     }
+    public function update_santri()
+    {
+        $dbs = db('santri', 'santri');
+
+        $res = [];
+        $qs = $dbs->where('status', 'Aktif')->where('deleted', 0)->whereNotIn("uid", [""])->limit(10)->get()->getResultArray();
+
+        if ($qs) {
+            $dbu = db('users');
+            foreach ($qs as $i) {
+                $continue = $dbu->where('uid', $i['uid'])->where('no_id', $i['no_id'])->get()->getRowArray();
+                if ($continue) {
+                    continue;
+                }
+                $qu = $dbu->where('uid', $i['uid'])->get()->getRowArray();
+                if ($qu) {
+                    $res[] = ['nama' => $i['nama'] . ' = ' . $qu['nama'] . " (TB)", 'ket' => 'Exist'];
+                } else {
+                    $qu_exist = $dbu->where('no_id', $i['no_id'])->get()->getRowArray();
+
+                    if ($qu_exist) {
+                        $res[] = ['nama' => $i['nama'], 'ket' => 'Changed'];
+                    } else {
+                        $data = [
+                            'nama' => $i['nama'],
+                            'hp' => '',
+                            'img' => 'file_not_found.jpg',
+                            'role' => 'Member',
+                            'bidang' => "Santri",
+                            'no_id' => $i['no_id'],
+                            'username' => time(),
+                            'password' => password_hash("santri_" . $i['no_id'], PASSWORD_DEFAULT),
+                            'uid' => $i['uid'],
+                            'fulus' => encode_jwt_fulus(['fulus' => 0]),
+                            'finger' => 0
+                        ];
+
+                        if ($dbu->insert($data)) {
+                            $res[] = ['nama' => $i['nama'], 'ket' => 'Success'];
+                        } else {
+                            $res[] = ['nama' => $i['nama'], 'ket' => 'Failed'];
+                        }
+                    }
+                }
+            }
+        }
+        sukses_js("Ok", $res);
+    }
 }
