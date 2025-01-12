@@ -1588,73 +1588,64 @@ class Api extends BaseController
         $pressed = (int)$decode['data2'];
 
         $db = db('perangkat');
-
-        $q = $db->where('nama', $nama)->get()->getResultArray();
-
-        if (!$q) {
-            gagal_arduino('Perangkat tidak ditemukan!.');
-        }
         $msg = "";
         $status = "";
-        $hasil_check = "";
-        foreach ($q as $i) {
-            if ($pressed == 1 && $i['nama'] == $nama) {
-                $i['status'] = ($i['status'] == 0 ? 1 : 0);
-                $db->where('id', $i['id']);
-                $db->update($i);
-                $msg = $i['jenis'] . ' ' . $i['nama'] . ' ' . ($i['status'] == 0 ? "mati." : "nyala.");
-                $status = $i['status'];
-                break;
-            } else {
-                if ($i['kode'] == $pressed) {
-                    foreach ($q as $x) {
-                        if ($x['kode'] == $pressed) {
-                            if ($hasil_check == "") {
-                                $hasil_check = $x['status'];
-                            } else {
-                                if ($hasil_check !== $x['status']) {
-                                    $hasil_check = "beda";
-                                    break;
-                                }
-                            }
-                        }
+        if ($pressed == 1) {
+            $q = $db->where('nama', $nama)->get()->getRowArray();
+            if (!$q) {
+                gagal_arduino('Perangkat tidak ditemukan!.');
+            }
+            $db->where('id', $q['id']);
+            $db->update($q);
+            $msg = $q['jenis'] . ' ' . $q['nama'] . ' ' . ($q['status'] == 0 ? "mati." : "nyala.");
+            $status = $q['status'];
+        } else {
+            $q = $db->where('kode', $pressed)->get()->getResultArray();
+            if (!$q) {
+                gagal_arduino('Perangkat tidak ditemukan!.');
+            }
+
+            $hasil_check = "";
+            foreach ($q as $i) {
+                if ($hasil_check == "") {
+                    $hasil_check = $i['status'];
+                } else {
+                    if ($hasil_check !== $i['status']) {
+                        $hasil_check = "beda";
+                        break;
                     }
                 }
             }
-        }
 
-        if ($pressed > 1) {
             if ($hasil_check == "beda") {
                 foreach ($q as $i) {
-                    if ($i['kode'] == $pressed) {
-                        $i['status'] = 0;
-                        $db->where('id', $i['id']);
-                        $db->update($i);
-                    }
-                    if ($msg == "") {
-                        $msg = 'Grup ' . $i['grup'] . ' ' . ($i['status'] == 0 ? "mati." : "nyala.");
-                    }
-                    if ($status == "") {
-                        $status = $i['status'];
-                    }
+                    $i['status'] = 1;
+                    $db->where('id', $i['id']);
+                    $db->update($i);
+                }
+                if ($msg == "") {
+                    $msg = 'Grup ' . $i['grup'] . ' nyala.';
+                }
+                if ($status == "") {
+                    $status = 1;
                 }
             } else {
                 foreach ($q as $i) {
-                    if ($i['kode'] == $pressed) {
-                        $i['status'] = ($i['status'] == 0 ? 1 : 0);
-                        $db->where('id', $i['id']);
-                        $db->update($i);
-                    }
+                    $i['status'] = ($i['status'] == 0 ? 1 : 0);
+                    $db->where('id', $i['id']);
+                    $db->update($i);
+                }
 
-                    if ($msg == "") {
-                        $msg = 'Grup ' . $i['grup'] . ' ' . ($i['status'] == 0 ? "mati." : "nyala.");
-                    }
-                    if ($status == "") {
-                        $status = $i['status'];
-                    }
+                if ($msg == "") {
+                    $msg = 'Grup ' . $i['grup'] . ' ' . ($i['status'] == 0 ? "mati." : "nyala.");
+                }
+                if ($status == "") {
+                    $status = $i['status'];
                 }
             }
         }
-        sukses_js($msg, $status, $hasil_check);
+
+
+        sukses_js($msg, $status, $hasil_check, $pressed);
     }
 }
