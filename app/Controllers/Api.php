@@ -1597,6 +1597,7 @@ class Api extends BaseController
             }
             $q['status'] = ($q['status'] == 0 ? 1 : 0);
             $db->where('id', $q['id']);
+            sukses_js('Ok', $q);
             $db->update($q);
             $msg = $q['jenis'] . ' ' . $q['nama'] . ' ' . ($q['status'] == 0 ? "mati." : "nyala.");
             $status = $q['status'];
