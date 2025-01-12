@@ -1606,7 +1606,7 @@ class Api extends BaseController
                 break;
             } else {
                 if ($i['kode'] == $pressed) {
-                    $i['status'] = 1;
+                    $i['status'] = 0;
                     $db->where('id', $i['id']);
                     $db->update($i);
                     $i['status'] = ($i['status'] == 0 ? 1 : 0);
