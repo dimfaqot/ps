@@ -1599,7 +1599,8 @@ class Api extends BaseController
             $db->update($q);
             $msg = $q['jenis'] . ' ' . $q['nama'] . ' ' . ($q['status'] == 0 ? "mati." : "nyala.");
             $status = $q['status'];
-        } else {
+        }
+        if ($pressed > 1) {
             $q = $db->where('kode', $pressed)->get()->getResultArray();
             if (!$q) {
                 gagal_arduino('Perangkat tidak ditemukan!.');
