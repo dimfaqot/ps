@@ -1585,21 +1585,37 @@ class Api extends BaseController
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_finger($jwt);
         $nama = $decode['uid'];
+        $pressed = $decode['data2'];
 
         $db = db('perangkat');
-        $q = $db->where('nama', $nama)->get()->getRowArray();
+
+        $q = $db->where('nama', $nama)->get()->getResultArray();
 
         if (!$q) {
             gagal_arduino('Perangkat tidak ditemukan!.');
         }
-
-        $q['status'] = ($q['status'] == 0 ? 1 : 0);
-        $db->where('id', $q['id']);
-
-        if ($db->update($q)) {
-            sukses_js("Sukses", $q['status']);
-        } else {
-            gagal_js("Gagal", $q['status']);
+        $msg = "";
+        $status = "";
+        foreach ($q as $i) {
+            if ($pressed == 1 && $i['nama'] == $nama) {
+                $i['status'] = ($i['status'] == 0 ? 1 : 0);
+                $db->where('id', $i['id']);
+                $msg = $i['jenis'] . ' ' . $i['nama'] . ' ' . ($i['status'] == 0 ? "mati." : "nyala.");
+                $status = $i['status'];
+                break;
+            } else {
+                if ($i['kode'] == $pressed) {
+                    $i['status'] = ($i['status'] == 0 ? 1 : 0);
+                    $db->where('id', $i['id']);
+                    if ($msg == "") {
+                        $msg = 'Grup ' . $i['grup'] . ' ' . ($i['status'] == 0 ? "mati." : "nyala.");
+                    }
+                    if ($status == "") {
+                        $status = $i['status'];
+                    }
+                }
+            }
         }
+        sukses_js($msg, $status);
     }
 }
