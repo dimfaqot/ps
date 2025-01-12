@@ -1600,6 +1600,7 @@ class Api extends BaseController
             if ($pressed == 1 && $i['nama'] == $nama) {
                 $i['status'] = ($i['status'] == 0 ? 1 : 0);
                 $db->where('id', $i['id']);
+                $db->update($i);
                 $msg = $i['jenis'] . ' ' . $i['nama'] . ' ' . ($i['status'] == 0 ? "mati." : "nyala.");
                 $status = $i['status'];
                 break;
@@ -1607,6 +1608,7 @@ class Api extends BaseController
                 if ($i['kode'] == $pressed) {
                     $i['status'] = ($i['status'] == 0 ? 1 : 0);
                     $db->where('id', $i['id']);
+                    $db->update($i);
                     if ($msg == "") {
                         $msg = 'Grup ' . $i['grup'] . ' ' . ($i['status'] == 0 ? "mati." : "nyala.");
                     }
