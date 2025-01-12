@@ -1655,6 +1655,6 @@ class Api extends BaseController
                 }
             }
         }
-        sukses_js($msg, $status);
+        sukses_js($msg, $status, $hasil_check);
     }
 }
