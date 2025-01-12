@@ -1585,7 +1585,7 @@ class Api extends BaseController
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_finger($jwt);
         $nama = $decode['uid'];
-        $pressed = $decode['data2'];
+        $pressed = (int)$decode['data2'];
 
         $db = db('perangkat');
 
@@ -1607,12 +1607,16 @@ class Api extends BaseController
                 break;
             } else {
                 if ($i['kode'] == $pressed) {
-                    if ($hasil_check == "") {
-                        $hasil_check = $i['status'];
-                    } else {
-                        if ($hasil_check !== $i['status']) {
-                            $hasil_check = "beda";
-                            break;
+                    foreach ($q as $x) {
+                        if ($x['kode'] == $pressed) {
+                            if ($hasil_check == "") {
+                                $hasil_check = $x['status'];
+                            } else {
+                                if ($hasil_check !== $x['status']) {
+                                    $hasil_check = "beda";
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
