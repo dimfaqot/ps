@@ -1624,13 +1624,23 @@ class Api extends BaseController
         }
 
         if ($pressed > 1) {
-            foreach ($q as $i) {
-                if ($i['kode'] == $pressed) {
-                    if ($hasil_check == "beda") {
+            if ($hasil_check == "beda") {
+                foreach ($q as $i) {
+                    if ($i['kode'] == $pressed) {
                         $i['status'] = 0;
                         $db->where('id', $i['id']);
                         $db->update($i);
-                    } else {
+                    }
+                    if ($msg == "") {
+                        $msg = 'Grup ' . $i['grup'] . ' ' . ($i['status'] == 0 ? "mati." : "nyala.");
+                    }
+                    if ($status == "") {
+                        $status = $i['status'];
+                    }
+                }
+            } else {
+                foreach ($q as $i) {
+                    if ($i['kode'] == $pressed) {
                         $i['status'] = ($i['status'] == 0 ? 1 : 0);
                         $db->where('id', $i['id']);
                         $db->update($i);
