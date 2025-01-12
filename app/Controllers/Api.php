@@ -1596,6 +1596,7 @@ class Api extends BaseController
         }
         $msg = "";
         $status = "";
+        $hasil_check = "";
         foreach ($q as $i) {
             if ($pressed == 1 && $i['nama'] == $nama) {
                 $i['status'] = ($i['status'] == 0 ? 1 : 0);
@@ -1606,12 +1607,31 @@ class Api extends BaseController
                 break;
             } else {
                 if ($i['kode'] == $pressed) {
-                    $i['status'] = 0;
-                    $db->where('id', $i['id']);
-                    $db->update($i);
-                    $i['status'] = ($i['status'] == 0 ? 1 : 0);
-                    $db->where('id', $i['id']);
-                    $db->update($i);
+                    if ($hasil_check == "") {
+                        $hasil_check = $i['status'];
+                    } else {
+                        if ($hasil_check !== $i['status']) {
+                            $hasil_check = "beda";
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if ($pressed > 1) {
+            foreach ($q as $i) {
+                if ($i['kode'] == $pressed) {
+                    if ($hasil_check == "beda") {
+                        $i['status'] = 0;
+                        $db->where('id', $i['id']);
+                        $db->update($i);
+                    } else {
+                        $i['status'] = ($i['status'] == 0 ? 1 : 0);
+                        $db->where('id', $i['id']);
+                        $db->update($i);
+                    }
+
                     if ($msg == "") {
                         $msg = 'Grup ' . $i['grup'] . ' ' . ($i['status'] == 0 ? "mati." : "nyala.");
                     }
