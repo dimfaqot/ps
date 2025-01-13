@@ -1597,6 +1597,7 @@ class Api extends BaseController
                 gagal_arduino('Perangkat tidak ditemukan!.');
             }
 
+            sukses_js("ok", $q);
             $target = -1;
 
             foreach ($q as $i) {
@@ -1609,7 +1610,7 @@ class Api extends BaseController
                     }
                 }
             }
-            sukses_js("ok", $target);
+
             $perangkat_target = [];
             if ($target !== -1 && $target !== 1 && $target !== 0) {
                 $perangkat_target = $db->where('nama', $target)->get()->getRowArray();
