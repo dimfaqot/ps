@@ -96,6 +96,7 @@ $routes->post('/users/add', 'User::add');
 $routes->post('/users/update', 'User::update');
 $routes->post('/users/get_uid', 'User::get_uid');
 $routes->post('/users/santri/update', 'User::update_santri');
+$routes->post('/users/santri/add_rfid', 'User::add_rfid');
 
 
 // options __________________________________

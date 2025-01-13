@@ -1584,23 +1584,22 @@ class Api extends BaseController
     {
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_finger($jwt);
-        $nama = $decode['uid'];
+        $grup = $decode['uid'];
         $pressed = $decode['data2'];
 
         $db = db('perangkat');
         $msg = "";
         $status = "";
-        $nama_perangkat = "";
+        $pin_perangkat = "";
         if ($pressed == 1) {
-            $q = $db->where('nama', $nama)->get()->getRowArray();
+            $q = $db->where('grup', $grup)->get()->getRowArray();
             if (!$q) {
                 gagal_arduino('Perangkat tidak ditemukan!.');
             }
 
-            $grup_perangkat = $db->where('grup', $q['grup'])->orderBy('no_urut', 'ASC')->get()->getResultArray();
             $target = -1;
 
-            foreach ($grup_perangkat as $i) {
+            foreach ($q as $i) {
                 if ($target == -1) {
                     $target = $i['status'];
                 } else {
@@ -1621,7 +1620,7 @@ class Api extends BaseController
                 if ($db->update($perangkat_target)) {
                     $msg = $perangkat_target['jenis'] . ' ' . $perangkat_target['nama'] . ' ' . ($perangkat_target['status'] == 0 ? "mati." : "nyala.");
                     $status = $perangkat_target['status'];
-                    $nama_perangkat = $perangkat_target['nama'];
+                    $pin_perangkat = $perangkat_target['nama'];
                 } else {
                     gagal_js("Update gagal!.");
                 }
@@ -1675,7 +1674,7 @@ class Api extends BaseController
         }
 
 
-        sukses_js($msg, $nama_perangkat, $status);
+        sukses_js($msg, $pin_perangkat, $status);
     }
 
     public function get_grup()
