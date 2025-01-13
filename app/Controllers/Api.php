@@ -1686,7 +1686,7 @@ class Api extends BaseController
 
         $db = db('perangkat');
 
-        $q = $db->where('grup', $grup)->get()->getResultArray();
+        $q = $db->where('grup', $grup)->orderBy('no_urut')->get()->getResultArray();
 
         if (!$q) {
             gagal_js('Grup tidak ditemukan!.');
