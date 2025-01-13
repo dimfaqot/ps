@@ -1585,7 +1585,7 @@ class Api extends BaseController
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_finger($jwt);
         $nama = $decode['uid'];
-        $pressed = (int)$decode['data2'];
+        $pressed = $decode['data2'];
 
         $db = db('perangkat');
         $msg = "";
@@ -1596,8 +1596,8 @@ class Api extends BaseController
                 gagal_arduino('Perangkat tidak ditemukan!.');
             }
             $q['status'] = ($q['status'] == 0 ? 1 : 0);
-            $db->where('id', $q['id']);
 
+            $db->where('id', $q['id']);
             if ($db->update($q)) {
                 $msg = $q['jenis'] . ' ' . $q['nama'] . ' ' . ($q['status'] == 0 ? "mati." : "nyala.");
                 $status = $q['status'];
@@ -1651,6 +1651,6 @@ class Api extends BaseController
         }
 
 
-        sukses_js($msg, $status, $hasil_check, $pressed);
+        sukses_js($msg, $status);
     }
 }

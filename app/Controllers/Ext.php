@@ -147,6 +147,7 @@ class Ext extends BaseController
     public function booking()
     {
 
+
         // dd(decode_jwt_fulus("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmdWx1cyI6MH0.xMR3V0PQ703flTaEkOgrnUiKC76BHAeptjAtj323ohk"));
 
         // $db = db("users");
