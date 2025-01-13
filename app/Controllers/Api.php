@@ -1590,6 +1590,7 @@ class Api extends BaseController
         $db = db('perangkat');
         $msg = "";
         $status = "";
+        $nama_perangkat = "";
         if ($pressed == 1) {
             $q = $db->where('nama', $nama)->get()->getRowArray();
             if (!$q) {
@@ -1620,6 +1621,7 @@ class Api extends BaseController
                 if ($db->update($perangkat_target)) {
                     $msg = $perangkat_target['jenis'] . ' ' . $perangkat_target['nama'] . ' ' . ($perangkat_target['status'] == 0 ? "mati." : "nyala.");
                     $status = $perangkat_target['status'];
+                    $nama_perangkat = $perangkat_target['nama'];
                 } else {
                     gagal_js("Update gagal!.");
                 }
@@ -1672,8 +1674,27 @@ class Api extends BaseController
             }
         }
 
-        $perangkat_ini = $db->where('nama', $nama)->get()->getRowArray();
 
-        sukses_js($msg, $status, $perangkat_ini['status']);
+        sukses_js($msg, $nama_perangkat, $status);
+    }
+
+    public function get_grup()
+    {
+        $jwt = $this->request->getVar('jwt');
+        $decode = decode_jwt_finger($jwt);
+        $grup = $decode['uid'];
+
+        $db = db('perangkat');
+
+        $q = $db->where('grup', $grup)->get()->getResultArray();
+
+        if (!$q) {
+            gagal_js('Grup tidak ditemukan!.');
+        }
+        $pin = [];
+        foreach ($q as $i) {
+            $pin[] = $i['pin'];
+        }
+        sukses_js("Ok", $pin, count($pin));
     }
 }

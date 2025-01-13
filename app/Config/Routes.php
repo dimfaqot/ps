@@ -38,6 +38,7 @@ $routes->post('/api/Poin', 'Api::tap_booking_poin');
 
 $routes->post('/api/itag/get_perangkat', 'Api::get_perangkat');
 $routes->post('/api/itag/itag_press', 'Api::itag_press');
+$routes->post('/api/itag/get_grup', 'Api::get_grup');
 
 // api finger
 $routes->post('/finger/get_booking', 'Finger::get_booking');
