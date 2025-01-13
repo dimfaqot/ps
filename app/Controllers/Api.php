@@ -1609,25 +1609,38 @@ class Api extends BaseController
                     }
                 }
             }
-            sukses_js("ok", $target);
-            $perangkat_target = [];
-            if ($target !== -1 && $target !== 1 && $target !== 0) {
-                $perangkat_target = $db->where('nama', $target)->get()->getRowArray();
-            }
 
-            if (count($perangkat_target) > 0) {
-                $perangkat_target['status'] = ($perangkat_target['status'] == 0 ? 1 : 0);
-
-                $db->where('id', $perangkat_target['id']);
-                if ($db->update($perangkat_target)) {
-                    $msg = $perangkat_target['jenis'] . ' ' . $perangkat_target['nama'] . ' ' . ($perangkat_target['status'] == 0 ? "mati." : "nyala.");
-                    $status = $perangkat_target['status'];
-                    $pin_perangkat = $perangkat_target['nama'];
-                } else {
-                    gagal_js("Update gagal!.");
+            if ($target == 0 || $target == 1) {
+                $qq = $db->orderBy("no_urut", "ASC")->get()->getRowArray();
+                if ($qq) {
+                    $qq['status'] = ($qq['status'] == 0 ? 1 : 0);
+                    $db->where('id', $qq['id']);
+                    if ($db->update($qq)) {
+                        $msg = $qq['jenis'] . ' ' . $qq['nama'] . ' ' . ($qq['status'] == 0 ? "mati." : "nyala.");
+                        $status = $qq['status'];
+                        $pin_perangkat = $qq['nama'];
+                    }
                 }
             } else {
-                gagal_js("Perangkat target tidak ditemukan!.");
+                $perangkat_target = [];
+                if ($target !== -1 && $target !== 1 && $target !== 0) {
+                    $perangkat_target = $db->where('nama', $target)->get()->getRowArray();
+                }
+
+                if (count($perangkat_target) > 0) {
+                    $perangkat_target['status'] = ($perangkat_target['status'] == 0 ? 1 : 0);
+
+                    $db->where('id', $perangkat_target['id']);
+                    if ($db->update($perangkat_target)) {
+                        $msg = $perangkat_target['jenis'] . ' ' . $perangkat_target['nama'] . ' ' . ($perangkat_target['status'] == 0 ? "mati." : "nyala.");
+                        $status = $perangkat_target['status'];
+                        $pin_perangkat = $perangkat_target['nama'];
+                    } else {
+                        gagal_js("Update gagal!.");
+                    }
+                } else {
+                    gagal_js("Perangkat target tidak ditemukan!.");
+                }
             }
         } elseif ($pressed > 1) {
             $q = $db->where('kode', $pressed)->get()->getResultArray();
