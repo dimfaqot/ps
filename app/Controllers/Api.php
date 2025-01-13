@@ -1595,14 +1595,36 @@ class Api extends BaseController
             if (!$q) {
                 gagal_arduino('Perangkat tidak ditemukan!.');
             }
-            $q['status'] = ($q['status'] == 0 ? 1 : 0);
 
-            $db->where('id', $q['id']);
-            if ($db->update($q)) {
-                $msg = $q['jenis'] . ' ' . $q['nama'] . ' ' . ($q['status'] == 0 ? "mati." : "nyala.");
-                $status = $q['status'];
+            $grup_perangkat = $db->where('grup', $q['grup'])->orderBy('no_urut', 'ASC')->get()->getResultArray();
+            $target = -1;
+
+            foreach ($grup_perangkat as $i) {
+                if ($target == -1) {
+                    $target = $i['status'];
+                } else {
+                    if ($i['status'] !== $target) {
+                        $target = $i['nama'];
+                        break;
+                    }
+                }
+            }
+            $perangkat_target = [];
+            if ($target !== -1 && $target !== 1 && $target !== 0) {
+                $perangkat_target = $db->where('nama', $target)->get()->getRowArray();
+            }
+            if (count($perangkat_target) > 0) {
+                $perangkat_target['status'] = ($perangkat_target['status'] == 0 ? 1 : 0);
+
+                $db->where('id', $perangkat_target['id']);
+                if ($db->update($perangkat_target)) {
+                    $msg = $perangkat_target['jenis'] . ' ' . $perangkat_target['nama'] . ' ' . ($perangkat_target['status'] == 0 ? "mati." : "nyala.");
+                    $status = $perangkat_target['status'];
+                } else {
+                    gagal_js("Update gagal!.");
+                }
             } else {
-                gagal_js("Update gagal!.");
+                gagal_js("Perangkat target tidak ditemukan!.");
             }
         } elseif ($pressed > 1) {
             $q = $db->where('kode', $pressed)->get()->getResultArray();
