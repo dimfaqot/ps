@@ -1652,6 +1652,6 @@ class Api extends BaseController
 
         $perangkat_ini = $db->where('nama', $nama)->get()->getRowArray();
 
-        sukses_js($msg, $status, $perangkat_ini);
+        sukses_js($msg, $status, $perangkat_ini['status']);
     }
 }
