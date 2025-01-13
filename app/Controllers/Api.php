@@ -1609,10 +1609,12 @@ class Api extends BaseController
                     }
                 }
             }
+            sukses_js("ok", $target);
             $perangkat_target = [];
             if ($target !== -1 && $target !== 1 && $target !== 0) {
                 $perangkat_target = $db->where('nama', $target)->get()->getRowArray();
             }
+
             if (count($perangkat_target) > 0) {
                 $perangkat_target['status'] = ($perangkat_target['status'] == 0 ? 1 : 0);
 
