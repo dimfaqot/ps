@@ -1618,7 +1618,7 @@ class Api extends BaseController
                     if ($db->update($qq)) {
                         $msg = $qq['jenis'] . ' ' . $qq['nama'] . ' ' . ($qq['status'] == 0 ? "mati." : "nyala.");
                         $status = $qq['status'];
-                        $pin_perangkat = $qq['nama'];
+                        $pin_perangkat = $qq['pin'];
                     }
                 }
             } else {
@@ -1634,7 +1634,7 @@ class Api extends BaseController
                     if ($db->update($perangkat_target)) {
                         $msg = $perangkat_target['jenis'] . ' ' . $perangkat_target['nama'] . ' ' . ($perangkat_target['status'] == 0 ? "mati." : "nyala.");
                         $status = $perangkat_target['status'];
-                        $pin_perangkat = $perangkat_target['nama'];
+                        $pin_perangkat = $perangkat_target['pin'];
                     } else {
                         gagal_js("Update gagal!.");
                     }
