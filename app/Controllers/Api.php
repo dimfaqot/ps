@@ -1610,9 +1610,6 @@ class Api extends BaseController
                 $q[0]['status'] = ($hasil == 0 ? 1 : 0);
                 $db->where('id', $q[0]['id']);
                 $db->update($q[0]);
-                $msg = $q[0]['jenis'] . ' ' . $q[0]['nama'] . ' ' . ($q[0]['status'] == 0 ? "mati." : "nyala.");
-                $status = $q[0]['status'];
-                $pin_perangkat = $q[0]['pin'];
             } else {
                 $exp = explode(" ", $hasil);
                 foreach ($q as $i) {
@@ -1620,9 +1617,6 @@ class Api extends BaseController
                         $i['status'] = ($i['status'] == 0 ? 1 : 0);
                         $db->where('id', $i['id']);
                         $db->update($i);
-                        $msg = $i['jenis'] . ' ' . $i['nama'] . ' ' . ($i['status'] == 0 ? "mati." : "nyala.");
-                        $status = $i['status'];
-                        $pin_perangkat = $i['pin'];
                         break;
                     }
                 }
@@ -1651,30 +1645,22 @@ class Api extends BaseController
                     $db->where('id', $i['id']);
                     $db->update($i);
                 }
-                if ($msg == "") {
-                    $msg = 'Grup ' . $i['grup'] . ' nyala.';
-                }
-                if ($status == "") {
-                    $status = 1;
-                }
             } else {
                 foreach ($q as $i) {
                     $i['status'] = ($i['status'] == 0 ? 1 : 0);
                     $db->where('id', $i['id']);
                     $db->update($i);
                 }
-
-                if ($msg == "") {
-                    $msg = 'Grup ' . $i['grup'] . ' ' . ($i['status'] == 0 ? "mati." : "nyala.");
-                }
-                if ($status == "") {
-                    $status = $i['status'];
-                }
             }
         }
 
+        $status = [];
+        $res = $db->where('grup', $grup)->orderBy('no_urut', 'ASC')->get()->getResultArray();
 
-        sukses_js($msg, $pin_perangkat, $status);
+        foreach ($res as $i) {
+            $status[] = $i['status'];
+        }
+        sukses_js("Sukses", $status);
     }
 
     public function get_grup()
