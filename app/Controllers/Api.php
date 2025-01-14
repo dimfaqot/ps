@@ -1545,10 +1545,14 @@ class Api extends BaseController
     {
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_finger($jwt);
-        $nama = $decode['uid'];
+        $grup = $decode['uid'];
 
         $db = db('perangkat');
-        $q = $db->get()->getResultArray();
+        $q = $db->where('grup', $grup)->orderBy('no_urut', 'ASC')->get()->getResultArray();
+
+        if (!$q) {
+            gagal_js('Grup tidak ditemukan!.');
+        }
 
         $jam = (int)date('H');
 
@@ -1556,29 +1560,30 @@ class Api extends BaseController
         foreach ($q as $i) {
             if ($jam == 0 && $i['otomatis'] == 1) {
                 $i['otomatis'] = 0;
-                $db->where('nama', $nama);
+                $db->where('id', $i['id']);
                 $db->update($i);
-            } else {
-                if ($jam == $i['nyala'] && $i['otomatis'] == 0 && $i['status'] == 0) {
-                    $i['status'] = 1;
-                    $i['otomatis'] = 1;
-                    $db->where('nama', $nama);
-                    $db->update($i);
-                }
-                if ($jam == $i['mati'] && $i['otomatis'] == 0 && $i['status'] == 1) {
-                    $i['otomatis'] = 1;
-                    $i['status'] = 0;
-                    $db->where('nama', $nama);
-                    $db->update($i);
-                }
             }
-
-            if ($i['nama'] == $nama) {
-                $res = $i;
+            if ($jam == $i['nyala'] && $i['otomatis'] == 0 && $i['status'] == 0) {
+                $i['status'] = 1;
+                $i['otomatis'] = 1;
+                $db->where('id', $i['id']);
+                $db->update($i);
+            }
+            if ($jam == $i['mati'] && $i['otomatis'] == 0 && $i['status'] == 1) {
+                $i['otomatis'] = 1;
+                $i['status'] = 0;
+                $db->where('id', $i['id']);
+                $db->update($i);
             }
         }
 
-        sukses_js("Sukses", $res['status'], $jam);
+        $status = [];
+        $res = $db->where('grup', $grup)->orderBy('no_urut', 'ASC')->get()->getResultArray();
+
+        foreach ($res as $i) {
+            $status[] = $i['status'];
+        }
+        sukses_js("Sukses", $status);
     }
     public function itag_press()
     {
