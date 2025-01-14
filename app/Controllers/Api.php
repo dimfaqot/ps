@@ -1592,7 +1592,7 @@ class Api extends BaseController
         $status = "";
         $pin_perangkat = "";
         if ($pressed == 1) {
-            $q = $db->where('grup', $grup)->get()->getResultArray();
+            $q = $db->where('grup', $grup)->orderBy('no_urut', 'ASC')->get()->getResultArray();
             if (!$q) {
                 gagal_arduino('Perangkat tidak ditemukan!.');
             }
@@ -1709,6 +1709,9 @@ class Api extends BaseController
         foreach ($q as $i) {
             $pin[] = $i['pin'];
         }
-        sukses_js("Ok", $pin, count($pin));
+        $dbs = db('settings');
+        $qs = $dbs->where('nama_setting', "Itag")->get()->getRowArray();
+
+        sukses_js("Ok", $pin, count($pin), (!$qs ? "" : $qs['value_str']));
     }
 }
