@@ -1593,53 +1593,38 @@ class Api extends BaseController
         $pin_perangkat = "";
         if ($pressed == 1) {
             $q = $db->where('grup', $grup)->orderBy('no_urut', 'ASC')->get()->getResultArray();
-            if (!$q) {
-                gagal_arduino('Perangkat tidak ditemukan!.');
-            }
 
-            $target = -1;
-
+            $hasil = "";
             foreach ($q as $i) {
-                if ($target == -1) {
-                    $target = $i['status'];
+                if ($hasil == "") {
+                    $hasil = $i['status'];
                 } else {
-                    if ($i['status'] !== $target) {
-                        $target = $i['nama'];
+                    if ($hasil !== $i['status']) {
+                        $hasil = "no_urut " . $i['no_urut'];
                         break;
                     }
                 }
             }
 
-            if ($target == 0 || $target == 1) {
-                $qq = $db->orderBy("no_urut", "ASC")->get()->getRowArray();
-                if ($qq) {
-                    $qq['status'] = ($qq['status'] == 0 ? 1 : 0);
-                    $db->where('id', $qq['id']);
-                    if ($db->update($qq)) {
-                        $msg = $qq['jenis'] . ' ' . $qq['nama'] . ' ' . ($qq['status'] == 0 ? "mati." : "nyala.");
-                        $status = $qq['status'];
-                        $pin_perangkat = $qq['pin'];
-                    }
-                }
+            if ($hasil == 1 || $hasil == 0) {
+                $q[0]['status'] = ($hasil == 0 ? 1 : 0);
+                $db->where('id', $q[0]['id']);
+                $db->update($q[0]);
+                $msg = $q[0]['jenis'] . ' ' . $q[0]['nama'] . ' ' . ($q[0]['status'] == 0 ? "mati." : "nyala.");
+                $status = $q[0]['status'];
+                $pin_perangkat = $q[0]['pin'];
             } else {
-                $perangkat_target = [];
-                if ($target !== -1 && $target !== 1 && $target !== 0) {
-                    $perangkat_target = $db->where('nama', $target)->get()->getRowArray();
-                }
-
-                if (count($perangkat_target) > 0) {
-                    $perangkat_target['status'] = ($perangkat_target['status'] == 0 ? 1 : 0);
-
-                    $db->where('id', $perangkat_target['id']);
-                    if ($db->update($perangkat_target)) {
-                        $msg = $perangkat_target['jenis'] . ' ' . $perangkat_target['nama'] . ' ' . ($perangkat_target['status'] == 0 ? "mati." : "nyala.");
-                        $status = $perangkat_target['status'];
-                        $pin_perangkat = $perangkat_target['pin'];
-                    } else {
-                        gagal_js("Update gagal!.");
+                $exp = explode(" ", $hasil);
+                foreach ($q as $i) {
+                    if ($i['no_urut'] == end($exp)) {
+                        $i['status'] = ($i['status'] == 0 ? 1 : 0);
+                        $db->where('id', $i['id']);
+                        $db->update($i);
+                        $msg = $i['jenis'] . ' ' . $i['nama'] . ' ' . ($i['status'] == 0 ? "mati." : "nyala.");
+                        $status = $i['status'];
+                        $pin_perangkat = $i['pin'];
+                        break;
                     }
-                } else {
-                    gagal_js("Perangkat target tidak ditemukan!.");
                 }
             }
         } elseif ($pressed > 1) {

@@ -1,4 +1,5 @@
 <?php
+
 $db = db('unit');
 $q = $db->whereNotIn('status', ['Maintenance'])->orderBy('id', 'ASC')->get()->getResultArray();
 $dbr = db('rental');
