@@ -331,13 +331,13 @@ $others = $db->orderBy('id', 'ASC')->get()->getResultArray();
                     <div class="rounded-circle embos text-center p-2 fw-bold btn_durasi" data-durasi="9" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">9</div>
                     </div>
                     <div class="d-flex justify-content-center">
-                    <div class="embos text-center border-warning rounded-pill text-warning px-3 py-2 fw-bold btn_durasi" data-durasi="0" style="cursor:pointer;font-size:x-large;height:55px;">Open</div>
+                    <div class="embos text-center border-warning rounded-pill text-warning px-3 py-2 fw-bold btn_durasi" data-durasi="0" style="cursor:pointer;font-size:x-large;">Open</div>
                     </div>
                     </div>`,
             meja_ps: html_ps,
             meja_billiard: html_billiard,
             meja_others: html_others,
-            btn_ok: '<button class="btn_grey embos mt-2 py-3 btn_ok" style="font-size:large">Ok</button>'
+            btn_ok: '<button class="btn_grey embos mt-2 py-3 btn_ok" style="font-size:xx-large">Ok</button>'
         }
         const modal_show = (id) => {
             let res = 0;
