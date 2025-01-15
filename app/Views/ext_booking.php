@@ -320,18 +320,18 @@ $others = $db->orderBy('id', 'ASC')->get()->getResultArray();
                     <div class="rounded-circle embos text-center p-2 mx-4 fw-bold btn_durasi" data-durasi="2" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">2</div>
                     <div class="rounded-circle embos text-center p-2 fw-bold btn_durasi" data-durasi="3" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">3</div>
                     </div>
-                    <div class="d-flex justify-content-center gap-5 mb-3">
+                    <div class="d-flex justify-content-center gap-3 mb-3">
                     <div class="rounded-circle embos text-center p-2 fw-bold btn_durasi" data-durasi="4" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">4</div>
                     <div class="rounded-circle embos text-center p-2 mx-4 fw-bold btn_durasi" data-durasi="5" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">5</div>
                     <div class="rounded-circle embos text-center p-2 fw-bold btn_durasi" data-durasi="6" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">6</div>
                     </div>
-                    <div class="d-flex justify-content-center gap-5 mb-3">
+                    <div class="d-flex justify-content-center gap-3 mb-3">
                     <div class="rounded-circle embos text-center p-2 fw-bold btn_durasi" data-durasi="7" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">7</div>
                     <div class="rounded-circle embos text-center p-2 mx-4 fw-bold btn_durasi" data-durasi="8" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">8</div>
                     <div class="rounded-circle embos text-center p-2 fw-bold btn_durasi" data-durasi="9" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">9</div>
                     </div>
                     <div class="d-flex justify-content-center">
-                    <div class="embos text-center border-warning rounded-pill text-warning p-2 fw-bold btn_durasi" data-durasi="0" style="cursor:pointer;font-size:x-large;height:55px;">Open</div>
+                    <div class="embos text-center border-warning rounded-pill text-warning px-3 py-2 fw-bold btn_durasi" data-durasi="0" style="cursor:pointer;font-size:x-large;height:55px;">Open</div>
                     </div>
                     </div>`,
             meja_ps: html_ps,
