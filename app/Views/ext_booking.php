@@ -514,7 +514,7 @@ $others = $db->orderBy('id', 'ASC')->get()->getResultArray();
             html += message;
             html += '</div>';
             html += '<div class="d-flex justify-content-center mt-5">';
-            html += '<div class="embos d-none px-1 py-2 countdown" style="color:#cbf4f0;width:200px;height:200px;font-size:118px;border-radius:50%;;border:1px solid #3c3e46"></div>';
+            html += '<div class="embos d-none px-1 py-3 countdown" style="color:#cbf4f0;width:200px;height:200px;font-size:118px;border-radius:50%;;border:1px solid #3c3e46"></div>';
             html += '</div>';
             $(".modal_body_menunggu").html(html);
             let myModal = document.getElementById('menunggu');
