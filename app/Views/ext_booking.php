@@ -337,7 +337,7 @@ $others = $db->orderBy('id', 'ASC')->get()->getResultArray();
             meja_ps: html_ps,
             meja_billiard: html_billiard,
             meja_others: html_others,
-            btn_ok: '<button class="btn_grey embos mt-2 py-3 btn_ok">Ok</button>'
+            btn_ok: '<button class="btn_grey embos mt-2 py-3 btn_ok" style="font-size:large">Ok</button>'
         }
         const modal_show = (id) => {
             let res = 0;
