@@ -36,7 +36,7 @@ class Ble extends BaseController
             $data[] = $i['status'] . $i['no_urut'];
         }
 
-        if ($nama_server == "Billiard") {
+        if ($nama_server == "Billiards") {
             $db = db('billiard_2');
             $qb = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             if (!$qb) {
