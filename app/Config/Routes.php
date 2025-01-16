@@ -48,6 +48,9 @@ $routes->post('/finger/Absen', 'Finger::absen');
 $routes->post('/finger/add_message', 'Finger::add_message');
 $routes->post('/finger/Add', 'Finger::add');
 
+// uuid ble
+$routes->post('/ble/settings', 'Ble::settings');
+$routes->post('/ble/perangkat', 'Ble::perangkat');
 
 // bot
 $routes->get('/api/wabot', 'Api::wabot');
