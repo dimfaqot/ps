@@ -33,7 +33,7 @@ class Ble extends BaseController
         }
         $data = [];
         foreach ($qp as $i) {
-            $data[] = $i['no_urut'] + $i['status'];
+            $data[] = (int)$i['no_urut'] . $i['status'];
         }
 
         if ($nama_server == "Billiards") {
@@ -45,7 +45,7 @@ class Ble extends BaseController
 
             foreach ($qb as $i) {
                 $meja = ($i['meja'] == 1 ? 10 : ($i['meja'] == 2 ? 11 : $i['meja']));
-                $data[] =  $meja + $i['is_active'];
+                $data[] =  (int)$meja . $i['is_active'];
             }
 
 
