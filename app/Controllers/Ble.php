@@ -27,7 +27,7 @@ class Ble extends BaseController
         $nama_server = $decode['uid'];
 
         $db = db('perangkat');
-        $qp = $db->where('grup', $nama_server)->orderBy('no_urut', 'ASC')->get()->getResultArray();
+        $qp = $db->where('grup', ($nama_server == "Billiards" ? "Billiard" : $nama_server))->orderBy('no_urut', 'ASC')->get()->getResultArray();
         if (!$qp) {
             gagal_js("Nama server tidak ditemukan!.");
         }
