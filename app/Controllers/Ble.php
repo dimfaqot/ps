@@ -12,7 +12,7 @@ class Ble extends BaseController
 
         $db = db('ble');
 
-        $q = $db->where('nama_server', $nama_server)->get()->getRowArray();
+        $q = $db->where('nama_server', ($nama_server == "Billiards" ? "Billiard" : $nama_server))->get()->getRowArray();
 
         if (!$q) {
             gagal_js("Nama server tidak ditemukan!.");
