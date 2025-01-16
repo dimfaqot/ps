@@ -37,7 +37,7 @@ class Ble extends BaseController
         }
 
         if ($nama_server == "Billiards") {
-            $db = db('billiard_2');
+            $db = db('jadwal_2');
             $qb = $db->orderBy('meja', 'ASC')->get()->getResultArray();
             if (!$qb) {
                 gagal_js("Nama server tidak ditemukan!.");
