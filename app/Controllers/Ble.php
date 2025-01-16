@@ -51,7 +51,7 @@ class Ble extends BaseController
             }
 
 
-            sukses_js("sukses", $data, count($qp), count($qb));
+            sukses_js("sukses", $data, count($qp), count($qb), count($qp) + count($qb));
         }
     }
 }
