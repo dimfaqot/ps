@@ -1671,10 +1671,13 @@ class Api extends BaseController
         }
 
         if ($role == "Gus") {
+            $order = $decode['data4'];
             $time_now = time();
             $db = db("jadwal_2");
             $meja_1 = $db->where('meja', 1)->get()->getRowArray();
-
+            if ($order == "rssi" && $meja_1['is_active'] == 1) {
+                gagal_js("Meja sudah aktif!.");
+            }
             if ($meja_1['is_active'] == 0) {
                 $data = [
                     'meja_id' => $meja_1['id'],
