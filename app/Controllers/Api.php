@@ -1704,7 +1704,7 @@ class Api extends BaseController
                     }
                 }
             }
-            if ($meja_1['is_active'] == 0) {
+            if ($meja_1['is_active'] == 1) {
                 $dbb = db("billiard_2");
                 $billiard = $dbb->where("meja", "Meja 1")->where("is_active", 1)->where('metode', "Itag")->get()->getRowArray();
 
