@@ -1671,6 +1671,9 @@ class Api extends BaseController
         }
 
         if ($role == "Gus") {
+            if ($pressed == 1) {
+                gagal_js("Press 2 kali untuk fungsi on off!.");
+            }
             $order = $decode['data4'];
             $time_now = time();
             $db = db("jadwal_2");
