@@ -1703,7 +1703,7 @@ class Api extends BaseController
                     $meja_1['start'] = $time_now;
 
                     if ($db->update($meja_1)) {
-                        sukses_js("Sukses", 1);
+                        sukses_js("Meja 1 aktif.", 1);
                     }
                 }
             }
@@ -1722,7 +1722,7 @@ class Api extends BaseController
                     $meja_1['start'] = 0;
 
                     if ($db->update($meja_1)) {
-                        sukses_js("Sukses", 0);
+                        sukses_js("Meja 1 mati.", 0);
                     }
                 }
             }
