@@ -1717,10 +1717,12 @@ class Api extends BaseController
 
                 $billiard['end'] = time();
                 $billiard['is_active'] = 0;
+                $dbb->where('id', $billiard['id']);
                 if ($dbb->update($billiard)) {
                     $meja_1['is_active'] = 0;
                     $meja_1['start'] = 0;
 
+                    $db->where('id', $meja_1['id']);
                     if ($db->update($meja_1)) {
                         sukses_js("Meja 1 mati.", 0);
                     }
