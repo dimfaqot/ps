@@ -1759,7 +1759,7 @@ class Api extends BaseController
         $addr_gus = "";
         $addr_admin = "";
         $q = $db->whereNotIn('itag', "")->get()->getResultArray();
-
+        sukses_js("sukses", $q);
         if (!$q) {
             gagal_js('Grup tidak ditemukan!.');
         }
