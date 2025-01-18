@@ -684,7 +684,7 @@ class Api extends BaseController
             gagal_arduino("Kode harga di unit tidak ada!.");
         }
         $biaya = $qs['value_int'] * $q['durasi'];
-        if ($user['role'] == "Root") {
+        if ($user['role'] == "Root" || $user['role'] == "Gus") {
             $biaya = 0;
         }
         $fulus = saldo($user);
@@ -787,7 +787,7 @@ class Api extends BaseController
         }
 
         $harga = (int)$meja['harga'] * (int)$q['durasi'];
-        if ($user['role'] == "Root") {
+        if ($user['role'] == "Root" || $user['role'] == "Gus") {
             $harga = 0;
         }
 
@@ -1591,81 +1591,136 @@ class Api extends BaseController
         $decode = decode_jwt_finger($jwt);
         $grup = $decode['uid'];
         $pressed = $decode['data2'];
+        $role = $decode['data3'];
 
-        $db = db('perangkat');
-        $msg = "";
-        $status = "";
-        $pin_perangkat = "";
-        if ($pressed == 1) {
-            $q = $db->where('grup', $grup)->orderBy('no_urut', 'ASC')->get()->getResultArray();
+        if ($role == "Root" || $role == "Admin") {
+            $db = db('perangkat');
+            $msg = "";
+            $status = "";
+            $pin_perangkat = "";
+            if ($pressed == 1) {
+                $q = $db->where('grup', $grup)->orderBy('no_urut', 'ASC')->get()->getResultArray();
 
-            $hasil = "";
-            foreach ($q as $i) {
-                if ($hasil == "") {
-                    $hasil = $i['status'];
-                } else {
-                    if ($hasil !== $i['status']) {
-                        $hasil = "no_urut " . $i['no_urut'];
-                        break;
+                $hasil = "";
+                foreach ($q as $i) {
+                    if ($hasil == "") {
+                        $hasil = $i['status'];
+                    } else {
+                        if ($hasil !== $i['status']) {
+                            $hasil = "no_urut " . $i['no_urut'];
+                            break;
+                        }
                     }
                 }
-            }
 
-            if ($hasil == 1 || $hasil == 0) {
-                $q[0]['status'] = ($hasil == 0 ? 1 : 0);
-                $db->where('id', $q[0]['id']);
-                $db->update($q[0]);
-            } else {
-                $exp = explode(" ", $hasil);
+                if ($hasil == 1 || $hasil == 0) {
+                    $q[0]['status'] = ($hasil == 0 ? 1 : 0);
+                    $db->where('id', $q[0]['id']);
+                    $db->update($q[0]);
+                } else {
+                    $exp = explode(" ", $hasil);
+                    foreach ($q as $i) {
+                        if ($i['no_urut'] == end($exp)) {
+                            $i['status'] = ($i['status'] == 0 ? 1 : 0);
+                            $db->where('id', $i['id']);
+                            $db->update($i);
+                            break;
+                        }
+                    }
+                }
+            } elseif ($pressed > 1) {
+                $q = $db->where('kode', $pressed)->get()->getResultArray();
+                if (!$q) {
+                    gagal_arduino('Perangkat tidak ditemukan!.');
+                }
+
+                $hasil_check = "";
                 foreach ($q as $i) {
-                    if ($i['no_urut'] == end($exp)) {
+                    if ($hasil_check == "") {
+                        $hasil_check = $i['status'];
+                    } else {
+                        if ($hasil_check !== $i['status']) {
+                            $hasil_check = "beda";
+                            break;
+                        }
+                    }
+                }
+
+                if ($hasil_check == "beda") {
+                    foreach ($q as $i) {
+                        $i['status'] = 1;
+                        $db->where('id', $i['id']);
+                        $db->update($i);
+                    }
+                } else {
+                    foreach ($q as $i) {
                         $i['status'] = ($i['status'] == 0 ? 1 : 0);
                         $db->where('id', $i['id']);
                         $db->update($i);
-                        break;
-                    }
-                }
-            }
-        } elseif ($pressed > 1) {
-            $q = $db->where('kode', $pressed)->get()->getResultArray();
-            if (!$q) {
-                gagal_arduino('Perangkat tidak ditemukan!.');
-            }
-
-            $hasil_check = "";
-            foreach ($q as $i) {
-                if ($hasil_check == "") {
-                    $hasil_check = $i['status'];
-                } else {
-                    if ($hasil_check !== $i['status']) {
-                        $hasil_check = "beda";
-                        break;
                     }
                 }
             }
 
-            if ($hasil_check == "beda") {
-                foreach ($q as $i) {
-                    $i['status'] = 1;
-                    $db->where('id', $i['id']);
-                    $db->update($i);
+            $status = [];
+            $res = $db->where('grup', $grup)->orderBy('no_urut', 'ASC')->get()->getResultArray();
+
+            foreach ($res as $i) {
+                $status[] = $i['status'];
+            }
+            sukses_js("Sukses", $status);
+        }
+
+        if ($role == "Gus") {
+            $time_now = time();
+            $db = db("jadwal_2");
+            $meja_1 = $db->where('meja', 1)->get()->getRowArray();
+
+            if ($meja_1['is_active'] == 0) {
+                $data = [
+                    'meja_id' => $meja_1['id'],
+                    'meja' => "Meja " . $meja_1['meja'],
+                    'tgl' => $time_now,
+                    'durasi' => 0,
+                    'petugas' => "Gus",
+                    'biaya' => 0,
+                    'diskon' => 0,
+                    'start' => $time_now,
+                    'end' => 0,
+                    'is_active' => 1,
+                    'harga' => $meja_1['harga'],
+                    'metode' => 'Itag'
+                ];
+
+                $dbb = db("billiard_2");
+                if ($dbb->insert($data)) {
+                    $meja_1['is_active'] = 1;
+                    $meja_1['start'] = $time_now;
+
+                    if ($db->update($meja_1)) {
+                        sukses_js("Sukses", 1);
+                    }
                 }
-            } else {
-                foreach ($q as $i) {
-                    $i['status'] = ($i['status'] == 0 ? 1 : 0);
-                    $db->where('id', $i['id']);
-                    $db->update($i);
+            }
+            if ($meja_1['is_active'] == 0) {
+                $dbb = db("billiard_2");
+                $billiard = $dbb->where("meja", "Meja 1")->where("is_active", 1)->where('metode', "Itag")->get()->getRowArray();
+
+                if (!$billiard) {
+                    gagal_js("Meja aktif tidak detemukan!.");
+                }
+
+                $billiard['end'] = time();
+                $billiard['is_active'] = 0;
+                if ($dbb->update($billiard)) {
+                    $meja_1['is_active'] = 0;
+                    $meja_1['start'] = 0;
+
+                    if ($db->update($meja_1)) {
+                        sukses_js("Sukses", 0);
+                    }
                 }
             }
         }
-
-        $status = [];
-        $res = $db->where('grup', $grup)->orderBy('no_urut', 'ASC')->get()->getResultArray();
-
-        foreach ($res as $i) {
-            $status[] = $i['status'];
-        }
-        sukses_js("Sukses", $status);
     }
 
     public function get_grup()
@@ -1689,5 +1744,35 @@ class Api extends BaseController
         $qs = $dbs->where('nama_setting', "Itag")->get()->getRowArray();
 
         sukses_js("Ok", $pin, count($pin), (!$qs ? "" : $qs['value_str']));
+    }
+    public function get_addr()
+    {
+        $jwt = $this->request->getVar('jwt');
+        $decode = decode_jwt_finger($jwt);
+        $grup = $decode['uid'];
+
+        $db = db('users');
+        $addr_root = "";
+        $addr_gus = "";
+        $addr_admin = "";
+        $q = $db->whereNotIn('itag', "")->get()->getResultArray();
+
+        if (!$q) {
+            gagal_js('Grup tidak ditemukan!.');
+        }
+
+        foreach ($q as $i) {
+            if ($i['role'] == "Root") {
+                $addr_root = $i['itag'];
+            } elseif ($i['role'] == "Gus") {
+                $addr_gus = $i['itag'];
+            } else {
+                if ($i['role'] == "Admin " . $grup) {
+                    $addr_admin = $i['itag'];
+                }
+            }
+        }
+
+        sukses_js("Sukses", $addr_root, $addr_gus, $addr_admin);
     }
 }

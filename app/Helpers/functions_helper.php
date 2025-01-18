@@ -1122,3 +1122,8 @@ function laporan_arduino()
         $db->insert($data);
     }
 }
+
+function get_itag_addr()
+{
+    $db = db("users");
+}

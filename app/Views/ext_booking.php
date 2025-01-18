@@ -19,7 +19,7 @@ foreach ($q as $i) {
 $db = db('jadwal_2');
 $billiard = $db->orderBy('meja', 'ASC')->get()->getResultArray();
 $db = db('perangkat');
-$others = $db->orderBy('id', 'ASC')->get()->getResultArray();
+$others = $db->orderBy('no_urut', 'ASC')->get()->getResultArray();
 
 ?>
 <!doctype html>
