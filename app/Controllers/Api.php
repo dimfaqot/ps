@@ -1592,12 +1592,11 @@ class Api extends BaseController
         $grup = $decode['uid'];
         $pressed = $decode['data2'];
         $role = $decode['data3'];
+        $meja_target = $decode['data5'];
 
         if ($role == "Root" || $role == "Admin") {
             $db = db('perangkat');
-            $msg = "";
             $status = "";
-            $pin_perangkat = "";
             if ($pressed == 1) {
                 $q = $db->where('grup', $grup)->orderBy('no_urut', 'ASC')->get()->getResultArray();
 
@@ -1677,9 +1676,9 @@ class Api extends BaseController
             $order = $decode['data4'];
             $time_now = time();
             $db = db("jadwal_2");
-            $meja_1 = $db->where('meja', 1)->get()->getRowArray();
+            $meja_1 = $db->where('meja', $meja_target)->get()->getRowArray();
             if ($order == "rssi" && $meja_1['is_active'] == 1) {
-                gagal_js("Meja sudah aktif!.");
+                gagal_js("Meja " . $meja_1["meja"] . " sudah aktif!.");
             }
             if ($meja_1['is_active'] == 0) {
                 $data = [
@@ -1702,17 +1701,18 @@ class Api extends BaseController
                     $meja_1['is_active'] = 1;
                     $meja_1['start'] = $time_now;
 
+                    $db->where('id', $meja_1["id"]);
                     if ($db->update($meja_1)) {
-                        sukses_js("Meja 1 aktif.", 1);
+                        sukses_js("Meja " . $meja_1["meja"] . " aktif.", 1);
                     }
                 }
             }
             if ($meja_1['is_active'] == 1) {
                 $dbb = db("billiard_2");
-                $billiard = $dbb->where("meja", "Meja 1")->where("is_active", 1)->where('metode', "Itag")->get()->getRowArray();
+                $billiard = $dbb->where("meja", "Meja " . $meja_1["meja"])->where("is_active", 1)->where('metode', "Itag")->get()->getRowArray();
 
                 if (!$billiard) {
-                    gagal_js("Meja aktif tidak detemukan!.");
+                    gagal_js("Meja " . $meja_1["meja"] . "aktif tidak detemukan!.");
                 }
 
                 $billiard['end'] = time();
@@ -1724,7 +1724,7 @@ class Api extends BaseController
 
                     $db->where('id', $meja_1['id']);
                     if ($db->update($meja_1)) {
-                        sukses_js("Meja 1 mati.", 0);
+                        sukses_js("Meja " . $meja_1["meja"] . " mati.", 0);
                     }
                 }
             }
