@@ -1754,12 +1754,12 @@ class Api extends BaseController
         $decode = decode_jwt_finger($jwt);
         $grup = $decode['uid'];
 
-        $db = db('users');
         $addr_root = "";
         $addr_gus = "";
         $addr_admin = "";
-        $q = $db->whereNotIn('itag', "")->get()->getResultArray();
-        sukses_js("sukses", $q);
+        $db = db('users');
+        $q = $db->whereNotIn('itag', [""])->get()->getResultArray();
+
         if (!$q) {
             gagal_js('Grup tidak ditemukan!.');
         }
