@@ -1788,7 +1788,7 @@ class Api extends BaseController
     {
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_finger($jwt);
-        $lokasi = $decode['uid'];
+        $lokasi = ($decode['uid'] == "Billiards" ? "Billiard" : $decode['uid']);
 
         $db = db("wifi");
         $q = $db->where('lokasi', $lokasi)->get()->getRowArray();
