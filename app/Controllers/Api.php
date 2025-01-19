@@ -1783,4 +1783,20 @@ class Api extends BaseController
 
         sukses_js("Sukses", $addr_root, $addr_gus, $addr_admin);
     }
+
+    public function get_wifi()
+    {
+        $jwt = $this->request->getVar('jwt');
+        $decode = decode_jwt_finger($jwt);
+        $lokasi = $decode['uid'];
+
+        $db = db("wifi");
+        $q = $db->where('lokasi', $lokasi)->get()->getRowArray();
+
+        if (!$q) {
+            gagal_js("Lokasi wifi tidak ditemukan!.");
+        }
+
+        sukses_js("Lokasi wifi berhasil ditemukan.", $q['nama'], $q['password']);
+    }
 }
