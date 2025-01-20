@@ -25,11 +25,7 @@ class Ble extends BaseController
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_finger($jwt);
         $nama_server = $decode['uid'];
-        $status_sekarang = $decode['data2'];
-
-        $res = [];
-        // foreach($)
-        // sukses_js("ok", $status_sekarang);
+        $status_esp = $decode['data2'];
 
         $db = db('perangkat');
         $qp = $db->where('grup', ($nama_server == "Billiards" ? "Billiard" : $nama_server))->orderBy('no_urut', 'ASC')->get()->getResultArray();
@@ -44,15 +40,40 @@ class Ble extends BaseController
 
         if ($nama_server == "Billiards") {
             $db = db('jadwal_2');
-            $qb = $db->orderBy('meja', 'ASC')->get()->getResultArray();
-            if (!$qb) {
-                gagal_js("Nama server tidak ditemukan!.");
-            }
+            if ($status_esp == "") {
+                $qb = $db->orderBy('meja', 'ASC')->get()->getResultArray();
+                if (!$qb) {
+                    gagal_js("Nama server tidak ditemukan!.");
+                }
 
-            foreach ($qb as $i) {
-                $meja = ($i['meja'] == 1 ? 10 : ($i['meja'] == 2 ? 11 : $i['meja']));
-                $hasil = $meja . $i['is_active'];
-                $data[] =  (int)$hasil;
+                foreach ($qb as $i) {
+                    $meja = ($i['meja'] == 1 ? 10 : ($i['meja'] == 2 ? 11 : $i['meja']));
+                    $hasil = $meja . $i['is_active'];
+                    $data[] =  (int)$hasil;
+                }
+            } else {
+                $statusArr = stringArr_to_arr($status_esp);
+                $qb = [];
+
+                $dbb = db('jadwal_2');
+                foreach ($statusArr as $i) {
+                    $q = $dbb->where('meja', $i['perangkat'])->get()->getRowArray();
+                    if ($q && $q['is_active'] != $i['status']) {
+                        $hasil = $q['meja'] . $q['is_active'];
+                        $qb[] = $hasil;
+                        $data[] =  (int)$hasil;
+                    }
+                }
+
+                $qp = [];
+                foreach ($statusArr as $i) {
+                    $q = $db->where('grup', ($nama_server == "Billiards" ? "Billiard" : $nama_server))->where("no_urut", $i['perangkat'])->get()->getRowArray();
+                    if ($q && $q['status'] != $i['status']) {
+                        $hasil = $q['no_urut'] . $q['status'];
+                        $qp[] = $hasil;
+                        $data[] =  (int)$hasil;
+                    }
+                }
             }
 
 

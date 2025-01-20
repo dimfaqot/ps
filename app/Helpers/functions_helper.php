@@ -1127,3 +1127,17 @@ function get_itag_addr()
 {
     $db = db("users");
 }
+function stringArr_to_arr($string)
+{
+    $string = str_replace("[", "", str_replace("]", "", $string));
+    $arr = explode(",", $string);
+
+    $hasil = [];
+    for ($i = 0; $i < count($arr); $i++) {
+        $angka_terakhir = $arr[$i];
+        $sisa_angka = array_slice($arr, 0, $i);
+        $hasil[] = ['status' => $angka_terakhir, 'perangkat' => $sisa_angka];
+    }
+
+    return $hasil;
+}
