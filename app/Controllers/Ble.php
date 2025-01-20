@@ -27,6 +27,9 @@ class Ble extends BaseController
         $nama_server = $decode['uid'];
         $status_esp = $decode['data2'];
 
+        $jml_perangkat = 0;
+        $jml_meja = 0;
+
         $db = db('perangkat');
         $qp = $db->where('grup', ($nama_server == "Billiards" ? "Billiard" : $nama_server))->orderBy('no_urut', 'ASC')->get()->getResultArray();
         if (!$qp) {
@@ -41,11 +44,12 @@ class Ble extends BaseController
                     $hasil = $i['no_urut'] . $i['status'];
                     $data[] = (int)$hasil;
                 }
+                $jml_perangkat = count($qp);
                 $qb = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                 if (!$qb) {
                     gagal_js("Nama server tidak ditemukan!.");
                 }
-
+                $jml_meja = count($qb);
                 foreach ($qb as $i) {
                     $meja = ($i['meja'] == 1 ? 10 : ($i['meja'] == 2 ? 11 : $i['meja']));
                     $hasil = $meja . $i['is_active'];
@@ -53,31 +57,32 @@ class Ble extends BaseController
                 }
             } else {
                 $statusArr = stringArr_to_arr($status_esp);
-                $qb = [];
+                $jml_mej = [];
 
                 $dbb = db('jadwal_2');
                 foreach ($statusArr as $i) {
                     $q = $dbb->where('meja', $i['perangkat'])->get()->getRowArray();
                     if ($q && $q['is_active'] != $i['status']) {
                         $hasil = $q['meja'] . $q['is_active'];
-                        $qb[] = $hasil;
+                        $jml_mej[] = $hasil;
                         $data[] =  (int)$hasil;
                     }
                 }
-
-                $qp = [];
+                $jml_meja = count($jml_mej);
+                $jml_per = [];
                 foreach ($statusArr as $i) {
                     $q = $db->where('grup', ($nama_server == "Billiards" ? "Billiard" : $nama_server))->where("no_urut", $i['perangkat'])->get()->getRowArray();
                     if ($q && $q['status'] != $i['status']) {
                         $hasil = $q['no_urut'] . $q['status'];
-                        $qp[] = $hasil;
+                        $jml_per[] = $hasil;
                         $data[] =  (int)$hasil;
                     }
                 }
+                $jml_perangkat = count($jml_per);
             }
 
 
-            sukses_js("sukses", $data, count($qp), count($qb), count($qp) + count($qb));
+            sukses_js("sukses", $data, $jml_perangkat, $jml_meja, $jml_perangkat + $jml_meja);
         }
     }
 }
