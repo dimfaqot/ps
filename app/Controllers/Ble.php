@@ -57,6 +57,7 @@ class Ble extends BaseController
                     $hasil = $meja . $i['is_active'];
                     $data[] =  (int)$hasil;
                 }
+                $jml_meja = count($qb);
             } else {
                 $statusArr = stringArr_to_arr($status_esp);
                 $jml_mej = [];
