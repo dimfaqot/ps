@@ -25,6 +25,11 @@ class Ble extends BaseController
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_finger($jwt);
         $nama_server = $decode['uid'];
+        $status_sekarang = $decode['data2'];
+
+        $res = [];
+        // foreach($)
+        sukses_js("ok", $status_sekarang);
 
         $db = db('perangkat');
         $qp = $db->where('grup', ($nama_server == "Billiards" ? "Billiard" : $nama_server))->orderBy('no_urut', 'ASC')->get()->getResultArray();
