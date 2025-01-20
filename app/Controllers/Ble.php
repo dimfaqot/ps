@@ -69,6 +69,7 @@ class Ble extends BaseController
                     }
                 }
                 $jml_meja = count($jml_mej);
+
                 $jml_per = [];
                 foreach ($statusArr as $i) {
                     $q = $db->where('grup', ($nama_server == "Billiards" ? "Billiard" : $nama_server))->where("no_urut", $i['perangkat'])->get()->getRowArray();
@@ -82,7 +83,7 @@ class Ble extends BaseController
             }
 
 
-            sukses_js("sukses", (count($data) == 1 ? "" : $data), $jml_perangkat, $jml_meja, $jml_perangkat + $jml_meja);
+            sukses_js("sukses", (count($data) == 1 || $data == null ? "" : $data), $jml_perangkat, $jml_meja, $jml_perangkat + $jml_meja);
         }
     }
 }
