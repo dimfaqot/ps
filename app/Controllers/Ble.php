@@ -33,14 +33,14 @@ class Ble extends BaseController
             gagal_js("Nama server tidak ditemukan!.");
         }
         $data = [];
-        foreach ($qp as $i) {
-            $hasil = $i['no_urut'] . $i['status'];
-            $data[] = (int)$hasil;
-        }
 
         if ($nama_server == "Billiards") {
             $db = db('jadwal_2');
             if ($status_esp == "") {
+                foreach ($qp as $i) {
+                    $hasil = $i['no_urut'] . $i['status'];
+                    $data[] = (int)$hasil;
+                }
                 $qb = $db->orderBy('meja', 'ASC')->get()->getResultArray();
                 if (!$qb) {
                     gagal_js("Nama server tidak ditemukan!.");
