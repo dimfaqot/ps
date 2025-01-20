@@ -83,7 +83,7 @@ class Ble extends BaseController
             }
 
 
-            sukses_js("sukses", (count($data) == 1 || $data == null ? "" : $data), $jml_perangkat, $jml_meja, $jml_perangkat + $jml_meja);
+            sukses_js("sukses", (count($data) == 0 || $data == null ? "" : $data), $jml_perangkat, $jml_meja, $jml_perangkat + $jml_meja);
         }
     }
 }
