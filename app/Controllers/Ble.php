@@ -35,21 +35,22 @@ class Ble extends BaseController
         if (!$qp) {
             gagal_js("Nama server tidak ditemukan!.");
         }
+
         $data = [];
 
         if ($nama_server == "Billiards") {
-            $db = db('jadwal_2');
+            $dbj = db('jadwal_2');
             if ($status_esp == "") {
                 foreach ($qp as $i) {
                     $hasil = $i['no_urut'] . $i['status'];
                     $data[] = (int)$hasil;
                 }
                 $jml_perangkat = count($qp);
-                $qb = $db->orderBy('meja', 'ASC')->get()->getResultArray();
+                $qb = $dbj->orderBy('meja', 'ASC')->get()->getResultArray();
                 if (!$qb) {
                     gagal_js("Nama server tidak ditemukan!.");
                 }
-                $jml_meja = count($qb);
+
                 foreach ($qb as $i) {
                     $meja = ($i['meja'] == 1 ? 10 : ($i['meja'] == 2 ? 11 : $i['meja']));
                     $hasil = $meja . $i['is_active'];
@@ -81,7 +82,6 @@ class Ble extends BaseController
                 }
                 $jml_perangkat = count($jml_per);
             }
-
 
             sukses_js("sukses", (count($data) == 0 || $data == null ? "" : $data), $jml_perangkat, $jml_meja, $jml_perangkat + $jml_meja);
         }

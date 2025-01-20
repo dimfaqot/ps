@@ -1133,10 +1133,11 @@ function stringArr_to_arr($string)
     $arr = explode(",", $string);
 
     $hasil = [];
-    for ($i = 0; $i < count($arr); $i++) {
-        $angka_terakhir = $arr[$i];
-        $sisa_angka = array_slice($arr, 0, $i);
-        $hasil[] = ['status' => $angka_terakhir, 'perangkat' => $sisa_angka];
+    foreach ($arr as $i) {
+        $angka_terakhir = $i % 10;
+        $sisa_angka = substr($i, 0, -1);
+
+        $hasil[] = ['status' => (int)$angka_terakhir, 'perangkat' => (int)$sisa_angka];
     }
 
     return $hasil;
