@@ -36,6 +36,7 @@ class Ble extends BaseController
             gagal_js("Nama server tidak ditemukan!.");
         }
 
+
         $data = [];
 
         if ($nama_server == "Billiards") {
@@ -62,11 +63,15 @@ class Ble extends BaseController
 
                 $dbb = db('jadwal_2');
                 foreach ($statusArr as $i) {
-                    $q = $dbb->where('meja', $i['perangkat'])->get()->getRowArray();
-                    if ($q && $q['is_active'] != $i['status']) {
-                        $hasil = $q['meja'] . $q['is_active'];
-                        $jml_mej[] = $hasil;
-                        $data[] =  (int)$hasil;
+                    $mej = ($i['perangkat'] == 10 ? 1 : ($i['perangkat'] == 11 ? 2 : $i['perangkat']));
+                    $q = $dbb->where('meja', $mej)->get()->getRowArray();
+                    if ($i['perangkat'] >= 10) {
+                        if ($q && $mej == $q['meja'] && $q['is_active'] != $i['status']) {
+                            $meja = ($q['meja'] == 1 ? 10 : ($q['meja'] == 2 ? 11 : $q['meja']));
+                            $hasil = $meja . $q['is_active'];
+                            $jml_mej[] = $hasil;
+                            $data[] =  (int)$hasil;
+                        }
                     }
                 }
                 $jml_meja = count($jml_mej);
@@ -74,7 +79,12 @@ class Ble extends BaseController
                 $jml_per = [];
                 foreach ($statusArr as $i) {
                     $q = $db->where('grup', ($nama_server == "Billiards" ? "Billiard" : $nama_server))->where("no_urut", $i['perangkat'])->get()->getRowArray();
+                    // if ($q && $q['status'] != $i['status']) {
+                    // }
+
+                    // dd("tidak masuk");
                     if ($q && $q['status'] != $i['status']) {
+                        dd("masuk");
                         $hasil = $q['no_urut'] . $q['status'];
                         $jml_per[] = $hasil;
                         $data[] =  (int)$hasil;
@@ -82,7 +92,6 @@ class Ble extends BaseController
                 }
                 $jml_perangkat = count($jml_per);
             }
-
             sukses_js("sukses", (count($data) == 0 || $data == null ? "" : $data), $jml_perangkat, $jml_meja, $jml_perangkat + $jml_meja);
         }
     }
