@@ -29,7 +29,7 @@ class Ble extends BaseController
 
         $res = [];
         // foreach($)
-        sukses_js("ok", $status_sekarang);
+        // sukses_js("ok", $status_sekarang);
 
         $db = db('perangkat');
         $qp = $db->where('grup', ($nama_server == "Billiards" ? "Billiard" : $nama_server))->orderBy('no_urut', 'ASC')->get()->getResultArray();
