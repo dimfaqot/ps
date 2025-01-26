@@ -12,10 +12,20 @@ class Rfid extends BaseController
 
     public function start()
     {
+
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_finger($jwt);
         $uid = $decode['uid'];
 
+        $dbs = db('session');
+        $qs = $dbs->where("lokasi", $decode['data3'])->get()->getResultArray();
+
+        if ($qs) {
+            foreach ($qs as $i) {
+                $dbs->where('id', $i['id']);
+                $dbs->delete();
+            }
+        }
 
         $dbs = db('session');
         $db = db('users');
