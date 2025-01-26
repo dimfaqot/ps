@@ -9,7 +9,7 @@ class Rfid extends BaseController
         if (session('messaage')) {
             dd(session('status'));
         }
-        return view('rfid/home', ['judul' => 'RFID', 'lokasi' => $lokasi]);
+        return view('rfid/home', ['judul' => 'RFID', 'lokasi' => upper_first($lokasi)]);
     }
 
     public function start()
