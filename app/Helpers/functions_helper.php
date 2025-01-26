@@ -314,8 +314,12 @@ function decode_jwt_fulus($encode_jwt, $lokasi = null)
             'data4' => "",
             'data5' => ""
         ];
-        sukses_js("Sukses", $data);
-        die;
+        if (!session("lokasi")) {
+            sukses_js("Sukses", $data);
+            die;
+        } else {
+            gagal_rfid(base_url('rfid'), "Expired token!.");
+        }
     }
 }
 function encode_jwt_finger($data)
