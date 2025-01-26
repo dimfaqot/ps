@@ -18,8 +18,18 @@ class Rfid extends BaseController
         $decode = decode_jwt_finger($jwt);
         $uid = $decode['uid'];
 
+        $dbs = db('session');
+        $qs = $dbs->get()->getResultArray();
+        if ($qs) {
+            foreach ($qs as $i) {
+                $dbs->where('id', $i['id']);
+                $dbs->delete();
+            }
+        }
+
         $db = db('users');
         $q = $db->where('uid', $uid)->get()->getRowArray();
+        sukses_js("ok", $q);
         if (!$q) {
             $data = [
                 'lokasi' => $decode['data3'],
@@ -28,7 +38,7 @@ class Rfid extends BaseController
                 'status' => "400",
                 'message' => "Kartu tidak terdaftar!."
             ];
-            $dbs = db('session');
+
             if ($dbs->insert($data)) {
                 gagal_js("Kartu tidak terdaftar!.");
             }
