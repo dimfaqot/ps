@@ -33,8 +33,6 @@ class Rfid extends BaseController
         if (!$q) {
             $data = [
                 'lokasi' => $decode['data3'],
-                'uid' => $q['uid'],
-                'uid_member' => $decode['data2'],
                 'status' => "400",
                 'message' => "Kartu tidak terdaftar!."
             ];
