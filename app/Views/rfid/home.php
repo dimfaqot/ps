@@ -36,7 +36,9 @@
         }).then(res => {
             if (res.status == "200") {
                 if (res.data.loasi !== "") {
+                    console.log(session_now);
                     if (res.data.status == "400" && session_now == 0) {
+                        console.log(session_now);
                         session_now = 1;
                         gagal_rfid(res.data.message);
                     }
