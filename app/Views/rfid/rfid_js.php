@@ -84,10 +84,10 @@
     }
     const gagal_rfid = (message, logout = "yes", seconds = 3, id = "fullscreen") => {
         $('.header_' + id).html(header_modal('loading', "Error"));
-        let html = "";
+        let html = '<div class="mt-5"></div>';
         let messages = message.split("|");
         messages.forEach(e => {
-            html += '<h6 class="text-center text-danger mt-5">' + e + '</h6>';
+            html += '<div class="text-center text-danger">' + e + '</div>';
         })
         if (seconds !== "") {
             session_now = 1;
@@ -105,10 +105,10 @@
     }
     const sukses_rfid = (message, logout = "no", seconds = 3, id = "fullscreen") => {
         $('.header_' + id).html(header_modal("loading", "Menunggu"));
-        let html = "";
+        let html = '<div class="mt-5"></div>';
         let messages = message.split("|");
         messages.forEach(e => {
-            html += '<h6 class="text-center text-light mt-5">' + e + '</h6>';
+            html += '<div class="text-center text-light">' + e + '</div>';
         })
         if (seconds !== '') {
             session_now = 1;
