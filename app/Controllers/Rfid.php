@@ -33,7 +33,6 @@ class Rfid extends BaseController
             }
         }
 
-
         $data = [
             'lokasi' => $decode['data3'],
             'uid' => $q['uid'],
@@ -42,7 +41,7 @@ class Rfid extends BaseController
             'url' => encode_jwt_fulus(['uid' => $uid, 'lokasi' => $decode['data3'], 'exp' => (time() + 60)]),
             'message' => "Hai " . $q['nama'] . "...."
         ];
-
+        sukses_js("Ok", $data);
         if ($dbs->insert($data)) {
             sukses_js("Hai " . $q['nama'] . "....");
         }
