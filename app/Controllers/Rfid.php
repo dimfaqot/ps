@@ -6,6 +6,15 @@ class Rfid extends BaseController
 {
     public function index($lokasi)
     {
+        $dbs = db('session');
+        $qs = $dbs->where("lokasi", $lokasi)->get()->getResultArray();
+
+        if ($qs) {
+            foreach ($qs as $i) {
+                $dbs->where('id', $i['id']);
+                $dbs->delete();
+            }
+        }
         // dd(encode_jwt_fulus(['uid' => "a9aec27a", 'lokasi' => "Billiard", 'exp' => (time() + 60)]));
         return view('rfid/home', ['judul' => 'RFID', 'lokasi' => upper_first($lokasi)]);
     }
