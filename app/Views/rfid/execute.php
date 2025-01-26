@@ -148,7 +148,7 @@ if (session('lokasi') == "Barber") {
                     }
 
                     setTimeout(() => {
-                        logout("Waktu habis!.");
+                        logout(lokasi, "Waktu habis!.");
                     }, 2000);
                 })
             })
@@ -381,7 +381,7 @@ if (session('lokasi') == "Barber") {
 
 
                 setTimeout(() => {
-                    logout("Waktu habis!.");
+                    logout(lokasi, "Waktu habis!.");
                 }, 2000);
             })
         })
@@ -449,7 +449,7 @@ if (session('lokasi') == "Barber") {
                 }
 
                 setTimeout(() => {
-                    logout("Waktu habis!.");
+                    logout(lokasi, "Waktu habis!.");
                 }, 2000);
             })
         })
@@ -493,7 +493,7 @@ if (session('lokasi') == "Barber") {
                 }
 
                 setTimeout(() => {
-                    logout("Waktu habis!.");
+                    logout(lokasi, "Waktu habis!.");
                 }, 2000);
             })
         })
@@ -530,7 +530,7 @@ if (session('lokasi') == "Barber") {
                 }
 
                 setTimeout(() => {
-                    logout("Waktu habis!.");
+                    logout(lokasi, "Waktu habis!.");
                 }, 2000);
             })
         })
@@ -597,7 +597,7 @@ if (session('lokasi') == "Barber") {
                 }
 
                 setTimeout(() => {
-                    logout("Waktu habis!.");
+                    logout(lokasi, "Waktu habis!.");
                 }, 2000);
             })
         }
