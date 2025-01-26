@@ -62,7 +62,7 @@ class Rfid extends BaseController
         $lokasi = clear($this->request->getVar('lokasi'));
         $dbs = db('session');
         $q = $dbs->where("lokasi", $lokasi)->get()->getRowArray();
-        sukses_js("Ok", $q);
+
         if ($q) {
             $exp = decode_jwt_fulus($q['url']);
             if ((time() + 60) > $exp['exp']) {
