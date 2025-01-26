@@ -1535,7 +1535,7 @@ class Api extends BaseController
         $db->where('id', $q['id']);
         if ($db->update($q)) {
             message($q['kategori'], 'Id detected.', '200', $user['nama']);
-            sukses_js('Id detected. ' . $user['nma']);
+            sukses_js('Id detected. ' . $user['nama']);
         } else {
             message($q['kategori'], 'Insert id failded.', '400');
             gagal_js('Insert id failed.');

@@ -89,6 +89,19 @@ function check_role($order = null)
     }
 }
 
+function check_session_tap()
+{
+    if (!session('lokasi') || !session('uid')) {
+        session()->remove('lokasi');
+        session()->remove('status');
+        session()->remove('message');
+        session()->remove('uid');
+        session()->remove('url');
+        session()->remove('uid_member');
+        gagal_js("Session expired!.");
+    }
+}
+
 
 function angka($uang)
 {
@@ -105,6 +118,16 @@ function sukses($url, $pesan)
 function gagal($url, $pesan)
 {
     session()->setFlashdata('gagal', $pesan);
+    header("Location: " . $url);
+    die;
+}
+function gagal_rfid($url, $pesan)
+{
+    session()->remove('lokasi');
+    session()->remove('status');
+    session()->remove('message');
+    session()->remove('url');
+    session()->setFlashdata('gagal_rfid', $pesan);
     header("Location: " . $url);
     die;
 }
@@ -601,12 +624,20 @@ function durasi($start, $end)
     return $diff->h . ':' . $diff->i;
 }
 
+function durasi_dalam_menit($start, $end)
+{
+    // Hitung selisih waktu dalam detik
+    $diffInSeconds = abs($end - $start); // Menggunakan abs untuk memastikan hasil positif
+    // Konversi selisih waktu ke menit
+    $diffInMinutes = round($diffInSeconds / 60);
+    return $diffInMinutes;
+}
+
 function biaya_per_menit($harga, $start, $end)
 {
 
     $diff = $end - $start;
     $menit = ceil($diff / 60);
-
     $harga_per_menit = ceil($harga / 60);
     $harga = $harga_per_menit * $menit;
 
@@ -646,8 +677,7 @@ function get_absen($user)
     $dbs = db('shift');
     $s = $dbs->where('kategori', $sess)->get()->getResultArray();
     if (!$s) {
-        message("Absen", "Data shift tidak ada!.", "400");
-        gagal_js("Data shift tidak ada!.");
+        gagal_js("Data shift tidak ada.");
     }
 
     // $time_shift = strtotime('2024-11-22 00:00:00');
@@ -693,16 +723,13 @@ function get_absen($user)
     $q = $db->where('role', $sess)->where('tgl', date('d'))->where('shift', $data['shift'])->whereIn('ket', ['Terlambat', 'Ontime'])->get()->getRowArray();
 
     if ($q) {
-        message("Absen", 'Absen shift ' . $data['shift'] . ' sudah dilakukan!.', "400");
-        gagal_js('Absen shift ' . $data['shift'] . ' sudah dilakukan!.');
+        gagal_js('Absen shift ' . $data['shift'] . ' sudah dilakukan.');
     }
 
     if ($data['menit'] < 0) {
-        message("Absen", $user['nama'] . ' belum waktunya absen', "400", 'untuk shift ' . $data['shift']  . '!.');
-        gagal_js($user["nama"] . ' belum waktunya absen untuk shift ' . $data['shift']  . '!.');
+        gagal_js('Belum waktunya absen untuk shift ' . $data['shift']  . '.');
     } else if (round($data['menit'] / 60) > 2) {
-        message("Absen", $user['nama'] . ' telat lebih 3 jam!.', "400", 'Absen untuk shift ' . $data['shift'] . ' ditutup!.');
-        gagal_js($user["nama"] . ' telat lebih 3 jam!. Absen untuk shift ' . $data['shift'] . ' ditutup!.');
+        gagal_js('Absen shift ' . $data['shift'] . ' ditutup.');
     }
 
 
@@ -716,19 +743,17 @@ function get_absen($user)
         if ($qp) {
             $data['poin'] = $qp['poin'];
         } else {
-            message("Absen", 'Data poin ontime tidak ada!.', "400");
-            gagal_js("Data poin ontime tidak ada!.");
+            gagal_js("Data poin ontime tidak ada.");
         }
     } else {
         $qat = $dbp->where("aturan", "Terlambat")->get()->getRowArray();
         if (!$qat) {
-            message("Absen", 'Data poin terlambat tidak ada!.', "400");
-            gagal_js("Data poin terlambat tidak ada!.");
+            gagal_js("Data poin terlambat tidak ada.");
         }
         $data['ket'] = 'Terlambat';
         $po = (round(($data['menit'] - 15) / 10)) + abs($qat["poin"]);
         $data['poin'] = -$po;
-        $msg = $user["nama"] . ' terlambat ' . $data['diff'] . ' untuk shift ' . $data['shift'] . '.!';
+        $msg = 'Ente terlambat ' . $data['diff'] . ' untuk shift ' . $data['shift'] . '.';
     }
     $data['msg'] = $msg;
     return $data;
@@ -983,14 +1008,14 @@ function konfirmasi_user_exist_finger($user_m, $booking)
     }
 }
 
-function saldo_tap($kategori, $barang, $uang, $user, $petugas = [])
+function saldo_tap($kategori, $barang, $uang, $user, $petugas = "")
 {
     $dbt = db("topup");
     $topup = [
         "tgl" => time(),
         "jenis" => ($kategori == "Remove" ? 'hapus' : ($kategori == "Topup" ? "in" : "out")),
         "kategori" => $kategori,
-        "petugas" => (key_exists("nama", $petugas) ? $petugas["nama"] : ""),
+        "petugas" => ($petugas == "" ? $user['nama'] : $petugas),
         "jml" => $uang,
         "barang" => $barang,
         "user_id" => $user["id"],
@@ -999,10 +1024,7 @@ function saldo_tap($kategori, $barang, $uang, $user, $petugas = [])
 
     ];
     if (!$dbt->insert($topup)) {
-        message($kategori, "Insert ke tabel topup gagal!.", 400);
-        clear_tabel('booking');
-        clear_tabel('api');
-        gagal_arduino("Insert ke tabel topup gagal!.");
+        gagal_js("Insert ke tabel topup gagal!.");
     }
 }
 

@@ -268,3 +268,22 @@ $routes->get('/firebase_notif', 'Firebase_notif::index');
 // fulus
 $routes->get('/fulus/get', 'Fulus::get');
 $routes->post('/fulus/add', 'Fulus::add');
+
+// rfid reader
+$routes->get('/rfid', 'Rfid::index');
+$routes->get('/rfid/start', 'Rfid::start');
+$routes->get('/rfid/auth', 'Rfid::auth');
+$routes->post('/rfid/session', 'Rfid::session');
+$routes->post('/rfid/logout', 'Rfid::logout');
+$routes->post('/rfid/hutang', 'Rfid::hutang');
+$routes->post('/rfid/absen', 'Rfid::absen');
+$routes->post('/rfid/poin', 'Rfid::poin');
+$routes->post('/rfid/perangkat', 'Rfid::perangkat');
+$routes->post('/rfid/lunasi_hutang', 'Rfid::lunasi_hutang');
+$routes->post('/rfid/akhiri_permainan', 'Rfid::akhiri_permainan');
+$routes->post('/rfid/bayar_permainan', 'Rfid::bayar_permainan');
+$routes->post('/rfid/lunasi_barber', 'Rfid::lunasi_barber');
+$routes->post('/rfid/transaksi', 'Rfid::transaksi');
+$routes->post('/rfid/search_user', 'Rfid::search_user');
+$routes->post('/rfid/transaksi_tap', 'Rfid::transaksi_tap');
+$routes->get('/rfid/execute/(:any)', 'Rfid::execute/$1');
