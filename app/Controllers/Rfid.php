@@ -6,6 +6,9 @@ class Rfid extends BaseController
 {
     public function index(): string
     {
+        if (session('messaage')) {
+            dd(session('status'));
+        }
         return view('rfid/home', ['judul' => 'RFID']);
     }
 
