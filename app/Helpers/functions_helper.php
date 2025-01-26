@@ -123,6 +123,7 @@ function gagal($url, $pesan)
 }
 function gagal_rfid($url, $pesan)
 {
+    $lokasi = session('lokasi');
     session()->remove('lokasi');
     session()->remove('status');
     session()->remove('message');
@@ -130,7 +131,7 @@ function gagal_rfid($url, $pesan)
     session()->remove('uid');
     session()->remove('uid_member');
     session()->setFlashdata('gagal_rfid', $pesan);
-    header("Location: " . $url . "/" . strtolower(session('lokasi')));
+    header("Location: " . $url . "/" . strtolower($lokasi));
     die;
 }
 

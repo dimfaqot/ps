@@ -274,6 +274,7 @@ $routes->post('/rfid/start', 'Rfid::start');
 // $routes->get('/rfid/auth', 'Rfid::auth');
 $routes->post('/rfid/session', 'Rfid::session');
 $routes->post('/rfid/logout', 'Rfid::logout');
+$routes->get('/rfid/terminate', 'Rfid::terminate');
 $routes->post('/rfid/hutang', 'Rfid::hutang');
 $routes->post('/rfid/absen', 'Rfid::absen');
 $routes->post('/rfid/poin', 'Rfid::poin');

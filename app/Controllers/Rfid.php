@@ -80,6 +80,10 @@ class Rfid extends BaseController
 
         sukses_js('Sukses.');
     }
+    public function terminate()
+    {
+        gagal_rfid(base_url("rfid"), "All session terminated.");
+    }
     // halaman eksekusi melalui jwt
     public function execute($jwt)
     {
