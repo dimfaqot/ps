@@ -105,7 +105,11 @@
     }
     const sukses_rfid = (message, logout = "no", seconds = 3, id = "fullscreen") => {
         $('.header_' + id).html(header_modal("loading", "Menunggu"));
-        let html = '<h6 class="text-center text-light mt-5">' + message + '</h6>';
+        let html = "";
+        let messages = message.split("|");
+        messages.forEach(e => {
+            let html = '<h6 class="text-center text-light mt-5">' + e + '</h6>';
+        })
         if (seconds !== '') {
             session_now = 1;
             html += '<div class="d-flex justify-content-center">';
