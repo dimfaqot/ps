@@ -84,8 +84,11 @@
     }
     const gagal_rfid = (message, logout = "yes", seconds = 3, id = "fullscreen") => {
         $('.header_' + id).html(header_modal('loading', "Error"));
-
-        let html = '<h6 class="text-center text-danger mt-5">' + message + '</h6>';
+        let html = "";
+        let messages = message.split("|");
+        messages.forEach(e => {
+            html += '<h6 class="text-center text-danger mt-5">' + e + '</h6>';
+        })
         if (seconds !== "") {
             session_now = 1;
             html += '<div class="d-flex justify-content-center">';
