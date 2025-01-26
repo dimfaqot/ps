@@ -4,7 +4,7 @@
 
 
 <div style="margin-top: 250px;">
-    <h5 class="text-center text-warning">SILAHKAN TAP UNTUK MEMULAI</h5>
+    <h5 class="text-center text-warning">SILAHKAN TAP UNTUK MEMULAI <?= session("message"); ?></h5>
     <div class="d-flex date_time justify-content-center mt-5 ">
         <div class="card" style="background-color:transparent;width:400px;border:none">
             <div class="card-body text-info text-center">
