@@ -17,6 +17,7 @@ class Rfid extends BaseController
         $uid = $decode['uid'];
 
 
+        $dbs = db('session');
         $db = db('users');
         $q = $db->where('uid', $uid)->get()->getRowArray();
 
@@ -27,7 +28,6 @@ class Rfid extends BaseController
                 'message' => "Kartu tidak terdaftar!."
             ];
 
-            $dbs = db('session');
             if ($dbs->insert($data)) {
                 gagal_js("Kartu tidak terdaftar!.");
             }
@@ -41,7 +41,7 @@ class Rfid extends BaseController
             'url' => encode_jwt_fulus(['uid' => $uid, 'lokasi' => $decode['data3'], 'exp' => (time() + 60)]),
             'message' => "Hai " . $q['nama'] . "...."
         ];
-        sukses_js("Ok", $data);
+
         if ($dbs->insert($data)) {
             sukses_js("Hai " . $q['nama'] . "....");
         }
