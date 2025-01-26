@@ -1,6 +1,6 @@
 <script>
     const base_url = "<?= base_url(); ?>";
-    let lokasi = "<?= session('lokasi'); ?>";
+    let lokasi = "<?= (!session('lokasi') ? $lokasi : session('lokasi')); ?>";
     async function post(url = '', data = {}) {
         const response = await fetch("<?= base_url(); ?>" + url, {
             method: 'POST',

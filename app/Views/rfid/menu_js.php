@@ -1,7 +1,6 @@
 <script>
     // execute
 
-    let lokasi = "<?= strtolower(session('lokasi')); ?>";
     let role = "<?= $role; ?>";
     let data_ps = <?= json_encode($ps); ?>;
     let html_ps = "";
