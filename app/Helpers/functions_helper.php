@@ -91,14 +91,14 @@ function check_role($order = null)
 
 function check_session_tap()
 {
-    if (!session('lokasi') || !session('uid')) {
+    if (!session('lokasi') || !session('status') || session('message')) {
         session()->remove('lokasi');
         session()->remove('status');
         session()->remove('message');
         session()->remove('uid');
         session()->remove('url');
-        gagal_js("Session expired!.");
         session()->remove('uid_member');
+        gagal_js("Session expired!.");
     }
 }
 
@@ -127,8 +127,10 @@ function gagal_rfid($url, $pesan)
     session()->remove('status');
     session()->remove('message');
     session()->remove('url');
+    session()->remove('uid');
+    session()->remove('uid_member');
     session()->setFlashdata('gagal_rfid', $pesan);
-    header("Location: " . $url);
+    header("Location: " . $url . "/" . strtolower(session('lokasi')));
     die;
 }
 

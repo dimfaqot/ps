@@ -87,7 +87,7 @@ if (session('lokasi') == "Barber") {
             </div>
         </div>
         <div class="rounded-2 p-1 mb-2 bg-secondary"><label style="width: 50px;">Nama</label>: <?= $nama; ?></div>
-        <div class="rounded-2 p-1 mb-2 bg-secondary"><label style="width: 50px;">Saldo</label>: <?= rupiah($uang); ?></div>
+        <div class="rounded-2 p-1 mb-2 bg-secondary"><label style="width: 50px;">Saldo</label>: <?= rupiah($saldo); ?></div>
 
     </div>
 </div>
@@ -148,7 +148,7 @@ if (session('lokasi') == "Barber") {
                     }
 
                     setTimeout(() => {
-                        logout(lokasi, "Waktu habis!.");
+                        logout("Waktu habis!.");
                     }, 2000);
                 })
             })
@@ -179,8 +179,7 @@ if (session('lokasi') == "Barber") {
 
     <script>
         let data = {};
-        let lokasi = "<?= $lokasi; ?>";
-        countdown(lokasi, 10);
+        countdown(10);
         const default_sub_menu = () => {
             if (data.menu == undefined) {
                 let html = '<h6 class="text-center">' + lokasi.toUpperCase() + '</h6>';
@@ -357,7 +356,7 @@ if (session('lokasi') == "Barber") {
                     html += '</div>';
                     $(".body_fullscreen").html(html);
                     show_modal();
-                    countdown(lokasi, 10);
+                    countdown(10);
                     return;
 
                 }
@@ -381,7 +380,7 @@ if (session('lokasi') == "Barber") {
 
 
                 setTimeout(() => {
-                    logout(lokasi, "Waktu habis!.");
+                    logout("Waktu habis!.");
                 }, 2000);
             })
         })
@@ -449,7 +448,7 @@ if (session('lokasi') == "Barber") {
                 }
 
                 setTimeout(() => {
-                    logout(lokasi, "Waktu habis!.");
+                    logout("Waktu habis!.");
                 }, 2000);
             })
         })
@@ -483,7 +482,7 @@ if (session('lokasi') == "Barber") {
                         html += '<div data-order="tap" data-id="' + res.data3 + '" data-biaya="' + res.data + '" class="btn_cara_pembayaran text-center text-light px-5 border rounded-2 border-light border-opacity-25 py-1 bg-dark bg-opacity-75" style="cursor: pointer;">Tap</div>';
                         html += '</div>';
                         $(".body_fullscreen").html(html);
-                        countdown(lokasi, 10);
+                        countdown(10);
                         return;
                     } else {
                         $(".body_fullscreen").html('<div class="text-light text-center">' + res.message + '</div>');
@@ -493,7 +492,7 @@ if (session('lokasi') == "Barber") {
                 }
 
                 setTimeout(() => {
-                    logout(lokasi, "Waktu habis!.");
+                    logout("Waktu habis!.");
                 }, 2000);
             })
         })
@@ -514,7 +513,7 @@ if (session('lokasi') == "Barber") {
                 html += '<div class="mt-2 body_list_search_user">';
                 html += '</div>';
                 $(".body_fullscreen").html(html);
-                countdown(lokasi, 10);
+                countdown(10);
                 return;
             }
 
@@ -530,7 +529,7 @@ if (session('lokasi') == "Barber") {
                 }
 
                 setTimeout(() => {
-                    logout(lokasi, "Waktu habis!.");
+                    logout("Waktu habis!.");
                 }, 2000);
             })
         })
@@ -597,7 +596,7 @@ if (session('lokasi') == "Barber") {
                 }
 
                 setTimeout(() => {
-                    logout(lokasi, "Waktu habis!.");
+                    logout("Waktu habis!.");
                 }, 2000);
             })
         }

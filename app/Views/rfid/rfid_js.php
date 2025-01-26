@@ -1,5 +1,6 @@
 <script>
     const base_url = "<?= base_url(); ?>";
+    let lokasi = "<?= session('lokasi'); ?>";
     async function post(url = '', data = {}) {
         const response = await fetch("<?= base_url(); ?>" + url, {
             method: 'POST',
@@ -45,7 +46,7 @@
     let session_now = 0;
     let menunggu = 0;
     let interval_countdown;
-    const countdown = (lokasi, seconds = 20, logout = "yes", id = "fullscreen", redirect = "rfid") => {
+    const countdown = (seconds = 20, logout = "yes", id = "fullscreen", redirect = "rfid") => {
         let x = 1;
         interval_countdown = setInterval(() => {
             x++;
@@ -62,7 +63,7 @@
                             session_now = 0;
                             clearInterval(interval_countdown);
                             if (redirect !== "") {
-                                window.location.href = base_url + "/" + redirect;
+                                window.location.href = base_url + "/" + redirect + "/" + lokasi;
                             } else {
                                 show_modal(id, "hide");
 
@@ -81,7 +82,7 @@
 
         }, 1000);
     }
-    const gagal_rfid = (lokasi, message, logout = "yes", seconds = 3, id = "fullscreen") => {
+    const gagal_rfid = (message, logout = "yes", seconds = 3, id = "fullscreen") => {
         $('.header_' + id).html(header_modal('loading', "Error"));
 
         let html = '<h6 class="text-center text-danger mt-5">' + message + '</h6>';
@@ -92,14 +93,14 @@
             html += '</div>';
             $(".body_" + id).html(html);
             show_modal(id, "show");
-            countdown(lokasi, seconds, logout, id);
+            countdown(seconds, logout, id);
             return;
         }
         $(".body_" + id).html(html);
         show_modal(id, "show");
 
     }
-    const sukses_rfid = (lokasi, message, logout = "no", seconds = 3, id = "fullscreen") => {
+    const sukses_rfid = (message, logout = "no", seconds = 3, id = "fullscreen") => {
         $('.header_' + id).html(header_modal("loading", "Menunggu"));
         let html = '<h6 class="text-center text-light mt-5">' + message + '</h6>';
         if (seconds !== '') {
@@ -109,7 +110,7 @@
             html += '</div>';
             $(".body_" + id).html(html);
             show_modal(id, "show");
-            countdown(lokasi, logout, seconds, id);
+            countdown(logout, seconds, id);
             return;
         }
 
@@ -152,7 +153,7 @@
         show_modal(modal_id, "hide");
     });
 
-    const logout = (lokasi, message = "", countdown = "", modal = "", id = "fullscreen", redirect = "rfid") => {
+    const logout = (message = "", countdown = "", modal = "", id = "fullscreen", redirect = "rfid") => {
         post("rfid/logout", {
             lokasi
         }).then(res => {
@@ -166,7 +167,7 @@
                     $(".body_" + id).html(html);
                 }
                 if (redirect !== "") {
-                    window.location.href = base_url + "/" + redirect;
+                    window.location.href = base_url + "/" + redirect + "/" + lokasi;
                 }
 
                 if (modal !== "") {

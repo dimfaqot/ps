@@ -72,30 +72,36 @@ class Rfid extends BaseController
                     $dbs->update($q);
                 }
             }
+
+
+            session()->set($q);
+
+            $dbs->where('id', $q['id']);
+            $dbs->delete();
             sukses_js("Ok", $q);
         }
+
         gagal_js("Session not found!.");
     }
     public function logout()
     {
-        $lokasi = clear($this->request->getVar('lokasi'));
-        $dbs = db('session');
-        $q = $dbs->where("lokasi", $lokasi)->get()->getRowArray();
-        if ($q) {
-            $dbs->where('id', $q['id']);
-            $dbs->delete();
-        }
+        session()->remove('lokasi');
+        session()->remove('status');
+        session()->remove('message');
+        session()->remove('uid');
+        session()->remove('url');
+        session()->remove('uid_member');
+
         sukses_js('Sukses.');
     }
     // halaman eksekusi melalui jwt
     public function execute($jwt)
     {
         $decode = decode_jwt_fulus($jwt);
-        $dbs = db('session');
-        $q = $dbs->where("lokasi", $decode['lokasi'])->get()->getRowArray();
+
+
         if ((time() + 60) > $decode['exp']) {
-            $dbs->update($q);
-            gagal_rfid(base_url('rfid'), $decode['lokasi'], "Time expired!.");
+            gagal_rfid(base_url('rfid'), "Time expired!.");
         }
 
         $uid = $decode['uid'];
@@ -104,10 +110,11 @@ class Rfid extends BaseController
         $q = $db->where('uid', $uid)->get()->getRowArray();
 
         if (!$q) {
-            gagal_rfid(base_url('rfid'), $decode['lokasi'], "Kartu tidak terdaftar!.");
+            gagal_rfid(base_url('rfid'), "Kartu tidak terdaftar!.");
         }
-        $fulus = decode_jwt_fulus($q['fulus']);
-        return view("rfid/execute", ['judul' => 'EXECUTE', 'nama' => $q['nama'], 'uang' => $fulus['fulus'], 'role' => $q['role'], 'user_id' => $q['id'], 'lokasi' => $decode['lokasi']]);
+
+        $saldo = saldo($q);
+        return view("rfid/execute", ['judul' => 'EXECUTE', 'nama' => $q['nama'], 'saldo' => $saldo, 'role' => $q['role'], 'user_id' => $q['id']]);
     }
 
     // menampilkan data hutang member
