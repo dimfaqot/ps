@@ -270,10 +270,10 @@ $routes->get('/fulus/get', 'Fulus::get');
 $routes->post('/fulus/add', 'Fulus::add');
 
 // rfid reader
-$routes->get('/rfid', 'Rfid::index');
+$routes->get('/rfid/(:any)', 'Rfid::index/$1');
 $routes->post('/rfid/start', 'Rfid::start');
 // $routes->get('/rfid/auth', 'Rfid::auth');
-$routes->post('/rfid/session', 'Rfid::sesi');
+$routes->post('/rfid/session', 'Rfid::session');
 $routes->post('/rfid/logout', 'Rfid::logout');
 $routes->post('/rfid/hutang', 'Rfid::hutang');
 $routes->post('/rfid/absen', 'Rfid::absen');

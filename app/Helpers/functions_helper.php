@@ -89,19 +89,6 @@ function check_role($order = null)
     }
 }
 
-function check_session_tap()
-{
-    if (!session('lokasi') || !session('uid')) {
-        session()->remove('lokasi');
-        session()->remove('status');
-        session()->remove('message');
-        session()->remove('uid');
-        session()->remove('url');
-        session()->remove('uid_member');
-        gagal_js("Session expired!.");
-    }
-}
-
 
 function angka($uang)
 {
@@ -121,12 +108,14 @@ function gagal($url, $pesan)
     header("Location: " . $url);
     die;
 }
-function gagal_rfid($url, $pesan)
+function gagal_rfid($url, $lokasi, $pesan)
 {
-    session()->remove('lokasi');
-    session()->remove('status');
-    session()->remove('message');
-    session()->remove('url');
+    $dbs = db('session');
+    $q = $dbs->where("lokasi", $lokasi)->get()->getRowArray();
+    if ($q) {
+        $dbs->where('id', $q['id']);
+        $dbs->delete();
+    }
     session()->setFlashdata('gagal_rfid', $pesan);
     header("Location: " . $url);
     die;

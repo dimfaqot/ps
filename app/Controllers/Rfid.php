@@ -4,12 +4,12 @@ namespace App\Controllers;
 
 class Rfid extends BaseController
 {
-    public function index(): string
+    public function index($lokasi)
     {
         if (session('messaage')) {
             dd(session('status'));
         }
-        return view('rfid/home', ['judul' => 'RFID']);
+        return view('rfid/home', ['judul' => 'RFID', 'lokasi' => $lokasi]);
     }
 
     public function start()
@@ -21,72 +21,86 @@ class Rfid extends BaseController
         $db = db('users');
         $q = $db->where('uid', $uid)->get()->getRowArray();
         if (!$q) {
-            $data = [];
-            $data['status'] = '400';
-            $data['message'] = 'Kartu tidak terdaftar!.';
-            session()->set($data);
-            if (session('status')) {
-                gagal_js(session("message"));
+            $data = [
+                'lokasi' => $decode['data3'],
+                'uid' => $q['uid'],
+                'uid_member' => $decode['data2'],
+                'status' => "400",
+                'message' => "Kartu tidak terdaftar!."
+            ];
+            $dbs = db('session');
+            if ($dbs->insert($data)) {
+                gagal_js("Kartu tidak terdaftar!.");
             }
         }
 
 
-        $data = [];
-        if ($decode['data2'] !== "") {
-            $data['uid_member'] = $decode['data2'];
+        $data = [
+            'lokasi' => $decode['data3'],
+            'uid' => $q['uid'],
+            'uid_member' => $decode['data2'],
+            'status' => "200",
+            'url' => encode_jwt_fulus(['uid' => $uid, 'lokasi' => $decode['data3'], 'exp' => (time() + 60)]),
+            'message' => "Hai " . $q['nama'] . "...."
+        ];
+
+        if ($dbs->insert($data)) {
+            sukses_js("Hai " . $q['nama'] . "....");
         }
-        $data['status'] = '200';
-        $data['lokasi'] = $decode['lokasi'];
-        $data['message'] = 'Hai, ' . $q['nama'] . '...';
-        $data['uid'] = $q['uid'];
-        session()->set($data);
     }
 
-    public function sesi()
+    public function session()
     {
-        $data = [
-            'status' => session('status'),
-            'message' => session('message'),
-            'url' => encode_jwt_fulus(['uid' => session('uid'), 'limit' => (time() + 10)])
-        ];
-        sukses_js('Ok', $data);
+        $lokasi = clear($this->request->getVar('lokasi'));
+        $dbs = db('session');
+        $q = $dbs->where("lokasi", $lokasi)->get()->getRowArray();
+        if ($q) {
+            $exp = decode_jwt_fulus($q['url']);
+            if ((time() + 60) > $exp['exp']) {
+                $q['status'] = '400';
+                $q['message'] = 'Time expired!.';
+                $dbs->update($q);
+            }
+            sukses_js("Ok", $q);
+        }
     }
     public function logout()
     {
-        session()->remove('lokasi');
-        session()->remove('status');
-        session()->remove('message');
-        session()->remove('uid');
-        session()->remove('url');
-        session()->remove('uid_member');
-
+        $lokasi = clear($this->request->getVar('lokasi'));
+        $dbs = db('session');
+        $q = $dbs->where("lokasi", $lokasi)->get()->getRowArray();
+        if ($q) {
+            $dbs->where('id', $q['id']);
+            $dbs->delete();
+        }
         sukses_js('Sukses.');
     }
     // halaman eksekusi melalui jwt
     public function execute($jwt)
     {
-        check_session_tap();
         $decode = decode_jwt_fulus($jwt);
+        $dbs = db('session');
+        $q = $dbs->where("lokasi", $decode['lokasi'])->get()->getRowArray();
+        if ((time() + 60) > $decode['exp']) {
+            $dbs->update($q);
+            gagal_rfid(base_url('rfid'), $decode['lokasi'], "Time expired!.");
+        }
+
         $uid = $decode['uid'];
 
-        $limit = $decode['limit'];
-        if (time() > $limit) {
-            gagal_rfid(base_url('rfid'), "Token kadaluarsa!.");
-        }
         $db = db('users');
         $q = $db->where('uid', $uid)->get()->getRowArray();
 
         if (!$q) {
-            gagal_rfid(base_url('rfid'), "Kartu tidak terdaftar!.");
+            gagal_rfid(base_url('rfid'), $decode['lokasi'], "Kartu tidak terdaftar!.");
         }
         $fulus = decode_jwt_fulus($q['fulus']);
-        return view("rfid/execute", ['judul' => 'EXECUTE', 'nama' => $q['nama'], 'uang' => $fulus['fulus'], 'role' => $q['role'], 'user_id' => $q['id']]);
+        return view("rfid/execute", ['judul' => 'EXECUTE', 'nama' => $q['nama'], 'uang' => $fulus['fulus'], 'role' => $q['role'], 'user_id' => $q['id'], 'lokasi' => $decode['lokasi']]);
     }
 
     // menampilkan data hutang member
     public function hutang()
     {
-        check_session_tap();
         $user_id = clear($this->request->getVar("user_id"));
         $db = db("hutang");
         $q = $db->where("user_id", $user_id)->where('status', 0)->get()->getResultArray();
@@ -97,7 +111,6 @@ class Rfid extends BaseController
     // melunasi hutang member secara mandiri melalui tap
     public function lunasi_hutang()
     {
-        check_session_tap();
         $user_id = clear($this->request->getVar("user_id"));
         $dbu = db('users');
         $user = $dbu->where('uid', session('uid'))->get()->getRowArray();
@@ -220,7 +233,6 @@ class Rfid extends BaseController
     // setelah member tap maka langsung menampilkan data tagihan barber member
     public function lunasi_barber()
     {
-        check_session_tap();
         $user_id = clear($this->request->getVar("user_id"));
         $dbu = db('users');
         $user = $dbu->where('uid', session('uid'))->get()->getRowArray();
@@ -277,7 +289,6 @@ class Rfid extends BaseController
     // transaksi billiard dan ps oleh member secara mandiri melalui tap
     public function transaksi()
     {
-        check_session_tap();
         $data = json_decode(json_encode($this->request->getVar('data')), true);
 
         if ($data['menu'] == "topup" || $data['menu'] == "rfid" || $data['menu'] == "finger") {
@@ -446,7 +457,6 @@ class Rfid extends BaseController
     // topup hanya bisa dilakukan role root
     function topup($data)
     {
-        check_session_tap();
         $dbu = db("users");
         $admin = $dbu->where('uid', session('uid'))->get()->getRowArray();
         if (!$admin) {
@@ -485,7 +495,6 @@ class Rfid extends BaseController
     // hanya bisa dilakukan oleh role Root
     function rfid($data)
     {
-        check_session_tap();
         $dbu = db("users");
         $admin = $dbu->where('uid', session('uid'))->get()->getRowArray();
         if (!$admin) {
@@ -562,7 +571,6 @@ class Rfid extends BaseController
     // hanya untuk admin
     public function absen()
     {
-        check_session_tap();
         $dbu = db('users');
         $user = $dbu->whereNotIn('role', ["Member"])->where('uid', session('uid'))->get()->getRowArray();
 
@@ -615,7 +623,6 @@ class Rfid extends BaseController
     // hanya untuk admin
     public function poin()
     {
-        check_session_tap();
         $db = db('users');
         $user = $db->whereNotIn('role', ["Member"])->where('uid', session('uid'))->get()->getRowArray();
 
@@ -655,7 +662,6 @@ class Rfid extends BaseController
     // Jika tidak open maka fungsinya menjadi hanya mematikan lampu
     public function akhiri_permainan()
     {
-        check_session_tap();
         $order = clear($this->request->getVar('order'));
         $id = clear($this->request->getVar('id'));
         $dbu = db("users");
@@ -711,7 +717,6 @@ class Rfid extends BaseController
     // admin menerima pembayaran open dengan cara cash
     public function bayar_permainan()
     {
-        check_session_tap();
         $id = clear($this->request->getVar('id'));
         $order = clear($this->request->getVar('order'));
         $biaya = clear($this->request->getVar('biaya'));
@@ -779,7 +784,6 @@ class Rfid extends BaseController
     // admin mencari member sedangkan root mencari semuanya
     public function search_user()
     {
-        check_session_tap();
         $value = clear($this->request->getVar('value'));
         $db = db('users');
         $admin = $db->where('uid', session('uid'))->get()->getRowArray();
@@ -803,7 +807,6 @@ class Rfid extends BaseController
     // admin menerima pembayaran open dengan cara tap
     public function transaksi_tap()
     {
-        check_session_tap();
         $member_id = clear($this->request->getVar('member_id'));
         $biaya = clear($this->request->getVar('biaya'));
         $billiard_id = clear($this->request->getVar('billiard_id'));

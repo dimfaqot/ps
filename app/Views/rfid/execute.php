@@ -179,7 +179,8 @@ if (session('lokasi') == "Barber") {
 
     <script>
         let data = {};
-        countdown(20);
+        let lokasi = <?= $lokasi; ?>;
+        countdown(lokasi, 10);
         const default_sub_menu = () => {
             if (data.menu == undefined) {
                 let html = '<h6 class="text-center">' + lokasi.toUpperCase() + '</h6>';
@@ -215,8 +216,6 @@ if (session('lokasi') == "Barber") {
                 }
             }
         }
-
-
 
         const remove_cls = (cls, rmv) => {
             let elem = document.querySelectorAll('.' + cls);
@@ -358,7 +357,7 @@ if (session('lokasi') == "Barber") {
                     html += '</div>';
                     $(".body_fullscreen").html(html);
                     show_modal();
-                    countdown(10);
+                    countdown(lokasi, 10);
                     return;
 
                 }
@@ -484,7 +483,7 @@ if (session('lokasi') == "Barber") {
                         html += '<div data-order="tap" data-id="' + res.data3 + '" data-biaya="' + res.data + '" class="btn_cara_pembayaran text-center text-light px-5 border rounded-2 border-light border-opacity-25 py-1 bg-dark bg-opacity-75" style="cursor: pointer;">Tap</div>';
                         html += '</div>';
                         $(".body_fullscreen").html(html);
-                        countdown(10);
+                        countdown(lokasi, 10);
                         return;
                     } else {
                         $(".body_fullscreen").html('<div class="text-light text-center">' + res.message + '</div>');
@@ -515,7 +514,7 @@ if (session('lokasi') == "Barber") {
                 html += '<div class="mt-2 body_list_search_user">';
                 html += '</div>';
                 $(".body_fullscreen").html(html);
-                countdown(10);
+                countdown(lokasi, 10);
                 return;
             }
 

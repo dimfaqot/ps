@@ -16,6 +16,7 @@
 </div>
 
 <script>
+    let lokasi = <?= $lokasi; ?>;
     // show_modal("fullscreen", "show");
     // gagal_rfid();
     let interval_date_time;
@@ -32,15 +33,13 @@
     }
     const get_session = () => {
         post('rfid/session', {
-            id: 0
+            lokasi
         }).then(res => {
             if (res.status == "200") {
                 if (res.data.loasi !== "") {
-                    console.log(session_now);
                     if (res.data.status == "400" && session_now == 0) {
-                        console.log(session_now);
                         session_now = 1;
-                        gagal_rfid(res.data.message);
+                        gagal_rfid(lokasi, res.data.message);
                     }
                     if (res.data.status == "200") {
                         clearInterval(interval_date_time);
