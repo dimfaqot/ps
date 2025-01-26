@@ -58,7 +58,7 @@ class Rfid extends BaseController
             'uid_member' => $decode['data2'],
             'status' => "200",
             'url' => encode_jwt_fulus(['uid' => $uid, 'uid_member' => $decode['data2'], 'lokasi' => $decode['data3'], 'limit' => (time() + 120)]),
-            'message' => "Hai " . $q['nama'] . "...." . ($decode['data2'] !== "" ? "|Uid member detected: " . $decode['data2'] : "")
+            'message' => "Hai " . $q['nama'] . "...." . ($decode['data2'] == "" ? "" : "|Uid member detected: " . $decode['data2'])
         ];
 
         if ($dbs->insert($data)) {

@@ -108,7 +108,7 @@
         let html = "";
         let messages = message.split("|");
         messages.forEach(e => {
-            let html = '<h6 class="text-center text-light mt-5">' + e + '</h6>';
+            html += '<h6 class="text-center text-light mt-5">' + e + '</h6>';
         })
         if (seconds !== '') {
             session_now = 1;
