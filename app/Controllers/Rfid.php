@@ -6,7 +6,7 @@ class Rfid extends BaseController
 {
     public function index($lokasi)
     {
-        dd(encode_jwt_fulus(['uid' => "a9aec27a", 'lokasi' => "Billiard", 'exp' => (time() + 60)]));
+        // dd(encode_jwt_fulus(['uid' => "a9aec27a", 'lokasi' => "Billiard", 'exp' => (time() + 60)]));
         return view('rfid/home', ['judul' => 'RFID', 'lokasi' => upper_first($lokasi)]);
     }
 
