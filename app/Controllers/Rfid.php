@@ -22,7 +22,7 @@ class Rfid extends BaseController
             $data['status'] = '400';
             $data['message'] = 'kartu tidak terdaftar!.';
             session()->set($data);
-            gagal_js("Rfid tidak terdaftar!.");
+            gagal_js(session("message"));
         }
 
 
