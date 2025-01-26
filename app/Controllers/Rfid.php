@@ -38,7 +38,7 @@ class Rfid extends BaseController
             'uid' => $q['uid'],
             'uid_member' => $decode['data2'],
             'status' => "200",
-            'url' => encode_jwt_fulus(['uid' => $uid, 'lokasi' => $decode['data3'], 'exp' => (time() + 120)]),
+            'url' => encode_jwt_fulus(['uid' => $uid, 'lokasi' => $decode['data3'], 'limit' => (time() + 120)]),
             'message' => "Hai " . $q['nama'] . "...."
         ];
 
@@ -55,8 +55,8 @@ class Rfid extends BaseController
 
         if ($q) {
             if ($q['url'] !== "") {
-                $exp = decode_jwt_fulus($q['url']);
-                if ((time() + 100) > $exp['exp']) {
+                $limit = decode_jwt_fulus($q['url']);
+                if ((time() + 100) > $limit['limit']) {
                     $q['message'] = "Time expired";
                     $q['status'] = 400;
                     sukses_js("Sukses", $q);
@@ -105,7 +105,7 @@ class Rfid extends BaseController
         $dbs->delete();
 
 
-        if ((time() + 100) > $decode['exp']) {
+        if ((time() + 100) > $decode['limit']) {
             gagal_rfid(base_url('rfid'), "Time expired!.");
         }
 
