@@ -38,7 +38,7 @@ class Rfid extends BaseController
             'uid' => $q['uid'],
             'uid_member' => $decode['data2'],
             'status' => "200",
-            'url' => encode_jwt_fulus(['uid' => $uid, 'lokasi' => $decode['data3'], 'exp' => (time() + 60)]),
+            'url' => encode_jwt_fulus(['uid' => $uid, 'lokasi' => $decode['data3'], 'exp' => (time() + 120)]),
             'message' => "Hai " . $q['nama'] . "...."
         ];
 
@@ -56,8 +56,9 @@ class Rfid extends BaseController
         if ($q) {
             if ($q['url'] !== "") {
                 $exp = decode_jwt_fulus($q['url']);
-                if ((time() + 60) > $exp['exp']) {
+                if ((time() + 100) > $exp['exp']) {
                     $q['message'] = "Time expired";
+                    $q['status'] = 400;
                     sukses_js("Sukses", $q);
                 }
             }
