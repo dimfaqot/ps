@@ -63,6 +63,7 @@ class Rfid extends BaseController
             }
             sukses_js("Ok", $q);
         }
+        gagal_js("Session not found!.");
     }
     public function logout()
     {
