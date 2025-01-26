@@ -64,11 +64,13 @@ class Rfid extends BaseController
         $q = $dbs->where("lokasi", $lokasi)->get()->getRowArray();
 
         if ($q) {
-            $exp = decode_jwt_fulus($q['url']);
-            if ((time() + 60) > $exp['exp']) {
-                $q['status'] = '400';
-                $q['message'] = 'Time expired!.';
-                $dbs->update($q);
+            if ($q['url'] !== "") {
+                $exp = decode_jwt_fulus($q['url']);
+                if ((time() + 60) > $exp['exp']) {
+                    $q['status'] = '400';
+                    $q['message'] = 'Time expired!.';
+                    $dbs->update($q);
+                }
             }
             sukses_js("Ok", $q);
         }
