@@ -18,6 +18,7 @@ class Rfid extends BaseController
         $db = db('users');
         $q = $db->where('uid', $uid)->get()->getRowArray();
         if (!$q) {
+            $data = [];
             $data['status'] = '400';
             $data['message'] = 'kartu tidak terdaftar!.';
             session()->set($data);
@@ -25,10 +26,10 @@ class Rfid extends BaseController
         }
 
 
+        $data = [];
         if ($decode['data2'] !== "") {
             $data['uid_member'] = $decode['data2'];
         }
-
         $data['status'] = '200';
         $data['lokasi'] = $decode['lokasi'];
         $data['message'] = 'Hai, ' . $q['nama'] . '...';
