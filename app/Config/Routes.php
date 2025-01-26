@@ -273,7 +273,7 @@ $routes->post('/fulus/add', 'Fulus::add');
 $routes->get('/rfid', 'Rfid::index');
 $routes->post('/rfid/start', 'Rfid::start');
 // $routes->get('/rfid/auth', 'Rfid::auth');
-$routes->post('/rfid/session', 'Rfid::session');
+$routes->post('/rfid/session', 'Rfid::sesi');
 $routes->post('/rfid/logout', 'Rfid::logout');
 $routes->post('/rfid/hutang', 'Rfid::hutang');
 $routes->post('/rfid/absen', 'Rfid::absen');

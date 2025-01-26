@@ -20,7 +20,7 @@ class Rfid extends BaseController
         if (!$q) {
             $data = [];
             $data['status'] = '400';
-            $data['message'] = 'kartu tidak terdaftar!.';
+            $data['message'] = 'Kartu tidak terdaftar!.';
             session()->set($data);
             if (session('status')) {
                 gagal_js(session("message"));
@@ -39,14 +39,14 @@ class Rfid extends BaseController
         session()->set($data);
     }
 
-    public function session()
+    public function sesi()
     {
         $data = [
             'status' => session('status'),
             'message' => session('message'),
             'url' => encode_jwt_fulus(['uid' => session('uid'), 'limit' => (time() + 10)])
         ];
-        sukses_js('Ok', $data);
+        sukses_js('Ok', session('status'));
     }
     public function logout()
     {
