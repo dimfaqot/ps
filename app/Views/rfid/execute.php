@@ -179,7 +179,7 @@ if (session('lokasi') == "Barber") {
 
     <script>
         let data = {};
-        let lokasi = <?= $lokasi; ?>;
+        let lokasi = "<?= $lokasi; ?>";
         countdown(lokasi, 10);
         const default_sub_menu = () => {
             if (data.menu == undefined) {

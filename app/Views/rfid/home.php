@@ -16,7 +16,7 @@
 </div>
 
 <script>
-    let lokasi = <?= $lokasi; ?>;
+    let lokasi = "<?= $lokasi; ?>";
     // show_modal("fullscreen", "show");
     // gagal_rfid();
     let interval_date_time;
