@@ -11,7 +11,7 @@
 
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-    <?= view('rfid/rfid_js', ['lokasi' => $loksi]); ?>
+    <?= view('rfid/rfid_js', ['lokasi' => $lokasi]); ?>
     <style>
         .active {
             background-color: #49432A;
@@ -29,6 +29,7 @@
 
 
 <body class="bg-dark">
+
     <!-- Modal -->
     <div class="modal fade" id="fullscreen" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">

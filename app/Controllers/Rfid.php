@@ -6,6 +6,7 @@ class Rfid extends BaseController
 {
     public function index($lokasi)
     {
+        dd(encode_jwt_fulus(['uid' => "a9aec27a", 'lokasi' => "Billiard", 'exp' => (time() + 60)]));
         return view('rfid/home', ['judul' => 'RFID', 'lokasi' => upper_first($lokasi)]);
     }
 
@@ -15,14 +16,6 @@ class Rfid extends BaseController
         $decode = decode_jwt_finger($jwt);
         $uid = $decode['uid'];
 
-        $dbs = db('session');
-        $qs = $dbs->get()->getResultArray();
-        if ($qs) {
-            foreach ($qs as $i) {
-                $dbs->where('id', $i['id']);
-                $dbs->delete();
-            }
-        }
 
         $db = db('users');
         $q = $db->where('uid', $uid)->get()->getRowArray();
@@ -34,6 +27,7 @@ class Rfid extends BaseController
                 'message' => "Kartu tidak terdaftar!."
             ];
 
+            $dbs = db('session');
             if ($dbs->insert($data)) {
                 gagal_js("Kartu tidak terdaftar!.");
             }
@@ -64,9 +58,8 @@ class Rfid extends BaseController
             if ($q['url'] !== "") {
                 $exp = decode_jwt_fulus($q['url']);
                 if ((time() + 60) > $exp['exp']) {
-                    $q['status'] = '400';
-                    $q['message'] = 'Time expired!.';
-                    $dbs->update($q);
+                    $q['message'] = "Time expired";
+                    sukses_js("Sukses", $q);
                 }
             }
 
@@ -82,6 +75,14 @@ class Rfid extends BaseController
     }
     public function logout()
     {
+        $lokasi = clear($this->request->getVar('lokasi'));
+        $dbs = db('session');
+        $q = $dbs->where("lokasi", $lokasi)->get()->getRowArray();
+        if ($q) {
+            $dbs->where('id', $q['id']);
+            $dbs->delete();
+        }
+
         session()->remove('lokasi');
         session()->remove('status');
         session()->remove('message');

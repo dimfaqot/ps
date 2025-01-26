@@ -295,8 +295,9 @@ function encode_jwt_fulus($data)
 
     return $jwt;
 }
-function decode_jwt_fulus($encode_jwt)
+function decode_jwt_fulus($encode_jwt, $lokasi = null)
 {
+    $lokasi = ($lokasi == null ? session('lokasi') : $lokasi);
     try {
 
         $decoded = JWT::decode($encode_jwt, new Key(getenv("jwt_fulus"), 'HS256'));
@@ -305,15 +306,15 @@ function decode_jwt_fulus($encode_jwt)
         return $arr;
     } catch (\Exception $e) { // Also tried JwtException
         $data = [
-            'status' => '300',
+            'status' => '400',
             'message' => $e->getMessage(),
-            'data' => "",
+            'lokasi' => $lokasi,
             'data2' => "",
             'data3' => "",
             'data4' => "",
             'data5' => ""
         ];
-        echo json_encode($data);
+        sukses_js("Sukses", $data);
         die;
     }
 }
