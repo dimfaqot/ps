@@ -38,7 +38,7 @@ class Rfid extends BaseController
             'uid' => $q['uid'],
             'uid_member' => $decode['data2'],
             'status' => "200",
-            'url' => encode_jwt_fulus(['uid' => $uid, 'lokasi' => $decode['data3'], 'limit' => (time() + 120)]),
+            'url' => encode_jwt_fulus(['uid' => $uid, 'uid_member' => $decode['data2'], 'lokasi' => $decode['data3'], 'limit' => (time() + 120)]),
             'message' => "Hai " . $q['nama'] . "...."
         ];
 
@@ -62,6 +62,7 @@ class Rfid extends BaseController
                     sukses_js("Sukses", $q);
                 }
             }
+
             sukses_js("Ok", $q);
         }
 
@@ -69,13 +70,6 @@ class Rfid extends BaseController
     }
     public function logout()
     {
-        $lokasi = clear($this->request->getVar('lokasi'));
-        $dbs = db('session');
-        $q = $dbs->where("lokasi", $lokasi)->get()->getRowArray();
-        if ($q) {
-            $dbs->where('id', $q['id']);
-            $dbs->delete();
-        }
 
         session()->remove('lokasi');
         session()->remove('status');
@@ -92,18 +86,18 @@ class Rfid extends BaseController
         $decode = decode_jwt_fulus($jwt);
 
         $dbs = db('session');
-        $qs = $dbs->where('lokasi', $decode['lokasi'])->get()->getRowArray();
+        $q = $dbs->where("lokasi", $decode['lokasi'])->get()->getRowArray();
+        if ($q) {
+            $dbs->where('id', $q['id']);
+            $dbs->delete();
+        }
 
         $data = [
-            'lokasi' => $qs['lokasi'],
-            'uid' => $qs['uid'],
-            'uid_member' => $qs['uid_member']
+            'lokasi' => $decode['lokasi'],
+            'uid' => $decode['uid'],
+            'uid_member' => $decode['uid_member']
         ];
         session()->set($data);
-
-        $dbs->where('id', $qs['id']);
-        $dbs->delete();
-
 
         if ((time() + 100) > $decode['limit']) {
             gagal_rfid(base_url('rfid'), "Time expired!.");
