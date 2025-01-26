@@ -29,7 +29,7 @@ class Rfid extends BaseController
 
         $db = db('users');
         $q = $db->where('uid', $uid)->get()->getRowArray();
-        sukses_js("ok", $q);
+
         if (!$q) {
             $data = [
                 'lokasi' => $decode['data3'],
