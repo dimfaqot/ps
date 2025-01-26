@@ -46,7 +46,7 @@ class Rfid extends BaseController
             'message' => session('message'),
             'url' => encode_jwt_fulus(['uid' => session('uid'), 'limit' => (time() + 10)])
         ];
-        sukses_js('Ok', session('status'));
+        sukses_js('Ok', $data);
     }
     public function logout()
     {
