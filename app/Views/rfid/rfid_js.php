@@ -211,7 +211,7 @@
             show_modal('warning');
             return;
         } else {
-            $('.header_fullscreen').html(header_modal((order == "absen" ? "loading" : "close"), order.toUpperCase()));
+            $('.header_fullscreen').html(header_modal((order == "absen" || order == "shift" ? "loading" : "close"), order.toUpperCase()));
             $(".body_fullscreen").html('<div class="text-light text-center">Proses...</div>');
             show_modal();
         }
@@ -222,7 +222,7 @@
             id
         }).then(res => {
             if (res.status == "200") {
-                if (order == 'absen' || order == 'perangkat') {
+                if (order == 'absen' || order == 'perangkat' || order == 'shift') {
                     $(".body_fullscreen").html('<div class="text-light text-center">' + res.message + '</div>');
                 }
 
@@ -257,7 +257,7 @@
             } else {
                 $(".body_fullscreen").html('<div class="text-danger text-center">' + res.message + '</div>');
             }
-            if (order == "absen") {
+            if (order == "absen" || order == "shift") {
                 setTimeout(() => {
                     logout("Waktu habis!.");
                 }, 2000);

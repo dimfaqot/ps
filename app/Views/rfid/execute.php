@@ -226,7 +226,7 @@ if (session('lokasi') == "Barber") {
         $(document).on("click", ".btn_menu", function(e) {
             e.preventDefault();
             let menu = $(this).data("menu");
-            if (menu == 'absen' || menu == 'poin' || menu == "finger") {
+            if (menu == 'absen' || menu == 'poin' || menu == "finger" || menu == "shift") {
                 if (menu == "finger") {
                     warning_message("Fitur belum tersedia!.");
                     return;
