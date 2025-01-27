@@ -536,6 +536,7 @@ class Rfid extends BaseController
     // hanya bisa dilakukan oleh role Root
     function rfid($data)
     {
+        sukses_js("Ok", $data, $data['durasi']);
         $dbu = db("users");
         $admin = $dbu->where('uid', session('uid'))->get()->getRowArray();
         if (!$admin) {
