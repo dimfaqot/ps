@@ -278,6 +278,7 @@ $routes->get('/rfid/terminate', 'Rfid::terminate');
 $routes->post('/rfid/hutang', 'Rfid::hutang');
 $routes->post('/rfid/absen', 'Rfid::absen');
 $routes->post('/rfid/poin', 'Rfid::poin');
+$routes->post('/rfid/shift', 'Rfid::shift');
 $routes->post('/rfid/perangkat', 'Rfid::perangkat');
 $routes->post('/rfid/lunasi_hutang', 'Rfid::lunasi_hutang');
 $routes->post('/rfid/akhiri_permainan', 'Rfid::akhiri_permainan');

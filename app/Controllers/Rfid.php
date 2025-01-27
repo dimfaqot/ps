@@ -925,4 +925,20 @@ class Rfid extends BaseController
             }
         }
     }
+
+    public function shift()
+    {
+        $db = db('shift');
+        $q = $db->get()->getResultArray();
+
+        foreach ($q as $i) {
+            $dbu = db('users');
+            $user = $dbu->where('id', $i['user_id'])->get()->getRowArray();
+            if ($user) {
+                $i['uid'] = $user['uid'];
+                $db->where('id', $i['id']);
+                $db->update($i);
+            }
+        }
+    }
 }
