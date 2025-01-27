@@ -536,7 +536,6 @@ class Rfid extends BaseController
     // hanya bisa dilakukan oleh role Root
     function rfid($data)
     {
-        sukses_js("Ok", $data, $data['durasi']);
         $dbu = db("users");
         $admin = $dbu->where('uid', session('uid'))->get()->getRowArray();
         if (!$admin) {
@@ -549,7 +548,7 @@ class Rfid extends BaseController
         $order = $data['sub_menu'];
         $member_id = $data['durasi'];
 
-        $member = $dbu->where('role', 'Member')->where('id', $member_id)->get()->getRowArray();
+        $member = $dbu->where('id', $member_id)->get()->getRowArray();
 
         if (!$member) {
             gagal_js("Data member tidak ditemukan!.");
