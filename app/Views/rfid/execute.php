@@ -80,7 +80,7 @@ if (session('lokasi') == "Barber") {
 <?php endif; ?>
 
 <div class="d-flex justify-content-center">
-    <div style="padding-top: 40px;width:70%" class="rounded-bottom px-2 pb-2 text-light border border-top-0 border-light bg-secondary bg-opacity-50">
+    <div style="padding-top: 20px;width:70%" class="rounded-bottom px-2 pb-2 text-light border border-top-0 border-light bg-secondary bg-opacity-50">
         <div class="d-flex justify-content-center mb-3">
             <div class="spinner-border text-dark" role="status">
                 <span class="visually-hidden">Loading...</span>
