@@ -6,13 +6,13 @@ class Rfid extends BaseController
 {
     public function index($lokasi)
     {
-        if (session('lokasi') || session('lokasi') !== "") {
-            session()->remove('lokasi');
-            session()->remove('status');
-            session()->remove('message');
-            session()->remove('uid');
-            session()->remove('url');
-            session()->remove('uid_member');
+        if (session('lokasi')) {
+            session()->destroy('lokasi');
+            session()->destroy('status');
+            session()->destroy('message');
+            session()->destroy('uid');
+            session()->destroy('url');
+            session()->destroy('uid_member');
         }
         $dbs = db('session');
         $qs = $dbs->where("lokasi", $lokasi)->get()->getResultArray();
@@ -22,6 +22,12 @@ class Rfid extends BaseController
                 $dbs->where('id', $i['id']);
                 $dbs->delete();
             }
+            session()->destroy('lokasi');
+            session()->destroy('status');
+            session()->destroy('message');
+            session()->destroy('uid');
+            session()->destroy('url');
+            session()->destroy('uid_member');
         }
         // dd(encode_jwt_fulus(['uid' => "a9aec27a", 'lokasi' => "Billiard", 'exp' => (time() + 60)]));
         return view('rfid/home', ['judul' => 'RFID', 'lokasi' => upper_first($lokasi)]);
@@ -141,12 +147,12 @@ class Rfid extends BaseController
     }
     public function logout()
     {
-        session()->remove('lokasi');
-        session()->remove('status');
-        session()->remove('message');
-        session()->remove('uid');
-        session()->remove('url');
-        session()->remove('uid_member');
+        session()->destroy('lokasi');
+        session()->destroy('status');
+        session()->destroy('message');
+        session()->destroy('uid');
+        session()->destroy('url');
+        session()->destroy('uid_member');
 
         sukses_js('Sukses.');
     }

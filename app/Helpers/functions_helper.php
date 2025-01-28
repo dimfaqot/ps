@@ -124,12 +124,12 @@ function gagal($url, $pesan)
 function gagal_rfid($url, $pesan)
 {
     $lokasi = session('lokasi');
-    session()->remove('lokasi');
-    session()->remove('status');
-    session()->remove('message');
-    session()->remove('url');
-    session()->remove('uid');
-    session()->remove('uid_member');
+    session()->destroy('lokasi');
+    session()->destroy('status');
+    session()->destroy('message');
+    session()->destroy('url');
+    session()->destroy('uid');
+    session()->destroy('uid_member');
     session()->setFlashdata('gagal_rfid', $pesan);
     header("Location: " . $url . "/" . strtolower($lokasi));
     die;

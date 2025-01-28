@@ -79,10 +79,10 @@ class Login extends BaseController
 
     public function logout()
     {
-        session()->remove('id');
-        session()->remove('role');
-        session()->remove('latitude');
-        session()->remove('longitude');
+        session()->destroy('id');
+        session()->destroy('role');
+        session()->destroy('latitude');
+        session()->destroy('longitude');
 
         sukses(base_url('login'), 'Logout sukses!.');
     }
