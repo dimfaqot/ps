@@ -85,7 +85,7 @@ class Rfid extends BaseController
             sukses_js("Ok", $q);
         }
         $data = [];
-        if (time() % 10 == 0) {
+        if (time() % 60 == 0) {
             if ($lokasi == "billiard") {
                 $dbm = db('jadwal_2');
                 $qm = $dbm->orderBy('meja', 'ASC')->get()->getResultArray();
