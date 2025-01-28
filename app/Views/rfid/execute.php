@@ -55,6 +55,7 @@ if (session('lokasi') == "Barber") {
             }
         }
     }
+    $billiard = [];
     $dbm = db('jadwal_2');
     $qm = $dbm->orderBy('meja', 'ASC')->get()->getResultArray();
 
@@ -62,8 +63,8 @@ if (session('lokasi') == "Barber") {
         $dbb = db('billiard_2');
         $qb = $dbb->where('meja', "Meja " . $i['meja'])->where('is_active', 1)->get()->getRowArray();
         if ($qb) {
-            $dur = explode(":", durasi($i['end'], time()));
-            $i['status'] = ($i['durasi'] == 0 ? "Open" : $dur[0] . "h " . $dur[1] . "m");
+            $dur = explode(":", durasi($qb['end'], time()));
+            $i['status'] = ($qb['durasi'] == 0 ? "Open" : $dur[0] . "h " . $dur[1] . "m");
         } else {
             $i['status'] = "Available";
         }
@@ -82,10 +83,10 @@ if (session('lokasi') == "Barber") {
         $i['is_active'] = ($i['status'] == "In Game" ? 1 : 0);
 
         $dbr = db('rental');
-        $qp = $dbr->where('unit', $i['meja'])->where('is_active', 1)->get()->getRowArray();
+        $qp = $dbr->where('meja', $i['unit'])->where('is_active', 1)->get()->getRowArray();
         if ($qp) {
-            $dur = explode(":", durasi($i['ke'], time()));
-            $i['status'] = ($i['durasi'] == -1 ? "Open" : $dur[0] . "h " . $dur[1] . "m");
+            $dur = explode(":", durasi($qp['ke'], time()));
+            $i['status'] = ($qp['durasi'] == -1 ? "Open" : $dur[0] . "h " . $dur[1] . "m");
         } else {
             $i['status'] = "Available";
         }
