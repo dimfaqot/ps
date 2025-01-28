@@ -6,7 +6,7 @@ class Rfid extends BaseController
 {
     public function index($lokasi)
     {
-        sukses_js("Ok", session('lokasi'));
+
         if (session('lokasi')) {
             session()->destroy('lokasi');
             session()->destroy('status');
@@ -42,9 +42,8 @@ class Rfid extends BaseController
         $uid = $decode['uid'];
 
         if (session('lokasi')) {
-            gagal_js("Transaksi sedang berlangsung!.");
+            gagal_js("Transaksi sedang berlangsung!.", session('lokasi'));
         }
-
         $dbs = db('session');
         $qs = $dbs->where("lokasi", $decode['data3'])->get()->getResultArray();
 
