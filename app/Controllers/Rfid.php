@@ -6,6 +6,7 @@ class Rfid extends BaseController
 {
     public function index($lokasi)
     {
+        sukses_js("Ok", session('lokasi'));
         if (session('lokasi')) {
             session()->destroy('lokasi');
             session()->destroy('status');
@@ -40,7 +41,7 @@ class Rfid extends BaseController
         $decode = decode_jwt_finger($jwt);
         $uid = $decode['uid'];
 
-        if (session('lokasi') || session('lokasi') !== "") {
+        if (session('lokasi')) {
             gagal_js("Transaksi sedang berlangsung!.");
         }
 
