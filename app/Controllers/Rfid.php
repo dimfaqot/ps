@@ -26,7 +26,7 @@ class Rfid extends BaseController
         $decode = decode_jwt_finger($jwt);
         $uid = $decode['uid'];
 
-        if (session('lokasi')) {
+        if (session('lokasi') || session('lokasi') !== "") {
             gagal_js("Transaksi sedang berlangsung!.");
         }
 
