@@ -170,7 +170,7 @@ if (session('lokasi') == "Barber") {
     </div>
     <div class="sub_menu mx-3 mt-3"></div>
     <div class="durasi mx-4 px-2 mt-2"></div>
-    <div class="body_btn_save d-grid mt-4 mx-4 px-2"></div>
+    <div class="body_btn_save d-grid mt-3 mx-4 px-2"></div>
 
     <div class="d-flex justify-content-center mt-4">
         <div style="cursor:pointer;font-size:35px;width: 75px;height:75px;" class="fw-bold text-center pt-3 rounded-circle border border-secondary text-secondary body_countdown">1</div>
