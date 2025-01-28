@@ -6,6 +6,14 @@ class Rfid extends BaseController
 {
     public function index($lokasi)
     {
+        if (session('lokasi') || session('lokasi') !== "") {
+            session()->remove('lokasi');
+            session()->remove('status');
+            session()->remove('message');
+            session()->remove('uid');
+            session()->remove('url');
+            session()->remove('uid_member');
+        }
         $dbs = db('session');
         $qs = $dbs->where("lokasi", $lokasi)->get()->getResultArray();
 
@@ -133,7 +141,6 @@ class Rfid extends BaseController
     }
     public function logout()
     {
-
         session()->remove('lokasi');
         session()->remove('status');
         session()->remove('message');
