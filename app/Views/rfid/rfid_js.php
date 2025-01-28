@@ -75,6 +75,7 @@
                     show_modal(id, "hide");
                     session_now = 0;
                 }
+                3
             } else {
                 $(".body_countdown").text(x);
             }
@@ -92,7 +93,7 @@
         if (seconds !== "") {
             session_now = 1;
             html += '<div class="d-flex justify-content-center">';
-            html += '<div style="cursor:pointer;font-size:35px;width: 75px;height:75px;" class="mt-5 fw-bold rounded-circle text-center pt-2 border border-secondary text-secondary body_countdown">1</div>';
+            html += '<div style="cursor:pointer;font-size:35px;width: 75px;height:75px;" class="mt-5 fw-bold rounded-circle text-center pt-3 border border-secondary text-secondary body_countdown">1</div>';
             html += '</div>';
             $(".body_" + id).html(html);
             show_modal(id, "show");

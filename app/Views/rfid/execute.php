@@ -173,7 +173,7 @@ if (session('lokasi') == "Barber") {
     <div class="body_btn_save d-grid mt-4 mx-4 px-2"></div>
 
     <div class="d-flex justify-content-center mt-4">
-        <div style="cursor:pointer;font-size:35px;width: 75px;height:75px;" class="fw-bold text-center pt-2 rounded-circle border border-secondary text-secondary body_countdown">1</div>
+        <div style="cursor:pointer;font-size:35px;width: 75px;height:75px;" class="fw-bold text-center pt-3 rounded-circle border border-secondary text-secondary body_countdown">1</div>
     </div>
 
 
