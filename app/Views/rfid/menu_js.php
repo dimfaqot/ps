@@ -67,7 +67,7 @@
     })
 
     const durasi_member = `<h6 class="text-center text-light mb-4">DURASI (JAM)</h6>
-                    <div class="d-flex justify-content-center gap-3 mb-3">
+                    <div class="d-flex justify-content-center gap-3">
                     <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 fw-bold btn_durasi" data-durasi="1" style="padding-top:12px;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">1</div>
                     <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 mx-4 fw-bold btn_durasi" data-durasi="2" style="padding-top:12px;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">2</div>
                     <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 fw-bold btn_durasi" data-durasi="3" style="padding-top:12px;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">3</div>
