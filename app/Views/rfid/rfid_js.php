@@ -51,6 +51,7 @@
         interval_countdown = setInterval(() => {
             x++;
             if (x > seconds) {
+                $(".body_btn_save").html("");
                 $(".header_" + id).html(header_modal("loading"));
                 let html = '<h6 class="text-center text-danger" style="margin-top:300px">Waktu habis!.</h6>';
                 $(".body_" + id).html(html);
