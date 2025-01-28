@@ -149,7 +149,7 @@ if (session('lokasi') == "Barber") {
 
                     setTimeout(() => {
                         logout("Waktu habis!.");
-                    }, 3000);
+                    }, 2000);
                 })
             })
         </script>
@@ -381,7 +381,7 @@ if (session('lokasi') == "Barber") {
 
                 setTimeout(() => {
                     logout("Waktu habis!.");
-                }, 3000);
+                }, 2000);
             })
         })
         $(document).on("click", ".btn_hutang", function(e) {
@@ -449,7 +449,7 @@ if (session('lokasi') == "Barber") {
 
                 setTimeout(() => {
                     logout("Waktu habis!.");
-                }, 3000);
+                }, 2000);
             })
         })
         $(document).on("click", ".btn_konfirmasi", function(e) {
@@ -493,7 +493,7 @@ if (session('lokasi') == "Barber") {
 
                 setTimeout(() => {
                     logout("Waktu habis!.");
-                }, 3000);
+                }, 2000);
             })
         })
 
@@ -530,7 +530,7 @@ if (session('lokasi') == "Barber") {
 
                 setTimeout(() => {
                     logout("Waktu habis!.");
-                }, 3000);
+                }, 2000);
             })
         })
 
@@ -597,7 +597,7 @@ if (session('lokasi') == "Barber") {
 
                 setTimeout(() => {
                     logout("Waktu habis!.");
-                }, 3000);
+                }, 2000);
             })
         }
     </script>

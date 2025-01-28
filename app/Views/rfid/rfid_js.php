@@ -261,7 +261,7 @@
             if (order == "absen" || order == "shift") {
                 setTimeout(() => {
                     logout("Waktu habis!.");
-                }, 3000);
+                }, 2000);
 
             }
         })
