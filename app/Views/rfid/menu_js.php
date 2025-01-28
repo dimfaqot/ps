@@ -105,19 +105,19 @@
         topup: `<div class="rounded px-4 pt-4">
                     <h6 class="text-center text-light mb-4">TOPUP</h6>
                     <div class="d-flex justify-content-center gap-5 mb-3">
-                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 fw-bold btn_sub_menu" data-sub_menu="1" style="12;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">1</div>
-                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 mx-2 fw-bold btn_sub_menu" data-sub_menu="2" style="12;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">2</div>
-                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 fw-bold btn_sub_menu" data-sub_menu="3" style="12;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">3</div>
+                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 fw-bold btn_sub_menu" data-sub_menu="1" style="padding-top:12px;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">1</div>
+                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 mx-2 fw-bold btn_sub_menu" data-sub_menu="2" style="padding-top:12px;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">2</div>
+                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 fw-bold btn_sub_menu" data-sub_menu="3" style="padding-top:12px;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">3</div>
                     </div>
                     <div class="d-flex justify-content-center gap-5 mb-3">
-                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 fw-bold btn_sub_menu" data-sub_menu="4" style="12;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">4</div>
-                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 mx-2 fw-bold btn_sub_menu" data-sub_menu="5" style="12;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">5</div>
-                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 fw-bold btn_sub_menu" data-sub_menu="6" style="12;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">6</div>
+                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 fw-bold btn_sub_menu" data-sub_menu="4" style="padding-top:12px;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">4</div>
+                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 mx-2 fw-bold btn_sub_menu" data-sub_menu="5" style="padding-top:12px;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">5</div>
+                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 fw-bold btn_sub_menu" data-sub_menu="6" style="padding-top:12px;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">6</div>
                     </div>
                     <div class="d-flex justify-content-center gap-5 mb-3">
-                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 fw-bold btn_sub_menu" data-sub_menu="10" style="12;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">10</div>
-                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 mx-2 fw-bold btn_sub_menu" data-sub_menu="20" style="12;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">20</div>
-                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 fw-bold btn_sub_menu" data-sub_menu="30" style="12;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">30</div>
+                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 fw-bold btn_sub_menu" data-sub_menu="10" style="padding-top:12px;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">10</div>
+                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 mx-2 fw-bold btn_sub_menu" data-sub_menu="20" style="padding-top:12px;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">20</div>
+                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 fw-bold btn_sub_menu" data-sub_menu="30" style="padding-top:12px;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">30</div>
                     </div>
                     </div>`,
         durasi: (role == "Member" ? durasi_member : durasi_admin),
