@@ -102,8 +102,8 @@
                         <span style="cursor: pointer;" data-menu="Add" class="btn_menu py-2 px-4 rounded border border-info">ADD</span>
                         <span style="cursor: pointer;" data-menu="Delete" class="btn_menu py-2 px-4 rounded border border-info">DELETE</span>
                     </div>`,
-        topup: `<div class="rounded px-4 pt-4">
-                    <h6 class="text-center text-light mb-4">TOPUP</h6>
+        topup: `<div class="rounded px-4">
+                    <h6 class="text-center text-light mb-2">TOPUP</h6>
                     <div class="d-flex justify-content-center gap-5 mb-3">
                     <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 fw-bold btn_sub_menu" data-sub_menu="1" style="padding-top:12px;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">1</div>
                     <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 mx-2 fw-bold btn_sub_menu" data-sub_menu="2" style="padding-top:12px;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">2</div>
