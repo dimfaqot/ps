@@ -513,7 +513,7 @@ class Rfid extends BaseController
         $jml_topup = (int)$data['sub_menu'] * 10000;
         $member_id = session('uid_member');
 
-        $member = $dbu->where('role', 'Member')->where('id', $member_id)->get()->getRowArray();
+        $member = $dbu->where('role', 'Member')->where('uid', $member_id)->get()->getRowArray();
 
         if (!$member) {
             gagal_js("Data member tidak ditemukan!.");
