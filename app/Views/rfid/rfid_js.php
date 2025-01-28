@@ -162,6 +162,7 @@
     });
 
     const logout = (message = "", countdown = "", modal = "", id = "fullscreen", redirect = "rfid") => {
+        $(".body_btn_save").html("");
         post("rfid/logout", {
             lokasi
         }).then(res => {

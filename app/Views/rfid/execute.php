@@ -380,7 +380,6 @@ if (session('lokasi') == "Barber") {
 
 
                 setTimeout(() => {
-                    $(".body_btn_save").html("");
                     logout("Waktu habis!.");
                 }, 2000);
             })

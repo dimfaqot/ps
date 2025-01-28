@@ -68,14 +68,14 @@
 
     const durasi_member = `<h6 class="text-center text-light mb-4">DURASI (JAM)</h6>
                     <div class="d-flex justify-content-center gap-3 mb-3">
-                    <div class="rounded-circle border border-secondary border-opacity-50 text-center p-2 fw-bold btn_durasi" data-durasi="1" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">1</div>
-                    <div class="rounded-circle border border-secondary border-opacity-50 text-center p-2 mx-4 fw-bold btn_durasi" data-durasi="2" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">2</div>
-                    <div class="rounded-circle border border-secondary border-opacity-50 text-center p-2 fw-bold btn_durasi" data-durasi="3" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">3</div>
+                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 fw-bold btn_durasi" data-durasi="1" style="padding-top:12px;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">1</div>
+                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 mx-4 fw-bold btn_durasi" data-durasi="2" style="padding-top:12px;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">2</div>
+                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 fw-bold btn_durasi" data-durasi="3" style="padding-top:12px;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">3</div>
                     </div>
                     <div class="d-flex justify-content-center gap-3 mb-3">
-                    <div class="rounded-circle border border-secondary border-opacity-50 text-center p-2 fw-bold btn_durasi" data-durasi="4" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">4</div>
-                    <div class="rounded-circle border border-secondary border-opacity-50 text-center p-2 mx-4 fw-bold btn_durasi" data-durasi="5" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">5</div>
-                    <div class="rounded-circle border border-secondary border-opacity-50 text-center p-2 fw-bold btn_durasi" data-durasi="6" style="cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">6</div>
+                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 fw-bold btn_durasi" data-durasi="4" style="padding-top:12px;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">4</div>
+                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 mx-4 fw-bold btn_durasi" data-durasi="5" style="padding-top:12px;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">5</div>
+                    <div class="rounded-circle border border-secondary border-opacity-50 text-center px-3 fw-bold btn_durasi" data-durasi="6" style="padding-top:12px;cursor:pointer;font-size:x-large;width: 55px;height:55px;color:#cbf4f0;border:1px solid #242b32">6</div>
                     </div>`;
     const durasi_admin = '<div class="d-flex justify-content-center"><div class="border border-secondary border-opacity-50 text-center border-warning rounded-pill text-light px-4 py-2 btn_durasi" data-durasi="0" style="cursor:pointer;font-size:large;">Open</div></div>';
     const menus = {
