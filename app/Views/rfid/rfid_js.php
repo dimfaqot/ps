@@ -53,7 +53,7 @@
             if (x > seconds) {
                 $(".body_btn_save").html("");
                 $(".header_" + id).html(header_modal("loading"));
-                let html = '<h6 class="text-center text-danger">Waktu habis!.</h6>';
+                let html = '<h6 class="text-center text-danger mt-5">Waktu habis!.</h6>';
                 $(".body_" + id).html(html);
                 show_modal(id, "show");
                 if (logout == "yes") {

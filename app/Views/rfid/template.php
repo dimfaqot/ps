@@ -40,7 +40,7 @@
 
                     </div>
                     <div class="body_fullscreen"></div>
-                    <div class="body_btn_save d-grid mt-4 mx-4 px-2"></div>
+                    <div class="body_btn_save d-grid mt-2 mx-4 px-2"></div>
                 </div>
             </div>
         </div>
