@@ -49,7 +49,7 @@
         <div class="modal-dialog modal-fullscreen modal-dialog-centered">
             <div class="modal-content" style="background-color: transparent;">
 
-                <div class="modal-body body_warning" style="margin-top: 300px;">
+                <div class="modal-body body_warning" style="margin-top: 50px;">
 
 
                 </div>
