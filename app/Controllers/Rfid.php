@@ -86,7 +86,7 @@ class Rfid extends BaseController
         }
         $data = [];
         if (time() % 10 == 0) {
-            if ($lokasi == "Billiard") {
+            if ($lokasi == "billiard") {
                 $dbm = db('jadwal_2');
                 $qm = $dbm->orderBy('meja', 'ASC')->get()->getResultArray();
 
@@ -102,7 +102,7 @@ class Rfid extends BaseController
 
                     $data[] = $i;
                 }
-            } elseif ($lokasi == "Ps") {
+            } elseif ($lokasi == "ps") {
                 $dbp = db('unit');
                 $qps = $dbp->whereNotIn('status', ["Maintenance"])->orderBy('id', 'ASC')->get()->getResultArray();
 
