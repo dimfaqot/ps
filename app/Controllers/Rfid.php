@@ -6,14 +6,7 @@ class Rfid extends BaseController
 {
     public function index($lokasi)
     {
-        if (session('lokasi')) {
-            session()->remove('lokasi');
-            session()->remove('status');
-            session()->remove('message');
-            session()->remove('uid');
-            session()->remove('url');
-            session()->remove('uid_member');
-        }
+
         $dbs = db('session');
         $qs = $dbs->where("lokasi", $lokasi)->get()->getResultArray();
 
@@ -40,9 +33,6 @@ class Rfid extends BaseController
         $decode = decode_jwt_finger($jwt);
         $uid = $decode['uid'];
 
-        if (session('lokasi')) {
-            gagal_js("Transaksi sedang berlangsung!.", session('lokasi'));
-        }
         $dbs = db('session');
         $qs = $dbs->where("lokasi", $decode['data3'])->get()->getResultArray();
 
