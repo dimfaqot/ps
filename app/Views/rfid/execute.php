@@ -156,7 +156,7 @@ if (session('lokasi') == "Barber") {
     <?php endif; ?>
 <?php endif; ?>
 <?php if (session('lokasi') !== "Barber"): ?>
-    <div class="mx-4 px-2 text-center mt-3">
+    <div class="mx-4 px-2 text-center mt-2">
         <div class="row justify-content-center g-2">
             <?php foreach ($menu as $i): ?>
                 <div class="col-4">
