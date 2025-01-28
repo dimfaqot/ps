@@ -498,6 +498,9 @@ class Rfid extends BaseController
     // topup hanya bisa dilakukan role root
     function topup($data)
     {
+        if (!session('uid_member') || session('uid_member') == "") {
+            gagal_js("Uid member belum terbaca!.");
+        }
         $dbu = db("users");
         $admin = $dbu->where('uid', session('uid'))->get()->getRowArray();
         if (!$admin) {
@@ -508,7 +511,7 @@ class Rfid extends BaseController
         }
 
         $jml_topup = (int)$data['sub_menu'] * 10000;
-        $member_id = $data['durasi'];
+        $member_id = session('uid_member');
 
         $member = $dbu->where('role', 'Member')->where('id', $member_id)->get()->getRowArray();
 

@@ -214,11 +214,11 @@
             show_modal('warning');
             return;
         } else {
-            $('.header_fullscreen').html(header_modal((order == "absen" || order == "shift" ? "loading" : "close"), order.toUpperCase()));
+            $('.header_fullscreen').html(header_modal((order == "absen" || order == "shift" || order == "topup" ? "loading" : "close"), order.toUpperCase()));
             $(".body_fullscreen").html('<div class="text-light text-center">Proses...</div>');
             show_modal();
         }
-        if (order == "absen") {
+        if (order == "absen" || order == "topup") {
             clearInterval(interval_countdown);
         }
         post("rfid/" + order, {

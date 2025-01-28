@@ -371,7 +371,7 @@ if (session('lokasi') == "Barber") {
             $(".body_btn_save").html("");
             clearInterval(interval_countdown);
 
-            if (data.menu == 'topup' || data.menu == 'rfid' || data.menu == 'finger') {
+            if (data.menu == 'rfid' || data.menu == 'finger') {
                 if (data.durasi == undefined) {
                     $('.header_fullscreen').html(header_modal("loading", (data.menu == "topup" ? data.menu.toUpperCase() : data.sub_menu.toUpperCase() + " " + data.menu.toUpperCase())));
                     let html = "";

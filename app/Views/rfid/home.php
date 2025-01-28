@@ -1,26 +1,3 @@
-<?php
-$ps = [];
-$dbp = db('unit');
-$qps = $dbp->whereNotIn('status', ["Maintenance"])->orderBy('id', 'ASC')->get()->getResultArray();
-
-foreach ($qps as $i) {
-    $exp = explode(" ", $i['unit']);
-    $i['meja'] = (int)end($exp);
-    $i['is_active'] = ($i['status'] == "In Game" ? 1 : 0);
-
-    $dbr = db('rental');
-    $qp = $dbr->where('meja', $i['unit'])->where('is_active', 1)->get()->getRowArray();
-    if ($qp) {
-        $dur = explode(":", durasi($qp['ke'], time()));
-        $i['status'] = ($qp['durasi'] == -1 ? "Open" : $dur[0] . "h " . $dur[1] . "m");
-    } else {
-        $i['status'] = "Available";
-    }
-    $ps[] = $i;
-}
-
-dd($ps);
-?>
 <?= $this->extend('rfid/template') ?>
 
 <?= $this->section('content') ?>
