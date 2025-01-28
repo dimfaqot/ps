@@ -15,7 +15,7 @@
         }
         html_ps += '<div class="rounded-circle p-2 text-center fw-bold btn_meja_' + e.meja + ' btn_meja ' + (e.is_active == 1 ? 'disable' : '') + '" data-meja="' + e.meja + '" data-menu="Ps" data-is_active="' + e.is_active + '" style="cursor:pointer;font-size:35px;width: 75px;height:75px;color:#7c6f3e;border:1px solid #fce882">';
         html_ps += '<div class="text-center" style="font-size:9px;margin-bottom:-2px">MEJA</div>' + e.meja;
-        html_ps += '<div class="text-center div_durasi_' + e.meja + '" style="font-size:9px;margin-top:-5px">Available</div>';
+        html_ps += '<div class="text-center div_durasi_' + e.meja + '" style="font-size:9px;margin-top:-5px">' + e.status + '</div>';
         html_ps += '</div>';
         if (i % 4 == 3) {
             html_ps += '</div>';
@@ -27,7 +27,7 @@
         }
         html_billiard += '<div class="rounded-circle p-2 text-center fw-bold btn_meja_' + e.meja + ' btn_meja ' + (e.is_active == 1 ? 'disable' : '') + '" data-meja="' + e.meja + '" data-menu="Billiard" data-is_active="' + e.is_active + '" style="cursor:pointer;font-size:35px;width: 75px;height:75px;color:#7c6f3e;border:1px solid #fce882">';
         html_billiard += '<div class="text-center" style="font-size:9px;margin-bottom:-2px">MEJA</div>' + e.meja;
-        html_billiard += '<div class="text-center div_durasi_' + e.meja + '" style="font-size:9px;margin-top:-5px">Available</div>';
+        html_billiard += '<div class="text-center div_durasi_' + e.meja + '" style="font-size:9px;margin-top:-5px">' + e.status + '</div>';
         html_billiard += '</div>';
         if (i % 4 == 3) {
             html_billiard += '</div>';
