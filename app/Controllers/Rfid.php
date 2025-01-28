@@ -65,7 +65,7 @@ class Rfid extends BaseController
             ];
 
             if ($dbs->insert($data)) {
-                gagal_js("Kartu tidak terdaftar!.");
+                gagal_js("Kartu tidak terdaftar!.", session('lokasi'));
             }
         }
 
