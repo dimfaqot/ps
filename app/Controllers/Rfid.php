@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class Wifi extends BaseController
+class Rfid extends BaseController
 {
     public function index($lokasi)
     {

@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class Ble extends BaseController
+class Wifi extends BaseController
 {
     public function settings()
     {
