@@ -90,7 +90,7 @@ class Wifi extends BaseController
                 }
                 $jml_perangkat = count($jml_per);
             }
-            sukses_js("sukses", $data, count($data), $pin);
+            sukses_js("sukses", $data, $pin, count($data));
         }
     }
 }
