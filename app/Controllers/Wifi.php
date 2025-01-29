@@ -12,7 +12,7 @@ class Ble extends BaseController
 
         $db = db('ble');
 
-        $q = $db->where('nama_server', ($nama_server == "Billiards" ? "Billiard" : $nama_server))->get()->getRowArray();
+        $q = $db->where('nama_server', $nama_server)->get()->getRowArray();
 
         if (!$q) {
             gagal_js("Nama server tidak ditemukan!.");
@@ -27,53 +27,50 @@ class Ble extends BaseController
         $nama_server = $decode['uid'];
         $status_esp = $decode['data2'];
 
-        $jml_perangkat = 0;
-        $jml_meja = 0;
+
+        $data = [];
+        $pin = [];
 
         $db = db('perangkat');
-        $qp = $db->where('grup', ($nama_server == "Billiards" ? "Billiard" : $nama_server))->orderBy('no_urut', 'ASC')->get()->getResultArray();
+        $qp = $db->where('grup', $nama_server)->orderBy('no_urut', 'ASC')->get()->getResultArray();
+        $macQp = $db->where('grup', $nama_server)->whereNotIn('mac', [''])->get()->getRowArray();
         if (!$qp) {
             gagal_js("Nama server tidak ditemukan!.");
         }
 
 
-        $data = [];
-
-        if ($nama_server == "Billiards") {
+        if ($nama_server == "Billiard") {
             $dbj = db('jadwal_2');
             if ($status_esp == "") {
                 foreach ($qp as $i) {
-                    $hasil = $i['no_urut'] . $i['status'];
-                    $data[] = (int)$hasil;
+                    $pin[] = $i['pin'];
+                    $data[] = ['mac' => $macQp['mac'], 'pin' => $i['pin'], 'status' => $i['status']];
                 }
-                $jml_perangkat = count($qp);
+
                 $qb = $dbj->orderBy('meja', 'ASC')->get()->getResultArray();
                 if (!$qb) {
                     gagal_js("Nama server tidak ditemukan!.");
                 }
-
+                $pin[] = 21;
                 foreach ($qb as $i) {
-                    $meja = ($i['meja'] == 1 ? 10 : ($i['meja'] == 2 ? 11 : $i['meja']));
-                    $hasil = $meja . $i['is_active'];
-                    $data[] =  (int)$hasil;
+                    $data[] = ['mac' => $i['mac'], 'pin' => 21, 'status' => $i['is_active']];
                 }
-                $jml_meja = count($qb);
             } else {
                 $statusArr = stringArr_to_arr($status_esp);
                 $jml_mej = [];
 
                 $dbb = db('jadwal_2');
                 foreach ($statusArr as $i) {
-                    $mej = ($i['perangkat'] == 10 ? 1 : ($i['perangkat'] == 11 ? 2 : $i['perangkat']));
-                    $q = $dbb->where('meja', $mej)->get()->getRowArray();
-                    if ($i['perangkat'] >= 10) {
-                        if ($q && $mej == $q['meja'] && $q['is_active'] != $i['status']) {
-                            $meja = ($q['meja'] == 1 ? 10 : ($q['meja'] == 2 ? 11 : $q['meja']));
-                            $hasil = $meja . $q['is_active'];
-                            $jml_mej[] = $hasil;
-                            $data[] =  (int)$hasil;
-                        }
-                    }
+                    $no_urut = "";
+                    // $q = $dbb->where('meja', $mej)->get()->getRowArray();
+                    // if ($i['perangkat'] >= 10) {
+                    //     if ($q && $mej == $q['meja'] && $q['is_active'] != $i['status']) {
+                    //         $meja = ($q['meja'] == 1 ? 10 : ($q['meja'] == 2 ? 11 : $q['meja']));
+                    //         $hasil = $meja . $q['is_active'];
+                    //         $jml_mej[] = $hasil;
+                    //         $data[] =  (int)$hasil;
+                    //     }
+                    // }
                 }
                 $jml_meja = count($jml_mej);
 
@@ -93,7 +90,7 @@ class Ble extends BaseController
                 }
                 $jml_perangkat = count($jml_per);
             }
-            sukses_js("sukses", (count($data) == 0 || $data == null ? "" : $data), $jml_perangkat, $jml_meja, $jml_perangkat + $jml_meja);
+            sukses_js("sukses", $data, count($data), $pin);
         }
     }
 }
