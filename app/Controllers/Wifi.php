@@ -81,7 +81,6 @@ class Wifi extends BaseController
 
                     // dd("tidak masuk");
                     if ($q && $q['status'] != $i['status']) {
-                        dd("masuk");
                         $hasil = $q['no_urut'] . $q['status'];
                         $jml_per[] = $hasil;
                         $data[] =  (int)$hasil;
