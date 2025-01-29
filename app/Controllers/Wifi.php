@@ -27,7 +27,7 @@ class Wifi extends BaseController
         $nama_server = $decode['uid'];
         $status_esp = $decode['data2'];
 
-
+        sukses_js("Ok", $nama_server);
         $data = [];
         $pin = [];
 
