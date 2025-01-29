@@ -38,7 +38,6 @@ class Wifi extends BaseController
             gagal_js("Nama server tidak ditemukan!.");
         }
 
-        sukses_js("Sukses", $macQp);
         if ($nama_server == "Billiard") {
             $dbj = db('jadwal_2');
             if ($status_esp == "") {
