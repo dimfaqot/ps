@@ -53,7 +53,7 @@ class Wifi extends BaseController
                 }
                 $pin[] = 21;
                 foreach ($qb as $i) {
-                    if (!in_array($i['mac'], $macs)) {
+                    if (!in_array($i['mac'], $macs) && $i['mac'] !== "") {
                         $macs[] = $i['mac'];
                     }
                     $data[] = ['mac' => $i['mac'], 'pin' => 21, 'status' => $i['is_active']];
