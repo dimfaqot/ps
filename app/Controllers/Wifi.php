@@ -30,6 +30,7 @@ class Wifi extends BaseController
         $data = [];
         $macs = [];
         $cek_perubahan = 0;
+        $no_urut_status = [];
 
         $db = db('perangkat');
         $qp = $db->where('grup', $nama_server)->orderBy('no_urut', 'ASC')->get()->getResultArray();
@@ -43,6 +44,7 @@ class Wifi extends BaseController
             if ($status_esp == "" || $status_esp == "1") {
                 $macs[] = $macQp['mac'];
                 foreach ($qp as $i) {
+                    $no_urut_status[] = $i['no_urut'] . '|' . $i['status'];
                     $data[] = ['mac' => $macQp['mac'], 'pin' => $i['pin'], 'status' => $i['status'], 'no_urut' => $i['no_urut']];
                 }
 
@@ -55,6 +57,7 @@ class Wifi extends BaseController
                     if (!in_array($i['mac'], $macs) && $i['mac'] !== "") {
                         $macs[] = $i['mac'];
                     }
+                    $no_urut_status[] = $i['no_urut'] . '|' . $i['status'];
                     $data[] = ['mac' => $i['mac'], 'pin' => 21, 'status' => $i['is_active'], 'no_urut' => $i['no_urut']];
                 }
 
@@ -62,26 +65,27 @@ class Wifi extends BaseController
                     sukses_js("Mulai", $macs);
                 }
                 if ($status_esp == "1") {
-                    sukses_js("Berubah", $data);
+                    sukses_js("Berubah", $data, $no_urut_status);
                 }
             } else {
                 $statusArr = stringArr_to_arr($status_esp);
 
                 foreach ($statusArr as $i) {
-                    $no_urut = (int)$i['no_urut'];
-
+                    $no_urut = $i['no_urut'];
                     if ($no_urut > 10) {
                         $qm = $dbj->where('no_urut', $no_urut)->get()->getRowArray();
                         if ($qm['is_active'] !== $i['status']) {
                             $cek_perubahan++;
-                            $data[] = ['mac' => $i['mac'], 'pin' => 21, 'status' => $qm['is_active'], 'no_urut' => $i['no_urut']];
+                            $no_urut_status[] = $i['no_urut'] . '|' . $qm['is_active'];
+                            $data[] = ['mac' => $qm['mac'], 'pin' => 21, 'status' => $qm['is_active'], 'no_urut' => $i['no_urut']];
                         }
                     } else {
                         foreach ($qp as $p) {
                             if ($p['no_urut'] == $i['no_urut']) {
                                 if ($i['status'] !== $p['status']) {
+                                    $no_urut_status[] = $i['no_urut'] . '|' . $p['is_active'];
                                     $cek_perubahan++;
-                                    $data[] = ['mac' => $macQp['mac'], 'pin' => $i['pin'], 'status' => $p['status'], 'no_urut' => $i['no_urut']];
+                                    $data[] = ['mac' => $macQp['mac'], 'pin' => $p['pin'], 'status' => $p['status'], 'no_urut' => $i['no_urut']];
                                 }
                             }
                         }
@@ -91,7 +95,7 @@ class Wifi extends BaseController
                     sukses_js("Sama", $data);
                 }
                 if ($cek_perubahan > 0) {
-                    sukses_js("Berubah", $data);
+                    sukses_js("Berubah", $data, $no_urut_status);
                 }
             }
         }

@@ -1164,10 +1164,9 @@ function stringArr_to_arr($string)
 
     $hasil = [];
     foreach ($arr as $i) {
-        $angka_terakhir = $i % 10;
-        $sisa_angka = substr($i, 0, -1);
+        $exp = explode("|", $i);
 
-        $hasil[] = ['status' => (int)$angka_terakhir, 'perangkat' => (int)$sisa_angka];
+        $hasil[] = ['status' => (int)end($exp), 'no_urut' => (int)$exp[0]];
     }
 
     return $hasil;
