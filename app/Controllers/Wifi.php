@@ -30,6 +30,7 @@ class Wifi extends BaseController
         $data = [];
         $pin = [];
         $macs = [];
+        $perubahan = [];
 
         $db = db('perangkat');
         $qp = $db->where('grup', $nama_server)->orderBy('no_urut', 'ASC')->get()->getResultArray();
@@ -44,6 +45,7 @@ class Wifi extends BaseController
                 $macs[] = $macQp['mac'];
                 foreach ($qp as $i) {
                     $pin[] = $i['pin'];
+                    $perubahan[] = $i['pin'];
                     $data[] = ['mac' => $macQp['mac'], 'pin' => $i['pin'], 'status' => $i['status']];
                 }
 
@@ -56,6 +58,7 @@ class Wifi extends BaseController
                     if (!in_array($i['mac'], $macs) && $i['mac'] !== "") {
                         $macs[] = $i['mac'];
                     }
+                    $perubahan[] = $i['mac'];
                     $data[] = ['mac' => $i['mac'], 'pin' => 21, 'status' => $i['is_active']];
                 }
             } else {
@@ -92,7 +95,7 @@ class Wifi extends BaseController
                 }
                 $jml_perangkat = count($jml_per);
             }
-            sukses_js("sukses", $data, $pin, count($data), $macs);
+            sukses_js("sukses", $data, $pin, count($data), $macs, $perubahan);
         }
     }
 }
