@@ -1160,6 +1160,7 @@ function get_itag_addr()
 function stringArr_to_arr($string)
 {
     $arr = json_decode(json_encode($string), true);
+    sukses_js($arr);
     $hasil = [];
     foreach ($arr as $i) {
         $exp = explode("|", $i);
