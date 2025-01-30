@@ -70,7 +70,7 @@ class Wifi extends BaseController
             } else {
 
                 $statusArr = stringArr_to_arr($status_esp);
-
+                sukses_js($statusArr);
                 foreach ($statusArr as $i) {
                     $no_urut = $i['no_urut'];
                     if ($no_urut > 10) {
