@@ -44,7 +44,7 @@ class Wifi extends BaseController
             if ($status_esp == "" || $status_esp == "1") {
                 $macs[] = $macQp['mac'];
                 foreach ($qp as $i) {
-                    $no_urut_status[] = $i['no_urut'] . '|' . $i['status'];
+                    $no_urut_status[] = $i['no_urut'] . '|' . $i['is_active'];
                     $data[] = ['mac' => $macQp['mac'], 'pin' => $i['pin'], 'status' => $i['status'], 'no_urut' => $i['no_urut']];
                 }
 
@@ -57,7 +57,7 @@ class Wifi extends BaseController
                     if (!in_array($i['mac'], $macs) && $i['mac'] !== "") {
                         $macs[] = $i['mac'];
                     }
-                    $no_urut_status[] = $i['no_urut'] . '|' . $i['status'];
+                    $no_urut_status[] = $i['no_urut'] . '|' . $i['is_active'];
                     $data[] = ['mac' => $i['mac'], 'pin' => 21, 'status' => $i['is_active'], 'no_urut' => $i['no_urut']];
                 }
 
@@ -83,7 +83,7 @@ class Wifi extends BaseController
                         foreach ($qp as $p) {
                             if ($p['no_urut'] == $i['no_urut']) {
                                 if ($i['status'] !== $p['status']) {
-                                    $no_urut_status[] = $i['no_urut'] . '|' . $p['is_active'];
+                                    $no_urut_status[] = $i['no_urut'] . '|' . $p['status'];
                                     $cek_perubahan++;
                                     $data[] = ['mac' => $macQp['mac'], 'pin' => $p['pin'], 'status' => $p['status'], 'no_urut' => $i['no_urut']];
                                 }
