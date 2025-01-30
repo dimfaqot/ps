@@ -105,4 +105,22 @@ class Wifi extends BaseController
             }
         }
     }
+    public function pin()
+    {
+        $jwt = $this->request->getVar('jwt');
+        $decode = decode_jwt_finger($jwt);
+        $nama_server = $decode['uid'];
+
+        $pin = [];
+
+        $db = db('perangkat');
+        $qp = $db->where('grup', $nama_server)->orderBy('no_urut', 'ASC')->get()->getResultArray();
+
+        foreach ($qp as $i) {
+            $pin[] = $i['pin'];
+        }
+        $pin[] = 21;
+
+        sukses_js("Sukses.", $pin);
+    }
 }

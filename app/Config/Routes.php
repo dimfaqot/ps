@@ -53,6 +53,7 @@ $routes->post('/finger/Add', 'Finger::add');
 // uuid wifi
 $routes->post('/wifi/settings', 'Wifi::settings');
 $routes->post('/wifi/perangkat', 'Wifi::perangkat');
+$routes->post('/wifi/pin', 'Wifi::pin');
 
 // bot
 $routes->get('/api/wabot', 'Api::wabot');
