@@ -68,6 +68,8 @@ class Wifi extends BaseController
                     sukses_js("Berubah", $data, $no_urut_status);
                 }
             } else {
+
+                sukses_js($status_esp);
                 $statusArr = stringArr_to_arr($status_esp);
 
                 foreach ($statusArr as $i) {
