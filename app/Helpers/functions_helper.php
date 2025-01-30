@@ -1159,7 +1159,7 @@ function get_itag_addr()
 }
 function stringArr_to_arr($string)
 {
-    $arr = json_decode(json_encode($string), true);
+    $arr = json_decode($string, true);
 
     $hasil = [];
     foreach ($arr as $i) {
