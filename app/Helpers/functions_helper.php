@@ -1159,9 +1159,7 @@ function get_itag_addr()
 }
 function stringArr_to_arr($string)
 {
-    $string = str_replace("[", "", str_replace("]", "", $string));
-    $arr = explode(",", $string);
-
+    $arr = json_decode(json_encode($string), true);
     $hasil = [];
     foreach ($arr as $i) {
         $exp = explode("|", $i);
