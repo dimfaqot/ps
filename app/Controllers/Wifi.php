@@ -117,9 +117,9 @@ class Wifi extends BaseController
         $qp = $db->where('grup', $nama_server)->orderBy('no_urut', 'ASC')->get()->getResultArray();
 
         foreach ($qp as $i) {
-            $pin[] = $i['pin'];
+            $pin[] = ['pin' => $i['pin']];
         }
-        $pin[] = 21;
+        $pin[] = ['pin' => 21];
 
         sukses_js("Sukses.", $pin);
     }
