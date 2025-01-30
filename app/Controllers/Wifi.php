@@ -44,7 +44,7 @@ class Wifi extends BaseController
             if ($status_esp == "" || $status_esp == "1") {
                 $macs[] = $macQp['mac'];
                 foreach ($qp as $i) {
-                    $no_urut_status[] = $i['no_urut'] . '|' . $i['is_active'];
+                    $no_urut_status[] = $i['no_urut'] . '|' . $i['status'];
                     $data[] = ['mac' => $macQp['mac'], 'pin' => $i['pin'], 'status' => $i['status'], 'no_urut' => $i['no_urut']];
                 }
 
@@ -52,7 +52,7 @@ class Wifi extends BaseController
                 if (!$qb) {
                     gagal_js("Nama server tidak ditemukan!.");
                 }
-                $pin[] = 21;
+
                 foreach ($qb as $i) {
                     if (!in_array($i['mac'], $macs) && $i['mac'] !== "") {
                         $macs[] = $i['mac'];
