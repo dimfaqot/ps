@@ -939,6 +939,9 @@ class Rfid extends BaseController
             $biaya_saat_ini = biaya_per_menit($meja['harga'], $billiard['start'], $time_now);
             $biaya_berlaku = (((int)$biaya_saat_ini - (int)$biaya) < 1001 ? $biaya : $biaya_saat_ini);
 
+            if ($user['role'] == "Root" || $user['role'] == "Gus") {
+                $biaya_berlaku = 0;
+            }
             $saldo = saldo($user);
 
             if ($saldo < $biaya_berlaku) {
