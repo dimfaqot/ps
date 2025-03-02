@@ -14,7 +14,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
         <?php endif; ?>
         <?php if (session('role') == 'Admin Billiard' || session('role') == 'Root'): ?>
             <?php $bisy = bisyaroh(); ?>
-            <div class="btn_success mb-2"><?= angka($bisy['jam']); ?> x <?= angka($bisy['jml']); ?> = <?= angka($bisy['jam'] * $bisy['jml']); ?></div>
+            <div class="btn_success mb-2"><?= $bisy['total']; ?></div>
         <?php endif; ?>
         <a href="" class="btn_purple btn_saldo_tap mb-2">Tap</a>
         <?php if (session('role') !== "Root" && session('role') !== "Member" && session('role') !== "Gus" && session('role') !== "Ekstra"): ?>

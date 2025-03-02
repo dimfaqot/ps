@@ -1405,25 +1405,32 @@ function bisyaroh()
     $dbp = db('rental');
     $p = $dbp->get()->getResultArray();
 
-    $minutes = 0;
+    $minutes_bill = 0;
 
     foreach ($b as $i) {
         if ($tahun == date('Y', $i['tgl']) && $bulan == date('n', $i['tgl']) && $i['biaya'] > 0) {
-            $minutes += $i['durasi'];
+            $minutes_bill += $i['durasi'];
+            $i['tanggal'] = date('d/m/Y', $i['tgl']);
         }
     }
+    $minutes_ps = 0;
     foreach ($p as $i) {
         if ($tahun == date('Y', $i['tgl']) && $bulan == date('n', $i['tgl']) && ($i['biaya'] - $i['diskon']) > 0) {
-            $minutes += $i['durasi'];
+            $minutes_ps += $i['durasi'];
         }
     }
 
-    $minutes = round($minutes / 60);
+    $jam_bill = round($minutes_bill / 60);
+    $jam_ps = round($minutes_ps / 60);
 
     $dbbisy = db('settings');
     $bisy = $dbbisy->where('nama_setting', "Bisyaroh")->get()->getRowArray();
 
-    $data = ['jam' => $minutes, 'jml' => $bisy['value_int']];
+    $data = [
+        'data' => "(" . angka($jam_ps) . "x" . angka($bisy['value_int'] - 1000) . ") + (" .  angka($jam_bill) . "x" . angka($bisy['value_int']) . ')= ',
+        'total' => angka(($jam_ps * ($bisy['value_int'] - 1000)) + $jam_bill * $bisy['value_int'])
+    ];
+
     return $data;
 }
 
