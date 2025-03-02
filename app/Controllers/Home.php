@@ -115,17 +115,44 @@ class Home extends BaseController
 
     public function koperasi()
     {
-        $usaha = clear($this->request->getVar('usaha'));
+        $usaha = upper_first(clear($this->request->getVar('usaha')));
 
         $db = db('koperasi');
 
-        $q = $db->where('usaha', $usaha)->orderBy('tgl', 'ASC')->get()->getResultArray();
+        $q = $db->orderBy('tgl', 'ASC')->get()->getResultArray();
 
-        sukses_js('Connection success.', $q);
+        $dbk = db('basil_keluar');
+        $keluar = $dbk->get()->getResultArray();
+        $total_keluar = 0;
+        foreach ($keluar as $i) {
+            $total_keluar += (int)$i['jml'];
+        }
+
+
+        $temp = [];
+        foreach ($q as $i) {
+            if ($total_keluar > 0) {
+                if ($i['tabungan'] >= $total_keluar) {
+                    $i['tabungan'] = (int)$i['tabungan'] - $total_keluar;
+                    $total_keluar = 0;
+                } else {
+                    $total_keluar -= (int)$i['tabungan'];
+                    $i['tabungan'] = 0;
+                }
+            }
+            $temp[] = $i;
+        }
+        $data = [];
+        foreach ($temp as $i) {
+            if ($i['usaha'] == $usaha) {
+                $data[] = $i;
+            }
+        }
+        sukses_js('Connection success.', $data);
     }
     public function add_tabungan()
     {
-        $usaha = clear($this->request->getVar('usaha'));
+        $usaha = upper_first(clear($this->request->getVar('usaha')));
         $tabungan = rp_to_int($this->request->getVar('tabungan'));
 
         $db = db('koperasi');
@@ -386,5 +413,47 @@ class Home extends BaseController
         }
 
         sukses_js("Ok", $data, $total);
+    }
+
+    public function pengecekan()
+    {
+        $kategori = clear(upper_first($this->request->getVar('kategori')));
+        $val = clear(upper_first($this->request->getVar('val')));
+
+        $db = db('pengecekan');
+        $q = $db->where('kategori', $kategori)->get()->getRowArray();
+
+        $res = '';
+
+        if ($q) {
+            if (date('Y', $q['tgl']) == date('Y') && date('m', $q['tgl']) == date('m') && date('d', $q['tgl']) == date('d')) {
+                $res = $q['status'];
+            }
+        }
+
+
+        if ($res == "") {
+            $data = [
+                'tgl' => time(),
+                'kategori' => $kategori,
+                'status' => $val,
+                'petugas' => user()['nama']
+            ];
+
+            if ($db->insert($data)) {
+                sukses_js('Data berhasil disimpan.');
+            } else {
+                gagal_js('Data gagal disimpan!.');
+            }
+        } else {
+            $q['status'] = $val;
+
+            $db->where('id', $q['id']);
+            if ($db->update($q)) {
+                sukses_js('Data berhasil diupdate.');
+            } else {
+                gagal_js('Data gagal diupdate!.');
+            }
+        }
     }
 }

@@ -12,8 +12,28 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
             <button data-bs-toggle="modal" class="btn_info mb-2" data-bs-target="#modal_user">Users</button>
             <a href="<?= base_url('absen/reset_absen'); ?>" class="btn_danger mb-2">Reset Absen</a>
         <?php endif; ?>
+        <?php if (session('role') == 'Admin Billiard' || session('role') == 'Root'): ?>
+            <?php $bisy = bisyaroh(); ?>
+            <div class="btn_success mb-2"><?= angka($bisy['jam']); ?> x <?= angka($bisy['jml']); ?> = <?= angka($bisy['jam'] * $bisy['jml']); ?></div>
+        <?php endif; ?>
         <a href="" class="btn_purple btn_saldo_tap mb-2">Tap</a>
-        <button data-id="<?= session('id'); ?>" data-nama="<?= user()['nama']; ?>" class="btn_primary mb-2 fw-bold poin_absen">POIN: <?= poin_absen(session('id'))['poin']; ?></button>
+        <?php if (session('role') !== "Root" && session('role') !== "Member" && session('role') !== "Gus" && session('role') !== "Ekstra"): ?>
+            <button data-id="<?= session('id'); ?>" data-nama="<?= user()['nama']; ?>" class="btn_primary mb-2 fw-bold poin_absen">POIN: <?= poin_absen(session('id'))['poin']; ?></button>
+
+        <?php endif; ?>
+    </div>
+    <div class="d-flex gap-2 mb-3">
+        <div class="input-group input-group-sm">
+            <input type="text" class="form-control pengecekan_Listrik" value="<?= (pengecekan('Listrik') == ""  ? "" : pengecekan('Listrik')); ?>" placeholder="<?= (pengecekan('Listrik') == "" ? "Belum dicek" : ""); ?>">
+            <button class="btn btn-outline-secondary btn_pengecekan" data-kategori="Listrik" type="button">Listrik</button>
+        </div>
+        <div class="input-group input-group-sm">
+            <select class="form-select pengecekan_Toilet">
+                <option <?= (pengecekan('Toilet') == "Kotor" || pengecekan('Toilet') == "" ? "selected" : ""); ?> value="Kotor" selected>Kotor</option>
+                <option <?= (pengecekan('Toilet') == "Bersih" ? "selected" : ""); ?> value="Bersih">Bersih</option>
+            </select>
+            <button class="btn btn-outline-secondary btn_pengecekan" data-kategori="Toilet" type="button">Toilet</button>
+        </div>
     </div>
 
     <div class="row g-3">
@@ -930,6 +950,27 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
         $(".tabel_search").html(html);
 
     });
+
+    $(document).on('click', '.btn_pengecekan', function(e) {
+        e.preventDefault();
+        let kategori = $(this).data('kategori');
+        let val = $(".pengecekan_" + kategori).val();
+
+        post('home/pengecekan', {
+            kategori,
+            val
+        }).then(res => {
+            if (res.status == "200") {
+                sukses(res.message);
+                setTimeout(() => {
+                    location.reload();
+                }, 1200);
+            } else {
+                gagal(res.message);
+            }
+        })
+
+    })
 </script>
 
 <?= $this->endSection() ?>

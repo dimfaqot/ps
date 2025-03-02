@@ -94,6 +94,7 @@ $routes->post('/home/pindah_ke_hutang', 'Home::pindah_ke_hutang');
 $routes->post('/home/hapus_pesanan', 'Home::hapus_pesanan');
 $routes->post('/home/saldo_tap', 'Home::saldo_tap');
 $routes->post('/home/saldo_tap_by_katagori', 'Home::saldo_tap_by_katagori');
+$routes->post('/home/pengecekan', 'Home::pengecekan');
 // $routes->get('/home/replace', 'Home::replace');
 
 // users ____________________________________
@@ -290,3 +291,12 @@ $routes->post('/rfid/search_user', 'Rfid::search_user');
 $routes->post('/rfid/transaksi_tap', 'Rfid::transaksi_tap');
 $routes->get('/rfid/execute/(:any)', 'Rfid::execute/$1');
 $routes->get('/rfid/(:any)', 'Rfid::index/$1');
+
+// basil __________________________________
+$routes->get('/basil_kotor', 'Basil::basil_kotor');
+$routes->get('/basil_kotor/(:num)/(:any)/(:any)', 'Basil::basil_kotor/$1/$2/$3');
+$routes->get('/basil_bersih', 'Basil::basil_bersih');
+$routes->get('/basil_bersih/(:any)/(:any)', 'Basil::basil_bersih/$1/$2');
+$routes->get('/basil', 'Basil::basil');
+$routes->post('/basil/data_pengeluaran', 'Basil::data_pengeluaran');
+$routes->post('/basil/add_pengeluaran', 'Basil::add_pengeluaran');

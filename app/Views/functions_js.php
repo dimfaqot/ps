@@ -473,8 +473,11 @@
 
     const time_php_to_js = (date) => {
         let d = new Date(date * 1000);
-        let res = d.getDate() + '/' + d.getMonth() + 1 + '/' + d.getFullYear();
+        let month = (d.getMonth() + 1).toString().padStart(2, '0'); // Bulan dimulai dari 0, sehingga harus ditambah 1
+        let day = d.getDate().toString().padStart(2, '0');
+        let year = d.getFullYear();
 
+        let res = `${day}/${month}/${year}`;
         return res;
     }
 </script>

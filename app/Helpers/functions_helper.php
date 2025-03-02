@@ -1170,3 +1170,275 @@ function stringArr_to_arr($string)
 
     return $hasil;
 }
+
+function basil_kotor($tahun, $bulan)
+{
+    $orders = ["Billiard", "Ps", "Barber", "Kantin"];
+    $dbb = db('basil');
+    $g = $dbb->groupBy('kepada')->orderBy("kepada", "ASC")->get()->getResultArray();
+
+    $gaji = [];
+    foreach ($orders as $o) {
+        $db = db('basil');
+
+        $gj = $db->where("kategori", $o)->get()->getResultArray();
+
+        $dbo = db(($o == "Ps" ? "rental" : ($o == "Billiard" ? "billiard_2" : strtolower($o))));
+
+        $data = $dbo->orderBy('tgl', 'ASC')->get()->getResultArray();
+        if ($o == "Billiard" || $o == "Ps") {
+            $hasil = [];
+            foreach ($data as $d) {
+                if ($o == "Ps") {
+                    $d['biaya'] = $d['biaya'] - $d['diskon'];
+                }
+                if (date("Y", $d['tgl']) == $tahun && date("m", $d['tgl']) == $bulan) {
+                    $temp = ['tgl' => date('d/m/Y', $d['tgl']), 'kategori' => $o, 'barang' => $d['meja'], 'masuk' => $d['biaya']];
+                    foreach ($gj as $i) {
+                        $temp[$i['kepada']] = ((int)$i['persen'] / 100) * $d['biaya'];
+                    }
+                    $hasil[] = $temp;
+                }
+            }
+            $gaji[$o] = $hasil;
+        }
+        if ($o == "Barber") {
+            $hasil = [];
+            foreach ($data as $d) {
+                if (date("Y", $d['tgl']) == $tahun && date("m", $d['tgl']) == $bulan) {
+
+                    $temp = ['tgl' => date('d/m/Y', $d['tgl']), 'kategori' => $o, 'barang' => $d['layanan'], 'masuk' => $d['total_harga']];
+                    foreach ($gj as $i) {
+                        $temp[$i['kepada']] = ((int)$i['persen'] / 100) * $d['total_harga'];
+                    }
+                    $hasil[] = $temp;
+                }
+            }
+            $gaji[$o] = $hasil;
+        }
+        if ($o == "Kantin") {
+            $hasil = [];
+            foreach ($data as $d) {
+                if (date("Y", $d['tgl']) == $tahun && date("m", $d['tgl']) == $bulan) {
+
+                    $temp = ['tgl' => date('d/m/Y', $d['tgl']), 'kategori' => $o, 'barang' => $d['barang'], 'masuk' => $d['total_harga']];
+                    foreach ($gj as $i) {
+                        $temp[$i['kepada']] = ((int)$i['persen'] / 100) * $d['total_harga'];
+                    }
+                    $hasil[] = $temp;
+                }
+            }
+            $gaji[$o] = $hasil;
+        }
+    }
+    $res = ['orders' => $orders, 'grup' => $g, 'data' => $gaji];
+    return $res;
+}
+function basil_bersih($bulan, $tahun)
+{
+    $dbb = db('basil');
+    $persen = $dbb->orderBy("kepada", "ASC")->get()->getResultArray();
+    $qo = $dbb->groupBy('kategori')->orderBy('kategori', 'ASC')->get()->getResultArray();
+    $grup = $dbb->groupBy('kepada')->orderBy('kepada', 'ASC')->get()->getResultArray();
+    $orders = [];
+    foreach ($qo as $i) {
+        $orders[] = $i['kategori'];
+    }
+
+    $hasil = [];
+    foreach ($orders as $o) {
+        $dbm = db(($o == 'Billiard' ? 'billiard_2' : ($o == "Ps" ? "rental" : strtolower($o))));
+        $masuk = $dbm->orderBy('tgl', 'ASC')->get()->getResultArray();
+
+        $tbl_pengeluaran = ($o == 'Ps' ? 'inventaris' : 'pengeluaran_' . strtolower($o));
+
+        $dbk = db($tbl_pengeluaran);
+        $keluar = $dbk->get()->getResultArray();
+
+        $total_masuk = 0;
+
+        foreach ($masuk as $i) {
+            if ($o == 'Kantin' || $o == "Barber") {
+                $i['biaya'] = $i['total_harga'];
+            }
+            if ($o == "Ps") {
+                $i['biaya'] = $i['biaya'] - $i['diskon'];
+            }
+
+            if ($bulan == "All" && $tahun == "All") {
+                $total_masuk += $i['biaya'];
+            } elseif ($bulan == "All" && $tahun !== "All") {
+                if (date("Y", $i['tgl']) == $tahun) {
+                    $total_masuk += $i['biaya'];
+                }
+            } elseif ($bulan !== "All" && $tahun == "All") {
+                if (date("m", $i['tgl']) == $bulan) {
+                    $total_masuk += $i['biaya'];
+                }
+            } elseif ($bulan !== "All" && $tahun !== "All") {
+                if (date("m", $i['tgl']) == $bulan && date("Y", $i['tgl']) == $tahun) {
+                    $total_masuk += $i['biaya'];
+                }
+            }
+        }
+
+
+        $total_keluar = 0;
+
+        foreach ($keluar as $i) {
+
+            if ($bulan == "All" && $tahun == "All") {
+                $total_keluar += $i['harga'];
+            } elseif ($bulan == "All" && $tahun !== "All") {
+                if (date("Y", $i['tgl']) == $tahun) {
+                    $total_keluar += $i['harga'];
+                }
+            } elseif ($bulan !== "All" && $tahun == "All") {
+                if (date("m", $i['tgl']) == $bulan) {
+                    $total_keluar += $i['harga'];
+                }
+            } elseif ($bulan !== "All" && $tahun !== "All") {
+                if (date("m", $i['tgl']) == $bulan && date("Y", $i['tgl']) == $tahun) {
+                    $total_keluar += $i['harga'];
+                }
+            }
+        }
+
+        $hasil[$o] = $total_masuk - $total_keluar;
+    }
+
+    $res = [];
+    foreach ($orders as $i) {
+        $val = [];
+        $val['Masuk'] = $hasil[$i];
+        foreach ($persen as $g) {
+            if ($g['kategori'] == $i) {
+                $val[$g['kepada']] = ((int)$g['persen'] / 100) * (int)$hasil[$i];
+            }
+        }
+        $res[$i] = $val;
+    }
+
+    $res = ['orders' => $orders, 'persen' => $persen, 'grup' => $grup, 'data' => $res];
+
+    return $res;
+}
+function basil()
+{
+    $dbb = db('basil_tabungan');
+    $usaha = $dbb->groupBy('kategori', 'ASC')->get()->getResultArray();
+    $persen = $dbb->get()->getResultArray();
+    $arr_pengeluaran = [];
+
+    foreach ($persen as $i) {
+        if (!key_exists($i['kepada'], $arr_pengeluaran)) {
+            $arr_pengeluaran[$i['kepada']] = 0;
+        }
+    }
+
+    $data = [];
+
+    $db = db('koperasi');
+    foreach ($usaha as $u) {
+        $q = $db->where('usaha', $u['kategori'])->get()->getResultArray();
+        $jml = 0;
+        foreach ($q as $i) {
+            $jml += (int)$i['tabungan'];
+        }
+        $u['jml'] = $jml;
+        $data[] = $u;
+    }
+
+    $dbk = db('basil_keluar');
+    foreach ($arr_pengeluaran as $k => $i) {
+        $q = $dbk->where('kepada', $k)->get()->getResultArray();
+
+        foreach ($q as $p) {
+            $arr_pengeluaran[$k] += $p['jml'];
+        }
+    }
+
+    $res = [];
+
+    foreach ($data as $d) {
+        $val = [];
+        foreach ($persen as $i) {
+            if ($i['kategori'] == $d['kategori']) {
+                $i['jml'] = ($i['persen'] / 100) * $d['jml'];
+                if ($arr_pengeluaran[$i['kepada']] > 0) {
+                    if ($i['jml'] >= $arr_pengeluaran[$i['kepada']]) {
+                        $i['jml'] = $i['jml'] - $arr_pengeluaran[$i['kepada']];
+                        $arr_pengeluaran[$i['kepada']] = 0;
+                    } else {
+                        $arr_pengeluaran[$i['kepada']] -= $i['jml'];
+                        $i['jml'] = 0;
+                    }
+                }
+                $val[] = $i;
+            }
+        }
+        $d['data'] = $val;
+        $res[] = $d;
+    }
+
+    return $res;
+}
+
+function bisyaroh()
+{
+    $tahun = (int)date('Y');
+    $bulan = (int)date('m');
+    if ($bulan == 1) {
+        if ((int)date('d') < 4) {
+            $bulan = 12;
+            $tahun = $tahun - 1;
+        }
+    } else {
+        if ((int)date('d') < 4) {
+            $bulan = $bulan - 1;
+        }
+    }
+
+    $dbb = db('billiard_2');
+    $b = $dbb->get()->getResultArray();
+
+    $dbp = db('rental');
+    $p = $dbp->get()->getResultArray();
+
+    $minutes = 0;
+
+    foreach ($b as $i) {
+        if ($tahun == date('Y', $i['tgl']) && $bulan == date('n', $i['tgl']) && $i['biaya'] > 0) {
+            $minutes += $i['durasi'];
+        }
+    }
+    foreach ($p as $i) {
+        if ($tahun == date('Y', $i['tgl']) && $bulan == date('n', $i['tgl']) && ($i['biaya'] - $i['diskon']) > 0) {
+            $minutes += $i['durasi'];
+        }
+    }
+
+    $minutes = round($minutes / 60);
+
+    $dbbisy = db('settings');
+    $bisy = $dbbisy->where('nama_setting', "Bisyaroh")->get()->getRowArray();
+
+    $data = ['jam' => $minutes, 'jml' => $bisy['value_int']];
+    return $data;
+}
+
+function pengecekan($kategori)
+{
+    $db = db('pengecekan');
+    $q = $db->where('kategori', $kategori)->get()->getRowArray();
+
+    $res = '';
+
+    if ($q) {
+        if (date('Y', $q['tgl']) == date('Y') && date('m', $q['tgl']) == date('m') && date('d', $q['tgl']) == date('d')) {
+            $res = $q['status'];
+        }
+    }
+
+    return $res;
+}
