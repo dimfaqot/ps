@@ -1437,7 +1437,8 @@ function bisyaroh()
 function pengecekan($kategori)
 {
     $db = db('pengecekan');
-    $q = $db->where('kategori', $kategori)->get()->getRowArray();
+    $q = $db->orderBy('tgl', 'DESC')->where('kategori', $kategori)->get()->getRowArray();
+
 
     $res = '';
 
