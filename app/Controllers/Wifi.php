@@ -40,46 +40,14 @@ class Wifi extends BaseController
         }
 
         if ($order == "perubahan") {
-            $data_esp = stringArr_to_arr($status_esp);
+            $data_esp = json_decode($status_esp, true);
         }
 
         $db_game = db($tabel);
         $db_perangkat = db("perangkat");
         $data_game = $db_game->where('grup', $grup)->orderBy('no_urut', "ASC")->get()->getResultArray();
         $data_perangkat = $db_perangkat->where('grup', "Perangkat " . $grup)->orderBy('no_urut', "ASC")->get()->getResultArray();
-        foreach ($data_game as $k => $i) {
-            $status = ($tabel == "unit" ? $i['status'] : $i['is_active']);
 
-            if ($k == 2) {
-                $status = ($status == 0 || $status == "Available" ? 1 : 0);
-            }
-
-            $data = [
-                'no_urut' => $i['no_urut'],
-                'mac' => $i['mac'],
-                'pin' => $i['pin'],
-                'status' => $status,
-                'tabel' => $tabel
-            ];
-            $data_esp[] = $data;
-        }
-        foreach ($data_perangkat as $k => $i) {
-            $status = $i['status'];
-
-            if ($k == 3) {
-                $status = ($status == 1 ? 0 : 1);
-            }
-
-            $data = [
-                'no_urut' => $i['no_urut'],
-                'mac' => $i['mac'],
-                'pin' => $i['pin'],
-                'status' => $status,
-                'tabel' => 'perangkat'
-            ];
-
-            $data_esp[] = $data;
-        }
 
         $res = [];
         if ($order == "pertama") {
@@ -107,6 +75,7 @@ class Wifi extends BaseController
             }
         }
 
+        $all_data = [];
         if ($order == "perubahan") {
             foreach ($data_esp as $i) {
                 $col = ($i['tabel'] == "perangkat" || $i['tabel'] == "unit" ? "status" : "is_active");
@@ -118,10 +87,11 @@ class Wifi extends BaseController
                     if ($q[$col] != $i['status']) {
                         $res[] = $i;
                     }
+                    $all_data[] = $i;
                 }
             }
         }
-        sukses_js("Sukses", $res);
+        sukses_js("Sukses", $res, $all_data);
     }
     public function perangkat2()
     {
