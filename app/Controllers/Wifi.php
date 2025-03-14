@@ -28,18 +28,20 @@ class Wifi extends BaseController
         $grup = $decode['data'];
         $order = $decode['data2'];
         $status_esp = $decode['data3'];
-        $data_esp = stringArr_to_arr($status_esp);
+        $data_esp = [];
 
         // $grup = "Ps 1";
         // $order = "perubahan";
         $tabel = "jadwal_2";
-        $data_esp = [];
 
         $exp = explode(" ", $grup);
         if ($exp[0] == "Ps") {
             $tabel = "unit";
         }
 
+        if ($order == "perubahan") {
+            $data_esp = stringArr_to_arr($status_esp);
+        }
 
         $db_game = db($tabel);
         $db_perangkat = db("perangkat");
