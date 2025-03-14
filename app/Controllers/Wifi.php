@@ -91,7 +91,7 @@ class Wifi extends BaseController
                 }
             }
         }
-        sukses_js("Sukses", $res, $all_data);
+        sukses_js("Sukses", $all_data, $res);
     }
     public function perangkat2()
     {
