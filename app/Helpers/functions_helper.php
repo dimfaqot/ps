@@ -1331,7 +1331,7 @@ function basil()
     $arr_pengeluaran = [];
 
     foreach ($persen as $i) {
-        if (!key_exists($i['kepada'], $arr_pengeluaran)) {
+        if (!array_key_exists($i['kepada'], $arr_pengeluaran)) {
             $arr_pengeluaran[$i['kepada']] = 0;
         }
     }

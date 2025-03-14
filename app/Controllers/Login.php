@@ -6,11 +6,14 @@ class Login extends BaseController
 {
     public function index(): string
     {
+
         return view('login', ['judul' => 'Login - PS']);
     }
 
     public function landing(): string
     {
+
+
         $db = db('unit');
 
         $rental = $db->orderBy('id', 'ASC')->get()->getResultArray();

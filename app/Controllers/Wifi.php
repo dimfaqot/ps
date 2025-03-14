@@ -20,7 +20,108 @@ class Wifi extends BaseController
 
         sukses_js("sukses", $q['uuid'], $q['karakteristik']);
     }
+
     public function perangkat()
+    {
+        $jwt = $this->request->getVar('jwt');
+        $decode = decode_jwt_finger($jwt);
+        $grup = $decode['data'];
+        $order = $decode['data2'];
+        $status_esp = $decode['data3'];
+        $data_esp = stringArr_to_arr($status_esp);
+
+        // $grup = "Ps 1";
+        // $order = "perubahan";
+        $tabel = "jadwal_2";
+        $data_esp = [];
+
+        $exp = explode(" ", $grup);
+        if ($exp[0] == "Ps") {
+            $tabel = "unit";
+        }
+
+
+        $db_game = db($tabel);
+        $db_perangkat = db("perangkat");
+        $data_game = $db_game->where('grup', $grup)->orderBy('no_urut', "ASC")->get()->getResultArray();
+        $data_perangkat = $db_perangkat->where('grup', "Perangkat " . $grup)->orderBy('no_urut', "ASC")->get()->getResultArray();
+        foreach ($data_game as $k => $i) {
+            $status = ($tabel == "unit" ? $i['status'] : $i['is_active']);
+
+            if ($k == 2) {
+                $status = ($status == 0 || $status == "Available" ? 1 : 0);
+            }
+
+            $data = [
+                'no_urut' => $i['no_urut'],
+                'mac' => $i['mac'],
+                'pin' => $i['pin'],
+                'status' => $status,
+                'tabel' => $tabel
+            ];
+            $data_esp[] = $data;
+        }
+        foreach ($data_perangkat as $k => $i) {
+            $status = $i['status'];
+
+            if ($k == 3) {
+                $status = ($status == 1 ? 0 : 1);
+            }
+
+            $data = [
+                'no_urut' => $i['no_urut'],
+                'mac' => $i['mac'],
+                'pin' => $i['pin'],
+                'status' => $status,
+                'tabel' => 'perangkat'
+            ];
+
+            $data_esp[] = $data;
+        }
+
+        $res = [];
+        if ($order == "pertama") {
+            foreach ($data_game as $i) {
+                $data = [
+                    'no_urut' => $i['no_urut'],
+                    'mac' => $i['mac'],
+                    'pin' => $i['pin'],
+                    'status' => ($tabel == "unit" ? $i['status'] : $i['is_active']),
+                    'tabel' => $tabel
+                ];
+
+                $res[] = $data;
+            }
+            foreach ($data_perangkat as $i) {
+                $data = [
+                    'no_urut' => $i['no_urut'],
+                    'mac' => $i['mac'],
+                    'pin' => $i['pin'],
+                    'status' => $i['status'],
+                    'tabel' => 'perangkat'
+                ];
+
+                $res[] = $data;
+            }
+        }
+
+        if ($order == "perubahan") {
+            foreach ($data_esp as $i) {
+                $col = ($i['tabel'] == "perangkat" || $i['tabel'] == "unit" ? "status" : "is_active");
+
+                $db = db($i['tabel']);
+                $q = $db->where('mac', $i['mac'])->get()->getRowArray();
+
+                if ($q) {
+                    if ($q[$col] != $i['status']) {
+                        $res[] = $i;
+                    }
+                }
+            }
+        }
+        sukses_js("Sukses", $res);
+    }
+    public function perangkat2()
     {
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_finger($jwt);
@@ -105,7 +206,7 @@ class Wifi extends BaseController
             }
         }
     }
-    public function pin()
+    public function pin2()
     {
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_finger($jwt);
