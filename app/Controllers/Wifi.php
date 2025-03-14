@@ -49,7 +49,8 @@ class Wifi extends BaseController
         $data_perangkat = $db_perangkat->where('grup', "Perangkat " . $grup)->orderBy('no_urut', "ASC")->get()->getResultArray();
 
 
-        $res = [];
+        $all_data = [];
+        $data_change = [];
         if ($order == "pertama") {
             foreach ($data_game as $i) {
                 $data = [
@@ -60,7 +61,7 @@ class Wifi extends BaseController
                     'tabel' => $tabel
                 ];
 
-                $res[] = $data;
+                $all_data[] = $data;
             }
             foreach ($data_perangkat as $i) {
                 $data = [
@@ -71,11 +72,10 @@ class Wifi extends BaseController
                     'tabel' => 'perangkat'
                 ];
 
-                $res[] = $data;
+                $all_data[] = $data;
             }
         }
 
-        $all_data = [];
         if ($order == "perubahan") {
             foreach ($data_esp as $i) {
                 $col = ($i['tabel'] == "perangkat" || $i['tabel'] == "unit" ? "status" : "is_active");
@@ -85,13 +85,13 @@ class Wifi extends BaseController
 
                 if ($q) {
                     if ($q[$col] != $i['status']) {
-                        $res[] = $i;
+                        $data_change[] = $i;
                     }
                     $all_data[] = $i;
                 }
             }
         }
-        sukses_js("Sukses", $all_data, $res);
+        sukses_js("Sukses", $all_data, $data_change);
     }
     public function perangkat2()
     {
