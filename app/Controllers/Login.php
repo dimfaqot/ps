@@ -12,8 +12,6 @@ class Login extends BaseController
 
     public function landing(): string
     {
-
-
         $db = db('unit');
 
         $rental = $db->orderBy('id', 'ASC')->get()->getResultArray();
