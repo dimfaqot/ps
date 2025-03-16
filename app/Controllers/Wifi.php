@@ -25,8 +25,8 @@ class Wifi extends BaseController
     {
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_finger($jwt);
+        sukses_js("sukses", $decode);
         $grup = $decode['data'];
-        sukses_js("sukses", $grup);
 
         $tabel = "jadwal_2";
 
