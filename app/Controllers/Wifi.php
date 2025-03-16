@@ -26,8 +26,6 @@ class Wifi extends BaseController
         $jwt = $this->request->getVar('jwt');
         $decode = decode_jwt_finger($jwt);
         $grup = $decode['data'];
-        $order = $decode['data2'];
-        $data_esp = [];
 
         $tabel = "jadwal_2";
 
@@ -36,63 +34,32 @@ class Wifi extends BaseController
             $tabel = "unit";
         }
 
-        if ($order == "perubahan") {
-            $data_esp = json_decode($decode['data3'], true);
-        }
-
         $db_game = db($tabel);
         $db_perangkat = db("perangkat");
         $data_game = $db_game->where('grup', $grup)->orderBy('no_urut', "ASC")->get()->getResultArray();
         $data_perangkat = $db_perangkat->where('grup', "Perangkat " . $grup)->orderBy('no_urut', "ASC")->get()->getResultArray();
 
+        $data = [];
 
-        $all_data = [];
-        $data_change = [];
-        if ($order == "pertama") {
-            foreach ($data_game as $i) {
-                // $data = [
-                //     'no_urut' => $i['no_urut'],
-                //     'mac' => $i['mac'],
-                //     'pin' => $i['pin'],
-                //     'status' => ($tabel == "unit" ? $i['status'] : $i['is_active']),
-                //     'tabel' => $tabel
-                // ];
-                $data = [$i['mac'] . "|" . $i['pin'] . "|" . ($tabel == "unit" ? $i['status'] : $i['is_active']) . "|" . $tabel];
+        foreach ($data_game as $i) {
+            $val = [
+                'pin' => $i['pin'],
+                'status' => ($tabel == "unit" ? $i['status'] : $i['is_active'])
+            ];
 
-                $all_data[] = $data;
-            }
-            foreach ($data_perangkat as $i) {
-                $data = [
-                    'no_urut' => $i['no_urut'],
-                    'mac' => $i['mac'],
-                    'pin' => $i['pin'],
-                    'status' => $i['status'],
-                    'tabel' => 'perangkat'
-                ];
+            $data[] = $val;
+        }
+        foreach ($data_perangkat as $i) {
+            $val = [
+                'pin' => $i['pin'],
+                'status' => $i['status']
+            ];
 
-                $all_data[] = $data;
-            }
+            $data[] = $val;
         }
 
-        if ($order == "perubahan") {
-            foreach ($data_esp as $i) {
-                $col = ($i['tabel'] == "perangkat" || $i['tabel'] == "unit" ? "status" : "is_active");
 
-                $db = db($i['tabel']);
-                $q = $db->where('mac', $i['mac'])->get()->getRowArray();
-
-                if ($q) {
-                    if ($q[$col] != $i['status']) {
-                        $data_change[] = $i;
-                    }
-                    $all_data[] = $i;
-                }
-            }
-        }
-        if (count($data_change) == 0 && $order == "perubahan") {
-            $order = "sama";
-        }
-        sukses_js($order, $data_change, $all_data);
+        sukses_js("Sukses", $data);
     }
     public function perangkat2()
     {
