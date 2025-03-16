@@ -24,8 +24,7 @@ class Wifi extends BaseController
     public function perangkat()
     {
         $jwt = $this->request->getVar('jwt');
-        $val = decode_jwt_finger($jwt);
-        $decode = json_decode($val['jwt'], true);
+        $decode = decode_jwt_finger($jwt);
         $grup = $decode['data'];
         $order = $decode['data2'];
         $data_esp = [];
@@ -89,7 +88,10 @@ class Wifi extends BaseController
                 }
             }
         }
-        sukses_js("Sukses", $all_data, $data_change);
+        if (count($data_change) == 0) {
+            $order = "sama";
+        }
+        sukses_js($order, $data_change, $all_data);
     }
     public function perangkat2()
     {
