@@ -88,7 +88,7 @@ class Wifi extends BaseController
                 }
             }
         }
-        if (count($data_change) == 0) {
+        if (count($data_change) == 0 && $order == "perubahan") {
             $order = "sama";
         }
         sukses_js($order, $data_change, $all_data);
