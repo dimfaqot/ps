@@ -50,13 +50,14 @@ class Wifi extends BaseController
         $data_change = [];
         if ($order == "pertama") {
             foreach ($data_game as $i) {
-                $data = [
-                    'no_urut' => $i['no_urut'],
-                    'mac' => $i['mac'],
-                    'pin' => $i['pin'],
-                    'status' => ($tabel == "unit" ? $i['status'] : $i['is_active']),
-                    'tabel' => $tabel
-                ];
+                // $data = [
+                //     'no_urut' => $i['no_urut'],
+                //     'mac' => $i['mac'],
+                //     'pin' => $i['pin'],
+                //     'status' => ($tabel == "unit" ? $i['status'] : $i['is_active']),
+                //     'tabel' => $tabel
+                // ];
+                $data = [$i['mac'] . "|" . $i['pin'] . "|" . ($tabel == "unit" ? $i['status'] : $i['is_active']) . "|" . $tabel];
 
                 $all_data[] = $data;
             }
