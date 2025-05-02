@@ -129,21 +129,21 @@ class Home extends BaseController
         }
 
 
-        $temp = [];
-        foreach ($q as $i) {
-            if ($total_keluar > 0) {
-                if ($i['tabungan'] >= $total_keluar) {
-                    $i['tabungan'] = (int)$i['tabungan'] - $total_keluar;
-                    $total_keluar = 0;
-                } else {
-                    $total_keluar -= (int)$i['tabungan'];
-                    $i['tabungan'] = 0;
-                }
-            }
-            $temp[] = $i;
-        }
+        // $temp = [];
+        // foreach ($q as $i) {
+        //     if ($total_keluar > 0) {
+        //         if ($i['tabungan'] >= $total_keluar) {
+        //             $i['tabungan'] = (int)$i['tabungan'] - $total_keluar;
+        //             $total_keluar = 0;
+        //         } else {
+        //             $total_keluar -= (int)$i['tabungan'];
+        //             $i['tabungan'] = 0;
+        //         }
+        //     }
+        //     $temp[] = $i;
+        // }
         $data = [];
-        foreach ($temp as $i) {
+        foreach ($q as $i) {
             if ($i['usaha'] == $usaha) {
                 $data[] = $i;
             }
