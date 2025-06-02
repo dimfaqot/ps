@@ -27,7 +27,7 @@ $data = basil();
                 <?php foreach ($data as $k => $i): ?>
                     <?php if ($k == 0): ?>
                         <?php foreach ($i['data'] as $d): ?>
-                            <th class="text-center" scope="col"><a class="modal_pengeluaran" data-kepada="<?= $d['kepada']; ?>" style="text-decoration: none;" href=""><?= $d['kepada']; ?></a></th>
+                            <th class="text-center" scope="col"><a class="modal_pengeluaran" data-kepada="<?= $d['kepada']; ?>" style="text-decoration: none;" href=""><?= $d['kepada']; ?> (<?= $d['persen']; ?>)</a></th>
 
                         <?php endforeach; ?>
                         <?php break; ?>

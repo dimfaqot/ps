@@ -12,6 +12,7 @@ class Login extends BaseController
 
     public function landing(): string
     {
+        //   https://ps.walisongosragen.com//login/a/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwicm9sZSI6IlJvb3QifQ.WAIZXresIJ-Wi-q2_n8NQS-fkxqUgHTVirwCceVcZfA
         //   http://localhost:8080/login/a/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwicm9sZSI6IlJvb3QifQ.WAIZXresIJ-Wi-q2_n8NQS-fkxqUgHTVirwCceVcZfA
         $db = db('unit');
 
