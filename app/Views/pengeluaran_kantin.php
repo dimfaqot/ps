@@ -40,11 +40,13 @@
                     <th style="text-align: center;" scope="col">Barang</th>
                     <th style="text-align: center;" class="d-none d-md-table-cell">Qty</th>
                     <th style="text-align: center;" scope="col">Harga</th>
+                    <th style="text-align: center;" scope="col">Nt</th>
                     <th style="text-align: center;" class="d-none d-md-table-cell">Pj</th>
                     <th style="text-align: center;" scope="col">Del</th>
                 </tr>
             </thead>
             <tbody class="tabel_search">
+                <?php $nt = count($data); ?>
                 <?php foreach ($data as $k => $i) : ?>
                     <tr class="<?= ($i['is_inv'] == 1 ? 'bg_success_bright' : ''); ?>">
                         <td style="text-align: center;"><?= ($k + 1); ?></td>
@@ -52,6 +54,7 @@
                         <td class="detail" style="cursor: pointer;" data-id="<?= $i['id']; ?>"><?= $i['barang']; ?></td>
                         <td style="text-align: center;" class="d-none d-md-table-cell"><?= $i['qty']; ?></td>
                         <td style="text-align: right;"><?= rupiah($i['harga']); ?></td>
+                        <td style="text-align: right;"><?= $nt--; ?></td>
                         <td class="d-none d-md-table-cell"><?= $i['pj']; ?></td>
                         <td style="text-align: center;"><a href="" data-alert="Are you sure to delete this data?" data-url="general/delete" data-id="<?= $i['id']; ?>" data-tabel="<?= menu()['tabel']; ?>" data-col="id" class="text_danger btn_confirm"><i class="fa-solid fa-circle-xmark"></i></a></td>
                     </tr>
