@@ -1450,3 +1450,195 @@ function pengecekan($kategori)
 
     return $res;
 }
+
+
+function laporan($bulan, $tahun)
+{
+    $db = \Config\Database::connect();
+    $builder = $db->table('rental'); // Ganti dengan nama tabelmu
+
+    $bulan_lalu = $bulan - 1;
+    if ($bulan_lalu = 0) {
+        $bulan_lalu = 12;
+    }
+    $tahun_lalu = ($bulan == 12 ? $tahun - 1 : $tahun);
+
+    $builder = $db->table('rental'); // Ganti dengan nama tabelmu
+    $builder->where("MONTH(FROM_UNIXTIME(tgl)) !=", $bulan_lalu);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl)) !=", $tahun_lalu);
+    $builder->select("*, SUM(biaya-diskon) AS total_harga");
+    $ps_masuk_kemarin = $builder->get()->getRowArray(); // Mengembalikan satu hasil dengan tota
+    $builder = $db->table('inventaris'); // Ganti dengan nama tabelmu
+    $builder->where('jenis', 'Pengeluaran');
+    $builder->where("MONTH(FROM_UNIXTIME(tgl)) !=", $bulan_lalu);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl)) !=", $tahun_lalu);
+    $builder->select("*, SUM(harga) AS total_harga");
+    $ps_keluar_kemarin = $builder->get()->getRowArray(); // Mengembalikan satu hasil dengan tota
+
+    $saldo_ps = $ps_masuk_kemarin['total_harga'] - $ps_keluar_kemarin['total_harga'];
+
+    $builder = $db->table('billiard_2'); // Ganti dengan nama tabelmu
+    $builder->whereNotIn('metode', ['Hutang']);
+    $builder->where("MONTH(FROM_UNIXTIME(tgl)) !=", $bulan_lalu);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl)) !=", $tahun_lalu);
+    $builder->select("*, SUM(harga) AS total_harga");
+    $billiard_masuk_kemarin = $builder->get()->getRowArray(); // Mengembalikan satu hasil dengan tota
+
+    $builder = $db->table('pengeluaran_billiard'); // Ganti dengan nama tabelmu
+    $builder->where("MONTH(FROM_UNIXTIME(tgl)) !=", $bulan_lalu);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl)) !=", $tahun_lalu);
+    $builder->select("*, SUM(harga) AS total_harga");
+    $billiard_keluar_kemarin = $builder->get()->getRowArray(); // Mengembalikan satu hasil dengan tota
+
+    $saldo_billiard = $billiard_masuk_kemarin['total_harga'] - $billiard_keluar_kemarin['total_harga'];
+
+    $builder = $db->table('barber'); // Ganti dengan nama tabelmu
+    $builder->whereNotIn('metode', ['Hutang']);
+    $builder->where("MONTH(FROM_UNIXTIME(tgl)) !=", $bulan_lalu);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl)) !=", $tahun_lalu);
+    $builder->select("*, SUM(total_harga) AS total_harga");
+    $barber_masuk_kemarin = $builder->get()->getRowArray(); // Mengembalikan satu hasil dengan tota
+
+    $builder = $db->table('pengeluaran_barber'); // Ganti dengan nama tabelmu
+    $builder->where("MONTH(FROM_UNIXTIME(tgl)) !=", $bulan_lalu);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl)) !=", $tahun_lalu);
+    $builder->select("*, SUM(harga) AS total_harga");
+    $barber_keluar_kemarin = $builder->get()->getRowArray(); // Mengembalikan satu hasil dengan tota
+
+    $saldo_barber = $barber_masuk_kemarin['total_harga'] - $barber_keluar_kemarin['total_harga'];
+
+    $builder = $db->table('kantin'); // Ganti dengan nama tabelmu
+    $builder->whereNotIn('metode', ['Hutang']);
+    $builder->where("MONTH(FROM_UNIXTIME(tgl)) !=", $bulan_lalu);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl)) !=", $tahun_lalu);
+    $builder->select("*, SUM(total_harga) AS total_harga");
+    $kantin_masuk_kemarin = $builder->get()->getRowArray(); // Mengembalikan satu hasil dengan tota
+
+    $builder = $db->table('pengeluaran_kantin'); // Ganti dengan nama tabelmu
+    $builder->where("MONTH(FROM_UNIXTIME(tgl)) !=", $bulan_lalu);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl)) !=", $tahun_lalu);
+    $builder->select("*, SUM(harga) AS total_harga");
+    $kantin_keluar_kemarin = $builder->get()->getRowArray(); // Mengembalikan satu hasil dengan tota
+
+    $saldo_kantin = $kantin_masuk_kemarin['total_harga'] - $kantin_keluar_kemarin['total_harga'];
+
+    $data['saldo_kemarin'] = ($saldo_ps + $saldo_billiard + $saldo_kantin + $saldo_barber);
+
+
+    // rangkuman bulan sekarang;
+    $builder = $db->table('rental'); // Ganti dengan nama tabelmu
+    $builder->where("MONTH(FROM_UNIXTIME(tgl))", $bulan);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl))", $tahun);
+    $builder->select("*, SUM(biaya-diskon) AS total_harga");
+    $ps_masuk_sekarang = $builder->get()->getRowArray(); // Mengembalikan satu hasil dengan tota
+
+    $builder = $db->table('inventaris'); // Ganti dengan nama tabelmu
+    $builder->where('jenis', 'Pengeluaran');
+    $builder->where("MONTH(FROM_UNIXTIME(tgl))", $bulan);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl))", $tahun);
+    $builder->select("*, SUM(harga) AS total_harga");
+    $ps_keluar_sekarang = $builder->get()->getRowArray(); // Mengembalikan satu hasil dengan tota
+
+    $ps_sekarang = ['masuk' => $ps_masuk_sekarang['total_harga'], 'keluar' => $ps_keluar_sekarang['total_harga']];
+
+    $builder = $db->table('billiard_2'); // Ganti dengan nama tabelmu
+    $builder->whereNotIn('metode', ['Hutang']);
+    $builder->where("MONTH(FROM_UNIXTIME(tgl))", $bulan);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl))", $tahun);
+    $builder->select("*, SUM(harga) AS total_harga");
+    $billiard_masuk_sekarang = $builder->get()->getRowArray(); // Mengembalikan satu hasil dengan tota
+
+    $builder = $db->table('pengeluaran_billiard'); // Ganti dengan nama tabelmu
+    $builder->where("MONTH(FROM_UNIXTIME(tgl))", $bulan);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl))", $tahun);
+    $builder->select("*, SUM(harga) AS total_harga");
+    $billiard_keluar_sekarang = $builder->get()->getRowArray(); // Mengembalikan satu hasil dengan tota
+
+    $billiard_sekarang = ['masuk' => $billiard_masuk_sekarang['total_harga'], 'keluar' => $billiard_keluar_sekarang['total_harga']];
+
+    $builder = $db->table('barber'); // Ganti dengan nama tabelmu
+    $builder->whereNotIn('metode', ['Hutang']);
+    $builder->where("MONTH(FROM_UNIXTIME(tgl))", $bulan);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl))", $tahun);
+    $builder->select("*, SUM(total_harga) AS total_harga");
+    $barber_masuk_sekarang = $builder->get()->getRowArray(); // Mengembalikan satu hasil dengan tota
+
+    $builder = $db->table('pengeluaran_barber'); // Ganti dengan nama tabelmu
+    $builder->where("MONTH(FROM_UNIXTIME(tgl))", $bulan);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl))", $tahun);
+    $builder->select("*, SUM(harga) AS total_harga");
+    $barber_keluar_sekarang = $builder->get()->getRowArray(); // Mengembalikan satu hasil dengan tota
+
+    $barber_sekarang = ['masuk' => $barber_masuk_sekarang['total_harga'], 'keluar' => $barber_keluar_sekarang['total_harga']];
+
+    $builder = $db->table('kantin'); // Ganti dengan nama tabelmu
+    $builder->whereNotIn('metode', ['Hutang']);
+    $builder->where("MONTH(FROM_UNIXTIME(tgl))", $bulan);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl))", $tahun);
+    $builder->select("*, SUM(total_harga) AS total_harga");
+    $kantin_masuk_sekarang = $builder->get()->getRowArray(); // Mengembalikan satu hasil dengan tota
+
+    $builder = $db->table('pengeluaran_kantin'); // Ganti dengan nama tabelmu
+    $builder->where("MONTH(FROM_UNIXTIME(tgl))", $bulan);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl))", $tahun);
+    $builder->select("*, SUM(harga) AS total_harga");
+    $kantin_keluar_sekarang = $builder->get()->getRowArray(); // Mengembalikan satu hasil dengan tota
+
+    $kantin_sekarang = ['masuk' => $kantin_masuk_sekarang['total_harga'], 'keluar' => $kantin_keluar_sekarang['total_harga']];
+
+    $data['rangkuman'] = ['ps' => $ps_sekarang, 'billiard' => $billiard_sekarang, 'barber' => $barber_sekarang, 'kantin' => $kantin_sekarang];
+
+    // data bulan sekarang
+    $builder = $db->table('rental');
+    $builder->where("MONTH(FROM_UNIXTIME(tgl))", $bulan);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl))", $tahun);
+    $ps_masuk = $builder->get()->getResultArray();
+
+    $builder = $db->table('inventaris'); // Ganti dengan nama tabelmu
+    $builder->where('jenis', 'Pengeluaran');
+    $builder->where("MONTH(FROM_UNIXTIME(tgl))", $bulan);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl))", $tahun);
+    $ps_keluar = $builder->get()->getResultArray();
+
+    $builder = $db->table('billiard_2'); // Ganti dengan nama tabelmu
+    $builder->whereNotIn('metode', ['Hutang']);
+    $builder->where("MONTH(FROM_UNIXTIME(tgl))", $bulan);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl))", $tahun);
+    $billiard_masuk = $builder->get()->getResultArray();
+
+    $builder = $db->table('pengeluaran_billiard'); // Ganti dengan nama tabelmu
+    $builder->where("MONTH(FROM_UNIXTIME(tgl))", $bulan);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl))", $tahun);
+    $billiard_keluar = $builder->get()->getResultArray();
+
+    $builder = $db->table('barber'); // Ganti dengan nama tabelmu
+    $builder->whereNotIn('metode', ['Hutang']);
+    $builder->where("MONTH(FROM_UNIXTIME(tgl))", $bulan);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl))", $tahun);
+    $barber_masuk = $builder->get()->getResultArray();
+
+    $builder = $db->table('pengeluaran_barber'); // Ganti dengan nama tabelmu
+    $builder->where("MONTH(FROM_UNIXTIME(tgl))", $bulan);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl))", $tahun);
+    $barber_keluar = $builder->get()->getResultArray();
+
+    $builder = $db->table('kantin'); // Ganti dengan nama tabelmu
+    $builder->whereNotIn('metode', ['Hutang']);
+    $builder->where("MONTH(FROM_UNIXTIME(tgl))", $bulan);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl))", $tahun);
+    $kantin_masuk = $builder->get()->getResultArray();
+
+    $builder = $db->table('pengeluaran_kantin'); // Ganti dengan nama tabelmu
+    $builder->where("MONTH(FROM_UNIXTIME(tgl))", $bulan);
+    $builder->where("YEAR(FROM_UNIXTIME(tgl))", $tahun);
+    $kantin_keluar = $builder->get()->getResultArray();
+
+    $data['data'] = [
+        'ps' => ['masuk' => $ps_masuk, 'keluar' => $ps_keluar],
+        'billiard' => ['masuk' => $billiard_masuk, 'keluar' => $billiard_keluar],
+        'barber' => ['masuk' => $barber_masuk, 'keluar' => $barber_keluar],
+        'kantin' => ['masuk' => $kantin_masuk, 'keluar' => $kantin_keluar]
+    ];
+
+    return $data;
+}

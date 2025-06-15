@@ -22,7 +22,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
 
         <?php endif; ?>
     </div>
-    <div class="d-flex gap-2 mb-3">
+    <div class="d-flex gap-2 mb-2">
         <div class="input-group input-group-sm">
             <input type="text" class="form-control pengecekan_Listrik" value="<?= (pengecekan('Listrik') == ""  ? "" : pengecekan('Listrik')); ?>" placeholder="<?= (pengecekan('Listrik') == "" ? "Belum dicek" : ""); ?>">
             <button class="btn btn-outline-secondary btn_pengecekan" data-kategori="Listrik" type="button">Listrik</button>
@@ -33,6 +33,21 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
                 <option <?= (pengecekan('Toilet') == "Bersih" ? "selected" : ""); ?> value="Bersih">Bersih</option>
             </select>
             <button class="btn btn-outline-secondary btn_pengecekan" data-kategori="Toilet" type="button">Toilet</button>
+        </div>
+    </div>
+    <div class="d-flex mb-3 gap-2">
+        <select class="form-select form-select-sm bulan_laporan">
+            <?php foreach (bulan() as $i): ?>
+                <option value="<?= $i['satuan']; ?>" <?= ($i['angka'] == date('m') ? "selected" : ""); ?>><?= $i['bulan']; ?></option>
+            <?php endforeach; ?>
+        </select>
+        <select class="form-select form-select-sm tahun_laporan">
+            <?php foreach (get_tahuns('billiard_2') as $i): ?>
+                <option value="<?= $i; ?>" <?= ($i == date('Y') ? "selected" : ""); ?>><?= $i; ?></option>
+            <?php endforeach; ?>
+        </select>
+        <div>
+            <button class="btn btn-sm btn-primary text-center btn_laporan"><i class="fa-regular fa-file-pdf"></i></button>
         </div>
     </div>
 
@@ -969,6 +984,15 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
                 gagal(res.message);
             }
         })
+
+    })
+    $(document).on('click', '.btn_laporan', function(e) {
+        e.preventDefault();
+        let tahun_laporan = $(".tahun_laporan").val();
+        let bulan_laporan = $(".bulan_laporan").val();
+
+        window.open("<?= base_url('home/laporan/'); ?>" + bulan_laporan + "/" + tahun_laporan, "_blank");
+
 
     })
 </script>

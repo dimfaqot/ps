@@ -456,4 +456,33 @@ class Home extends BaseController
             }
         }
     }
+    public function laporan($bulan, $tahun)
+    {
+
+        $data = laporan($bulan, $tahun);
+        // dd($data);
+        $set = [
+            'mode' => 'utf-8',
+            'format' => [210, 330],
+            'orientation' => 'P',
+            'margin_left' => 5,
+            'margin_right' => 5,
+            'margin_top' => 5,
+            'margin_bottom' => 5
+        ];
+
+        $mpdf = new \Mpdf\Mpdf($set);
+
+        $judul = "LAPORAN SONGO PLAYGROUND BULAN " . strtoupper(bulan($bulan)['bulan']) . " TAHUN " . $tahun;
+        // Dapatkan konten HTML
+        $logo = '<img width="90" src="logo.png" alt="KOP"/>';
+        $html = view('laporan', ['judul' => $judul, 'logo' => $logo, 'tahun' => $tahun, 'bulan' => $bulan, 'data' => $data]); // view('pdf_template') mengacu pada file view yang akan dirender menjadi PDF
+
+        // Setel konten HTML ke mPDF
+        $mpdf->WriteHTML($html);
+
+        // Output PDF ke browser
+        $this->response->setHeader('Content-Type', 'application/pdf');
+        $mpdf->Output($judul . '.pdf', 'I');
+    }
 }
