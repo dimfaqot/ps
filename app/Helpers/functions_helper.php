@@ -1459,6 +1459,14 @@ function laporan($bulan, $tahun)
 
     $bl_lalu = strtotime(date($tahun . '-' . bulan($bulan)['angka'] . '-01'));
 
+    $dbb = db('basil_keluar');
+    $basil_keluar = $dbb->get()->getResultArray();
+
+    $total_basil_keluar = 0;
+    foreach ($basil_keluar as $i) {
+        $basil_keluar += ['jml'];
+    }
+
     // PS______________
     $builder = $db->table('rental');
     $builder->select("*, SUM(biaya-diskon) AS total_harga")->where('tgl <', $bl_lalu);
@@ -1516,6 +1524,7 @@ function laporan($bulan, $tahun)
     $saldo_barber = $barber_masuk_kemarin - $barber_keluar_kemarin;
 
     $data['saldo_kemarin'] = ($saldo_ps + $saldo_billiard + $saldo_kantin + $saldo_barber);
+    $data['basil_keluar'] = $total_basil_keluar;
 
     // rangkuman bulan sekarang;
     $builder = $db->table('rental'); // Ganti dengan nama tabelmu

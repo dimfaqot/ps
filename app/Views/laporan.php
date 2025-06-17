@@ -46,7 +46,7 @@
     <h3 style="text-align: center;"><?= $judul; ?></h3>
 
     <h4>A. RANGKUMAN</h4>
-    <h5>SALDO BULAN LALU: <?= angka($data['saldo_kemarin']); ?></h5>
+    <h5>SALDO BULAN LALU: <?= angka($data['saldo_kemarin']); ?> - <?= angka($data['basil_keluar']); ?> = <?= angka($data['saldo_kemarin'] - $data['basil_keluar']); ?></h5>
     <table style="margin-top: 10px;width:100%;">
         <tr>
             <th style="border: 1px solid grey;padding:2px">No.</th>
