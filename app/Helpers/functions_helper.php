@@ -1464,7 +1464,7 @@ function laporan($bulan, $tahun)
 
     $total_basil_keluar = 0;
     foreach ($basil_keluar as $i) {
-        $basil_keluar += ['jml'];
+        $total_basil_keluar += ['jml'];
     }
 
     // PS______________
