@@ -286,9 +286,15 @@
         </tr>
 
     </table>
+    <br>
+    <br>
+    <div style="text-align: center;">Sragen, 1 <?= bulan($bulan)['bulan']; ?> <?= $tahun; ?></div>
+    <div style="text-align: center;">Penanggung Jawab</div>
+    <br>
+    <br>
+    <br>
+    <div style="text-align: center;">Dimyati</div>
 
-
-    </div>
 
 
 
