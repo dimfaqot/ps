@@ -459,7 +459,7 @@ class Home extends BaseController
     {
 
         $data = laporan($bulan, $tahun);
-        dd($data);
+        // dd($data);
         $set = [
             'mode' => 'utf-8',
             'format' => [210, 330],
