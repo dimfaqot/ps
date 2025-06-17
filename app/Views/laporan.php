@@ -117,12 +117,12 @@
         </tr>
         <?php $total = 0; ?>
         <?php foreach ($data['data']['barber']['keluar'] as $k => $i): ?>
-            <?php $total += $i['total_harga']; ?>
+            <?php $total += $i['harga']; ?>
             <tr>
                 <td style="text-align:center;border: 1px solid grey;padding:4px"><?= ($k + 1); ?></td>
                 <td style="border: 1px solid grey;padding:4px;text-align:center"><?= date('d/m/Y', $i['tgl']); ?></td>
                 <td style="text-align: left;border: 1px solid grey;padding:4px"><?= $i['layanan']; ?></td>
-                <td style="text-align: right;border: 1px solid grey;padding:4px"><?= angka($i['total_harga']); ?></td>
+                <td style="text-align: right;border: 1px solid grey;padding:4px"><?= angka($i['harga']); ?></td>
             </tr>
         <?php endforeach; ?>
         <tr>
