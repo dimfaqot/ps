@@ -1457,12 +1457,6 @@ function laporan($bulan, $tahun)
     $db = \Config\Database::connect();
     $builder = $db->table('rental'); // Ganti dengan nama tabelmu
 
-    $bulan_lalu = $bulan - 1;
-    if ($bulan_lalu == 0) {
-        $bulan_lalu = 12;
-    }
-    $tahun_lalu = ($bulan == 1 ? $tahun - 1 : $tahun);
-
     $bl_lalu = strtotime(date($tahun . '-' . bulan($bulan)['angka'] . '-01'));
 
     // PS______________
@@ -1543,7 +1537,7 @@ function laporan($bulan, $tahun)
     $builder->whereNotIn('metode', ['Hutang']);
     $builder->where("MONTH(FROM_UNIXTIME(tgl))", $bulan);
     $builder->where("YEAR(FROM_UNIXTIME(tgl))", $tahun);
-    $builder->select("*, SUM(harga) AS total_harga");
+    $builder->select("*, SUM(biaya) AS total_harga");
     $billiard_masuk_sekarang = $builder->get()->getRowArray(); // Mengembalikan satu hasil dengan tota
 
     $builder = $db->table('pengeluaran_billiard'); // Ganti dengan nama tabelmu
