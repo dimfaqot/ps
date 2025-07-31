@@ -1644,3 +1644,64 @@ function laporan($bulan, $tahun)
 
     return $data;
 }
+
+function durasi_waktu($start)
+{
+    $selisihDetik = time() - $start;
+    $selisihMenit = floor($selisihDetik / 60);
+
+    $jam = floor($selisihMenit / 60);
+    $menit = $selisihMenit % 60;
+    return "$jam : $menit";
+}
+
+function no_invoice($order = null)
+{
+
+    $db = db('nota');
+    if ($order !== null) {
+        $db = db('hutang');
+    }
+    $year  = date('Y');
+    $month = date('m');
+    $prefix = "$year/$month/";
+
+    // Cari no_nota terakhir berdasarkan bulan ini
+    $lastNota = $db->select('no_nota')
+        ->orderBy('tgl', 'DESC')
+        ->get()
+        ->getRowArray();
+
+
+    $nextNumber = 1;
+    if ($lastNota) {
+        $parts = explode('/', $lastNota['no_nota']);
+        $lastNumber = end($parts);
+        $nextNumber = (int)$lastNumber + 1;
+    }
+
+    return $prefix . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+}
+
+function hutang($no_nota)
+{
+    $data = db('hutang')->where('no_nota', $no_nota)->get()->getResultArray();
+    $time = time();
+    $res = [];
+    foreach ($data as $i) {
+        $i['ket'] = "";
+        if ($i['kategori'] == "Billiard" || $i['kategori'] == "Ps") {
+            if ($i['qty'] == 0) {
+                $i['qty'] = ceil(($time - $i['tgl']) / 60);
+                $i['total_harga'] = biaya_per_menit($i["harga_satuan"], $i['tgl'], $time);
+                $i['ket'] = "Open";
+            } else {
+                $i['ket'] = "Reguler";
+            }
+        }
+
+        $res[] = $i;
+    }
+
+    return $res;
+}

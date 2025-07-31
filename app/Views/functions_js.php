@@ -480,4 +480,66 @@
         let res = `${day}/${month}/${year}`;
         return res;
     }
+
+    function biaya_sewa(start, end, harga) {
+
+        if (end > 0) {
+            let jam = Math.ceil(start / 60);
+            let biaya = jam * harga;
+            let waktu = durasi_waktu(jam, 'play');
+            let menit = start;
+
+            let res = {
+                biaya,
+                waktu,
+                menit
+            };
+            return res;
+
+        } else {
+            let tarifPerMenit = harga / 60; // Ubah tarif ke per menit
+            let now = Math.floor(Date.now() / 1000); // Waktu saat ini dalam detik
+            let durasiMenit = Math.floor((now - start) / 60); // Hitung durasi bermain dalam menit
+            let biaya = durasiMenit * tarifPerMenit;
+            biaya = Math.ceil(biaya); // Bulatkan ke atas untuk hasil akhir
+            let waktu = durasi_waktu(durasiMenit);
+
+            let res = {
+                biaya,
+                waktu,
+                menit: durasiMenit
+            };
+            return res;
+
+        }
+    }
+
+    function durasi_waktu(totalMenit, order = undefined) {
+
+        if (order == undefined) {
+            let jam = Math.floor(totalMenit / 60);
+            let menit = totalMenit % 60;
+            return `${angka(jam)} Jam ${menit} Menit`;
+
+        } else {
+            return `${angka(totalMenit)} Jam 0 Menit`;
+
+        }
+    }
+
+    function angka_to_int(nominalString) {
+        // Hapus semua karakter non-digit (kecuali minus jika perlu)
+        const angkaBersih = nominalString.replace(/[^0-9]/g, '');
+        return parseInt(angkaBersih, 10);
+    }
+
+    function menit_ke_jam(totalMinutes) {
+
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+
+        const result = `${hours} : ${minutes}`;
+
+        return result;
+    }
 </script>

@@ -33,7 +33,7 @@ class User extends BaseController
         $username = strtolower(clear($this->request->getVar('username')));
         $role = upper_first(clear($this->request->getVar('role')));
         $hp = upper_first(clear($this->request->getVar('hp')));
-        $uid = clear($this->request->getVar('uid'));
+        $uid = generateRandomString(4);
         $fulus = rp_to_int($this->request->getVar('fulus'));
         $img = 'file_not_found.jpg';
         $password = password_hash(getenv('default_password'), PASSWORD_DEFAULT);

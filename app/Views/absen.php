@@ -116,7 +116,7 @@
         }
 
         const errorCb = (error) => {
-            console.error(error);
+            // console.error(error);
         }
 
         // $(document).on('click', '.lokasi_saya', function(e) {

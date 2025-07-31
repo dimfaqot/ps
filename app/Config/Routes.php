@@ -301,3 +301,25 @@ $routes->get('/basil_bersih/(:any)/(:any)', 'Basil::basil_bersih/$1/$2');
 $routes->get('/basil', 'Basil::basil');
 $routes->post('/basil/data_pengeluaran', 'Basil::data_pengeluaran');
 $routes->post('/basil/add_pengeluaran', 'Basil::add_pengeluaran');
+
+
+// kasir __________________________________
+$routes->get('/kasir', 'Kasir::index');
+$routes->post('/kasir/get_data', 'Kasir::get_data');
+$routes->post('/kasir/search_user', 'Kasir::search_user');
+$routes->post('/kasir/add_user', 'Kasir::add_user');
+$routes->post('/kasir/cari_barang', 'Kasir::cari_barang');
+$routes->post('/kasir/bayar_langsung', 'Kasir::bayar_langsung');
+$routes->post('/kasir/bayar_nanti', 'Kasir::bayar_nanti');
+$routes->get('/kasir/nota/(:any)', 'Kasir::nota/$1');
+$routes->post('/kasir/menu_utama', 'Kasir::menu_utama');
+$routes->post('/kasir/data_hutang', 'Kasir::data_hutang');
+$routes->post('/kasir/options', 'Kasir::options');
+$routes->post('/kasir/tambah_pesanan', 'Kasir::tambah_pesanan');
+
+
+$routes->get('/kasir2', 'Kasir::index');
+$routes->post('/kasir2/get_data', 'Kasir2::get_data');
+$routes->post('/kasir2/execute', 'Kasir2::execute');
+$routes->post('/kasir2/add_change', 'Kasir2::add_change');
+$routes->post('/kasir2/bayar', 'Kasir2::bayar');

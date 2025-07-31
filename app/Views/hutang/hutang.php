@@ -416,7 +416,7 @@
                 value
             }).then(res => {
 
-                // console.log(args_values);
+
                 if (res.status == '200') {
                     html = '';
                     if (res.data.length == 0) {
@@ -819,7 +819,7 @@
         let kategori = $(this).data('kategori');
         let no_hp = "62";
         no_hp += $(this).data('no_hp').substring(1);
-        console.log(kategori);
+
         if (kategori == 'Root') {
             gagal('Root tidak diizinkan!.');
             return;

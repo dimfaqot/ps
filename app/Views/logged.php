@@ -24,6 +24,25 @@
             width: max-content;
             font-weight: 600;
         }
+
+        .data_list,
+        .data_list_barang {
+            position: absolute;
+            top: 100%;
+            width: 100%;
+            left: 0;
+            z-index: 99999;
+            background-color: aliceblue;
+            color: black;
+        }
+
+        .data_list div,
+        .data_list_barang div {
+            padding: 5px 10px;
+            border-bottom: 1px solid grey;
+            cursor: pointer;
+            text-align: left;
+        }
     </style>
 </head>
 
