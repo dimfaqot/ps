@@ -857,7 +857,7 @@ class Kasir extends BaseController
                 ->get()
                 ->getResultArray();
 
-            sukses_js('Ok', $data, $start > 1754070430, $end < 1754070430);
+            sukses_js('Ok', $data, $start > 1754070430, $end < 1754070430, $start, $end);
         }
     }
     public function data_hutang()
