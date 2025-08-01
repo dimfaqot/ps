@@ -849,10 +849,10 @@ class Kasir extends BaseController
 
             $data = db('hutang')
                 ->where('status', 0)
-                ->where('tgl >=', $start)
-                ->where('tgl <=', $end)
+                // ->where('tgl >=', $start)
+                // ->where('tgl <=', $end)
                 ->groupBy('no_nota')
-                ->orderBy('tgl', "ASC")
+                ->orderBy('tgl', "DESC")
                 ->get()
                 ->getResultArray();
 
