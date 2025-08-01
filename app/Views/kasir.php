@@ -1692,7 +1692,9 @@
         $(".body_fullscreen").html("");
 
 
-        tampilkan_data_hutang(no_nota, order);
+        setTimeout(() => {
+            tampilkan_data_hutang(no_nota, order);
+        }, 1000);
     });
     $(document).on('click', '.btn_tambah_pesanan ', function(e) {
         e.preventDefault();
