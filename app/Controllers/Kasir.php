@@ -847,7 +847,7 @@ class Kasir extends BaseController
                 $start = strtotime(date('Y-m-d') . ' 12:00:00');
                 $end   = strtotime(date('Y-m-d', strtotime('+1 day')) . ' 06:00:00');
             }
-            sukses_js($start . " " . date("d/m/Y H:i", $start), $end . " " . date("d/m/Y H:i", $end));
+
             $data = db('hutang')
                 ->select('*')
                 ->where('tgl >=', $start)
