@@ -857,7 +857,7 @@ class Kasir extends BaseController
                 ->get()
                 ->getResultArray();
 
-            sukses_js(date("d/m/Y H:i", 1754070430), $data, $start > 1754070430, $end < 1754070430, $start . " " . date("d/m/Y H:i", $start), $end . " " . date("d/m/Y H:i", $end));
+            sukses_js("1754070430" . " " . date("d/m/Y H:i", 1754070430), $data, $start > 1754070430, $end < 1754070430, $start . " " . date("d/m/Y H:i", $start), $end . " " . date("d/m/Y H:i", $end));
         }
     }
     public function data_hutang()
