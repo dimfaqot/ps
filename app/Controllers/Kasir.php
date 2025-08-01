@@ -852,6 +852,7 @@ class Kasir extends BaseController
                 ->select('*')
                 ->where('tgl >=', $start)
                 ->where('tgl <=', $end)
+                ->where('status', 0)
                 ->groupBy('no_nota')
                 ->orderBy('tgl', "ASC")
                 ->get()
