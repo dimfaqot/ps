@@ -458,7 +458,6 @@
                 <h5>KANTIN</h5>
                  <div class="input-group my-3">
                     <input type="text" class="form-control cari_barang" placeholder="Cari barang">
-                    <button class="btn btn-outline-secondary btn_tambah_barang" type="button">Tambah</button>
                     <div class="data_list_barang"></div>
                 </div>
               <div class="list_barang"></div>

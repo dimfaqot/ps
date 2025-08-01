@@ -483,7 +483,7 @@ class Kasir extends BaseController
                 $id = $meja['unit_id'];
 
                 $meja['is_active'] = 0;
-                $meja['ke'] = ($meja['ke'] == -1 ? time() : $meja['ke']);
+                $meja['ke'] = ($meja['durasi'] == -1 ? time() : $meja['ke']);
                 $meja['petugas'] = user()['nama'];
                 $meja['durasi'] = ($meja['durasi'] == -1 ? $ps['durasi'] : $meja['durasi']);
                 $meja['diskon'] = $ps['diskon'];
