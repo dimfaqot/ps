@@ -129,28 +129,49 @@
     $(document).on('click', '.menu_utama', function(e) {
         e.preventDefault();
         let menu = $(this).data("menu");
+        if (menu == "hutang") {
 
+            post("kasir/menu_utama", {
+                menu
+            }).then(res => {
+                if (res.status == "200") {
+                    if (menu == "hutang") {
 
-        post("kasir/menu_utama", {
-            menu
-        }).then(res => {
-            if (res.status == "200") {
-                if (menu == "hutang") {
+                        let html = `<div class="container mt-3">
+                <div class="text-center mb-3"><button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">Kembali</button></div>
+                                <input class="form-control cari_nama_hutang" type="text" placeholder="Cari nama...">`;
 
-                    let html = `<div class="container mt-3">
-                    <div class="text-center mb-3"><button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">Kembali</button></div>
-                                    <input class="form-control cari_nama_hutang" type="text" placeholder="Cari nama...">`;
-
-                    res.data.forEach(e => {
-                        html += `<a class="btn btn-light text-start w-100 data_cari_nama_hutang" data-no_nota="${e.no_nota}" href="#" role="button">${e.nama}</a>`;
-                    })
-                    $("#canvas_kasir").html(html);
-                    canvas.show();
+                        res.data.forEach(e => {
+                            html += `<a class="btn btn-light text-start w-100 data_cari_nama_hutang" data-no_nota="${e.no_nota}" href="#" role="button">${e.nama}</a>`;
+                        })
+                        $("#canvas_kasir").html(html);
+                        canvas.show();
+                    }
+                } else {
+                    gagal(res.message);
                 }
-            } else {
-                gagal(res.message);
-            }
-        })
+            })
+        }
+
+        if (menu == "billiard" || menu == "ps") {
+
+            post("kasir/status_now", {
+                id: 0
+            }).then(res => {
+                let html = ``;
+
+                html += `<ul class="list-group">`;
+                res.data[menu].forEach(e => {
+                    html += `<li class="list-group-item ${e.text}">${e.meja} | ${e.harga} | ${e.status} | ${e.durasi} </li>`;
+
+                })
+                html += `</ul>`;
+
+                $(".modal_kasir").html(html);
+                modal.show();
+            });
+        }
+
 
     });
 
@@ -566,7 +587,7 @@
                 }
             })
         }
-        console.log(kategori);
+
         if (kategori == "ps") {
             let id = $(".tambah_pesanan_ps").val();
             let jam = $(".tambah_pesanan_jam_ps").val();
@@ -588,6 +609,12 @@
 
         let html = tabel_tambah_pesanan(no_nota, total_harga("tambah"));
         $(".body_tabel_tambah_pesanan").html(html);
+
+        sukses("Sukses");
+
+        if (kategori == "billiard" || kategori == "ps") {
+            modal.hide();
+        }
 
     })
     $(document).on('click', '.cancel_tambah', function(e) {
@@ -662,6 +689,10 @@
             let html = tabel_tambah_pesanan(no_nota, total_harga("tambah"));
 
             $(".body_tabel_tambah_pesanan").html(html);
+
+            sukses("Sukses");
+
+            modal.hide();
         } else {
             $(".cari_barang").val("");
             $(".data_list_barang").html("");
@@ -1147,7 +1178,7 @@
                 </table>
                 <div class="text-center">`;
 
-        html += `<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>`;
+        html += `<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>`;
         if (status == undefined) {
             html += `<button type="button" class="btn btn-success btn_tambah_pesanan mx-2" data-order="hutang" data-no_nota="${no_nota}">Ubah Pesanan</button>`;
         }
@@ -1210,10 +1241,11 @@
 
         }
         if (billiard.id) {
+
             let no = list_barang.length + barber.length + 1;
             html += `<tr>
                         <td class="text-center">${no}</td>
-                        <td>${billiard}</td>
+                        <td>"Billiard</td>
                         <td>${billiard.meja}</td>`;
 
 
@@ -1234,7 +1266,7 @@
             }
             html += `<tr>
                         <td class="text-center">${no}</td>
-                         <td>${ps}</td>
+                         <td>Ps</td>
                             <td>${ps.meja}</td>`;
 
 
@@ -1255,7 +1287,7 @@
                 </table>
                 <div class="text-center">`;
 
-        html += `<button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">Cancel</button>`;
+        html += `<button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">Kembali</button>`;
 
 
         html += `<button type="button" class="btn btn-success bayar_langsung mx-2" data-order="langsung">Bayar Langsung</button>`;
@@ -1673,7 +1705,10 @@
             ps
         }).then(res => {
             if (res.status == "200") {
-
+                sukses("Sukses");
+                setTimeout(() => {
+                    location.reload();
+                }, 1200);
             } else {
                 gagal(res.message);
             }

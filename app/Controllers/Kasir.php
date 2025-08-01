@@ -14,6 +14,7 @@ class Kasir extends BaseController
 
     public function index()
     {
+
         return view(menu()['controller'], ['judul' => menu()['menu'] . ' - PS']);
     }
 
@@ -260,7 +261,7 @@ class Kasir extends BaseController
                 } else {
                     $temp['ket'] = (time() > $q['end'] ? "Over" : "In Game");
                     $temp['text'] = ($temp['ket'] == "Over" ? "text-danger" : "text-secondary");
-                    $temp['waktu'] = (time() > $q['end'] ? -1 : "-" . durasi(time(), $q['end']));
+                    $temp['waktu'] = (time() > $q['end'] ? 0 : "-" . durasi(time(), $q['end']));
                 }
             }
 
@@ -1007,5 +1008,79 @@ class Kasir extends BaseController
         } else {
             gagal_js("Gagal");
         }
+    }
+
+    public function status_now()
+    {
+        $db_meja = db('jadwal_2');
+        $meja = $db_meja->orderBy('meja', 'ASC')->get()->getResultArray();
+        $db_billiard = db('billiard_2');
+
+        $billiard = [];
+        foreach ($meja as $i) {
+            $q = $db_billiard->where('meja', "Meja " . $i['meja'])->where('is_active', 1)->get()->getRowArray();
+
+            $temp = [
+                'meja' => "Meja " . $i['meja'],
+                'status' => "Kosong",
+                'harga' => $i['harga'],
+                'text' => 'text-success',
+                'durasi' => ''
+            ];
+
+            if ($q) {
+                if ($q['durasi'] == 0) {
+                    $temp['status'] = "Open";
+                    $temp['text'] = "text-secondary";
+                    $temp['durasi'] = durasi($q['start'], $q['end']);
+                } else {
+                    $temp['status'] = "Regular";
+                    $temp['durasi'] = (time() > $q['end'] ? "Habis" : "-" . durasi(time(), $q['end']));
+                    $temp['text'] = ($temp['durasi'] == "Habis" ? "text-danger" : "text-secondary");
+                }
+            }
+
+            $billiard[] = $temp;
+        }
+
+        $db_unit = db('unit');
+        $unit = $db_unit->whereNotIn('status', ['Maintenance'])->orderBy('no_urut', 'ASC')->get()->getResultArray();
+        $db_ps = db('rental');
+        $db_kode_bayar = db('settings');
+        $ps = [];
+        foreach ($unit as $i) {
+            $q = $db_ps->where('meja', $i['unit'])->where('is_active', 1)->get()->getRowArray();
+            $kode_bayar = $db_kode_bayar->where('nama_setting', $i['kode_harga'])->get()->getRowArray();
+
+            $temp = [
+                'meja' => $i['unit'],
+                'status' => "Kosong",
+                'harga' =>  $kode_bayar['value_int'],
+                'text' => 'text-success',
+                'durasi' => ''
+            ];
+
+
+            if ($q) {
+                if ($q['durasi'] == -10) {
+                    $temp['status'] = "Open";
+                    $temp['text'] = "text-secondary";
+                    $temp['durasi'] = durasi($q['dari'], $q['ke']);
+                } else {
+                    $temp['status'] = "Regular";
+                    $temp['durasi'] = (time() > $q['ke'] ? "Habis" : "-" . durasi(time(), $q['ke']));
+                    $temp['text'] = ($temp['durasi'] == "Habis" ? "text-danger" : "text-secondary");
+                }
+            }
+            $ps[] = $temp;
+        }
+
+
+        $res = [
+            'billiard' => $billiard,
+            'ps' => $ps
+        ];
+
+        sukses_js("Ok", $res);
     }
 }
