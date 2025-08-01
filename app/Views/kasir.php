@@ -138,7 +138,7 @@
                 if (menu == "hutang") {
 
                     let html = `<div class="container mt-3">
-                    <div class="text-center mb-3"><button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">Cancel</button></div>
+                    <div class="text-center mb-3"><button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">Kembali</button></div>
                                     <input class="form-control cari_nama_hutang" type="text" placeholder="Cari nama...">`;
 
                     res.data.forEach(e => {
@@ -287,6 +287,7 @@
                 if (iframe && iframe.contentWindow) {
                     iframe.contentWindow.focus();
                     iframe.contentWindow.print();
+                    console.log('Ok');
                 } else {
                     console.log("gagal");
                 }
@@ -1553,7 +1554,7 @@
         modal.show();
     });
 
-    function bluetooth_print(nota) {
+    function bluetooth_print(nota = "111") {
         bluetoothSerial.isEnabled(function() {
             bluetoothSerial.list(function(devices) {
                 const printer = devices.find(d => d.name.includes("RPP02N"));
@@ -1616,7 +1617,7 @@
         }).then(res => {
             if (res.status == "200") {
                 let html = `<iframe src="<?= base_url('kasir/nota/') ?>${res.data3}" style="border: none; width: 100%; height: 600px;"></iframe>`;
-                html += '<div class="text-center mt-5"><button id="btn_print_nota" class="btn btn-secondary">Print Nota</button></div>';
+                html += '<div class="text-center mt-5"><button class="btn btn-secondary selesai me-2i">Selesai</button> <button id="btn_print_nota" class="btn btn-primary">Print Nota</button></div>';
                 $(".modal_kasir").html(html);
                 modal.show();
             } else {
@@ -1637,11 +1638,18 @@
             ps
         }).then(res => {
             if (res.status == "200") {
-
+                sukses(res.message);
+                setTimeout(() => {
+                    location.reload();
+                }, 1200);
             } else {
                 gagal(res.message);
             }
         })
+    });
+    $(document).on('click', '.selesai', function(e) {
+        e.preventDefault();
+        location.reload();
     });
     $(document).on('click', '.bayar_hutang', function(e) {
         e.preventDefault();

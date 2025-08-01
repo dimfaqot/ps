@@ -20,123 +20,148 @@ class Kasir extends BaseController
     public function nota($nota)
     {
         $nota = str_replace("-", "/", $nota);
+
+        // // dd($data);
+        // $set = [
+        //     'mode' => 'utf-8',
+        //     'format' => [210, 330],
+        //     'orientation' => 'P',
+        //     'margin_left' => 5,
+        //     'margin_right' => 5,
+        //     'margin_top' => 5,
+        //     'margin_bottom' => 5
+        // ];
+
         $db = db('nota');
         $q = $db->where('no_nota', $nota)->get()->getResultArray();
+
+        // $mpdf = new \Mpdf\Mpdf($set);
+
+        // $judul = "NOTA " . $nota;
+        // // Dapatkan konten HTML
+        // // $logo = '<img width="90" src="logo.png" alt="KOP"/>';
+        // $html = view('nota', ['judul' => $judul, 'data' => $data]); // view('pdf_template') mengacu pada file view yang akan dirender menjadi PDF
+        // dd($html);
+        // // Setel konten HTML ke mPDF
+        // $mpdf->WriteHTML($html);
+
+        // // Output PDF ke browser
+        // $this->response->setHeader('Content-Type', 'application/pdf');
+        // $mpdf->Output($judul . '.pdf', 'I');
 
 
         $total = 0;
         $diskon = 0;
 
         $html = '<!DOCTYPE html>
-        <html lang="id">
-        <head>
-          <meta charset="UTF-8">
-          <title>Nota Pembelian</title>
-          <style>
+                <html lang="id">
+                <head>
+                  <meta charset="UTF-8">
+                  <title>Nota Pembelian</title>
+                  <style>
+                    body {
+                      font-family: Arial, sans-serif;
+                      max-width: 400px;
+                      margin: auto;
+                      border: 1px solid #ccc;
+                      padding: 20px;
+                    }
+                    hr {
+                      border: none;
+                      border-top: 1px dashed grey;
+                    }
+                    table {
+                      width: 100%;
+                      border-collapse: collapse;
+                      margin-top: 10px;
+                    }
+                    th, td {
+                      padding: 4px;
+                    }
+                    th {
+                      text-align: right;
+                    }
+                    td {
+                      vertical-align: top;
+                    }
+                      @media print {
+            @page {
+              margin: 0;
+              width:300px;
+              height:100%;
+            }
+
             body {
-              font-family: Arial, sans-serif;
-              max-width: 400px;
-              margin: auto;
-              border: 1px solid #ccc;
-              padding: 20px;
+              margin: 0; /* Menghilangkan margin default body */
             }
-            hr {
-              border: none;
-              border-top: 1px dashed grey;
-            }
-            table {
-              width: 100%;
-              border-collapse: collapse;
-              margin-top: 10px;
-            }
-            th, td {
-              padding: 4px;
-            }
-            th {
-              text-align: right;
-            }
-            td {
-              vertical-align: top;
-            }
-              @media print {
-    @page {
-      margin: 0;
-      width:300px;
-      height:100%;
-    }
 
-    body {
-      margin: 0; /* Menghilangkan margin default body */
-    }
+            /* Jika perlu, tambahkan styling lainnya untuk elemen nota */
+            .nota {
+              font-size: 10px; /* Contoh penyesuaian tampilan */
+            }
+          }
 
-    /* Jika perlu, tambahkan styling lainnya untuk elemen nota */
-    .nota {
-      font-size: 10px; /* Contoh penyesuaian tampilan */
-    }
-  }
+                }
+                  </style>
+                </head>
+                <body>
+                  <h2 style="text-align: center; margin-bottom: 10px;">SONGO PLAYGROUND</h2>
+                  <p style="text-align: center; margin: 0;">Karangmalang Sragen Jawa Tengah</p>
+                  <p style="text-align: center; margin: 0 0 10px;">0857-4661-6165</p>
 
-        }
-          </style>
-        </head>
-        <body>
-          <h2 style="text-align: center; margin-bottom: 10px;">SONGO PLAYGROUND</h2>
-          <p style="text-align: center; margin: 0;">Karangmalang Sragen Jawa Tengah</p>
-          <p style="text-align: center; margin: 0 0 10px;">0857-4661-6165</p>
-        
-          <hr>
-        
-          <p style="margin: 4px 0;"><strong>Nota:</strong> ' . esc($nota) . '</p>
-          <p style="margin: 4px 0;"><strong>Kasir:</strong> ' . esc($q[0]["petugas"]) . '</p>
-          <p style="margin: 4px 0;"><strong>Tgl:</strong> ' . esc(date("d-m-Y H:i", $q[0]["tgl"])) . '</p>
-        
-          <hr>
-        
-          <table>
-            <thead>
-              <tr>
-                <td style="width: 50%; text-align: center;"><strong>Barang</strong></td>
-                <td style="width: 15%; text-align: center;"><strong>Harga</strong></td>
-                <td style="width: 20%; text-align: center;"><strong>Qty</strong></td>
-                <td style="width: 15%; text-align: right;"><strong>Total</strong></td>
-              </tr>
-            </thead>
-            <tbody>';
+                  <hr>
+
+                  <p style="margin: 4px 0;"><strong>Nota:</strong> ' . esc($nota) . '</p>
+                  <p style="margin: 4px 0;"><strong>Kasir:</strong> ' . esc($q[0]["petugas"]) . '</p>
+                  <p style="margin: 4px 0;"><strong>Tgl:</strong> ' . esc(date("d-m-Y H:i", $q[0]["tgl"])) . '</p>
+
+                  <hr>
+
+                  <table>
+                    <thead>
+                      <tr>
+                        <td style="width: 50%; text-align: center;"><strong>Barang</strong></td>
+                        <td style="width: 15%; text-align: center;"><strong>Harga</strong></td>
+                        <td style="width: 20%; text-align: center;"><strong>Qty</strong></td>
+                        <td style="width: 15%; text-align: right;"><strong>Total</strong></td>
+                      </tr>
+                    </thead>
+                    <tbody>';
 
         foreach ($q as $item) {
             $total += $item['jml'];
             $diskon += $item['diskon'];
 
             $html .= '
-              <tr>
-                <td>' . esc($item['barang']) . '</td>
-                <td style="text-align: right;">' . esc($item['harga']) . '</td>
-                <td style="text-align: center;">' . esc($item['qty']) . '</td>
-                <td style="text-align: right;">' . esc($item['jml']) . '</td>
-              </tr>';
+                      <tr>
+                        <td>' . esc($item['barang']) . '</td>
+                        <td style="text-align: right;">' . esc($item['harga']) . '</td>
+                        <td style="text-align: center;">' . esc($item['qty']) . '</td>
+                        <td style="text-align: right;">' . esc($item['jml']) . '</td>
+                      </tr>';
         }
 
         $html .= '
-            </tbody>
-          </table>
-        
-          <hr>
-        
-          <table>
-            <tr><th colspan="3">Sub Total</th><td style="text-align: right;">' . esc(angka($total)) . '</td></tr>
-            <tr><th colspan="3">Diskon</th><td style="text-align: right;">' . esc(angka($diskon)) . '</td></tr>
-            <tr><th colspan="3">Total</th><td style="text-align: right;">' . esc(angka($total - $diskon)) . '</td></tr>
-            <tr><th colspan="3">Uang</th><td style="text-align: right;">' . esc(angka($q[0]["uang"])) . '</td></tr>
-            <tr><th colspan="3">Kembalian</th><td style="text-align: right;">' . esc(angka(($q[0]["uang"]) - ($total - $diskon))) . '</td></tr>
-          </table>
-        
-          <hr>
-        
-          <p style="text-align: center; font-style: italic; margin-top: 10px;">* Terima kasih atas kunjungan anda *</p>
-        
-        
-        </body>
-        </html>';
+                    </tbody>
+                  </table>
 
+                  <hr>
+
+                  <table>
+                    <tr><th colspan="3">Sub Total</th><td style="text-align: right;">' . esc(angka($total)) . '</td></tr>
+                    <tr><th colspan="3">Diskon</th><td style="text-align: right;">' . esc(angka($diskon)) . '</td></tr>
+                    <tr><th colspan="3">Total</th><td style="text-align: right;">' . esc(angka($total - $diskon)) . '</td></tr>
+                    <tr><th colspan="3">Uang</th><td style="text-align: right;">' . esc(angka($q[0]["uang"])) . '</td></tr>
+                    <tr><th colspan="3">Kembalian</th><td style="text-align: right;">' . esc(angka(($q[0]["uang"]) - ($total - $diskon))) . '</td></tr>
+                  </table>
+
+                  <hr>
+
+                  <p style="text-align: center; font-style: italic; margin-top: 10px;">* Terima kasih atas kunjungan anda *</p>
+
+
+                </body>
+                </html>';
 
         echo $html;
     }
@@ -590,7 +615,7 @@ class Kasir extends BaseController
         // 👇 Billiard logic
         if (!empty($billiard)) {
             $jadwal = db('jadwal_2')->where('id', $billiard['id'])->get()->getRowArray();
-            if (!$jadwal) gagal_js("Cancel semua");
+            if (!$jadwal) gagal_js("Id jadwal tidak ditemukan");
 
             $jadwal['is_active'] = 1;
             $jadwal['start'] = $tgl;
@@ -621,7 +646,7 @@ class Kasir extends BaseController
         // 👇 PS logic
         if (!empty($ps)) {
             $unit = db('unit')->where('id', $ps['id'])->get()->getRowArray();
-            if (!$unit) gagal_js("Cancel semua");
+            if (!$unit) gagal_js("Id unit tidak ditemukan");
 
             $unit['status'] = 'In Game';
             db('unit')->where("id", $unit['id'])->update($unit);
@@ -778,9 +803,10 @@ class Kasir extends BaseController
 
         // 👇 PS logic
         if (!empty($ps)) {
-            if (array_key_exists("kode", $billiard)) {
+            if (array_key_exists("kode", $ps)) {
+
                 $unit = db('unit')->where('id', $ps['id'])->get()->getRowArray();
-                if (!$unit) gagal_js("Cancel semua");
+                if (!$unit) gagal_js("Id unit tidak ditemukan");
 
                 $unit['status'] = 'In Game';
                 db('unit')->where("id", $unit['id'])->update($unit);
