@@ -840,8 +840,8 @@ class Kasir extends BaseController
     public function menu_utama()
     {
         if (clear($this->request->getVar('menu')) === 'hutang') {
-            $end   = strtotime(date('Y-m-d', strtotime('-1 day')) . ' 12:00:00');
-            $start   = strtotime(date('Y-m-d') . ' 06:00:00');
+            $start   = strtotime(date('Y-m-d', strtotime('-1 day')) . ' 12:00:00');
+            $end   = strtotime(date('Y-m-d') . ' 06:00:00');
 
             if ((int)date("H") > 11 && date("H") < 24) {
                 $start = strtotime(date('Y-m-d') . ' 12:00:00');
