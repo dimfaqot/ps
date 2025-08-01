@@ -852,11 +852,13 @@ class Kasir extends BaseController
                 // ->where('tgl >=', $start)
                 // ->where('tgl <=', $end)
                 ->groupBy('no_nota')
-                ->orderBy('tgl', "DESC")
+                ->orderBy('id', "DESC")
                 ->get()
                 ->getResultArray();
 
             sukses_js('Ok', $data);
+
+            // 1754070430
         }
     }
     public function data_hutang()
