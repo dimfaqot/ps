@@ -1063,7 +1063,7 @@ class Kasir extends BaseController
 
 
             if ($q) {
-                if ($q['durasi'] == -10) {
+                if ($q['durasi'] == -1) {
                     $temp['status'] = "Open";
                     $temp['text'] = "text-secondary";
                     $temp['durasi'] = durasi($q['dari'], time());
