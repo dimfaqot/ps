@@ -14,7 +14,6 @@ class Kasir extends BaseController
 
     public function index()
     {
-
         return view(menu()['controller'], ['judul' => menu()['menu'] . ' - PS']);
     }
 
@@ -850,15 +849,15 @@ class Kasir extends BaseController
 
             $data = db('hutang')
                 ->select('*')
+                ->where('status', 0)
                 ->where('tgl >=', $start)
                 ->where('tgl <=', $end)
-                ->where('status', 0)
                 ->groupBy('no_nota')
                 ->orderBy('tgl', "ASC")
                 ->get()
                 ->getResultArray();
 
-            sukses_js('Ok', $data);
+            sukses_js('Ok', $data, $start > 1754070430, $end < 1754070430);
         }
     }
     public function data_hutang()
