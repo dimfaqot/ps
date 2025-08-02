@@ -469,7 +469,7 @@ class Kasir extends BaseController
             db('jadwal_2')->where("id", $jadwal['id'])->update($jadwal);
 
 
-            insertNota("billiard", $uang, $db, $nota, $billiard['meja'], $billiard['harga'], $billiard['durasi'], $billiard['diskon'], $tgl, $customer['nama'], $billiard['total_harga']);
+            insertNota("billiard", $uang, $db, $nota, $billiard['meja'], $billiard['harga'], $billiard['durasi'], $billiard['diskon'], $tgl, $customer['nama'], ($order == "hutang" ? $billiard['total_harga'] : null));
         }
 
         if (!empty($ps)) {
@@ -514,7 +514,7 @@ class Kasir extends BaseController
             db('unit')->where("id", $unit['id'])->update($unit);
 
 
-            insertNota("ps", $uang, $db, $nota, $ps['meja'], $ps['harga'], $ps['durasi'], $ps['diskon'], $tgl, $customer['nama'], $ps['total_harga']);
+            insertNota("ps", $uang, $db, $nota, $ps['meja'], $ps['harga'], $ps['durasi'], $ps['diskon'], $tgl, $customer['nama'], ($order == "hutang" ? $ps['total_harga'] : null));
 
             // $unit = db('unit')->where('id', $ps['id'])->get()->getRowArray();
             // if (!$unit) gagal_js("Cancel semua");
