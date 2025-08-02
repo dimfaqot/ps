@@ -319,6 +319,8 @@ $routes->post('/kasir/tambah_pesanan', 'Kasir::tambah_pesanan');
 $routes->post('/kasir/status_now', 'Kasir::status_now');
 $routes->post('/kasir/matikan_lampu', 'Kasir::matikan_lampu');
 $routes->post('/kasir/wl', 'Kasir::wl');
+$routes->post('/kasir/tambah_wl', 'Kasir::tambah_wl');
+$routes->post('/kasir/delete_wl', 'Kasir::delete_wl');
 
 
 $routes->get('/kasir2', 'Kasir::index');

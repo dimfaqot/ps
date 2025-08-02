@@ -3,6 +3,7 @@
 <?= $this->section('content') ?>
 
 <?php
+// dd(time());
 // dd(date('d/m/Y H:i:s', 1740924391));
 // dd(time());
 // dd(date('d/m/Y H:i:s', time()));
@@ -126,6 +127,20 @@
 
     let list_barang = [];
 
+    const template_wl = (data) => {
+        let html = '';
+        data.forEach(e => {
+            html += ` <tr>
+                        <td>${e.nama}</td>
+                        <td>${e.kategori}</td>
+                        <td>${e.meja}</td>
+                        <td class="text-center">${e.jam}</td>
+                        <td class="text-center"><a href="" style="text-decoration:none;font-size:medium" class="btn_delete_wl text-danger" data-id="${e.id}"><i class="fa-solid fa-circle-xmark"></i></a></td>
+                    </tr>`;
+        })
+        return html;
+    }
+
     $(document).on('click', '.menu_utama', function(e) {
         e.preventDefault();
         let menu = $(this).data("menu");
@@ -184,63 +199,49 @@
                               ADD WAITING LIST
                             </button>
                             </h2>
-                            <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                                <form method="post" action="">
-                                    <select class="form-select form-select-sm">
+                            <div id="flush-collapseOne" class="accordion-collapse py-4 collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                               
+                                    <select class="form-select kategori_wl">
                                         <option selected value="">Pilih Kategori</option>
                                         <option value="Billiard">Billiard</option>
                                         <option value="Ps">Ps</option>
-                                    </select>
-                                    <div class="mb-3">
+                                        </select>
+                                        <div class="mb-3">
                                         <label class="form-label">Nama</label>
                                         <input type="text" class="form-control users users_wl" data-order="wl" placeholder="Cari nama">
                                         <div class="data_list data_list_wl"></div>
-                                    </div>
-                                   <select class="form-select form-select-sm">`;
+                                        </div>
+                                   <select class="form-select meja_wl">`;
                 html += `<option selected value="">Pilih Meja</option>`;
                 for (let i = 1; i < 16; i++) {
-                    html += `<option selected value="Meja ${i}">Meja ${i}</option>`;
+                    html += `<option value="${i}">Meja ${i}</option>`;
                 }
                 html += `</select>
                                    <div class="mb-3">
                                         <label class="form-label">Jam</label>
-                                        <input type="text" class="form-control" placeholder="Jam">
+                                        <input type="text" class="form-control jam_wl" placeholder="Jam">
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                </form>
+                                    <div class="d-grid">
+                                        <button type="button" class="btn btn-primary btn_tambah_wl">Submit</button>
+                                    </div>
+                            
                             </div>
                         </div>
                 </div>`;
                 html += `
-                    <table class="table mt-4 table bordered">
+                    <table class="table mt-4 table table-bordered">
                     <thead>
                         <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Kategori</th>
-                        <th scope="col">Meja</th>
-                        <th scope="col">Jam</th>
-                        <th scope="col">Nama</th>
+                        <th class="text-center">Nama</th>
+                        <th class="text-center">Kategori</th>
+                        <th class="text-center">Meja</th>
+                        <th class="text-center">Jam</th>
+                        <th class="text-center">Del</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                        </tr>
-                        <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                        </tr>
-                        <tr>
-                        <th scope="row">3</th>
-                        <td colspan="2">Larry the Bird</td>
-                        <td>@twitter</td>
-                        </tr>
-                    </tbody>
+                    <tbody class="template_wl">`;
+                html += template_wl(res.data);
+                html += `</tbody>
                     </table>`;
 
                 $(".modal_kasir").html(html);
@@ -252,6 +253,67 @@
 
     });
 
+    $(document).on('click', '.btn_delete_wl', function(e) {
+        e.preventDefault();
+        let id = $(this).data("id");
+
+        post("kasir/delete_wl", {
+            id
+        }).then(res => {
+            if (res.status == "200") {
+                sukses(res.message);
+                setTimeout(() => {
+                    location.reload();
+                }, 1200);
+            } else {
+                gagal(res.message);
+            }
+        })
+
+    });
+    $(document).on('click', '.btn_tambah_wl', function(e) {
+        e.preventDefault();
+        let kategori = $(".kategori_wl").val();
+        let nama = $(".users_wl").val();
+        let user_id = $(".users_wl").data("user_id");
+        let meja = $(".meja_wl").val();
+        let jam = $(".jam_wl").val();
+
+        if (kategori == "") {
+            gagal("Kategori belum dipilih");
+            return;
+        }
+        if (nama == "") {
+            gagal("Nama belum dipilih");
+            return;
+        }
+        if (jam == "") {
+            gagal("Jam belum dipilih");
+            return;
+        }
+        if (meja == "") {
+            gagal("Meja belum dipilih");
+            return;
+        }
+
+        post("kasir/tambah_wl", {
+            nama,
+            user_id,
+            meja,
+            jam,
+            kategori
+        }).then(res => {
+            if (res.status == "200") {
+                sukses(res.message);
+                setTimeout(() => {
+                    location.reload();
+                }, 1200);
+            } else {
+                gagal(res.message);
+            }
+        })
+
+    });
     $(document).on('click', '.btn_matikan_lampu', function(e) {
         e.preventDefault();
         let kategori = $(this).data("kategori");
@@ -385,7 +447,7 @@
                     html += '<div>Data tidak ditemukan!.</div>';
                 }
                 res.data.forEach(e => {
-                    html += '<div data-user_id="' + e.id + '" class="select_user">' + e.nama + '</div>';
+                    html += '<div data-order="' + order + '" data-user_id="' + e.id + '" class="select_user">' + e.nama + '</div>';
                 })
                 if (order == "wl") {
                     $(".data_list_wl").html(html);
@@ -424,6 +486,7 @@
         let order = $(this).data("order");
         if (order == "wl") {
             $(".users_wl").val(nama);
+            $(".users_wl").data("user_id", id);
             $(".data_list_wl").html("");
 
         } else {

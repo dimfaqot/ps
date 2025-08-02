@@ -1709,3 +1709,17 @@ function hutang($no_nota)
 
     return $res;
 }
+
+function hari_ini()
+{
+    $start   = strtotime(date('Y-m-d', strtotime('-1 day')) . ' 12:00:00');
+    $end   = strtotime(date('Y-m-d') . ' 06:00:00');
+
+    if ((int)date("H") > 11 && date("H") < 24) {
+        $start = strtotime(date('Y-m-d') . ' 12:00:00');
+        $end   = strtotime(date('Y-m-d', strtotime('+1 day')) . ' 06:00:00');
+    }
+
+    $res = ['start' => $start, 'end' => $end];
+    return $res;
+}

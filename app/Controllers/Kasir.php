@@ -893,18 +893,12 @@ class Kasir extends BaseController
     public function menu_utama()
     {
         if (clear($this->request->getVar('menu')) === 'hutang') {
-            $start   = strtotime(date('Y-m-d', strtotime('-1 day')) . ' 12:00:00');
-            $end   = strtotime(date('Y-m-d') . ' 06:00:00');
-
-            if ((int)date("H") > 11 && date("H") < 24) {
-                $start = strtotime(date('Y-m-d') . ' 12:00:00');
-                $end   = strtotime(date('Y-m-d', strtotime('+1 day')) . ' 06:00:00');
-            }
+            $hari_ini = hari_ini();
 
             $data = db('hutang')
                 ->where('status', 0)
-                ->where('tgl >=', $start)
-                ->where('tgl <=', $end)
+                ->where('tgl >=', $hari_ini['start'])
+                ->where('tgl <=', $hari_ini['end'])
                 ->groupBy('no_nota')
                 ->orderBy('tgl', "ASC")
                 ->get()
@@ -1143,5 +1137,58 @@ class Kasir extends BaseController
         ];
 
         sukses_js("Ok", $res);
+    }
+
+    public function wl()
+    {
+        $hari_ini = hari_ini();
+
+        $data = db('wl')
+            ->where('tgl >=', $hari_ini['start'])
+            ->where('tgl <=', $hari_ini['end'])
+            ->orderBy('tgl', "ASC")
+            ->get()
+            ->getResultArray();
+
+        sukses_js("Ok", $data);
+    }
+    public function tambah_wl()
+    {
+        if (!db('wl')->insert([
+            'tgl' => time(),
+            'kategori' => clear($this->request->getVar('kategori')),
+            'nama' => clear($this->request->getVar('nama')),
+            'user_id' => clear($this->request->getVar('user_id')),
+            'meja' => clear($this->request->getVar('meja')),
+            'jam' => clear($this->request->getVar('jam')),
+        ])) {
+            gagal_js("Gagal");
+        }
+        $hari_ini = hari_ini();
+
+        $data = db('wl')
+            ->where('tgl >=', $hari_ini['start'])
+            ->where('tgl <=', $hari_ini['end'])
+            ->orderBy('tgl', "ASC")
+            ->get()
+            ->getResultArray();
+
+        sukses_js("Ok", $data);
+    }
+    public function delete_wl()
+    {
+        $id = clear($this->request->getVar('id'));
+
+        $q = db('wl')->where('id', $id)->get()->getRowArray();
+
+        if (!$q) {
+            gagal_js("Id tidak ditemukan");
+        }
+
+        if (!db('wl')->where('id', $id)->delete()) {
+            gagal_js("Gagal");
+        } else {
+            sukses_js("Sukses");
+        }
     }
 }
