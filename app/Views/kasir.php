@@ -162,7 +162,7 @@
 
                 html += `<ul class="list-group">`;
                 res.data[menu].forEach(e => {
-                    html += `<li class="list-group-item ${e.text}">${e.meja} | ${e.harga} | ${e.status} | ${e.durasi} </li>`;
+                    html += `<li class="list-group-item ${e.text}">${e.meja} | ${e.harga} | ${e.status} | ${e.durasi} ${(e.status=="Regular"?'| <a style="text-decoration:none" href="" data-kategori="'+e.kategori+'" data-id="'+e.id+'" class="btn_matikan_lampu badge text-bg-danger">Matikan</a>':"")}</li>`;
 
                 })
                 html += `</ul>`;
@@ -252,6 +252,26 @@
 
     });
 
+    $(document).on('click', '.btn_matikan_lampu', function(e) {
+        e.preventDefault();
+        let kategori = $(this).data("kategori");
+        let id = $(this).data("id");
+
+        post("kasir/matikan_lampu", {
+            id,
+            kategori
+        }).then(res => {
+            if (res.status == "200") {
+                sukses(res.message);
+                setTimeout(() => {
+                    location.reload();
+                }, 1200);
+            } else {
+                gagal(res.message);
+            }
+        })
+
+    });
     $(document).on('keyup', '.cari_nama_hutang', function(e) {
         e.preventDefault();
         let value = $(this).val().toLowerCase();

@@ -839,6 +839,56 @@ class Kasir extends BaseController
         $db->transComplete();
         $db->transStatus() ? sukses_js("Sukses") : gagal_js("Transaksi dibatalkan.");
     }
+    public function matikan_lampu()
+    {
+        $db       = \Config\Database::connect();
+        $kategori     = clear($this->request->getVar('kategori'));
+        $id     = clear($this->request->getVar('id'));
+
+
+        $db->transStart();
+        if ($kategori == "Billiard") {
+            $meja = db('billiard_2')->where('id', $id)->get()->getRowArray();
+            if (!$meja) return gagal_js("Id meja tidak ditemukan");
+
+            $jadwal = db('jadwal_2')->where('id', $meja['meja_id'])->get()->getRowArray();
+            if (!$jadwal) return gagal_js("Id jadwal tidak ditemukan");
+
+            $meja['is_active'] = 0;
+            $jadwal['is_active'] = 0;
+            $jadwal['start'] = 0;
+
+            if (!db('billiard_2')->where('id', $meja['id'])->update($meja)) {
+                gagal_js("Update meja gagal");
+            }
+            if (!db('jadwal_2')->where('id', $jadwal['id'])->update($jadwal)) {
+                gagal_js("Update jadwal gagal");
+            }
+        }
+
+        if ($kategori == "Ps") {
+            $meja = db('rental')->where('id', $id)->get()->getRowArray();
+            if (!$meja) return gagal_js("Id meja tidak ditemukan");
+
+            $meja['is_active'] = 0;
+
+            $unit = db('unit')->where('id', $meja['unit_id'])->get()->getRowArray();
+            if (!$unit) return gagal_js("Id unit tidak ditemukan");
+
+            $unit['status'] = "Available";
+
+            if (!db('rental')->where('id', $meja['id'])->update($meja)) {
+                gagal_js("Update meja gagal");
+            }
+            if (!db('unit')->where('id', $unit['id'])->update($unit)) {
+                gagal_js("Update unit gagal");
+            }
+        }
+
+
+        $db->transComplete();
+        $db->transStatus() ? sukses_js("Sukses") : gagal_js("Transaksi dibatalkan.");
+    }
 
     public function menu_utama()
     {
@@ -1024,19 +1074,23 @@ class Kasir extends BaseController
             $q = $db_billiard->where('meja', "Meja " . $i['meja'])->where('is_active', 1)->get()->getRowArray();
 
             $temp = [
+                'kategori' => "Billiard",
                 'meja' => "Meja " . $i['meja'],
                 'status' => "Kosong",
                 'harga' => $i['harga'],
                 'text' => 'text-success',
+                'id' => $i['id'],
                 'durasi' => ''
             ];
 
             if ($q) {
                 if ($q['durasi'] == 0) {
+                    $temp['id'] = $q['id'];
                     $temp['status'] = "Open";
                     $temp['text'] = "text-secondary";
                     $temp['durasi'] = durasi($q['start'], time());
                 } else {
+                    $temp['id'] = $q['id'];
                     $temp['status'] = "Regular";
                     $temp['durasi'] = (time() > $q['end'] ? "Habis" : "-" . durasi(time(), $q['end']));
                     $temp['text'] = ($temp['durasi'] == "Habis" ? "text-danger" : "text-secondary");
@@ -1056,6 +1110,8 @@ class Kasir extends BaseController
             $kode_bayar = $db_kode_bayar->where('nama_setting', $i['kode_harga'])->get()->getRowArray();
 
             $temp = [
+                'id' => $i['id'],
+                'kategori' => "Ps",
                 'meja' => $i['unit'],
                 'status' => "Kosong",
                 'harga' =>  $kode_bayar['value_int'],
@@ -1066,10 +1122,12 @@ class Kasir extends BaseController
 
             if ($q) {
                 if ($q['durasi'] == -1) {
+                    $temp['id'] = $q['id'];
                     $temp['status'] = "Open";
                     $temp['text'] = "text-secondary";
                     $temp['durasi'] = durasi($q['dari'], time());
                 } else {
+                    $temp['id'] = $q['id'];
                     $temp['status'] = "Regular";
                     $temp['durasi'] = (time() > $q['ke'] ? "Habis" : "-" . durasi(time(), $q['ke']));
                     $temp['text'] = ($temp['durasi'] == "Habis" ? "text-danger" : "text-secondary");
