@@ -874,7 +874,7 @@
             total += parseInt(e.harga_satuan) * parseInt(e.qty);
         })
         barber.forEach(e => {
-            total += parseInt(e.harga);
+            total += parseInt(e.harga) * parseInt(e.qty);
         })
 
         if (order == "tambah") {
@@ -1014,6 +1014,7 @@
         let temp = [];
         data_from_server.layanan.forEach(e => {
             if (checkedValues.includes(e.id)) {
+                e['qty'] = 1;
                 temp.push(e);
             }
         })

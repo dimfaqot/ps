@@ -373,7 +373,7 @@ class Kasir extends BaseController
             }
 
 
-            $db->table('nota')->insert([
+            if (!$db->table('nota')->insert([
                 "no_nota" => $nota,
                 "barang"  => $bar,
                 "harga"   => $harga,
@@ -385,7 +385,9 @@ class Kasir extends BaseController
                 "user"    => $user,
                 "uang"    => $uang,
                 "petugas" => user()['nama']
-            ]);
+            ])) {
+                gagal_js("Nota gagal");
+            }
         }
 
         if (!empty($kantin)) {
@@ -408,7 +410,7 @@ class Kasir extends BaseController
 
         if (!empty($barber)) {
             foreach ($barber as $i) {
-                $db->table('barber')->insert([
+                if (!$db->table('barber')->insert([
                     "layanan_id" => $i['id'],
                     "layanan" => $i['layanan'],
                     "harga" => $i['harga'],
@@ -421,7 +423,9 @@ class Kasir extends BaseController
                     "lokasi" => "Kasir",
                     "petugas" => user()['nama'],
                     "metode" => "Cash"
-                ]);
+                ])) {
+                    gagal_js("Insert barber gagal");
+                }
                 insertNota("barber", $uang, $db, $nota, $i['layanan'], $i['harga'], 1, $i['diskon'], $tgl, $customer['nama']);
             }
         }
