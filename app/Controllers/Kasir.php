@@ -559,7 +559,7 @@ class Kasir extends BaseController
     public function bayar_nanti()
     {
         $db       = \Config\Database::connect();
-        $nota     = no_invoice("nanti");
+        $nota     = no_invoice("hutang");
         $tgl      = time();
         $customer = json_decode(json_encode($this->request->getVar('customer')), true);
         $billiard = json_decode(json_encode($this->request->getVar('billiard')), true);

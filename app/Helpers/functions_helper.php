@@ -1659,9 +1659,7 @@ function no_invoice($order = null)
 {
 
     $db = db('nota');
-    if ($order !== null) {
-        $db = db('hutang');
-    }
+
     $year  = date('Y');
     $month = date('m');
     $prefix = "$year/$month/";
@@ -1680,7 +1678,13 @@ function no_invoice($order = null)
         $nextNumber = (int)$lastNumber + 1;
     }
 
-    return $prefix . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+    $nota = $prefix . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+
+    if ($order == "hutang") {
+        $nota = $prefix . generateRandomString(6);
+    }
+
+    return $nota;
 }
 
 function hutang($no_nota)
