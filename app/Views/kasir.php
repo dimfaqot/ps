@@ -34,10 +34,10 @@
             </a>
         </div>
         <div class="col-6 col-md-2">
-            <a href="" style="text-decoration: none;" class="menu_utama" data-menu="kantin">
+            <a href="" style="text-decoration: none;" class="menu_utama" data-menu="wl">
                 <div>
-                    <h5><i class="fa-solid fa-utensils"></i></h5>
-                    <div>KANTIN</div>
+                    <h5><i class="fa-solid fa-stopwatch"></i></h5>
+                    <div>WL</div>
                 </div>
             </a>
         </div>
@@ -172,6 +172,83 @@
             });
         }
 
+        if (menu == "wl") {
+            post("kasir/wl", {
+                id: 0
+            }).then(res => {
+                let html =
+                    `<div class="accordion accordion-flush" id="accordionFlushExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="flush-headingOne">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                              ADD WAITING LIST
+                            </button>
+                            </h2>
+                            <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                <form method="post" action="">
+                                    <select class="form-select form-select-sm">
+                                        <option selected value="">Pilih Kategori</option>
+                                        <option value="Billiard">Billiard</option>
+                                        <option value="Ps">Ps</option>
+                                    </select>
+                                    <div class="mb-3">
+                                        <label class="form-label">Nama</label>
+                                        <input type="text" class="form-control users users_wl" data-order="wl" placeholder="Cari nama">
+                                        <div class="data_list data_list_wl"></div>
+                                    </div>
+                                   <select class="form-select form-select-sm">`;
+                html += `<option selected value="">Pilih Meja</option>`;
+                for (let i = 1; i < 16; i++) {
+                    html += `<option selected value="Meja ${i}">Meja ${i}</option>`;
+                }
+                html += `</select>
+                                   <div class="mb-3">
+                                        <label class="form-label">Jam</label>
+                                        <input type="text" class="form-control" placeholder="Jam">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                </div>`;
+                html += `
+                    <table class="table mt-4 table bordered">
+                    <thead>
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Kategori</th>
+                        <th scope="col">Meja</th>
+                        <th scope="col">Jam</th>
+                        <th scope="col">Nama</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <th scope="row">1</th>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                        <td>@mdo</td>
+                        </tr>
+                        <tr>
+                        <th scope="row">2</th>
+                        <td>Jacob</td>
+                        <td>Thornton</td>
+                        <td>@fat</td>
+                        </tr>
+                        <tr>
+                        <th scope="row">3</th>
+                        <td colspan="2">Larry the Bird</td>
+                        <td>@twitter</td>
+                        </tr>
+                    </tbody>
+                    </table>`;
+
+                $(".modal_kasir").html(html);
+                modal.show();
+
+            });
+        }
+
 
     });
 
@@ -271,6 +348,7 @@
     $(document).on('keyup', '.users', function(e) {
         e.preventDefault();
         let val = $(this).val();
+        let order = $(this).data("order");
 
         if (val == "") {
             $(".data_list").html("");
@@ -289,8 +367,11 @@
                 res.data.forEach(e => {
                     html += '<div data-user_id="' + e.id + '" class="select_user">' + e.nama + '</div>';
                 })
-
-                $(".data_list").html(html);
+                if (order == "wl") {
+                    $(".data_list_wl").html(html);
+                } else {
+                    $(".data_list").html(html);
+                }
             } else {
                 gagal(res.message);
             }
@@ -320,13 +401,21 @@
         e.preventDefault();
         let nama = $(this).text();
         let id = $(this).data("user_id");
-        user_selected['nama'] = nama;
-        user_selected['id'] = id;
+        let order = $(this).data("order");
+        if (order == "wl") {
+            $(".users_wl").val(nama);
+            $(".data_list_wl").html("");
 
-        $(".users").val("");
-        $(".data_list").html("");
+        } else {
+            user_selected['nama'] = nama;
+            user_selected['id'] = id;
+            $(".users").val("");
+            $(".data_list").html("");
 
-        $(".pesanan").html(pesanan());
+            $(".pesanan").html(pesanan());
+
+        }
+
     });
 
     $(document).on('click', '.btn_tambah_user', function(e) {
@@ -785,7 +874,7 @@
             total += parseInt(e.harga_satuan) * parseInt(e.qty);
         })
         barber.forEach(e => {
-            total += parseInt(e.harga) * parseInt(e.qty);
+            total += parseInt(e.harga);
         })
 
         if (order == "tambah") {
@@ -929,6 +1018,7 @@
             }
         })
         barber = temp;
+
         total_harga();
     });
 

@@ -317,6 +317,7 @@ $routes->post('/kasir/data_hutang', 'Kasir::data_hutang');
 $routes->post('/kasir/options', 'Kasir::options');
 $routes->post('/kasir/tambah_pesanan', 'Kasir::tambah_pesanan');
 $routes->post('/kasir/status_now', 'Kasir::status_now');
+$routes->post('/kasir/wl', 'Kasir::wl');
 
 
 $routes->get('/kasir2', 'Kasir::index');
