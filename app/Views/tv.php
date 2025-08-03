@@ -10,8 +10,8 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <style>
         .lingkaran {
-            width: 200px;
-            height: 200px;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
             font-weight: bold;
             margin: 25px;
@@ -150,7 +150,6 @@
         }
         const orders = ["Billiard", "Ps", "Image"];
         let index = 0;
-
 
         setInterval(() => {
             index = (index + 1) % orders.length;
