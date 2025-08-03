@@ -1712,14 +1712,151 @@ function hutang($no_nota)
 
 function hari_ini()
 {
-    $start   = strtotime(date('Y-m-d', strtotime('-1 day')) . ' 12:00:00');
-    $end   = strtotime(date('Y-m-d') . ' 06:00:00');
+    $start = 0;
+    $end = 0;
 
-    if ((int)date("H") > 11 && date("H") < 24) {
-        $start = strtotime(date('Y-m-d') . ' 12:00:00');
+    $hari = date('w'); // 0 = Minggu, 1 = Senin, ..., 6 = Sabtu
+
+    if ($hari == 0) { // Minggu
+        $start = strtotime(date('Y-m-d') . ' 07:00:00');
         $end   = strtotime(date('Y-m-d', strtotime('+1 day')) . ' 06:00:00');
+    } elseif ($hari == 1) { // Senin
+        $start = strtotime(date('Y-m-d', strtotime('-1 day')) . ' 07:00:00');
+        $end   = strtotime(date('Y-m-d') . ' 06:00:00');
+    } else {
+
+        $start   = strtotime(date('Y-m-d', strtotime('-1 day')) . ' 12:00:00');
+        $end   = strtotime(date('Y-m-d') . ' 06:00:00');
+
+        if ((int)date("H") > 11 && date("H") < 24) {
+            $start = strtotime(date('Y-m-d') . ' 12:00:00');
+            $end   = strtotime(date('Y-m-d', strtotime('+1 day')) . ' 06:00:00');
+        }
     }
 
     $res = ['start' => $start, 'end' => $end];
     return $res;
+}
+
+function status_now($order = null)
+{
+    $db_meja = db('jadwal_2');
+    $meja = $db_meja->orderBy('meja', 'ASC')->get()->getResultArray();
+    $db_billiard = db('billiard_2');
+
+    $billiard = [];
+    foreach ($meja as $i) {
+        $q = $db_billiard->where('meja', "Meja " . $i['meja'])->where('is_active', 1)->get()->getRowArray();
+
+        $temp = [
+            'kategori' => "Billiard",
+            'meja' => "Meja " . $i['meja'],
+            'status' => "Kosong",
+            'harga' => $i['harga'],
+            'text' => 'text-success',
+            'id' => $i['id'],
+            'durasi' => ''
+        ];
+
+        if ($order !== null) {
+            $temp['durasi'] = "Available";
+            $temp['meja'] = $i['meja'];
+            $temp['status'] = "-";
+            $temp['text'] = "border border-2 border-success";
+        }
+
+
+        if ($q) {
+            $exp = explode(" ", $q['meja']);
+            if ($q['durasi'] == 0) {
+                $temp['id'] = $q['id'];
+                $temp['status'] = "Open";
+                $temp['text'] = "text-secondary";
+                $temp['durasi'] = durasi($q['start'], time());
+
+                if ($order !== null) {
+                    $temp['text'] = "border border-2 border-warning";
+                    $temp['meja'] = end($exp);
+                }
+            } else {
+                $temp['id'] = $q['id'];
+                $temp['status'] = "Regular";
+                $temp['durasi'] = (time() > $q['end'] ? "Habis" : "-" . durasi(time(), $q['end']));
+                $temp['text'] = ($temp['durasi'] == "Habis" ? "text-danger" : "text-secondary");
+
+                if ($order !== null) {
+                    $temp['text'] = ($temp['durasi'] == "Habis" ? "border border-2 border-danger" : "border border-2 border-secondary");
+                    $temp['meja'] = end($exp);
+                }
+            }
+        }
+
+        $billiard[] = $temp;
+    }
+
+    $db_unit = db('unit');
+    $unit = $db_unit->whereNotIn('status', ['Maintenance'])->orderBy('no_urut', 'ASC')->get()->getResultArray();
+    $db_ps = db('rental');
+    $db_kode_bayar = db('settings');
+    $ps = [];
+    foreach ($unit as $i) {
+        $q = $db_ps->where('meja', $i['unit'])->where('is_active', 1)->get()->getRowArray();
+        $kode_bayar = $db_kode_bayar->where('nama_setting', $i['kode_harga'])->get()->getRowArray();
+
+        $temp = [
+            'id' => $i['id'],
+            'kategori' => "Ps",
+            'meja' => $i['unit'],
+            'status' => "Kosong",
+            'harga' =>  $kode_bayar['value_int'],
+            'text' => 'text-success',
+            'durasi' => ''
+        ];
+
+        if ($order !== null) {
+            $exp = explode(" ", $i['unit']);
+            $temp['durasi'] = "Available";
+            $temp['meja'] = end($exp);
+            $temp['status'] = "-";
+            $temp['text'] = "border border-2 border-success";
+        }
+
+
+        if ($q) {
+            $exp = explode(" ", $q['meja']);
+            if ($q['durasi'] == -1) {
+                $temp['id'] = $q['id'];
+                $temp['status'] = "Open";
+                $temp['text'] = "text-secondary";
+                $temp['durasi'] = durasi($q['dari'], time());
+
+                if ($order !== null) {
+                    $temp['text'] = "border border-2 border-warning";
+                    $temp['meja'] = end($exp);
+                }
+            } else {
+                $temp['id'] = $q['id'];
+                $temp['status'] = "Regular";
+                $temp['durasi'] = (time() > $q['ke'] ? "Habis" : "-" . durasi(time(), $q['ke']));
+                $temp['text'] = ($temp['durasi'] == "Habis" ? "text-danger" : "text-secondary");
+                if ($order !== null) {
+                    $temp['text'] = ($temp['durasi'] == "Habis" ? "border border-2 border-danger" : "border border-2 border-secondary");
+                    $temp['meja'] = end($exp);
+                }
+            }
+        }
+        $ps[] = $temp;
+    }
+
+    $res = [
+        'billiard' => $billiard,
+        'ps' => $ps
+    ];
+
+    return $res;
+}
+
+function text_tv()
+{
+    return db('settings')->where("nama_setting", "Tv")->get()->getRowArray()['value_str'];
 }

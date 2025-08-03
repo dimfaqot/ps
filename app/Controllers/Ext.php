@@ -377,4 +377,31 @@ class Ext extends BaseController
         $data = poin_absen($q['durasi'], 'Tap');
         sukses_js('Data ditemukan.', $data['data'], $data['poin']);
     }
+
+    public function tv()
+    {
+        return view('tv', ['judul' => "TV"]);
+    }
+    public function data_tv()
+    {
+        $order = clear($this->request->getVar("order"));
+        if ($order == "Image") {
+            sukses_js("Ok", base_url("berkas/iklan.jpg") . "?" . time());
+        }
+        $hari_ini = hari_ini();
+        $status_now = status_now($order);
+
+        $wl = db('wl')
+            ->where('kategori', $order)
+            ->where('tgl >=', $hari_ini['start'])
+            ->where('tgl <=', $hari_ini['end'])
+            ->orderBy('tgl', "ASC")
+            ->get()
+            ->getResultArray();
+
+        $data = $status_now[strtolower($order)];
+
+
+        sukses_js("Ok", $data, $wl, text_tv());
+    }
 }

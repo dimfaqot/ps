@@ -224,6 +224,8 @@ $routes->post('/del_message', 'Ext::del_message');
 $routes->post('/ext/data_hutang', 'Ext::data_hutang');
 $routes->post('/ext/data_poin', 'Ext::data_poin');
 $routes->post('/ext/bayar_hutang_cash', 'Ext::bayar_hutang_cash');
+$routes->get('/tv', 'Ext::tv');
+$routes->post('/ext/tv', 'Ext::data_tv');
 
 // bot
 
