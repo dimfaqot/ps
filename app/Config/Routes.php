@@ -323,6 +323,8 @@ $routes->post('/kasir/matikan_lampu', 'Kasir::matikan_lampu');
 $routes->post('/kasir/wl', 'Kasir::wl');
 $routes->post('/kasir/tambah_wl', 'Kasir::tambah_wl');
 $routes->post('/kasir/delete_wl', 'Kasir::delete_wl');
+$routes->post('/kasir/upload_iklan', 'Kasir::upload_iklan');
+$routes->post('/kasir/running_text', 'Kasir::running_text');
 
 
 $routes->get('/kasir2', 'Kasir::index');

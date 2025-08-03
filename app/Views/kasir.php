@@ -43,6 +43,14 @@
             </a>
         </div>
         <div class="col-6 col-md-2">
+            <a href="" style="text-decoration: none;" class="menu_utama" data-menu="settings">
+                <div>
+                    <h5><i class="fa-solid fa-gear"></i></h5>
+                    <div>SETTINGS</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-2">
             <a href="" style="text-decoration: none;" class="menu_utama" data-menu="barber">
                 <div>
                     <h5><i class="fa-solid fa-scissors"></i></h5>
@@ -250,9 +258,46 @@
             });
         }
 
+        if (menu == "settings") {
+            let html = '';
+            html += `
+            <form method="post" action="<?= base_url('kasir/upload_iklan'); ?>" enctype="multipart/form-data">
+                <div class="input-group">
+                    <input type="file" class="form-control" name="file" aria-label="Upload">
+                    <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04">Button</button>
+                </div>
+                <div class="input-group mt-3">
+                    <input type="text" class="form-control running_text" placeholder="Running text">
+                    <button class="btn btn-outline-secondary btn_running_text" type="button">Button</button>
+                </div>
+            </form>
+                    `;
+
+            $(".modal_kasir").html(html);
+            modal.show();
+        }
+
 
     });
 
+    $(document).on('click', '.btn_running_text', function(e) {
+        e.preventDefault();
+        let text = $(".running_text").val();
+
+        post("kasir/running_text", {
+            text
+        }).then(res => {
+            if (res.status == "200") {
+                sukses(res.message);
+                setTimeout(() => {
+                    location.reload();
+                }, 1200);
+            } else {
+                gagal(res.message);
+            }
+        })
+
+    });
     $(document).on('click', '.btn_delete_wl', function(e) {
         e.preventDefault();
         let id = $(this).data("id");

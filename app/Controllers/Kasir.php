@@ -1115,4 +1115,48 @@ class Kasir extends BaseController
             sukses_js("Sukses");
         }
     }
+    public function upload_iklan()
+    {
+        $file = $_FILES['file'];
+        if ($file['error'] == 4) {
+            gagal(base_url('kasir'), "File belum dipilih");
+        }
+        if ($file['size'] > 2000000) {
+            gagal(base_url('kasir'), "Ukuran max. 2MB");
+        }
+
+        $ext = explode(".", $file['name']);
+
+        if (strtolower(end($ext)) !== "jpg") {
+            gagal(base_url('kasir'), "File harus jpg");
+        }
+
+        $nama = "iklan.jpg";
+        $dir = 'berkas/' . $nama;
+        if (!unlink($dir)) {
+            gagal(base_url('kasir'), 'File lama gagal dihapus.');
+        }
+        if (!move_uploaded_file($file['tmp_name'], $dir)) {
+            gagal(base_url('kasir'), 'File gagal diupload');
+        }
+        sukses(base_url('kasir'), "Sukses");
+    }
+    public function running_text()
+    {
+        $texx = upper_first(clear($this->request->getVar("text")));
+
+        $q = db("settings")->where('nama_setting', "Tv")->get()->getRowArray();
+
+        if (!$q) {
+            gagal_js("Setting tidak ada");
+        }
+
+        $q['value_str'] = $texx;
+
+        if (!db("settings")->where("id", $q['id'])->update($q)) {
+            gagal_js("Gagal");
+        } else {
+            sukses_js("Sukses");
+        }
+    }
 }
