@@ -18,7 +18,7 @@
             text-align: center;
             line-height: 1.2;
             font-size: 0.8rem;
-            padding: 30px;
+            padding: 10px;
             overflow: hidden;
         }
 
@@ -100,10 +100,10 @@
                     res.data.forEach(e => {
                         html += `<div class="col">
                                             <div class="lingkaran ${e.text}">
-                                                <h6>MEJA</h6>
+                                                <h6 style="font-size:10px">MEJA</h6>
                                                 <h2>${e.meja}</h2>
                                                 <p>${e.status}</p>
-                                                <h4>${e.durasi}</h4>
+                                                <h6>${e.durasi}</h6>
                                             </div>
                                         </div>`;
                     });
