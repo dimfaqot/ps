@@ -1712,30 +1712,6 @@ function hutang($no_nota)
 
 function hari_ini()
 {
-    // $start = 0;
-    // $end = 0;
-
-    // $hari = date('w'); // 0 = Minggu, 1 = Senin, ..., 6 = Sabtu
-
-    // if ($hari == 0) { // Minggu
-    //     $start = strtotime(date('Y-m-d') . ' 07:00:00');
-    //     $end   = strtotime(date('Y-m-d', strtotime('+1 day')) . ' 06:00:00');
-    // } elseif ($hari == 1) { // Senin
-    //     $start = strtotime(date('Y-m-d', strtotime('-1 day')) . ' 07:00:00');
-    //     $end   = strtotime(date('Y-m-d') . ' 06:00:00');
-    // } else {
-    // $start = strtotime(date('Y-m-d') . ' 00:00:00');
-    // $end   = strtotime(date('Y-m-d', strtotime('+1 day')) . ' 23:59:59');
-
-    // $start   = strtotime(date('Y-m-d', strtotime('-1 day')) . ' 06:00:00');
-    // $end   = strtotime(date('Y-m-d') . ' 06:00:00');
-
-    // if ((int)date("H") > 6 && date("H") < 24) {
-    //     $start = strtotime(date('Y-m-d') . ' 07:00:00');
-    //     $end   = strtotime(date('Y-m-d', strtotime('+1 day')) . ' 06:00:00');
-    // }
-    // }
-
     $start = strtotime(date('Y-m-d', strtotime('-1 day')) . ' 00:00:00');
     $end   = strtotime(date('Y-m-d') . ' 23:59:59');
 
