@@ -332,3 +332,5 @@ $routes->post('/kasir2/get_data', 'Kasir2::get_data');
 $routes->post('/kasir2/execute', 'Kasir2::execute');
 $routes->post('/kasir2/add_change', 'Kasir2::add_change');
 $routes->post('/kasir2/bayar', 'Kasir2::bayar');
+
+$routes->get('/guest/nota/(:any)', 'Guest::nota/$1');

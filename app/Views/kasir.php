@@ -10,7 +10,7 @@
 ?>
 <div class="container text-center">
     <div class="row justify-content-center g-2">
-        <div class="col-6 col-md-2">
+        <div class="col-6 col-md-1">
             <a href="" style="text-decoration: none;" class="menu_utama" data-menu="hutang">
                 <div>
                     <h5><i class="fa-solid fa-cash-register"></i></h5>
@@ -18,7 +18,7 @@
                 </div>
             </a>
         </div>
-        <div class="col-6 col-md-2">
+        <div class="col-6 col-md-1">
             <a href="" style="text-decoration: none;" class="menu_utama" data-menu="billiard">
                 <div>
                     <h5><i class="fa-solid fa-bowling-ball"></i></h5>
@@ -26,7 +26,7 @@
                 </div>
             </a>
         </div>
-        <div class="col-6 col-md-2">
+        <div class="col-6 col-md-1">
             <a href="" style="text-decoration: none;" class="menu_utama" data-menu="ps">
                 <div>
                     <h5><i class="fa-brands fa-playstation"></i></h5>
@@ -34,7 +34,7 @@
                 </div>
             </a>
         </div>
-        <div class="col-6 col-md-2">
+        <div class="col-6 col-md-1">
             <a href="" style="text-decoration: none;" class="menu_utama" data-menu="wl">
                 <div>
                     <h5><i class="fa-solid fa-stopwatch"></i></h5>
@@ -42,7 +42,7 @@
                 </div>
             </a>
         </div>
-        <div class="col-6 col-md-2">
+        <div class="col-6 col-md-1">
             <a href="" style="text-decoration: none;" class="menu_utama" data-menu="settings">
                 <div>
                     <h5><i class="fa-solid fa-gear"></i></h5>
@@ -50,11 +50,19 @@
                 </div>
             </a>
         </div>
-        <div class="col-6 col-md-2">
-            <a href="" style="text-decoration: none;" class="menu_utama" data-menu="barber">
+        <div class="col-6 col-md-1">
+            <a href="" style="text-decoration: none;" class="menu_utama" data-menu="hutang">
                 <div>
-                    <h5><i class="fa-solid fa-scissors"></i></h5>
-                    <div>BARBER</div>
+                    <h5><i class="fa-solid fa-heart-crack"></i></h5>
+                    <div>HUTANG</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-1">
+            <a href="" style="text-decoration: none;" class="menu_utama" data-menu="cucian">
+                <div>
+                    <h5><i class="fa-solid fa-motorcycle"></i></h5>
+                    <div>CUCIAN</div>
                 </div>
             </a>
         </div>
@@ -85,8 +93,15 @@
         <div class="modal-content">
 
             <div class="modal-body modal_kasir">
-                <iframe src="<?= view('nota') ?>" style="border: none; width: 100%; height: 100%;"></iframe>
             </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="main_modal_static" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark text-light border border-secondary body_modal_static pt-3 pb-4">
 
         </div>
     </div>
@@ -120,6 +135,9 @@
     let mdl_fc = bootstrap.Modal.getOrCreateInstance(mdl_fullscreen);
     // mdl_fc.show();
     // modal.show();
+
+    let myModalStatic = document.getElementById('main_modal_static');
+    let modal_static = bootstrap.Modal.getOrCreateInstance(myModalStatic);
 
 
     let myOffcanvas = document.getElementById('canvas_kasir')
@@ -275,6 +293,9 @@
 
             $(".modal_kasir").html(html);
             modal.show();
+        }
+        if (menu == "cucian") {
+            window.open("<?= base_url('cucian'); ?>", "_blank");
         }
 
 
@@ -1866,10 +1887,11 @@
             no_nota
         }).then(res => {
             if (res.status == "200") {
-                let html = `<iframe src="<?= base_url('kasir/nota/') ?>${res.data3}" style="border: none; width: 100%; height: 600px;"></iframe>`;
+                const iframe_url = `<?= base_url(); ?>guest/nota/${res.data3}`;
+                let html = `<iframe id="nota_frame" src="${iframe_url}" style="border: none; width: 100%; height: 600px;"></iframe>`;
                 html += '<div class="text-center mt-5"><button class="btn btn-secondary selesai me-2i">Selesai</button> <button id="btn_print_nota" class="btn btn-primary">Print Nota</button></div>';
-                $(".modal_kasir").html(html);
-                modal.show();
+                $(".body_modal_static").html(html);
+                modal_static.show();
             } else {
                 gagal(res.message);
             }
