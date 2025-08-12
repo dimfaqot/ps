@@ -1887,15 +1887,16 @@
             no_nota
         }).then(res => {
             if (res.status == "200") {
-                const iframe_url = `<?= base_url(); ?>guest/nota/${res.data3}`;
+                let iframe_url = `<?= base_url(); ?>guest/nota/${res.data3}`;
                 let html = `<iframe id="nota_frame" src="${iframe_url}" style="border: none; width: 100%; height: 600px;"></iframe>`;
                 html += '<div class="text-center mt-5"><button class="btn btn-secondary selesai me-2i">Selesai</button> <button id="btn_print_nota" class="btn btn-primary">Print Nota</button></div>';
                 modal.hide();
-                setTimeout(() => {
-                    $(".body_modal_static").html(html);
-                    modal_static.show();
 
-                }, 700);
+                setTimeout(() => {
+                    $(".body_fullscreen").html(html);
+                    mdl_fc.show();
+
+                }, 1500);
             } else {
                 gagal(res.message);
             }
