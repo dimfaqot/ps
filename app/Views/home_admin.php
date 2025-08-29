@@ -991,7 +991,7 @@ $q = $db->orderBy('poin', 'DESC')->get()->getResultArray();
         let tahun_laporan = $(".tahun_laporan").val();
         let bulan_laporan = $(".bulan_laporan").val();
 
-        window.open("<?= base_url('home/laporan/'); ?>" + bulan_laporan + "/" + tahun_laporan, "_blank");
+        window.open("<?= base_url('home/laporan/'); ?>" + bulan_laporan + "/" + tahun_laporan + "/Barber", "_blank");
 
 
     })
