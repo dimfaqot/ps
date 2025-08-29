@@ -93,7 +93,7 @@ $routes->post('/home/pembayaran_kantin_barcode', 'Home::pembayaran_kantin_barcod
 $routes->post('/home/pindah_ke_hutang', 'Home::pindah_ke_hutang');
 $routes->post('/home/hapus_pesanan', 'Home::hapus_pesanan');
 $routes->post('/home/saldo_tap', 'Home::saldo_tap');
-$routes->post('/home/saldo_tap_by_katagori', 'Home::saldo_tap_by_katagori');
+$routes->post('/home/saldo_tap_by_kaagori', 'Home::saldo_tap_by_katagori');
 $routes->post('/home/pengecekan', 'Home::pengecekan');
 $routes->get('/home/laporan/(:num)/(:num)/(:any)', 'Home::laporan/$1/$2/$3');
 // $routes->get('/home/replace', 'Home::replace');
