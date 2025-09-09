@@ -96,6 +96,7 @@ $routes->post('/home/saldo_tap', 'Home::saldo_tap');
 $routes->post('/home/saldo_tap_by_kaagori', 'Home::saldo_tap_by_katagori');
 $routes->post('/home/pengecekan', 'Home::pengecekan');
 $routes->get('/home/laporan/(:num)/(:num)/(:any)', 'Home::laporan/$1/$2/$3');
+$routes->get('/home/laporan/(:num)/(:num)/(:any)/(:any)', 'Home::laporan/$1/$2/$3/$4');
 // $routes->get('/home/replace', 'Home::replace');
 
 // users ____________________________________

@@ -455,16 +455,22 @@ class Home extends BaseController
             }
         }
     }
-    public function laporan($bulan, $tahun, $unit)
+    public function laporan($bulan, $tahun, $unit, $order = "")
     {
         $val = laporan($bulan, $tahun);
 
         $data_unit = $val['data'][strtolower($unit)];
+        $data = [];
         if ($unit == "Barber") {
             $data = ['saldo_kemarin' => $val['saldo_kemarin'], 'basil_keluar' => $val['basil_keluar'], 'rangkuman' => $val['rangkuman'], 'data' => [strtolower($unit) => $data_unit]];
         } else {
-            $data = ['data' => [strtolower($unit) => $data_unit]];
+            if ($order == "") {
+                $data = ['data' => [strtolower($unit) => $data_unit]];
+            } else {
+                $data = ['data' => [strtolower($unit) => $data_unit[$order]]];
+            }
         }
+
 
         $set = [
             'mode' => 'utf-8',
