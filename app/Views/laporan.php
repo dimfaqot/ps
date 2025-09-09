@@ -295,7 +295,7 @@
 
             </table>
         <?php else: ?>
-            <?php if ($page == "" || $page == "1"): ?>
+            <?php if ($page == "0" || $page == "1"): ?>
                 <h6 style="font-weight: normal;"><?= ($order == "masuk" ? "1. Masuk" : "2. Keluar"); ?></h6>
             <?php endif; ?>
 
@@ -311,7 +311,7 @@
                 <?php $total = 0; ?>
                 <?php $indexs = getIndexRange($page); ?>
                 <?php foreach ($data['data']['kantin'][$order] as $k => $i): ?>
-                    <?php if ($page !== "" && $k >= $indexs['start'] && $k <= $indexs['end']): ?>
+                    <?php if ($page !== "0" && $k >= $indexs['start'] && $k <= $indexs['end']): ?>
                         <?php $total += $i[$col]; ?>
                         <tr>
                             <td style="text-align:center;border: 1px solid grey;padding:4px"><?= ($k + 1); ?></td>

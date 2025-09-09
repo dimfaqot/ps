@@ -455,7 +455,7 @@ class Home extends BaseController
             }
         }
     }
-    public function laporan($bulan, $tahun, $unit, $order = "", $page = "")
+    public function laporan($bulan, $tahun, $unit, $order = "", $page = "0")
     {
         $val = laporan($bulan, $tahun);
 
