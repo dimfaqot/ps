@@ -134,6 +134,7 @@
             </table>
         <?php else: ?>
             <h6 style="font-weight: normal;"><?= ($order == "masuk" ? "1. Masuk" : "2. Keluar"); ?></h6>
+            <?php $col = ($order == "masuk" ? "total_harga" : "harga"); ?>
             <table style="margin-top: 10px;width:100%;">
                 <tr>
                     <th style="border: 1px solid grey;padding:2px">No.</th>
@@ -144,12 +145,12 @@
                 </tr>
                 <?php $total = 0; ?>
                 <?php foreach ($data['data'][$unit][$order] as $k => $i): ?>
-                    <?php $total += $i['total_harga']; ?>
+                    <?php $total += $i[$col]; ?>
                     <tr>
                         <td style="text-align:center;border: 1px solid grey;padding:4px"><?= ($k + 1); ?></td>
                         <td style="border: 1px solid grey;padding:4px;text-align:center"><?= date('d/m/Y', $i['tgl']); ?></td>
                         <td style="text-align: left;border: 1px solid grey;padding:4px"><?= $i['layanan']; ?></td>
-                        <td style="text-align: right;border: 1px solid grey;padding:4px"><?= angka($i['total_harga']); ?></td>
+                        <td style="text-align: right;border: 1px solid grey;padding:4px"><?= angka($i[$col]); ?></td>
                     </tr>
                 <?php endforeach; ?>
                 <tr>
@@ -214,6 +215,7 @@
             </table>
         <?php else: ?>
             <h6 style="font-weight: normal;"><?= ($order == "masuk" ? "1. Masuk" : "2. Keluar"); ?></h6>
+            <?php $col = ($order == "masuk" ? "biaya" : "harga"); ?>
             <table style="margin-top: 10px;width:100%;">
                 <tr>
                     <th style="border: 1px solid grey;padding:2px">No.</th>
@@ -224,12 +226,12 @@
                 </tr>
                 <?php $total = 0; ?>
                 <?php foreach ($data['data']['billiard'][$order] as $k => $i): ?>
-                    <?php $total += $i['biaya']; ?>
+                    <?php $total += $i[$col]; ?>
                     <tr>
                         <td style="text-align:center;border: 1px solid grey;padding:4px"><?= ($k + 1); ?></td>
                         <td style="border: 1px solid grey;padding:4px;text-align:center"><?= date('d/m/Y', $i['tgl']); ?></td>
                         <td style="text-align: left;border: 1px solid grey;padding:4px"><?= $i['meja']; ?></td>
-                        <td style="text-align: right;border: 1px solid grey;padding:4px"><?= angka($i['biaya']); ?></td>
+                        <td style="text-align: right;border: 1px solid grey;padding:4px"><?= angka($i[$col]); ?></td>
                     </tr>
                 <?php endforeach; ?>
                 <tr>
@@ -293,7 +295,11 @@
 
             </table>
         <?php else: ?>
-            <h6 style="font-weight: normal;"><?= ($order == "masuk" ? "1. Masuk" : "2. Keluar"); ?></h6>
+            <?php if ($page == "" || $page == "1"): ?>
+                <h6 style="font-weight: normal;"><?= ($order == "masuk" ? "1. Masuk" : "2. Keluar"); ?></h6>
+            <?php endif; ?>
+
+            <?php $col = ($order == "masuk" ? "total_harga" : "harga"); ?>
             <table style="margin-top: 10px;width:100%;">
                 <tr>
                     <th style="border: 1px solid grey;padding:2px">No.</th>
@@ -303,14 +309,17 @@
 
                 </tr>
                 <?php $total = 0; ?>
+                <?php $indexs = getIndexRange($page); ?>
                 <?php foreach ($data['data']['kantin'][$order] as $k => $i): ?>
-                    <?php $total += $i['total_harga']; ?>
-                    <tr>
-                        <td style="text-align:center;border: 1px solid grey;padding:4px"><?= ($k + 1); ?></td>
-                        <td style="border: 1px solid grey;padding:4px;text-align:center"><?= date('d/m/Y', $i['tgl']); ?></td>
-                        <td style="text-align: left;border: 1px solid grey;padding:4px"><?= $i['barang']; ?></td>
-                        <td style="text-align: right;border: 1px solid grey;padding:4px"><?= angka($i['total_harga']); ?></td>
-                    </tr>
+                    <?php if ($page !== "" && $k >= $indexs['start'] && $k <= $indexs['end']): ?>
+                        <?php $total += $i[$col]; ?>
+                        <tr>
+                            <td style="text-align:center;border: 1px solid grey;padding:4px"><?= ($k + 1); ?></td>
+                            <td style="border: 1px solid grey;padding:4px;text-align:center"><?= date('d/m/Y', $i['tgl']); ?></td>
+                            <td style="text-align: left;border: 1px solid grey;padding:4px"><?= $i['barang']; ?></td>
+                            <td style="text-align: right;border: 1px solid grey;padding:4px"><?= angka($i[$col]); ?></td>
+                        </tr>
+                    <?php endif; ?>
                 <?php endforeach; ?>
                 <tr>
                     <th style="text-align:center;border: 1px solid grey;padding:4px" colspan="3">TOTAL</th>
@@ -384,12 +393,12 @@
                 </tr>
                 <?php $total = 0; ?>
                 <?php foreach ($data['data']['ps'][$order] as $k => $i): ?>
-                    <?php $total += ($i['biaya'] - $i['diskon']); ?>
+                    <?php $total += ($order == "masuk" ? ($i['biaya'] - $i['diskon']) : $i['harga']); ?>
                     <tr>
                         <td style="text-align:center;border: 1px solid grey;padding:4px"><?= ($k + 1); ?></td>
                         <td style="border: 1px solid grey;padding:4px;text-align:center"><?= date('d/m/Y', $i['tgl']); ?></td>
                         <td style="text-align: left;border: 1px solid grey;padding:4px"><?= $i['meja']; ?></td>
-                        <td style="text-align: right;border: 1px solid grey;padding:4px"><?= angka(($i['biaya'] - $i['diskon'])); ?></td>
+                        <td style="text-align: right;border: 1px solid grey;padding:4px"><?= angka(($order == "masuk" ? ($i['biaya'] - $i['diskon']) : $i['harga'])); ?></td>
                     </tr>
                 <?php endforeach; ?>
                 <tr>

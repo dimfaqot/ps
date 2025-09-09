@@ -455,16 +455,20 @@ class Home extends BaseController
             }
         }
     }
-    public function laporan($bulan, $tahun, $unit, $order = "")
+    public function laporan($bulan, $tahun, $unit, $order = "", $page = "")
     {
         $val = laporan($bulan, $tahun);
 
         $data_unit = $val['data'][strtolower($unit)];
+
         $data = [];
         if ($unit == "Barber") {
             $data = ['saldo_kemarin' => $val['saldo_kemarin'], 'basil_keluar' => $val['basil_keluar'], 'rangkuman' => $val['rangkuman'], 'data' => [strtolower($unit) => $data_unit]];
         } else {
-            $data = ['data' => [strtolower($unit) => $data_unit]];
+            if ($order == "") {
+            } else {
+                $data = ['data' => [strtolower($unit) => $data_unit]];
+            }
         }
 
         $set = [
@@ -482,7 +486,7 @@ class Home extends BaseController
         $judul = "LAPORAN SONGO PLAYGROUND BULAN " . strtoupper(bulan($bulan)['bulan']) . " TAHUN " . $tahun;
         // Dapatkan konten HTML
         $logo = '<img width="90" src="logo.png" alt="KOP"/>';
-        $html = view('laporan', ['judul' => $judul, 'logo' => $logo, 'tahun' => $tahun, 'bulan' => $bulan, 'data' => $data, 'order' => $order, 'unit' => strtolower($unit)]); // view('pdf_template') mengacu pada file view yang akan dirender menjadi PDF
+        $html = view('laporan', ['judul' => $judul, 'logo' => $logo, 'tahun' => $tahun, 'bulan' => $bulan, 'data' => $data, 'order' => $order, 'unit' => strtolower($unit), 'page' => $page]); // view('pdf_template') mengacu pada file view yang akan dirender menjadi PDF
 
         // Setel konten HTML ke mPDF
         $mpdf->WriteHTML($html);

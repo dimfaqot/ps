@@ -1842,3 +1842,10 @@ function text_tv()
 {
     return db('settings')->where("nama_setting", "Tv")->get()->getRowArray()['value_str'];
 }
+
+function getIndexRange(int $page, int $limit = 700): array
+{
+    $start = ($page - 1) * $limit;
+    $end = $start + $limit - 1;
+    return ['start' => $start, 'end' => $end];
+}
