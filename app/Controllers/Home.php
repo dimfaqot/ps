@@ -487,7 +487,7 @@ class Home extends BaseController
         $judul = "LAPORAN SONGO PLAYGROUND BULAN " . strtoupper(bulan($bulan)['bulan']) . " TAHUN " . $tahun;
         // Dapatkan konten HTML
         $logo = '<img width="90" src="logo.png" alt="KOP"/>';
-        $html = view('laporan', ['judul' => $judul, 'logo' => $logo, 'tahun' => $tahun, 'bulan' => $bulan, 'data' => $data, 'unit' => strtolower($unit)]); // view('pdf_template') mengacu pada file view yang akan dirender menjadi PDF
+        $html = view('laporan', ['judul' => $judul, 'logo' => $logo, 'tahun' => $tahun, 'bulan' => $bulan, 'data' => $data, 'order' => $order, 'unit' => strtolower($unit)]); // view('pdf_template') mengacu pada file view yang akan dirender menjadi PDF
 
         // Setel konten HTML ke mPDF
         $mpdf->WriteHTML($html);
