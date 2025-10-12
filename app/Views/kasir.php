@@ -59,10 +59,10 @@
             </a>
         </div>
         <div class="col-6 col-md-1">
-            <a href="" style="text-decoration: none;" class="menu_utama" data-menu="cucian">
+            <a href="" style="text-decoration: none;" class="menu_utama" data-status="<?= (prime() == 45000 ? "prime" : ""); ?>" data-menu="harga">
                 <div>
-                    <h5><i class="fa-solid fa-motorcycle"></i></h5>
-                    <div>CUCIAN</div>
+                    <h5><i class="fa-solid fa-hand-holding-dollar <?= (prime() == 45000 ? "text-success" : "text-danger"); ?>"></i></h5>
+                    <div class="<?= (prime() == 45000 ? "text-success" : "text-danger"); ?>">HARGA</div>
                 </div>
             </a>
         </div>
@@ -273,6 +273,14 @@
                 $(".modal_kasir").html(html);
                 modal.show();
 
+            });
+        }
+        if (menu == "harga") {
+            let status = $(this).data("status");
+            post("kasir/harga", {
+                status
+            }).then(res => {
+                location.reload();
             });
         }
 

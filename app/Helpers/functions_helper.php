@@ -1849,3 +1849,10 @@ function getIndexRange(int $page, int $limit = 700): array
     $end = $start + $limit - 1;
     return ['start' => $start, 'end' => $end];
 }
+
+function prime()
+{
+    $res = (int) db('jadwal_2')->orderBy('meja', 'ASC')->get()->getRowArray()['harga'];
+
+    return $res;
+}

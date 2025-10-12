@@ -1159,4 +1159,36 @@ class Kasir extends BaseController
             sukses_js("Sukses");
         }
     }
+
+    public function harga()
+    {
+        $status = clear($this->request->getVar('status'));
+        $data = db('jadwal_2')->get()->getResultArray();
+
+        if ($status == "prime") {
+            foreach ($data as $i) {
+                if ($i['meja'] == 1 || $i['meja'] == 2 || $i['meja'] == 15 || $i['meja'] == 24) {
+                    $i['harga'] = 35000;
+                } elseif ($i['meja'] == 3) {
+                    $i['harga'] = 30000;
+                } elseif ($i['meja'] == 4 || $i['meja'] == 5) {
+                    $i['harga'] = 25000;
+                }
+                db('jadwal_2')->where('id', $i['id'])->update($i);
+            }
+        } else {
+            foreach ($data as $i) {
+                if ($i['meja'] == 1 || $i['meja'] == 2 || $i['meja'] == 15 || $i['meja'] == 24) {
+                    $i['harga'] = 45000;
+                } elseif ($i['meja'] == 3) {
+                    $i['harga'] = 35000;
+                } elseif ($i['meja'] == 4 || $i['meja'] == 5) {
+                    $i['harga'] = 30000;
+                }
+                db('jadwal_2')->where('id', $i['id'])->update($i);
+            }
+        }
+
+        sukses_js("Ok");
+    }
 }

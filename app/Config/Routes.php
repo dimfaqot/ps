@@ -327,6 +327,7 @@ $routes->post('/kasir/tambah_wl', 'Kasir::tambah_wl');
 $routes->post('/kasir/delete_wl', 'Kasir::delete_wl');
 $routes->post('/kasir/upload_iklan', 'Kasir::upload_iklan');
 $routes->post('/kasir/running_text', 'Kasir::running_text');
+$routes->post('/kasir/harga', 'Kasir::harga');
 
 
 $routes->get('/kasir2', 'Kasir::index');

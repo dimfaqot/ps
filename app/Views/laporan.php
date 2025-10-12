@@ -309,7 +309,8 @@
 
                 </tr>
                 <?php $total = 0; ?>
-                <?php $indexs = getIndexRange($page); ?>
+                <?php $indexs = getIndexRange($page);
+                ?>
                 <?php foreach ($data['data']['kantin'][$order] as $k => $i): ?>
                     <?php if ($page !== "0" && $k >= $indexs['start'] && $k <= $indexs['end']): ?>
                         <?php $total += $i[$col]; ?>
