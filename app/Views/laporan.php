@@ -230,7 +230,7 @@
                     <tr>
                         <td style="text-align:center;border: 1px solid grey;padding:4px"><?= ($k + 1); ?></td>
                         <td style="border: 1px solid grey;padding:4px;text-align:center"><?= date('d/m/Y', $i['tgl']); ?></td>
-                        <td style="text-align: left;border: 1px solid grey;padding:4px"><?= $i['meja']; ?></td>
+                        <td style="text-align: left;border: 1px solid grey;padding:4px"><?= ($order == "masuk" ? $i['meja'] : $i['barang']); ?></td>
                         <td style="text-align: right;border: 1px solid grey;padding:4px"><?= angka($i[$col]); ?></td>
                     </tr>
                 <?php endforeach; ?>
@@ -397,7 +397,7 @@
                     <tr>
                         <td style="text-align:center;border: 1px solid grey;padding:4px"><?= ($k + 1); ?></td>
                         <td style="border: 1px solid grey;padding:4px;text-align:center"><?= date('d/m/Y', $i['tgl']); ?></td>
-                        <td style="text-align: left;border: 1px solid grey;padding:4px"><?= $i['meja']; ?></td>
+                        <td style="text-align: left;border: 1px solid grey;padding:4px"><?= ($order == "masuk" ? $i['meja'] : $i['barang']); ?></td>
                         <td style="text-align: right;border: 1px solid grey;padding:4px"><?= angka(($order == "masuk" ? ($i['biaya'] - $i['diskon']) : $i['harga'])); ?></td>
                     </tr>
                 <?php endforeach; ?>

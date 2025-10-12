@@ -466,6 +466,7 @@ class Home extends BaseController
             $data = ['saldo_kemarin' => $val['saldo_kemarin'], 'basil_keluar' => $val['basil_keluar'], 'rangkuman' => $val['rangkuman'], 'data' => [strtolower($unit) => $data_unit]];
         } else {
             if ($order == "") {
+                $data = ['data' => [strtolower($unit) => $data_unit]];
             } else {
                 $data = ['data' => [strtolower($unit) => $data_unit]];
             }
