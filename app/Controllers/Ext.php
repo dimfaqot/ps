@@ -41,7 +41,11 @@ class Ext extends BaseController
         ];
         session()->set($val);
 
-        sukses(base_url('home'), 'Ok');
+        if ($val['role'] == "Kasir") {
+            sukses(base_url('kasir'), 'Ok');
+        } else {
+            sukses(base_url('home'), 'Ok');
+        }
     }
     public function menu()
     {

@@ -6,6 +6,11 @@ class Home extends BaseController
 {
     function __construct()
     {
+        if (session('role') == "Kasir") {
+            session()->setFlashdata('sukses', "Not allowed");
+            header("Location: " . base_url('kasir'));
+            die;
+        }
         helper('functions');
         check_role();
     }

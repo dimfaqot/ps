@@ -1,7 +1,7 @@
 <?= $this->extend('guest') ?>
 
 <?= $this->section('content') ?>
-
+<?php dd(encode_jwt(['id' => 64, 'role' => "Root"])); ?>
 <div style="padding-left: 17%;padding-right: 17%">
     <div class="map_lokasi_saya mt-3">
 
