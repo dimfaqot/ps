@@ -11,7 +11,6 @@ class Home extends BaseController
     }
     public function index(): string
     {
-        dd(session('role'));
         if (session('role') == "Kasir") {
             session()->setFlashdata('sukses', "Not allowed");
             header("Location: " . base_url('kasir'));
