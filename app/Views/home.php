@@ -7,7 +7,7 @@
     $belanja = $dbh->where('user_id', session('id'))->orderBy('status', 'ASC')->orderBy('tgl', 'ASC')->get()->getResultArray();
     ?>
     <div class="container">
-        <h6><?= session('role'); ?></h6>
+
         <h6>ANDA BELANJA ANDA BERAMAL</h6>
         <p>Daftar belanja Anda:</p>
         <div class="form-check form-check-inline">
@@ -85,7 +85,7 @@
         });
     </script>
 <?php else: ?>
-
     <?= view('home_admin'); ?>
+    <h6><?= session('role'); ?></h6>
 <?php endif; ?>
 <?= $this->endSection() ?>
