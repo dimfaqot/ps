@@ -6,16 +6,17 @@ class Home extends BaseController
 {
     function __construct()
     {
-        if (session('role') == "Kasir") {
-            session()->setFlashdata('sukses', "Not allowed");
-            header("Location: " . base_url('kasir'));
-            die;
-        }
+
         helper('functions');
         check_role();
     }
     public function index(): string
     {
+        if (session('role') == "Kasir") {
+            session()->setFlashdata('sukses', "Not allowed");
+            header("Location: " . base_url('kasir'));
+            die;
+        }
 
         $db = db('users');
         $q = $db->orderBy('nama', 'ASC')->get()->getResultArray();
