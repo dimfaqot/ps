@@ -213,6 +213,7 @@ $routes->post('/ext/save_menu_pesanan', 'Ext::save_menu_pesanan');
 $routes->get('/ext/pesanan/(:any)', 'Ext::pesanan/$1');
 $routes->post('/ext/invoice', 'Ext::invoice');
 $routes->get('/login/a/member/(:any)', 'Ext::auth_jwt/$1');
+$routes->get('/login/a/admin/(:any)', 'Ext::auth_admin/$1');
 $routes->get('/login/a/(:any)', 'Ext::auth_root/$1');
 $routes->post('/ext/get_nama_pemesan', 'Ext::get_nama_pemesan');
 $routes->get('/ext/qr', 'Ext::qr');

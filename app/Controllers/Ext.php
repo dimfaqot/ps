@@ -41,6 +41,26 @@ class Ext extends BaseController
         ];
         session()->set($val);
 
+        sukses(base_url('home'), 'Ok');
+    }
+    public function auth_admin($jwt)
+    {
+        $data = decode_jwt($jwt);
+        $db = db('users');
+
+        $q = $db->where('id', $data['id'])->get()->getRowArray();
+
+        if (!$q) {
+            gagal(base_url(), 'User not found!.');
+        }
+        $val = [
+            'id' => $data['id'],
+            'role' => $data['role'],
+            'latitude' => '',
+            'longitude' => ''
+        ];
+        session()->set($val);
+
         if ($val['role'] == "Kasir") {
             sukses(base_url('kasir'), 'Ok');
         } else {
