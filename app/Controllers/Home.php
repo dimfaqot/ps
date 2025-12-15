@@ -6,7 +6,6 @@ class Home extends BaseController
 {
     function __construct()
     {
-
         helper('functions');
         check_role();
     }
