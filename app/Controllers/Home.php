@@ -16,7 +16,6 @@ class Home extends BaseController
             header("Location: " . base_url('kasir'));
             die;
         }
-        echo "<h1>Tes</h1>";
 
         $db = db('users');
         $q = $db->orderBy('nama', 'ASC')->get()->getResultArray();
