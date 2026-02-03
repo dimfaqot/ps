@@ -19,6 +19,7 @@
 background: rgb(0,134,255);
 background: linear-gradient(90deg, rgba(0,134,255,1) 70%, rgba(97,180,255,1) 100%);
 ">
+
     <!-- warning alert message -->
     <div class="box_warning" style="position:fixed;z-index:999999;display:none;">
 
@@ -53,7 +54,17 @@ background: linear-gradient(90deg, rgba(0,134,255,1) 70%, rgba(97,180,255,1) 100
         </div>
     </div>
 
+
     <?= $this->renderSection('content') ?>
+
+    <?php
+    helper('qr_code');
+    $data = generate_qris('ID1025419133927', null, 'SONGO PLAYGROUND', 'Sragen');
+
+    // Tampilkan QR di view
+    echo '<img class="mb-5" src="data:image/png;base64,' . $data['image'] . '" />';
+
+    ?>
 
     <!-- sukses php -->
     <?php if (session()->getFlashdata('sukses')) : ?>
