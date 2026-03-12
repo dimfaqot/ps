@@ -1167,22 +1167,18 @@ class Kasir extends BaseController
 
         if ($status == "prime") {
             foreach ($data as $i) {
-                if ($i['meja'] == 1 || $i['meja'] == 2 || $i['meja'] == 15 || $i['meja'] == 24) {
+                if ($i['meja'] > 0  && $i['meja'] <= 4) {
                     $i['harga'] = 35000;
-                } elseif ($i['meja'] == 3) {
-                    $i['harga'] = 30000;
-                } elseif ($i['meja'] == 4 || $i['meja'] == 5) {
+                } elseif ($i['meja'] > 4) {
                     $i['harga'] = 25000;
                 }
                 db('jadwal_2')->where('id', $i['id'])->update($i);
             }
         } else {
             foreach ($data as $i) {
-                if ($i['meja'] == 1 || $i['meja'] == 2 || $i['meja'] == 15 || $i['meja'] == 24) {
+                if ($i['meja'] > 0  && $i['meja'] <= 4) {
                     $i['harga'] = 45000;
-                } elseif ($i['meja'] == 3) {
-                    $i['harga'] = 35000;
-                } elseif ($i['meja'] == 4 || $i['meja'] == 5) {
+                } elseif ($i['meja'] > 4) {
                     $i['harga'] = 30000;
                 }
                 db('jadwal_2')->where('id', $i['id'])->update($i);
