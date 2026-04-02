@@ -46,7 +46,12 @@
         <div style="text-align: center;"><?= $logo; ?></div>
         <h3 style="text-align: center;"><?= $judul; ?></h3>
         <h4>A. RANGKUMAN</h4>
-        <h4>SALDO BULAN LALU: 15.941.125</h4>
+        <!-- 
+        1. 15.941.125
+        2. 5.483.634
+        3. -5.973.263 
+        -->
+        <h4>SALDO BULAN LALU: 21.424.759</h4>
         <table style="margin-top: 10px;width:100%;">
             <tr>
                 <th style="border: 1px solid grey;padding:2px">No.</th>
