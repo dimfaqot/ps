@@ -1168,7 +1168,7 @@ class Kasir extends BaseController
         if ($status == "prime") {
             foreach ($data as $i) {
                 if ($i['meja'] > 0  && $i['meja'] <= 4) {
-                    $i['harga'] = 35000;
+                    $i['harga'] = 30000;
                 } elseif ($i['meja'] > 4) {
                     $i['harga'] = 25000;
                 }
@@ -1177,7 +1177,7 @@ class Kasir extends BaseController
         } else {
             foreach ($data as $i) {
                 if ($i['meja'] > 0  && $i['meja'] <= 4) {
-                    $i['harga'] = 45000;
+                    $i['harga'] = 40000;
                 } elseif ($i['meja'] > 4) {
                     $i['harga'] = 30000;
                 }
