@@ -50,8 +50,9 @@
         1. 15.941.125
         2. 5.483.634
         3. -5.973.263 
+        4. 5.825.116
         -->
-        <h4>SALDO BULAN LALU: 21.424.759</h4>
+        <h4>SALDO BULAN LALU: 21.276.612</h4>
         <table style="margin-top: 10px;width:100%;">
             <tr>
                 <th style="border: 1px solid grey;padding:2px">No.</th>
