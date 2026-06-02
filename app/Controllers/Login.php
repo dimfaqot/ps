@@ -13,6 +13,8 @@ class Login extends BaseController
     public function landing(): string
     {
 
+        dd(encode_jwt(['id' => 296, 'role' => 'Admin Barber']));
+
         $db = db('unit');
 
         $rental = $db->orderBy('id', 'ASC')->get()->getResultArray();

@@ -51,8 +51,10 @@
         2. 5.483.634
         3. -5.973.263 
         4. 5.825.116
+        5. 14.135.277
         -->
-        <h4>SALDO BULAN LALU: 15.451.496</h4>
+        <?php $laba = [15941125, 5483634, -5973263, 5825116, 14135277]; ?>
+        <h4>SALDO BULAN LALU: <?= angka(array_sum(array_slice($laba, 0, -1))) ?></h4>
         <table style="margin-top: 10px;width:100%;">
             <tr>
                 <th style="border: 1px solid grey;padding:2px">No.</th>

@@ -464,6 +464,7 @@ class Home extends BaseController
     }
     public function laporan($bulan, $tahun, $unit, $order = "", $page = "0")
     {
+
         $val = laporan($bulan, $tahun);
 
         $data_unit = $val['data'][strtolower($unit)];
