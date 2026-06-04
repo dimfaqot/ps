@@ -42,6 +42,7 @@
 </head>
 
 <body>
+
     <?php if ($unit == "barber"): ?>
         <div style="text-align: center;"><?= $logo; ?></div>
         <h3 style="text-align: center;"><?= $judul; ?></h3>
@@ -53,7 +54,7 @@
         4. 5.825.116
         5. 14.135.277
         -->
-        <?php $laba = [15941125, 5483634, -5973263, 5825116, 14135277]; ?>
+        <?php $laba = [15941125, 5483634, -5973263, 5825116, 15562777]; ?>
         <h4>SALDO BULAN LALU: <?= angka(array_sum(array_slice($laba, 0, -1))) ?></h4>
         <table style="margin-top: 10px;width:100%;">
             <tr>

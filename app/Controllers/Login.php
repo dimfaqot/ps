@@ -13,7 +13,7 @@ class Login extends BaseController
     public function landing(): string
     {
 
-        dd(encode_jwt(['id' => 296, 'role' => 'Admin Barber']));
+        dd(date("d/M/Y", 1780153605));
 
         $db = db('unit');
 
