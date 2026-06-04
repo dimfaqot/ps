@@ -13,8 +13,6 @@ class Login extends BaseController
     public function landing(): string
     {
 
-        dd(date("d/M/Y", 1780153605));
-
         $db = db('unit');
 
         $rental = $db->orderBy('id', 'ASC')->get()->getResultArray();
